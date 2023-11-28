@@ -19,6 +19,7 @@ import com.hifi.redeal.memo.adapter.UserRecordMemoListAdapter
 import com.hifi.redeal.memo.vm.MemoViewModel
 
 class MemoFragment : Fragment() {
+    // 테스트 커밋2
     private lateinit var fragmentMemoBinding: FragmentMemoBinding
     private lateinit var mainActivity: MainActivity
     private lateinit var memoViewModel: MemoViewModel
