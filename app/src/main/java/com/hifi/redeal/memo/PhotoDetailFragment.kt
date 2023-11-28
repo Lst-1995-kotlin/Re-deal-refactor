@@ -20,6 +20,7 @@ import com.hifi.redeal.memo.repository.PhotoMemoRepository
 import com.hifi.redeal.memo.utils.SwipeGestureListener
 
 class PhotoDetailFragment : Fragment() {
+    // 테스트 커밋
     lateinit var fragmentPhotoDetailBinding: FragmentPhotoDetailBinding
     lateinit var mainActivity: MainActivity
     private lateinit var gestureDetector: GestureDetector
