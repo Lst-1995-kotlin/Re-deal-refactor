@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "49069832061",
+    "project_id": "tempredealproject",
+    "storage_bucket": "tempredealproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:49069832061:android:c8d3dbdc69dc6faa95be14",
+        "android_client_info": {
+          "package_name": "com.hifi.redeal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "49069832061-9smntoatp5d1sbl0oek28bmuoep2t07i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hifi.redeal",
+            "certificate_hash": "b6f8f714c7cb4c9843bf995f8a572d9e78998729"
+          }
+        },
+        {
+          "client_id": "49069832061-46fkft4klhgnjhs1nu9db2tvrbeiqhst.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVL5WlBul2JBNCjAGlt0bi4RtR_yU2EBs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "49069832061-46fkft4klhgnjhs1nu9db2tvrbeiqhst.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
