@@ -25,6 +25,7 @@ import com.hifi.redeal.databinding.RowTransactionDepositBinding
 import com.hifi.redeal.databinding.TransactionSelectClientBinding
 import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
 import com.hifi.redeal.transaction.model.ClientSimpleData
+import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.model.TransactionData
 import java.math.BigInteger
 import java.text.SimpleDateFormat
@@ -86,174 +87,11 @@ class TransactionFragment : Fragment() {
             transactionList.observe(viewLifecycleOwner) {
                 fragmentTransactionBinding.transactionListLayout.removeAllViews()
 
-                var lastDate = ""
-                var lastClientName = ""
-                var totalSalesPrice = BigInteger("0") // 총 판매 금액
-                var totalDepositPrice = BigInteger("0") // 총 받은 금액
-                var salesCnt = 0
-
-                val sdf = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
-
                 it.sortByDescending { it.date }
                 it.forEach { TransactionData ->
-                    if (clientIdx != null) {
-                        if (clientIdx == TransactionData.clientIdx) {
-                            if (TransactionData.isDeposit) { // 입금 일 때
-
-                                val transItem = RowTransactionDepositBinding.inflate(layoutInflater)
-
-                                transItem.depositPriceTextView.text =
-                                    "${formatAmount(TransactionData.transactionAmountReceived)} 원"
-                                totalDepositPrice =
-                                    totalDepositPrice.add(BigInteger(TransactionData.transactionAmountReceived))
-
-                                val date = sdf.format(TransactionData.date.toDate())
-                                if (date == lastDate) {
-                                    transItem.textTransactionDate.visibility = View.GONE
-                                } else {
-                                    transItem.textTransactionDate.text = date
-                                    lastDate = date
-                                }
-
-                                if (TransactionData.clientName != null && lastClientName != TransactionData.clientName) {
-                                    transItem.transctionClientNameTextView.text =
-                                        TransactionData.clientName
-                                    lastClientName = TransactionData.clientName!!
-                                } else {
-                                    transItem.transctionClientNameTextView.visibility = View.GONE
-                                }
-
-                                fragmentTransactionBinding.transactionListLayout.addView(transItem.root)
-                            } else { // 매출 일 때
-                                salesCnt++
-                                val transItem = RowTransactionBinding.inflate(layoutInflater)
-
-                                val date = sdf.format(TransactionData.date.toDate())
-                                if (date == lastDate) {
-                                    transItem.textTransactionDate.visibility = View.GONE
-                                } else {
-                                    transItem.textTransactionDate.text = date
-                                    lastDate = date
-                                }
-
-                                if (TransactionData.clientName != null && lastClientName != TransactionData.clientName) {
-                                    transItem.transctionClientNameTextView.text =
-                                        TransactionData.clientName
-                                    lastClientName = TransactionData.clientName!!
-                                } else {
-                                    transItem.transctionClientNameTextView.visibility = View.GONE
-                                }
-
-                                transItem.textProductName.text = TransactionData.transactionName
-                                transItem.textProductCount.text =
-                                    formatAmount(TransactionData.transactionItemCount.toString())
-                                transItem.textUnitPrice.text =
-                                    formatAmount(TransactionData.transactionItemPrice)
-
-                                val totalAmount =
-                                    BigInteger(TransactionData.transactionItemPrice).multiply(
-                                        BigInteger(TransactionData.transactionItemCount.toString())
-                                    )
-                                transItem.textTotalAmount.text =
-                                    formatAmount(totalAmount.toString())
-                                transItem.textRecievedAmount.text =
-                                    formatAmount(TransactionData.transactionAmountReceived)
-
-                                val recievables =
-                                    totalAmount.minus(BigInteger(TransactionData.transactionAmountReceived))
-                                transItem.textRecievables.text =
-                                    formatAmount(recievables.toString())
-
-                                totalSalesPrice = totalSalesPrice.add(totalAmount) // 판매 금액
-                                totalDepositPrice =
-                                    totalDepositPrice.add(BigInteger(TransactionData.transactionAmountReceived)) // 받은 금액
-
-                                fragmentTransactionBinding.transactionListLayout.addView(transItem.root)
-                            }
-                        }
-                        fragmentTransactionBinding.textTotalSalesCount.text = "$salesCnt"
-                        fragmentTransactionBinding.textTotalSales.text =
-                            formatAmount(totalSalesPrice.toString())
-                        fragmentTransactionBinding.textTotalReceivables.text =
-                            formatAmount(totalSalesPrice.minus(totalDepositPrice).toString())
-                    } else {
-                        if (TransactionData.isDeposit) { // 입금 일 때
-
-                            val transItem = RowTransactionDepositBinding.inflate(layoutInflater)
-
-                            transItem.depositPriceTextView.text =
-                                "${formatAmount(TransactionData.transactionAmountReceived)} 원"
-                            totalDepositPrice =
-                                totalDepositPrice.add(BigInteger(TransactionData.transactionAmountReceived))
-
-                            val date = sdf.format(TransactionData.date.toDate())
-                            if (date == lastDate) {
-                                transItem.textTransactionDate.visibility = View.GONE
-                            } else {
-                                transItem.textTransactionDate.text = date
-                                lastDate = date
-                            }
-
-                            if (TransactionData.clientName != null && lastClientName != TransactionData.clientName) {
-                                transItem.transctionClientNameTextView.text =
-                                    TransactionData.clientName
-                                lastClientName = TransactionData.clientName!!
-                            } else {
-                                transItem.transctionClientNameTextView.visibility = View.GONE
-                            }
-
-                            fragmentTransactionBinding.transactionListLayout.addView(transItem.root)
-                        } else { // 매출 일 때
-                            salesCnt++
-                            val transItem = RowTransactionBinding.inflate(layoutInflater)
-
-                            val date = sdf.format(TransactionData.date.toDate())
-                            if (date == lastDate) {
-                                transItem.textTransactionDate.visibility = View.GONE
-                            } else {
-                                transItem.textTransactionDate.text = date
-                                lastDate = date
-                            }
-
-                            if (TransactionData.clientName != null && lastClientName != TransactionData.clientName) {
-                                transItem.transctionClientNameTextView.text =
-                                    TransactionData.clientName
-                                lastClientName = TransactionData.clientName!!
-                            } else {
-                                transItem.transctionClientNameTextView.visibility = View.GONE
-                            }
-
-                            transItem.textProductName.text = TransactionData.transactionName
-                            transItem.textProductCount.text =
-                                formatAmount(TransactionData.transactionItemCount.toString())
-                            transItem.textUnitPrice.text =
-                                formatAmount(TransactionData.transactionItemPrice)
-
-                            val totalAmount =
-                                BigInteger(TransactionData.transactionItemPrice).multiply(
-                                    BigInteger(TransactionData.transactionItemCount.toString())
-                                )
-                            transItem.textTotalAmount.text = formatAmount(totalAmount.toString())
-                            transItem.textRecievedAmount.text =
-                                formatAmount(TransactionData.transactionAmountReceived)
-
-                            val recievables =
-                                totalAmount.minus(BigInteger(TransactionData.transactionAmountReceived))
-                            transItem.textRecievables.text = formatAmount(recievables.toString())
-
-                            totalSalesPrice = totalSalesPrice.add(totalAmount) // 판매 금액
-                            totalDepositPrice =
-                                totalDepositPrice.add(BigInteger(TransactionData.transactionAmountReceived)) // 받은 금액
-
-                            fragmentTransactionBinding.transactionListLayout.addView(transItem.root)
-                        }
-                    }
-
-                    fragmentTransactionBinding.textTotalSalesCount.text = "$salesCnt"
-                    fragmentTransactionBinding.textTotalSales.text =
-                        formatAmount(totalSalesPrice.toString())
-                    fragmentTransactionBinding.textTotalReceivables.text =
-                        formatAmount(totalSalesPrice.minus(totalDepositPrice).toString())
+                    fragmentTransactionBinding.transactionListLayout.addView(
+                        Transaction(TransactionData).getTransactionView(layoutInflater)
+                    )
                 }
             }
 

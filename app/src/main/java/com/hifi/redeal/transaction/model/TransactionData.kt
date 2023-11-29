@@ -15,16 +15,16 @@ data class TransactionData(
     var transactionName: String,
 )
 
-data class customTransactionData(
-    var clientIdx: Long,
-    var date: Timestamp,
+data class CustomTransactionData(
+    val clientIdx: Long,
+    val date: Timestamp,
     @JvmField
-    var isDeposit: Boolean,
-    var transactionAmountReceived: String,
-    var transactionIdx: Long,
-    var transactionItemCount: Long,
-    var transactionItemPrice: String,
-    var transactionName: String,
+    val isDeposit: Boolean,
+    val transactionAmountReceived: String,
+    val transactionIdx: Long,
+    val transactionItemCount: Long,
+    val transactionItemPrice: String,
+    val transactionName: String,
     var clientName: String?
 )
 

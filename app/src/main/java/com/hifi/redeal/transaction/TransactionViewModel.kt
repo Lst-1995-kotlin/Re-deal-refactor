@@ -4,12 +4,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.hifi.redeal.transaction.model.ClientSimpleData
-import com.hifi.redeal.transaction.model.customTransactionData
+import com.hifi.redeal.transaction.model.CustomTransactionData
 
 class TransactionViewModel : ViewModel() {
 
-    var transactionList = MutableLiveData<MutableList<customTransactionData>>()
-    var tempTransactionList = mutableListOf<customTransactionData>()
+    var transactionList = MutableLiveData<MutableList<CustomTransactionData>>()
+    var tempTransactionList = mutableListOf<CustomTransactionData>()
 
     var clientSimpleDataListVM = MutableLiveData<MutableList<ClientSimpleData>>()
     var tempClientSimpleDataList = mutableListOf<ClientSimpleData>()
@@ -37,7 +37,7 @@ class TransactionViewModel : ViewModel() {
                 val transactionItemPrice = c1["transactionItemPrice"] as String
                 val transactionName = c1["transactionName"] as String
 
-                val newTransactionData = customTransactionData(
+                val newTransactionData = CustomTransactionData(
                     clientIdx,
                     date,
                     isDeposit,
@@ -49,17 +49,16 @@ class TransactionViewModel : ViewModel() {
                     null
                 )
                 tempTransactionList.add(newTransactionData)
-                transactionList.postValue(tempTransactionList)
             }
         }, {
             tempTransactionList.forEach { TransactionData ->
                 TransactionRepository.getClientInfo(uid, TransactionData.clientIdx) {
                     for (c2 in it.result) {
                         TransactionData.clientName = c2["clientName"] as String
-                        transactionList.postValue(tempTransactionList)
                     }
                 }
             }
+            transactionList.postValue(tempTransactionList)
         })
     }
 
