@@ -1,29 +1,31 @@
 package com.hifi.redeal.transaction.model
 
 import android.widget.TextView
+import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.DEPOSIT_TRANSACTION
+import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.WITHDRAWAL_TRANSACTION
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class Transaction(
-    private val transactionData: CustomTransactionData
+    private val transactionData: CustomTransactionData,
 ) {
 
     private val numberFormat = NumberFormat.getNumberInstance(Locale.getDefault())
     private val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
 
     fun getTransactionType(): Int {
-        if (transactionData.isDeposit) return 1
-        return 2
+        if (transactionData.isDeposit) return DEPOSIT_TRANSACTION
+        return WITHDRAWAL_TRANSACTION
     }
 
-    fun setViewText(date: TextView, clientName: TextView, price: TextView) {
+    fun getTextViewValue(date: TextView, clientName: TextView, price: TextView) {
         date.text = dateFormat.format(transactionData.date.toDate())
         clientName.text = transactionData.clientName
         price.text = numberFormat.format(transactionData.transactionAmountReceived.toLong())
     }
 
-    fun setViewText(
+    fun getTextViewValue(
         date: TextView,
         clientName: TextView,
         productName: TextView,
@@ -31,7 +33,7 @@ class Transaction(
         unitPrice: TextView,
         totalAmount: TextView,
         receivedAmount: TextView,
-        receivables: TextView
+        receivables: TextView,
     ) {
         date.text = dateFormat.format(transactionData.date.toDate())
         clientName.text = transactionData.clientName
@@ -40,15 +42,16 @@ class Transaction(
         unitPrice.text = numberFormat.format(transactionData.transactionItemPrice.toLong())
         totalAmount.text = numberFormat.format(
             transactionData.transactionItemPrice.toLong() *
-                    transactionData.transactionItemCount
+                transactionData.transactionItemCount,
         )
         receivedAmount.text =
             numberFormat.format(transactionData.transactionAmountReceived.toLong())
         receivables.text = numberFormat.format(
-            (transactionData.transactionItemPrice.toLong() *
-                    transactionData.transactionItemCount) -
-                    transactionData.transactionAmountReceived.toLong()
+            (
+                transactionData.transactionItemPrice.toLong() *
+                    transactionData.transactionItemCount
+                ) -
+                transactionData.transactionAmountReceived.toLong(),
         )
     }
-
 }

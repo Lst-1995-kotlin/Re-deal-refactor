@@ -12,9 +12,13 @@ import com.hifi.redeal.transaction.model.TransactionData
 
 class TransactionRepository {
 
-    companion object{
+    companion object {
 
-        fun setClientTransactionDataList(uid: String, newTransactionData: TransactionData, callback1: (Task<DocumentSnapshot>) -> Unit){
+        fun setClientTransactionDataList(
+            uid: String,
+            newTransactionData: TransactionData,
+            callback1: (Task<DocumentSnapshot>) -> Unit,
+        ) {
             var clientData = ClientData()
             var transactionList = mutableListOf<Long>()
             val db = Firebase.firestore
@@ -36,7 +40,12 @@ class TransactionRepository {
                         .set(clientData)
                 }.addOnCompleteListener(callback1)
         }
-        fun setTransactionData(uid: String, transactionData: TransactionData, callback1: (Task<Void>) -> Unit){
+
+        fun setTransactionData(
+            uid: String,
+            transactionData: TransactionData,
+            callback1: (Task<Void>) -> Unit,
+        ) {
             val db = Firebase.firestore
             db.collection("userData")
                 .document(uid)
@@ -45,7 +54,8 @@ class TransactionRepository {
                 .set(transactionData)
                 .addOnCompleteListener(callback1)
         }
-        fun getClientInfo(uid: String, clientIdx: Long, callback1: (Task<QuerySnapshot>) -> Unit){
+
+        fun getClientInfo(uid: String, clientIdx: Long, callback1: (Task<QuerySnapshot>) -> Unit) {
             val db = Firebase.firestore
             db.collection("userData")
                 .document(uid)
@@ -55,7 +65,7 @@ class TransactionRepository {
                 .addOnCompleteListener(callback1)
         }
 
-        fun getUserAllClient(uid: String, callback1: (Task<QuerySnapshot>) -> Unit){
+        fun getUserAllClient(uid: String, callback1: (Task<QuerySnapshot>) -> Unit) {
             val db = Firebase.firestore
             db.collection("userData")
                 .document(uid)
@@ -64,7 +74,7 @@ class TransactionRepository {
                 .addOnCompleteListener(callback1)
         }
 
-        fun getNextTransactionIdx(uid: String, callback: (Task<QuerySnapshot>) -> Unit){
+        fun getNextTransactionIdx(uid: String, callback: (Task<QuerySnapshot>) -> Unit) {
             val db = Firebase.firestore
             val transactionDataRef = db.collection("userData")
                 .document(uid)
@@ -75,7 +85,11 @@ class TransactionRepository {
                 .addOnCompleteListener(callback)
         }
 
-        fun getAllTransactionData(uid: String, callback1: (Task<QuerySnapshot>) -> Unit, callback2: (Task<QuerySnapshot>) -> Unit){
+        fun getAllTransactionData(
+            uid: String,
+            callback1: (Task<QuerySnapshot>) -> Unit,
+            callback2: (Task<QuerySnapshot>) -> Unit,
+        ) {
             val db = Firebase.firestore
             db.collection("userData")
                 .document(uid)
@@ -84,6 +98,5 @@ class TransactionRepository {
                 .addOnCompleteListener(callback1)
                 .addOnCompleteListener(callback2)
         }
-
     }
 }

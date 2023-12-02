@@ -27,7 +27,6 @@ class TransactionViewModel : ViewModel() {
         tempTransactionList.clear()
         TransactionRepository.getAllTransactionData(uid, {
             for (c1 in it.result) {
-
                 val clientIdx = c1["clientIdx"] as Long
                 val date = c1["date"] as Timestamp
                 val isDeposit = c1["isDeposit"] as Boolean
@@ -46,7 +45,7 @@ class TransactionViewModel : ViewModel() {
                     transactionItemCount,
                     transactionItemPrice,
                     transactionName,
-                    null
+                    null,
                 )
                 tempTransactionList.add(newTransactionData)
             }
@@ -71,7 +70,7 @@ class TransactionViewModel : ViewModel() {
                     c1["clientName"] as String,
                     c1["clientManagerName"] as String,
                     c1["clientState"] as Long,
-                    c1["isBookmark"] as Boolean
+                    c1["isBookmark"] as Boolean,
                 )
                 tempClientSimpleDataList.add(newClientData)
                 clientSimpleDataListVM.postValue(tempClientSimpleDataList)
