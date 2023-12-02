@@ -61,7 +61,7 @@ class TransactionFragment : Fragment() {
         transactionVM.run {
 
             transactionList.observe(viewLifecycleOwner) {
-                it.sortedBy { it.date }.forEach {CustomTransaction ->
+                it.sortedByDescending { it.date }.forEach {CustomTransaction ->
                     transactionAdapter.addTransaction(Transaction(CustomTransaction))
                 }
             }
