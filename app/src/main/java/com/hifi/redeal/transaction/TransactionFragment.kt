@@ -20,16 +20,13 @@ import com.hifi.redeal.R
 import com.hifi.redeal.databinding.DialogAddDepositBinding
 import com.hifi.redeal.databinding.DialogAddTransactionBinding
 import com.hifi.redeal.databinding.FragmentTransactionBinding
-import com.hifi.redeal.databinding.RowTransactionBinding
-import com.hifi.redeal.databinding.RowTransactionDepositBinding
 import com.hifi.redeal.databinding.TransactionSelectClientBinding
 import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
+import com.hifi.redeal.transaction.adapter.TransactionAdapter
 import com.hifi.redeal.transaction.model.ClientSimpleData
 import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.model.TransactionData
 import java.math.BigInteger
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class TransactionFragment : Fragment() {
 
@@ -54,7 +51,7 @@ class TransactionFragment : Fragment() {
     var clientIdx: Long? = null
     var selectClientIdx: Long? = null
     val uid = Firebase.auth.uid!!
-
+    val transactions = mutableListOf<Transaction>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,6 +64,11 @@ class TransactionFragment : Fragment() {
 
         setViewModel()
         setClickEvent()
+
+        fragmentTransactionBinding.transactionRecyclerView.run {
+            adapter = TransactionAdapter(transactions)
+            layoutManager = LinearLayoutManager(context)
+        }
 
         return fragmentTransactionBinding.root
 
@@ -85,14 +87,11 @@ class TransactionFragment : Fragment() {
             }
 
             transactionList.observe(viewLifecycleOwner) {
-                fragmentTransactionBinding.transactionListLayout.removeAllViews()
-
-                it.sortByDescending { it.date }
-                it.forEach { TransactionData ->
-                    fragmentTransactionBinding.transactionListLayout.addView(
-                        Transaction(TransactionData).getTransactionView(layoutInflater)
-                    )
+                transactions.clear()
+                it.sortedByDescending { it.date }.forEach {
+                    transactions.add(Transaction(it))
                 }
+                fragmentTransactionBinding.transactionRecyclerView.adapter?.notifyDataSetChanged()
             }
 
             transactionVM.getAllTransactionData(uid)
