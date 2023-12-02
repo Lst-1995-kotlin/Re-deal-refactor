@@ -4,15 +4,15 @@ import com.google.firebase.Timestamp
 
 
 data class TransactionData(
-    var clientIdx: Long,
-    var date: Timestamp,
+    val clientIdx: Long,
+    val date: Timestamp,
     @JvmField
-    var isDeposit: Boolean,
-    var transactionAmountReceived: String,
-    var transactionIdx: Long,
-    var transactionItemCount: Long,
-    var transactionItemPrice: String,
-    var transactionName: String,
+    val isDeposit: Boolean,
+    val transactionAmountReceived: String,
+    val transactionIdx: Long,
+    val transactionItemCount: Long,
+    val transactionItemPrice: String,
+    val transactionName: String,
 )
 
 data class CustomTransactionData(

@@ -1,10 +1,6 @@
 package com.hifi.redeal.transaction.model
 
-import android.view.LayoutInflater
-import android.view.View
 import android.widget.TextView
-import com.hifi.redeal.databinding.RowTransactionBinding
-import com.hifi.redeal.databinding.RowTransactionDepositBinding
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -13,8 +9,8 @@ class Transaction(
     private val transactionData: CustomTransactionData
 ) {
 
-    val numberFormat = NumberFormat.getNumberInstance(Locale.getDefault())
-    val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
+    private val numberFormat = NumberFormat.getNumberInstance(Locale.getDefault())
+    private val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
 
     fun getTransactionType(): Int {
         if (transactionData.isDeposit) return 1
@@ -34,8 +30,8 @@ class Transaction(
         productCount: TextView,
         unitPrice: TextView,
         totalAmount: TextView,
-        recievedAmount: TextView,
-        recievables: TextView
+        receivedAmount: TextView,
+        receivables: TextView
     ) {
         date.text = dateFormat.format(transactionData.date.toDate())
         clientName.text = transactionData.clientName
@@ -46,9 +42,9 @@ class Transaction(
             transactionData.transactionItemPrice.toLong() *
                     transactionData.transactionItemCount
         )
-        recievedAmount.text =
+        receivedAmount.text =
             numberFormat.format(transactionData.transactionAmountReceived.toLong())
-        recievables.text = numberFormat.format(
+        receivables.text = numberFormat.format(
             (transactionData.transactionItemPrice.toLong() *
                     transactionData.transactionItemCount) -
                     transactionData.transactionAmountReceived.toLong()

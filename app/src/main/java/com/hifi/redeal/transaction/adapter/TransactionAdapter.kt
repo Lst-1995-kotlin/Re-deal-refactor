@@ -11,27 +11,6 @@ class TransactionAdapter(
     private val transactions: MutableList<Transaction>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    inner class DepositHolder(rowTransactionDepositBinding: RowTransactionDepositBinding) :
-        RecyclerView.ViewHolder(rowTransactionDepositBinding.root) {
-        val textTransactionDate = rowTransactionDepositBinding.textTransactionDate
-        val transctionClientNameTextView = rowTransactionDepositBinding.transctionClientNameTextView
-        val depositPriceTextVie = rowTransactionDepositBinding.depositPriceTextView
-
-    }
-
-    inner class TransactionHolder(rowTransactionBinding: RowTransactionBinding) :
-        RecyclerView.ViewHolder(rowTransactionBinding.root) {
-        val date = rowTransactionBinding.textTransactionDate
-        val clientName = rowTransactionBinding.transctionClientNameTextView
-        val productName = rowTransactionBinding.textProductName
-        val productCount = rowTransactionBinding.textProductCount
-        val unitPrice = rowTransactionBinding.textUnitPrice
-        val totalAmount = rowTransactionBinding.textTotalAmount
-        val recievedAmount = rowTransactionBinding.textRecievedAmount
-        val recievables = rowTransactionBinding.textRecievables
-
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         when (viewType) {
@@ -65,25 +44,12 @@ class TransactionAdapter(
         when (holder.itemViewType) {
             1 -> {
                 val item = holder as DepositHolder
-                transactions[position].setViewText(
-                    item.textTransactionDate,
-                    item.transctionClientNameTextView,
-                    item.depositPriceTextVie
-                )
+                item.bind(transactions[position])
             }
 
             2 -> {
                 val item = holder as TransactionHolder
-                transactions[position].setViewText(
-                    item.date,
-                    item.clientName,
-                    item.productName,
-                    item.productCount,
-                    item.unitPrice,
-                    item.totalAmount,
-                    item.recievedAmount,
-                    item.recievables
-                )
+                item.bind(transactions[position])
             }
         }
     }
@@ -92,11 +58,36 @@ class TransactionAdapter(
         return transactions[position].getTransactionType()
     }
 
-    fun addTransaction() {
-//        transactions.add(Transaction(CustomTransactionData(
-//
-//        )))
+    fun addTransaction(transaction: Transaction) {
+        transactions.add(transaction)
         notifyDataSetChanged()
+    }
+
+    inner class DepositHolder(private val rowTransactionDepositBinding: RowTransactionDepositBinding) :
+        RecyclerView.ViewHolder(rowTransactionDepositBinding.root) {
+        fun bind(transaction: Transaction) {
+            transaction.setViewText(
+                rowTransactionDepositBinding.textTransactionDate,
+                rowTransactionDepositBinding.transctionClientNameTextView,
+                rowTransactionDepositBinding.depositPriceTextView
+            )
+        }
+    }
+
+    inner class TransactionHolder(private val rowTransactionBinding: RowTransactionBinding) :
+        RecyclerView.ViewHolder(rowTransactionBinding.root) {
+        fun bind(transaction: Transaction) {
+            transaction.setViewText(
+                rowTransactionBinding.textTransactionDate,
+                rowTransactionBinding.transctionClientNameTextView,
+                rowTransactionBinding.textProductName,
+                rowTransactionBinding.textProductCount,
+                rowTransactionBinding.textUnitPrice,
+                rowTransactionBinding.textTotalAmount,
+                rowTransactionBinding.textRecievedAmount,
+                rowTransactionBinding.textRecievables
+            )
+        }
     }
 
 }

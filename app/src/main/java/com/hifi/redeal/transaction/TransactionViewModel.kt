@@ -56,9 +56,9 @@ class TransactionViewModel : ViewModel() {
                     for (c2 in it.result) {
                         TransactionData.clientName = c2["clientName"] as String
                     }
+                    transactionList.postValue(tempTransactionList)
                 }
             }
-            transactionList.postValue(tempTransactionList)
         })
     }
 
