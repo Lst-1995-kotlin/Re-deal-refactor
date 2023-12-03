@@ -18,7 +18,10 @@ import com.hifi.redeal.databinding.FragmentPhotoDetailBinding
 import com.hifi.redeal.databinding.RowDetailPhotoBinding
 import com.hifi.redeal.memo.repository.PhotoMemoRepository
 import com.hifi.redeal.memo.utils.SwipeGestureListener
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class PhotoDetailFragment : Fragment() {
     // 테스트 커밋
     lateinit var fragmentPhotoDetailBinding: FragmentPhotoDetailBinding
@@ -26,8 +29,8 @@ class PhotoDetailFragment : Fragment() {
     private lateinit var gestureDetector: GestureDetector
     var imgSrcArr = arrayListOf<String>()
     var imgOrder = 0
-    private val userIdx = Firebase.auth.uid!!
     lateinit var previousView: View
+    @Inject lateinit var photoMemoRepository: PhotoMemoRepository
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,7 +40,7 @@ class PhotoDetailFragment : Fragment() {
         imgOrder = arguments?.getInt("order")!!
         imgSrcArr = arguments?.getStringArrayList("srcArr")!!
 
-        PhotoMemoRepository.getPhotoMemoImgUrl(userIdx, imgSrcArr[imgOrder]){url ->
+        photoMemoRepository.getPhotoMemoImgUrl(imgSrcArr[imgOrder]){url ->
             Glide.with(fragmentPhotoDetailBinding.detailImageView)
                 .load(url)
                 .into(fragmentPhotoDetailBinding.detailImageView)
@@ -54,7 +57,7 @@ class PhotoDetailFragment : Fragment() {
                 }
                 imgOrder--
             }
-            PhotoMemoRepository.getPhotoMemoImgUrl(userIdx, imgSrcArr[imgOrder]){url ->
+            photoMemoRepository.getPhotoMemoImgUrl(imgSrcArr[imgOrder]){url ->
                 Glide.with(fragmentPhotoDetailBinding.detailImageView)
                     .load(url)
                     .into(fragmentPhotoDetailBinding.detailImageView)
@@ -94,7 +97,7 @@ class PhotoDetailFragment : Fragment() {
             init{
                 rowImageView.setOnClickListener {
                     imgOrder = adapterPosition
-                    PhotoMemoRepository.getPhotoMemoImgUrl(userIdx, imgSrcArr[adapterPosition]){url ->
+                    photoMemoRepository.getPhotoMemoImgUrl(imgSrcArr[adapterPosition]){url ->
                         Glide.with(fragmentPhotoDetailBinding.detailImageView)
                             .load(url)
                             .into(fragmentPhotoDetailBinding.detailImageView)
@@ -112,7 +115,7 @@ class PhotoDetailFragment : Fragment() {
                     rowImageView.setBackgroundResource(R.drawable.row_photo_detail_border)
                 }
                 rowImageView.setImageResource(R.drawable.empty_photo)
-                PhotoMemoRepository.getPhotoMemoImgUrl(userIdx, imgSrc){url ->
+                photoMemoRepository.getPhotoMemoImgUrl(imgSrc){url ->
                     Glide.with(rowImageView)
                         .load(url)
                         .into(rowImageView)

@@ -31,11 +31,13 @@ import com.hifi.redeal.databinding.FragmentAddRecordMemoBinding
 import com.hifi.redeal.memo.repository.RecordMemoRepository
 import com.hifi.redeal.memo.utils.getCurrentDuration
 import com.hifi.redeal.memo.utils.getTotalDuration
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class AddRecordMemoFragment : Fragment() {
     private lateinit var fragmentAddRecordMemoBinding : FragmentAddRecordMemoBinding
     private lateinit var mainActivity: MainActivity
@@ -61,6 +63,7 @@ class AddRecordMemoFragment : Fragment() {
     private lateinit var audioLauncher: ActivityResultLauncher<Intent>
     private val userIdx = Firebase.auth.uid!!
 
+    @Inject lateinit var recordMemoRepository: RecordMemoRepository
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -126,7 +129,7 @@ class AddRecordMemoFragment : Fragment() {
                     setRecordingLocation(audioFileName!!)
                     saveAudioFileFromUri(audioFileUri!!, recordFileLocation.getAbsolutePath())
                 }
-                RecordMemoRepository.addRecordMemo(userIdx,clientIdx,recordMemoContext,audioFileUri!!, audioFileName!!){
+                recordMemoRepository.addRecordMemo(clientIdx,recordMemoContext,audioFileUri!!, audioFileName!!){
                     mainActivity.removeFragment(MainActivity.ADD_RECORD_MEMO_FRAGMENT)
                 }
             }

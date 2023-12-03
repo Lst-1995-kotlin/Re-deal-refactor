@@ -25,14 +25,17 @@ import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentAddPhotoMemoBinding
 import com.hifi.redeal.memo.repository.PhotoMemoRepository
 import com.hifi.redeal.memo.utils.dpToPx
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AddPhotoMemoFragment : Fragment() {
     private lateinit var fragmentAddPhotoMemoBinding: FragmentAddPhotoMemoBinding
     private lateinit var mainActivity: MainActivity
     private lateinit var albumLauncher: ActivityResultLauncher<Intent>
     private var uriList = mutableListOf<Uri>()
     private var clientIdx = 1L
-    private val userIdx = Firebase.auth.uid!!
+    @Inject lateinit var photoMemoRepository: PhotoMemoRepository
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -70,7 +73,7 @@ class AddPhotoMemoFragment : Fragment() {
                             R.color.primary20
                         )
                     )
-                    PhotoMemoRepository.addPhotoMemo(userIdx, clientIdx, photoMemoContext, uriList) {
+                    photoMemoRepository.addPhotoMemo(clientIdx, photoMemoContext, uriList) {
                         mainActivity.removeFragment(MainActivity.ADD_PHOTO_MEMO_FRAGMENT)
                     }
                 }

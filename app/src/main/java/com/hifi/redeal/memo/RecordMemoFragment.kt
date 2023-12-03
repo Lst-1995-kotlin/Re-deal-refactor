@@ -11,6 +11,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,14 +27,16 @@ import com.hifi.redeal.memo.utils.getCurrentDuration
 import com.hifi.redeal.memo.utils.getTotalDuration
 import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.RecordMemoViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 
+@AndroidEntryPoint
 class RecordMemoFragment : Fragment() {
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     private lateinit var fragmentRecordMemoBinding : FragmentRecordMemoBinding
     private lateinit var mainActivity: MainActivity
-    private lateinit var recordMemoViewModel: RecordMemoViewModel
+    private val recordMemoViewModel: RecordMemoViewModel by viewModels()
     private val userIdx = Firebase.auth.uid!!
     var clientIdx = 1L
     var currentMediaPlayer:MediaPlayer? = null
@@ -50,7 +53,6 @@ class RecordMemoFragment : Fragment() {
         mainActivity = activity as MainActivity
 
         clientIdx = arguments?.getLong("clientIdx")?:1L
-        recordMemoViewModel = ViewModelProvider(this)[RecordMemoViewModel::class.java]
 
         recordMemoViewModel.run{
             recordMemoList.observe(viewLifecycleOwner){
@@ -59,7 +61,7 @@ class RecordMemoFragment : Fragment() {
         }
 
         fragmentRecordMemoBinding.run{
-            recordMemoViewModel.getRecordMemoList(userIdx, clientIdx, mainActivity)
+            recordMemoViewModel.getRecordMemoList(clientIdx, mainActivity)
             recordMemoToolbar.run{
                 setNavigationOnClickListener {
                     mainActivity.removeFragment(MainActivity.RECORD_MEMO_FRAGMENT)

@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,16 +24,19 @@ import com.hifi.redeal.memo.repository.PhotoMemoRepository
 import com.hifi.redeal.memo.utils.dpToPx
 import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.PhotoMemoViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class PhotoMemoFragment : Fragment() {
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-    private lateinit var photoMemoViewModel: PhotoMemoViewModel
+    private val photoMemoViewModel: PhotoMemoViewModel by viewModels()
     private lateinit var fragmentPhotoMemoBinding: FragmentPhotoMemoBinding
     private lateinit var mainActivity: MainActivity
-    private val userIdx = Firebase.auth.uid!!
     private var clientIdx = 1L
+    @Inject lateinit var photoMemoRepository:PhotoMemoRepository
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,8 +45,6 @@ class PhotoMemoFragment : Fragment() {
         mainActivity = activity as MainActivity
 
         clientIdx = arguments?.getLong("clientIdx")?:1L
-        photoMemoViewModel = ViewModelProvider(this)[PhotoMemoViewModel::class.java]
-
         photoMemoViewModel.run{
             photoMemoList.observe(viewLifecycleOwner){
                 fragmentPhotoMemoBinding.photoMemoRecyclerView.adapter?.notifyDataSetChanged()
@@ -50,7 +52,7 @@ class PhotoMemoFragment : Fragment() {
         }
 
         fragmentPhotoMemoBinding.run{
-            photoMemoViewModel.getPhotoMemoList(userIdx, clientIdx)
+            photoMemoViewModel.getPhotoMemoList(clientIdx)
             photoMemoToolbar.run{
                 setNavigationOnClickListener {
                     mainActivity.removeFragment(MainActivity.PHOTO_MEMO_FRAGMENT)
@@ -117,7 +119,7 @@ class PhotoMemoFragment : Fragment() {
                         mainActivity.replaceFragment(MainActivity.PHOTO_DETAIL_FRAGMENT, true, newBundle)
                     }
                     linearLayoutHorizontal.addView(imageView)
-                    PhotoMemoRepository.getPhotoMemoImgUrl(userIdx, item.srcArr[i]){url ->
+                    photoMemoRepository.getPhotoMemoImgUrl(item.srcArr[i]){url ->
                         Glide.with(imageView)
                             .load(url)
                             .into(imageView)
