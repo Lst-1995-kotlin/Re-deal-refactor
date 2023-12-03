@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/arrow_back_ios_24px"
-        app:title="메모 전체 보기"
+        app:title="@string/memo_toolbar_title"
         app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"/>
 
     <com.google.android.material.divider.MaterialDivider
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/nanumsquareneo_bold"
-            android:text="포토 메모"
+            android:text="@string/memo_tab_item_name_photo"
             android:textAlignment="center"
             android:textColor="@color/primary10"
             android:textSize="16sp" />
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/nanumsquareneo_bold"
-            android:text="음성 메모"
+            android:text="@string/memo_tab_item_name_voice"
             android:textAlignment="center"
             android:textColor="@color/primary80"
             android:textSize="16sp" />

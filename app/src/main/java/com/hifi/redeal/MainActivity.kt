@@ -51,12 +51,14 @@ import com.hifi.redeal.schedule.vm.ScheduleVM
 import com.hifi.redeal.transaction.TransactionFragment
 import com.skt.tmap.TMapTapi
 import com.skt.tmap.TMapTapi.OnAuthenticationListenerCallback
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import kotlin.concurrent.thread
 
-class MainActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class MainActivity: AppCompatActivity() {
 
     lateinit var activityMainBinding: ActivityMainBinding
     lateinit var scheduleVM: ScheduleVM

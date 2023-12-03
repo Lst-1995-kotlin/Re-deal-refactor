@@ -7,16 +7,21 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.hifi.redeal.memo.model.RecordMemoData
 import com.hifi.redeal.memo.repository.RecordMemoRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.io.File
+import javax.inject.Inject
 
-class RecordMemoViewModel : ViewModel() {
+@HiltViewModel
+class RecordMemoViewModel @Inject constructor(
+    private val recordMemoRepository: RecordMemoRepository
+) : ViewModel() {
     val recordMemoList = MutableLiveData<List<RecordMemoData>>()
 
     init{
         recordMemoList.value = listOf<RecordMemoData>()
     }
-    fun getRecordMemoList(userIdx:String, clientIdx:Long, mainContext:Context){
-        RecordMemoRepository.getRecordMemoAll(userIdx, clientIdx){ documentSnapshot ->
+    fun getRecordMemoList(clientIdx:Long, mainContext:Context){
+        recordMemoRepository.getRecordMemoAll(clientIdx){ documentSnapshot ->
             val recordMemoData = mutableListOf<RecordMemoData>()
             for(item in documentSnapshot){
                 val context = item.get("recordMemoContext") as String

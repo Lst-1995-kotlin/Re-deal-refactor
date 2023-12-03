@@ -1,4 +1,4 @@
-package com.hifi.redeal.memo.adapter
+package com.hifi.redeal.memo.adapters
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,17 +13,20 @@ import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.RowFooterAccountListBinding
 import com.hifi.redeal.databinding.RowUserPhotoMemoBinding
-import com.hifi.redeal.memo.model.UserPhotoMemoData
+import com.hifi.redeal.memo.model.PhotoMemoData
 import com.hifi.redeal.memo.repository.MemoRepository
+import com.hifi.redeal.memo.repository.PhotoMemoRepository
 import com.hifi.redeal.memo.utils.dpToPx
 import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.MemoViewModel
 import java.text.SimpleDateFormat
+import javax.inject.Inject
 
-class UserPhotoMemoListAdapter(
-    val mainActivity: MainActivity,
-    val memoViewModel: MemoViewModel
-): ListAdapter<UserPhotoMemoData, RecyclerView.ViewHolder>(diffUtil){
+class UserPhotoMemoListAdapter @Inject constructor(
+    private val mainActivity: MainActivity,
+    private val memoViewModel: MemoViewModel,
+    private val memoRepository: MemoRepository
+): ListAdapter<PhotoMemoData, RecyclerView.ViewHolder>(diffUtil){
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     val drawableClientStateArr = arrayOf(
@@ -32,12 +35,12 @@ class UserPhotoMemoListAdapter(
         R.drawable.circle_big_24px_primary80
     )
     companion object {
-        val diffUtil = object : DiffUtil.ItemCallback<UserPhotoMemoData>() {
-            override fun areItemsTheSame(oldItem: UserPhotoMemoData, newItem: UserPhotoMemoData): Boolean {
+        val diffUtil = object : DiffUtil.ItemCallback<PhotoMemoData>() {
+            override fun areItemsTheSame(oldItem: PhotoMemoData, newItem: PhotoMemoData): Boolean {
                 return oldItem.clientIdx == newItem.clientIdx
             }
 
-            override fun areContentsTheSame(oldItem: UserPhotoMemoData, newItem: UserPhotoMemoData): Boolean {
+            override fun areContentsTheSame(oldItem: PhotoMemoData, newItem: PhotoMemoData): Boolean {
                 return oldItem == newItem
             }
         }
@@ -52,7 +55,7 @@ class UserPhotoMemoListAdapter(
         private val userPhotoMemoEnterClientDetailBtn = rowUserPhotoMemoBinding.userPhotoMemoEnterClientDetailBtn
         private val userPhotoMemoClientName = rowUserPhotoMemoBinding.userPhotoMemoClientName
         private val userPhotoMemoClientManagerName = rowUserPhotoMemoBinding.userPhotoMemoClientManagerName
-        fun bindItem(item: UserPhotoMemoData){
+        fun bindItem(item: PhotoMemoData){
             userPhotoDateTextView.text = intervalBetweenDateText(dateFormat.format(item.date.toDate()))
             userPhotoMemoTextView.text = item.context.ifEmpty { "메모를 등록하지 않았어요" }
 
@@ -63,7 +66,7 @@ class UserPhotoMemoListAdapter(
                 newBundle.putLong("clientIdx", item.clientIdx)
                 mainActivity.replaceFragment(MainActivity.ACCOUNT_DETAIL_FRAGMENT, true, newBundle)
             }
-            MemoRepository.getUserMemoClientInfo(mainActivity.uid, item.clientIdx){ documentSnapshot ->
+            memoRepository.getUserMemoClientInfo(item.clientIdx){ documentSnapshot ->
                 userPhotoMemoClientName.text = documentSnapshot.get("clientName") as String
                 userPhotoMemoClientManagerName.text = documentSnapshot.get("clientManagerName") as String
                 val clientState = documentSnapshot.get("clientState") as Long
@@ -109,7 +112,7 @@ class UserPhotoMemoListAdapter(
                     mainActivity.replaceFragment(MainActivity.PHOTO_DETAIL_FRAGMENT, true, newBundle)
                 }
                 linearLayoutHorizontal.addView(imageView)
-                MemoRepository.getUserPhotoMemoImgUrl(mainActivity.uid, item.srcArr[i]){ url ->
+                memoRepository.getUserPhotoMemoImgUrl(item.srcArr[i]){ url ->
                     Glide.with(imageView)
                         .load(url)
                         .into(imageView)

@@ -1,6 +1,5 @@
-package com.hifi.redeal.memo.adapter
+package com.hifi.redeal.memo.adapters
 
-import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
@@ -23,10 +22,12 @@ import com.hifi.redeal.memo.utils.getTotalDuration
 import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.MemoViewModel
 import java.text.SimpleDateFormat
+import javax.inject.Inject
 
-class UserRecordMemoListAdapter(
-    val mainActivity: MainActivity,
-    val memoViewModel: MemoViewModel
+class UserRecordMemoListAdapter @Inject constructor(
+    private val mainActivity: MainActivity,
+    private val memoViewModel: MemoViewModel,
+    private val memoRepository: MemoRepository
 ): ListAdapter<UserRecordMemoData, RecyclerView.ViewHolder>(diffUtil){
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -100,7 +101,7 @@ class UserRecordMemoListAdapter(
                 newBundle.putLong("clientIdx", item.clientIdx)
                 mainActivity.replaceFragment(MainActivity.ACCOUNT_DETAIL_FRAGMENT, true, newBundle)
             }
-            MemoRepository.getUserMemoClientInfo(mainActivity.uid, item.clientIdx){ documentSnapshot ->
+            memoRepository.getUserMemoClientInfo(item.clientIdx){ documentSnapshot ->
                 userRecordMemoClientName.text = documentSnapshot.get("clientName") as String
                 userRecordMemoClientManagerName.text = documentSnapshot.get("clientManagerName") as String
                 val clientState = documentSnapshot.get("clientState") as Long
