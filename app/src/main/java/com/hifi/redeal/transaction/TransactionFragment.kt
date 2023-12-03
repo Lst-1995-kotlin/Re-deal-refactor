@@ -9,16 +9,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentTransactionBinding
 import com.hifi.redeal.transaction.adapter.TransactionAdapter
 import com.hifi.redeal.transaction.model.Transaction
 
 class TransactionFragment : Fragment() {
 
-    lateinit var fragmentTransactionBinding: FragmentTransactionBinding
-    lateinit var mainActivity: MainActivity
-    lateinit var transactionVM: TransactionViewModel
+    private lateinit var fragmentTransactionBinding: FragmentTransactionBinding
 
     private val transactions = mutableListOf<Transaction>()
     private val transactionAdapter = TransactionAdapter(transactions)
@@ -27,31 +24,34 @@ class TransactionFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater)
-        mainActivity = activity as MainActivity
-
+        setTransactionView(inflater)
         setViewModel()
-
-        fragmentTransactionBinding.transactionRecyclerView.run {
-            adapter = transactionAdapter
-            layoutManager = LinearLayoutManager(context)
-        }
-
         return fragmentTransactionBinding.root
     }
 
+    private fun setTransactionView(inflater: LayoutInflater) {
+        fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater)
+        fragmentTransactionBinding.run {
+            transactionRecyclerView.run {
+                adapter = transactionAdapter
+                layoutManager = LinearLayoutManager(context)
+            }
+        }
+    }
+
     private fun setViewModel() {
-        transactionVM = ViewModelProvider(requireActivity())[TransactionViewModel::class.java]
+        val transactionVM = ViewModelProvider(requireActivity())[TransactionViewModel::class.java]
+        val uid = Firebase.auth.uid!!
 
         transactionVM.run {
             transactionList.observe(viewLifecycleOwner) {
-                it.sortedByDescending { it.date }.forEach { CustomTransaction ->
-                    transactionAdapter.addTransaction(Transaction(CustomTransaction))
+                it.sortedByDescending { it.date }.forEach { transactionData ->
+                    transactionAdapter.addTransaction(Transaction(transactionData))
                 }
             }
-            transactionVM.getAllTransactionData(Firebase.auth.uid!!)
-            transactionVM.getNextTransactionIdx(Firebase.auth.uid!!)
-            transactionVM.getUserAllClient(Firebase.auth.uid!!)
+            getAllTransactionData(uid)
+            getNextTransactionIdx(uid)
+            getUserAllClient(uid)
         }
     }
 }

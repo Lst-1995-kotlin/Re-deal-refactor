@@ -85,18 +85,13 @@ class TransactionRepository {
                 .addOnCompleteListener(callback)
         }
 
-        fun getAllTransactionData(
-            uid: String,
-            callback1: (Task<QuerySnapshot>) -> Unit,
-            callback2: (Task<QuerySnapshot>) -> Unit,
-        ) {
+        fun getAllTransactionData(uid: String, callback1: (Task<QuerySnapshot>) -> Unit) {
             val db = Firebase.firestore
             db.collection("userData")
                 .document(uid)
                 .collection("transactionData")
                 .get()
                 .addOnCompleteListener(callback1)
-                .addOnCompleteListener(callback2)
         }
     }
 }

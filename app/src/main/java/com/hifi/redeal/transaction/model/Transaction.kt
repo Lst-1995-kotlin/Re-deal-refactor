@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class Transaction(
-    private val transactionData: CustomTransactionData,
+    private val transactionData: ViewTransactionData,
 ) {
 
     private val numberFormat = NumberFormat.getNumberInstance(Locale.getDefault())

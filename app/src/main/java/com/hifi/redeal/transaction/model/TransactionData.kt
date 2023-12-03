@@ -2,7 +2,6 @@ package com.hifi.redeal.transaction.model
 
 import com.google.firebase.Timestamp
 
-
 data class TransactionData(
     val clientIdx: Long,
     val date: Timestamp,
@@ -15,7 +14,7 @@ data class TransactionData(
     val transactionName: String,
 )
 
-data class CustomTransactionData(
+data class ViewTransactionData(
     val clientIdx: Long,
     val date: Timestamp,
     @JvmField
@@ -25,7 +24,7 @@ data class CustomTransactionData(
     val transactionItemCount: Long,
     val transactionItemPrice: String,
     val transactionName: String,
-    var clientName: String?
+    val clientName: String,
 )
 
 data class ClientData(
@@ -53,5 +52,5 @@ data class ClientSimpleData(
     var clientName: String,
     var clientManagerName: String,
     var clientState: Long,
-    @JvmField var isBookmark: Boolean
+    @JvmField var isBookmark: Boolean,
 )
