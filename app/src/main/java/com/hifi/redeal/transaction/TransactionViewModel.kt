@@ -4,12 +4,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.hifi.redeal.transaction.model.ClientSimpleData
-import com.hifi.redeal.transaction.model.customTransactionData
+import com.hifi.redeal.transaction.model.ViewTransactionData
 
 class TransactionViewModel : ViewModel() {
 
-    var transactionList = MutableLiveData<MutableList<customTransactionData>>()
-    var tempTransactionList = mutableListOf<customTransactionData>()
+    var transactionList = MutableLiveData<MutableList<ViewTransactionData>>()
+    var tempTransactionList = mutableListOf<ViewTransactionData>()
 
     var clientSimpleDataListVM = MutableLiveData<MutableList<ClientSimpleData>>()
     var tempClientSimpleDataList = mutableListOf<ClientSimpleData>()
@@ -25,19 +25,38 @@ class TransactionViewModel : ViewModel() {
 
     fun getAllTransactionData(uid: String) {
         tempTransactionList.clear()
-        TransactionRepository.getAllTransactionData(uid, {
+        TransactionRepository.getAllTransactionData(uid) {
             for (c1 in it.result) {
+                getClientName(
+                    uid,
+                    c1["clientIdx"] as Long,
+                    c1["date"] as Timestamp,
+                    c1["isDeposit"] as Boolean,
+                    c1["transactionAmountReceived"] as String,
+                    c1["transactionIdx"] as Long,
+                    c1["transactionItemCount"] as Long,
+                    c1["transactionItemPrice"] as String,
+                    c1["transactionName"] as String,
+                )
+            }
+        }
+    }
 
-                val clientIdx = c1["clientIdx"] as Long
-                val date = c1["date"] as Timestamp
-                val isDeposit = c1["isDeposit"] as Boolean
-                val transactionAmountReceived = c1["transactionAmountReceived"] as String
-                val transactionIdx = c1["transactionIdx"] as Long
-                val transactionItemCount = c1["transactionItemCount"] as Long
-                val transactionItemPrice = c1["transactionItemPrice"] as String
-                val transactionName = c1["transactionName"] as String
-
-                val newTransactionData = customTransactionData(
+    private fun getClientName(
+        uid: String,
+        clientIdx: Long,
+        date: Timestamp,
+        isDeposit: Boolean,
+        transactionAmountReceived: String,
+        transactionIdx: Long,
+        transactionItemCount: Long,
+        transactionItemPrice: String,
+        transactionName: String,
+    ) {
+        TransactionRepository.getClientInfo(uid, clientIdx) {
+            for (c2 in it.result) {
+                val clientName = c2["clientName"] as String
+                val newTransactionData = ViewTransactionData(
                     clientIdx,
                     date,
                     isDeposit,
@@ -46,21 +65,12 @@ class TransactionViewModel : ViewModel() {
                     transactionItemCount,
                     transactionItemPrice,
                     transactionName,
-                    null
+                    clientName,
                 )
                 tempTransactionList.add(newTransactionData)
                 transactionList.postValue(tempTransactionList)
             }
-        }, {
-            tempTransactionList.forEach { TransactionData ->
-                TransactionRepository.getClientInfo(uid, TransactionData.clientIdx) {
-                    for (c2 in it.result) {
-                        TransactionData.clientName = c2["clientName"] as String
-                        transactionList.postValue(tempTransactionList)
-                    }
-                }
-            }
-        })
+        }
     }
 
     fun getUserAllClient(uid: String) {
@@ -72,7 +82,7 @@ class TransactionViewModel : ViewModel() {
                     c1["clientName"] as String,
                     c1["clientManagerName"] as String,
                     c1["clientState"] as Long,
-                    c1["isBookmark"] as Boolean
+                    c1["isBookmark"] as Boolean,
                 )
                 tempClientSimpleDataList.add(newClientData)
                 clientSimpleDataListVM.postValue(tempClientSimpleDataList)

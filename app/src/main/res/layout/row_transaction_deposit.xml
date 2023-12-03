@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="4dp"
+    android:transitionGroup="true">
 
     <LinearLayout
         android:id="@+id/linearLayout4"
@@ -31,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nanumsquareneo_regular"
-            android:text="거래처 명"
+            android:text="거래처 이름"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -59,6 +61,7 @@
                 android:id="@+id/depositTextView"
                 android:layout_width="46dp"
                 android:layout_height="match_parent"
+                android:fontFamily="@font/nanumsquareneo_regular"
                 android:gravity="center"
                 android:text="입금" />
 
@@ -66,11 +69,19 @@
                 android:id="@+id/depositPriceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginRight="12dp"
+                android:layout_marginRight="2dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:gravity="center_vertical|end"
                 android:textColor="@color/text10" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="12dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:text="원" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
