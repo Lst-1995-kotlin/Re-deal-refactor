@@ -24,7 +24,7 @@ class MemoViewModel @Inject constructor(
         userRecordMemoList.value = listOf<UserRecordMemoData>()
     }
     fun getUserPhotoMemoList(){
-        memoRepository.getUserPhotoMemoAll(){ querySnapshot ->
+        memoRepository.getUserPhotoMemoAll{ querySnapshot ->
             val photoMemoData = mutableListOf<PhotoMemoData>()
             for(document in querySnapshot){
                 val clientIdx = document.get("clientIdx") as Long
