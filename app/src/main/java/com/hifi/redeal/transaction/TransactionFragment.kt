@@ -24,13 +24,14 @@ class TransactionFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        setTransactionView(inflater)
+        fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater)
+
+        setTransactionView()
         setViewModel()
         return fragmentTransactionBinding.root
     }
 
-    private fun setTransactionView(inflater: LayoutInflater) {
-        fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater)
+    private fun setTransactionView() {
         fragmentTransactionBinding.run {
             transactionRecyclerView.run {
                 adapter = transactionAdapter
@@ -45,8 +46,10 @@ class TransactionFragment : Fragment() {
 
         transactionVM.run {
             transactionList.observe(viewLifecycleOwner) {
-                it.sortedByDescending { it.date }.forEach { transactionData ->
-                    transactionAdapter.addTransaction(Transaction(transactionData))
+                transactionAdapter.transactionsClear()
+                it.forEach { transaction ->
+                    transactionAdapter.addTransaction(transaction)
+                    transactionAdapter.sortTransaction(false)
                 }
             }
             getAllTransactionData(uid)

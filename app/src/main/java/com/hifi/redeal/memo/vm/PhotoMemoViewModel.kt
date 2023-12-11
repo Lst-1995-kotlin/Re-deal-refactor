@@ -10,17 +10,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PhotoMemoViewModel @Inject constructor(
-    private val photoMemoRepository: PhotoMemoRepository
-): ViewModel(){
+    private val photoMemoRepository: PhotoMemoRepository,
+) : ViewModel() {
     val photoMemoList = MutableLiveData<List<PhotoMemoData>>()
 
-    init{
+    init {
         photoMemoList.value = listOf<PhotoMemoData>()
     }
-    fun getPhotoMemoList(clientIdx:Long){
-        photoMemoRepository.getPhotoMemoAll(clientIdx){documentSnapshot ->
+
+    fun getPhotoMemoList(clientIdx: Long) {
+        photoMemoRepository.getPhotoMemoAll(clientIdx) { documentSnapshot ->
             val photoMemoData = mutableListOf<PhotoMemoData>()
-            for(item in documentSnapshot){
+            for (item in documentSnapshot) {
                 val context = item.get("photoMemoContext") as String
                 val date = item.get("photoMemoDate") as Timestamp
                 val srcArr = item.get("photoMemoSrcArr") as List<String>

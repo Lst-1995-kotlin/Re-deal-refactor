@@ -14,19 +14,6 @@ data class TransactionData(
     val transactionName: String,
 )
 
-data class ViewTransactionData(
-    val clientIdx: Long,
-    val date: Timestamp,
-    @JvmField
-    val isDeposit: Boolean,
-    val transactionAmountReceived: String,
-    val transactionIdx: Long,
-    val transactionItemCount: Long,
-    val transactionItemPrice: String,
-    val transactionName: String,
-    val clientName: String,
-)
-
 data class ClientData(
     var clientAddress: String? = null,
     var clientCeoPhone: String? = null,

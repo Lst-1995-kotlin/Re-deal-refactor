@@ -4,12 +4,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.hifi.redeal.transaction.model.ClientSimpleData
-import com.hifi.redeal.transaction.model.ViewTransactionData
+import com.hifi.redeal.transaction.model.Transaction
+import com.hifi.redeal.transaction.model.TransactionData
 
 class TransactionViewModel : ViewModel() {
 
-    var transactionList = MutableLiveData<MutableList<ViewTransactionData>>()
-    var tempTransactionList = mutableListOf<ViewTransactionData>()
+    var transactionList = MutableLiveData<MutableList<Transaction>>()
+    var tempTransactionList = mutableListOf<Transaction>()
 
     var clientSimpleDataListVM = MutableLiveData<MutableList<ClientSimpleData>>()
     var tempClientSimpleDataList = mutableListOf<ClientSimpleData>()
@@ -27,8 +28,7 @@ class TransactionViewModel : ViewModel() {
         tempTransactionList.clear()
         TransactionRepository.getAllTransactionData(uid) {
             for (c1 in it.result) {
-                getClientName(
-                    uid,
+                val transactionData = TransactionData(
                     c1["clientIdx"] as Long,
                     c1["date"] as Timestamp,
                     c1["isDeposit"] as Boolean,
@@ -38,36 +38,25 @@ class TransactionViewModel : ViewModel() {
                     c1["transactionItemPrice"] as String,
                     c1["transactionName"] as String,
                 )
+                val transaction = Transaction(transactionData)
+                tempTransactionList.add(transaction)
+                transactionList.postValue(tempTransactionList)
+                tempTransactionList.forEach { transaction ->
+                    getClientName(uid, transaction, transactionData.clientIdx)
+                }
             }
         }
     }
 
     private fun getClientName(
         uid: String,
+        transaction: Transaction,
         clientIdx: Long,
-        date: Timestamp,
-        isDeposit: Boolean,
-        transactionAmountReceived: String,
-        transactionIdx: Long,
-        transactionItemCount: Long,
-        transactionItemPrice: String,
-        transactionName: String,
     ) {
         TransactionRepository.getClientInfo(uid, clientIdx) {
-            for (c2 in it.result) {
-                val clientName = c2["clientName"] as String
-                val newTransactionData = ViewTransactionData(
-                    clientIdx,
-                    date,
-                    isDeposit,
-                    transactionAmountReceived,
-                    transactionIdx,
-                    transactionItemCount,
-                    transactionItemPrice,
-                    transactionName,
-                    clientName,
-                )
-                tempTransactionList.add(newTransactionData)
+            for (c1 in it.result) {
+                val clientName = c1["clientName"] as String
+                transaction.setTransactionClientName(clientName)
                 transactionList.postValue(tempTransactionList)
             }
         }

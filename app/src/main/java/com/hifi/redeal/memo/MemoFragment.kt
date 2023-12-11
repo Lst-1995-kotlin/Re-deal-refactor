@@ -24,35 +24,40 @@ class MemoFragment : Fragment() {
     private lateinit var fragmentMemoBinding: FragmentMemoBinding
     private lateinit var mainActivity: MainActivity
     private val memoViewModel: MemoViewModel by viewModels()
-    @Inject lateinit var memoRepository: MemoRepository
+
+    @Inject
+    lateinit var memoRepository: MemoRepository
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View? {
         fragmentMemoBinding = FragmentMemoBinding.inflate(inflater)
-       mainActivity = activity as MainActivity
+        mainActivity = activity as MainActivity
 
         val colorPrimary10 = ContextCompat.getColor(requireContext(), R.color.primary10)
         val colorPrimary80 = ContextCompat.getColor(requireContext(), R.color.primary80)
 
-        memoViewModel.run{
-            userPhotoMemoList.observe(viewLifecycleOwner){
+        memoViewModel.run {
+            userPhotoMemoList.observe(viewLifecycleOwner) {
                 fragmentMemoBinding.userPhotoMemoRecyclerView.adapter?.notifyDataSetChanged()
             }
-            userRecordMemoList.observe(viewLifecycleOwner){
+            userRecordMemoList.observe(viewLifecycleOwner) {
                 fragmentMemoBinding.userRecordMemoRecyclerView.adapter?.notifyDataSetChanged()
             }
         }
 
-        val userPhotoMemoListAdapter = UserPhotoMemoListAdapter(mainActivity, memoViewModel, memoRepository)
-        val userRecordMemoListAdapter = UserRecordMemoListAdapter(mainActivity, memoViewModel, memoRepository)
+        val userPhotoMemoListAdapter =
+            UserPhotoMemoListAdapter(mainActivity, memoViewModel, memoRepository)
+        val userRecordMemoListAdapter =
+            UserRecordMemoListAdapter(mainActivity, memoViewModel, memoRepository)
 
-        fragmentMemoBinding.run{
+        fragmentMemoBinding.run {
             memoViewModel.getUserPhotoMemoList()
             memoViewModel.getUserRecordMemoList(mainActivity)
             memoViewSwitcher.displayedChild = 0
-            memoToolbar.run{
+            memoToolbar.run {
                 setNavigationOnClickListener {
                     UserRecordMemoListAdapter.resetAudio()
                     mainActivity.removeFragment(MainActivity.MEMO_FRAGMENT)
@@ -69,15 +74,25 @@ class MemoFragment : Fragment() {
                 recordMemoTabItem.setTextColor(colorPrimary10)
                 memoViewSwitcher.displayedChild = 1
             }
-            userPhotoMemoRecyclerView.run{
+            userPhotoMemoRecyclerView.run {
                 adapter = userPhotoMemoListAdapter
                 layoutManager = LinearLayoutManager(context)
-                addItemDecoration(DividerItemDecoration(mainActivity, DividerItemDecoration.VERTICAL))
+                addItemDecoration(
+                    DividerItemDecoration(
+                        mainActivity,
+                        DividerItemDecoration.VERTICAL,
+                    ),
+                )
             }
-            userRecordMemoRecyclerView.run{
+            userRecordMemoRecyclerView.run {
                 adapter = userRecordMemoListAdapter
                 layoutManager = LinearLayoutManager(context)
-                addItemDecoration(DividerItemDecoration(mainActivity, DividerItemDecoration.VERTICAL))
+                addItemDecoration(
+                    DividerItemDecoration(
+                        mainActivity,
+                        DividerItemDecoration.VERTICAL,
+                    ),
+                )
             }
         }
         return fragmentMemoBinding.root

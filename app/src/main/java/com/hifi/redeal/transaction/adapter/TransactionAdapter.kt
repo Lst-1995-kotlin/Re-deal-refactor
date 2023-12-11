@@ -64,6 +64,19 @@ class TransactionAdapter(
         notifyDataSetChanged()
     }
 
+    fun transactionsClear() {
+        transactions.clear()
+    }
+
+    fun sortTransaction(sortValue: Boolean) {
+        if (sortValue) {
+            transactions.sortBy { it.getTransactionDate() }
+            return notifyDataSetChanged()
+        }
+        transactions.sortByDescending { it.getTransactionDate() }
+        notifyDataSetChanged()
+    }
+
     inner class DepositHolder(private val rowTransactionDepositBinding: RowTransactionDepositBinding) :
         RecyclerView.ViewHolder(rowTransactionDepositBinding.root) {
         fun bind(transaction: Transaction) {
