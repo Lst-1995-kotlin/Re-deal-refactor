@@ -6,8 +6,13 @@ import com.google.firebase.Timestamp
 import com.hifi.redeal.transaction.model.ClientSimpleData
 import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.model.TransactionData
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class TransactionViewModel : ViewModel() {
+@HiltViewModel
+class TransactionViewModel @Inject constructor(
+    private val transactionRepository: TransactionRepository,
+) : ViewModel() {
 
     var transactionList = MutableLiveData<MutableList<Transaction>>()
     var tempTransactionList = mutableListOf<Transaction>()
@@ -16,17 +21,17 @@ class TransactionViewModel : ViewModel() {
     var tempClientSimpleDataList = mutableListOf<ClientSimpleData>()
 
     var nextTransactionIdx = 0L
-    fun getNextTransactionIdx(uid: String) {
-        TransactionRepository.getNextTransactionIdx(uid) {
+    fun getNextTransactionIdx() {
+        transactionRepository.getNextTransactionIdx {
             for (c1 in it.result) {
                 nextTransactionIdx = c1["transactionIdx"] as Long + 1L
             }
         }
     }
 
-    fun getAllTransactionData(uid: String) {
+    fun getAllTransactionData() {
         tempTransactionList.clear()
-        TransactionRepository.getAllTransactionData(uid) {
+        transactionRepository.getAllTransactionData {
             for (c1 in it.result) {
                 val transactionData = TransactionData(
                     c1["clientIdx"] as Long,
@@ -41,30 +46,26 @@ class TransactionViewModel : ViewModel() {
                 val transaction = Transaction(transactionData)
                 tempTransactionList.add(transaction)
                 transactionList.postValue(tempTransactionList)
-                tempTransactionList.forEach { transaction ->
-                    getClientName(uid, transaction, transactionData.clientIdx)
+                getClientName()
+            }
+        }
+    }
+
+    private fun getClientName() {
+        tempTransactionList.forEach { transaction ->
+            transactionRepository.getClientInfo(transaction.getTransactionClientIdx()) {
+                for (c1 in it.result) {
+                    val clientName = c1["clientName"] as String
+                    transaction.setTransactionClientName(clientName)
+                    transactionList.postValue(tempTransactionList)
                 }
             }
         }
     }
 
-    private fun getClientName(
-        uid: String,
-        transaction: Transaction,
-        clientIdx: Long,
-    ) {
-        TransactionRepository.getClientInfo(uid, clientIdx) {
-            for (c1 in it.result) {
-                val clientName = c1["clientName"] as String
-                transaction.setTransactionClientName(clientName)
-                transactionList.postValue(tempTransactionList)
-            }
-        }
-    }
-
-    fun getUserAllClient(uid: String) {
+    fun getUserAllClient() {
         tempClientSimpleDataList.clear()
-        TransactionRepository.getUserAllClient(uid) {
+        transactionRepository.getUserAllClient() {
             for (c1 in it.result) {
                 val newClientData = ClientSimpleData(
                     c1["clientIdx"] as Long,

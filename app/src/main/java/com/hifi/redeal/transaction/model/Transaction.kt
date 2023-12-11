@@ -26,13 +26,15 @@ class Transaction(
 
     fun getTransactionDate() = transactionData.date
 
-    fun getTextViewValue(date: TextView, clientName: TextView, price: TextView) {
+    fun getTransactionClientIdx() = transactionData.clientIdx
+
+    fun setTextViewValue(date: TextView, clientName: TextView, price: TextView) {
         date.text = dateFormat.format(transactionData.date.toDate())
         clientName.text = transactionClientName
         price.text = numberFormat.format(transactionData.transactionAmountReceived.toLong())
     }
 
-    fun getTextViewValue(
+    fun setTextViewValue(
         date: TextView,
         clientName: TextView,
         productName: TextView,
