@@ -1,8 +1,9 @@
-package com.hifi.redeal.transaction
+package com.hifi.redeal.transaction.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
+import com.hifi.redeal.transaction.repository.TransactionRepository
 import com.hifi.redeal.transaction.model.ClientSimpleData
 import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.model.TransactionData
@@ -29,9 +30,9 @@ class TransactionViewModel @Inject constructor(
         }
     }
 
-    fun getAllTransactionData() {
+    fun getAllTransactionData(clientIdx: Long?) {
         tempTransactionList.clear()
-        transactionRepository.getAllTransactionData {
+        transactionRepository.getAllTransactionData(clientIdx) {
             for (c1 in it.result) {
                 val transactionData = TransactionData(
                     c1["clientIdx"] as Long,

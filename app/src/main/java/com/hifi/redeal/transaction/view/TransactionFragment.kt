@@ -1,4 +1,4 @@
-package com.hifi.redeal.transaction
+package com.hifi.redeal.transaction.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.databinding.FragmentTransactionBinding
 import com.hifi.redeal.transaction.adapter.TransactionAdapter
+import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,6 +37,10 @@ class TransactionFragment : Fragment() {
                 adapter = transactionAdapter
                 layoutManager = LinearLayoutManager(context)
             }
+
+            ImgBtnAddDeposit.setOnClickListener {
+
+            }
         }
     }
 
@@ -48,7 +53,7 @@ class TransactionFragment : Fragment() {
                     transactionAdapter.sortTransaction(false)
                 }
             }
-            getAllTransactionData()
+            getAllTransactionData(arguments?.getLong("clientIdx"))
             getNextTransactionIdx()
             getUserAllClient()
         }

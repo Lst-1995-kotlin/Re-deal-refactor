@@ -1,5 +1,6 @@
-package com.hifi.redeal.transaction
+package com.hifi.redeal.transaction.repository
 
+import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
@@ -85,8 +86,15 @@ class TransactionRepository @Inject constructor(
             .addOnCompleteListener(callback)
     }
 
-    fun getAllTransactionData(callback1: (Task<QuerySnapshot>) -> Unit) {
+    fun getAllTransactionData(clientIdx: Long?, callback1: (Task<QuerySnapshot>) -> Unit) {
+        if (clientIdx == null) {
+            dbTransactionRef
+                .get()
+                .addOnCompleteListener(callback1)
+            return
+        }
         dbTransactionRef
+            .whereEqualTo("clientIdx", clientIdx)
             .get()
             .addOnCompleteListener(callback1)
     }

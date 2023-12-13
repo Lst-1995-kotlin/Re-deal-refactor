@@ -76,7 +76,9 @@ class TransactionAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         notifyDataSetChanged()
     }
 
-    inner class DepositHolder(private val rowTransactionDepositBinding: RowTransactionDepositBinding) :
+    inner class DepositHolder(
+        private val rowTransactionDepositBinding: RowTransactionDepositBinding,
+    ) :
         RecyclerView.ViewHolder(rowTransactionDepositBinding.root) {
         fun bind(transaction: Transaction) {
             transaction.setTextViewValue(
@@ -87,7 +89,9 @@ class TransactionAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    inner class WithdrawalHolder(private val rowTransactionWithdrawalBinding: RowTransactionWithdrawalBinding) :
+    inner class WithdrawalHolder(
+        private val rowTransactionWithdrawalBinding: RowTransactionWithdrawalBinding,
+    ) :
         RecyclerView.ViewHolder(rowTransactionWithdrawalBinding.root) {
         fun bind(transaction: Transaction) {
             transaction.setTextViewValue(
