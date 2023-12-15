@@ -24,8 +24,6 @@ class TransactionFragment : Fragment() {
     @Inject
     lateinit var transactionAdapter: TransactionAdapter
 
-    @Inject
-    lateinit var transactionDepositDialog: TransactionAddDialog
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,11 +45,11 @@ class TransactionFragment : Fragment() {
             }
 
             ImgBtnAddDeposit.setOnClickListener {
-                transactionDepositDialog.show(DEPOSIT_TRANSACTION)
+                //transactionDepositDialog.show(DEPOSIT_TRANSACTION)
             }
 
             ImgBtnAddTransaction.setOnClickListener {
-                transactionDepositDialog.show(WITHDRAWAL_TRANSACTION)
+                //transactionDepositDialog.show(WITHDRAWAL_TRANSACTION)
             }
         }
     }
@@ -66,6 +64,7 @@ class TransactionFragment : Fragment() {
                 }
             }
             getAllTransactionData(arguments?.getLong("clientIdx"))
+            getUserAllClient()
         }
     }
 }
