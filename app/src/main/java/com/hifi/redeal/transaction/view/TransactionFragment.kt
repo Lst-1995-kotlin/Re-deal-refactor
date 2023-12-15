@@ -61,7 +61,7 @@ class TransactionFragment : Fragment() {
             transactionList.observe(viewLifecycleOwner) {
                 transactionAdapter.transactionsClear()
                 it.forEach { transaction ->
-                    transactionAdapter.addTransaction(transaction)
+                    transactionAdapter.adapterAddTransaction(transaction)
                     transactionAdapter.sortTransaction(false)
                 }
             }

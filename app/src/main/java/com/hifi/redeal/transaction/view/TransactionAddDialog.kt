@@ -13,6 +13,7 @@ import javax.inject.Inject
 
 class TransactionAddDialog @Inject constructor(
     @ActivityContext private val context: Context,
+    private val selectTransactionClientDialog: SelectTransactionClientDialog
 ) {
     private val inflater = LayoutInflater.from(context)
     private val builder = AlertDialog.Builder(context)
@@ -30,7 +31,6 @@ class TransactionAddDialog @Inject constructor(
             }
         }
         dialog?.setOnDismissListener {
-            dialog?.setView(null)
             dialog = null
         }
         dialog?.show()
@@ -38,11 +38,21 @@ class TransactionAddDialog @Inject constructor(
 
     private fun getDepositBindingView(): View {
         val dialogAddDepositBinding = DialogAddDepositBinding.inflate(inflater)
+        dialogAddDepositBinding.run {
+            addSelectClientDepositBtn.setOnClickListener {
+                selectTransactionClientDialog.selectTransactionClientDialogShow()
+            }
+        }
         return dialogAddDepositBinding.root
     }
 
     private fun getAddTransactionBindingView(): View {
         val dialogAddTransactionBinding = DialogAddTransactionBinding.inflate(inflater)
+        dialogAddTransactionBinding.run {
+            selectTransactionClientBtn.setOnClickListener {
+                selectTransactionClientDialog.selectTransactionClientDialogShow()
+            }
+        }
         return dialogAddTransactionBinding.root
     }
 }

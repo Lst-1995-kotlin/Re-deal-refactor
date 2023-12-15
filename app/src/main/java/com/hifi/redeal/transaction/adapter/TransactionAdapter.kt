@@ -6,9 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.databinding.RowTransactionDepositBinding
 import com.hifi.redeal.databinding.RowTransactionWithdrawalBinding
 import com.hifi.redeal.transaction.model.Transaction
+import com.hifi.redeal.transaction.repository.TransactionRepository
 import javax.inject.Inject
 
-class TransactionAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TransactionAdapter @Inject constructor(
+    private val transactionRepository: TransactionRepository,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val transactions = mutableListOf<Transaction>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -59,7 +62,7 @@ class TransactionAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVi
         return transactions[position].getTransactionType()
     }
 
-    fun addTransaction(transaction: Transaction) {
+    fun adapterAddTransaction(transaction: Transaction) {
         transactions.add(transaction)
         notifyDataSetChanged()
     }
