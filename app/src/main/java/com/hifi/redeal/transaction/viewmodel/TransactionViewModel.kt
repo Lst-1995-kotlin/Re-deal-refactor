@@ -3,10 +3,10 @@ package com.hifi.redeal.transaction.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
-import com.hifi.redeal.transaction.repository.TransactionRepository
 import com.hifi.redeal.transaction.model.ClientSimpleData
 import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.model.TransactionData
+import com.hifi.redeal.transaction.repository.TransactionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -53,7 +53,8 @@ class TransactionViewModel @Inject constructor(
     }
 
     private fun getClientName() {
-        tempTransactionList.forEach { transaction ->
+        for (transaction in tempTransactionList) {
+            if (!transaction.isTransactionClientSetName()) continue
             transactionRepository.getClientInfo(transaction.getTransactionClientIdx()) {
                 for (c1 in it.result) {
                     val clientName = c1["clientName"] as String

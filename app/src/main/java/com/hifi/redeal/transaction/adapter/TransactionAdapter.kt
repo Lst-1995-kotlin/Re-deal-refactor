@@ -6,8 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.databinding.RowTransactionDepositBinding
 import com.hifi.redeal.databinding.RowTransactionWithdrawalBinding
 import com.hifi.redeal.transaction.model.Transaction
+import javax.inject.Inject
 
-class TransactionAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TransactionAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val transactions = mutableListOf<Transaction>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

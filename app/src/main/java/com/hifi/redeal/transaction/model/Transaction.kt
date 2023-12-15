@@ -15,6 +15,7 @@ class Transaction(
     private val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
     private var transactionClientName = ""
 
+    fun isTransactionClientSetName() = transactionClientName == ""
     fun setTransactionClientName(name: String) {
         transactionClientName = name
     }
