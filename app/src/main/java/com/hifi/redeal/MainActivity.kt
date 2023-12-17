@@ -1,6 +1,5 @@
 package com.hifi.redeal
 
-
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -48,7 +47,7 @@ import com.hifi.redeal.schedule.view.ScheduleSelectByClientFragment
 import com.hifi.redeal.schedule.view.UnvisitedScheduleFragment
 import com.hifi.redeal.schedule.view.VisitedScheduleFragment
 import com.hifi.redeal.schedule.vm.ScheduleVM
-import com.hifi.redeal.transaction.TransactionFragment
+import com.hifi.redeal.transaction.view.TransactionFragment
 import com.skt.tmap.TMapTapi
 import com.skt.tmap.TMapTapi.OnAuthenticationListenerCallback
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,15 +57,15 @@ import java.util.Date
 import kotlin.concurrent.thread
 
 @AndroidEntryPoint
-class MainActivity: AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     lateinit var activityMainBinding: ActivityMainBinding
     lateinit var scheduleVM: ScheduleVM
 
     lateinit var tMapTapi: TMapTapi
 
-    var newFragment:Fragment? = null
-    var oldFragment:Fragment? = null
+    var newFragment: Fragment? = null
+    var oldFragment: Fragment? = null
 
     var uid = ""
 
@@ -83,12 +82,12 @@ class MainActivity: AppCompatActivity() {
         Manifest.permission.INTERNET,
         Manifest.permission.RECORD_AUDIO,
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.CALL_PHONE
+        Manifest.permission.CALL_PHONE,
     )
     val NOTIFICATION_CHANNEL1_ID = "CHANNEL_REDEAL1"
     val NOTIFICATION_CHANNEL1_NAME = "리딜"
 
-    companion object{
+    companion object {
         val ACCOUNT_LIST_FRAGMENT = "AccountListFragment"
         val ACCOUNT_DETAIL_FRAGMENT = "AccountDetailFragment"
         val ACCOUNT_EDIT_FRAGMENT = "AccountEditFragment"
@@ -122,7 +121,7 @@ class MainActivity: AppCompatActivity() {
 
     val REQUEST_INTENTS = listOf(
         Intent.ACTION_GET_CONTENT,
-        MediaStore.Audio.Media.RECORD_SOUND_ACTION
+        MediaStore.Audio.Media.RECORD_SOUND_ACTION,
     )
 
 //    lateinit var navController: NavController
@@ -144,11 +143,11 @@ class MainActivity: AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if(intent.getLongExtra("notifyClientIdx", -1) != -1L){
+        if (intent.getLongExtra("notifyClientIdx", -1) != -1L) {
             Log.d("RedealNotify", "메인 액티비티 실행 : ${intent.getLongExtra("notifyClientIdx", -1)}")
             val bundle = Bundle()
             val notifyClientIdx = intent.getLongExtra("notifyClientIdx", -1)
-            if(notifyClientIdx != -1L){
+            if (notifyClientIdx != -1L) {
                 bundle.putLong("notifyClientIdx", notifyClientIdx)
                 replaceFragment(ACCOUNT_DETAIL_FRAGMENT, false, bundle)
             }
@@ -164,7 +163,7 @@ class MainActivity: AppCompatActivity() {
 
         tMapTapi = TMapTapi(this)
 
-        tMapTapi.setOnAuthenticationListenerCallback( object : OnAuthenticationListenerCallback {
+        tMapTapi.setOnAuthenticationListenerCallback(object : OnAuthenticationListenerCallback {
             override fun SKTMapApikeySucceed() {
                 Log.d("brudenell", "성공")
             }
@@ -181,21 +180,24 @@ class MainActivity: AppCompatActivity() {
         scheduleVM = ViewModelProvider(this)[ScheduleVM::class.java]
 
         activityMainBinding.run {
-
             bottomNavigationViewMain.setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.accountListFragment -> {
                         replaceFragment(ACCOUNT_LIST_FRAGMENT, true)
                     }
+
                     R.id.scheduleManageFragment -> {
                         replaceFragment(SCHEDULE_MANAGE_FRAGMENT, true)
                     }
+
                     R.id.mapFragment -> {
                         replaceFragment(MAP_FRAGMENT, true)
                     }
+
                     R.id.transactionFragment -> {
                         replaceFragment(TRANSACTION_FRAGMENT, true)
                     }
+
                     R.id.memoFragment -> {
                         replaceFragment(MEMO_FRAGMENT, true)
                     }
@@ -203,17 +205,20 @@ class MainActivity: AppCompatActivity() {
                 true
             }
         }
-        //replaceFragment(MAP_FRAGMENT,false,null)
+        // replaceFragment(MAP_FRAGMENT,false,null)
 
         supportFragmentManager.addOnBackStackChangedListener {
             for (fragment in supportFragmentManager.fragments) {
                 if (fragment.isVisible) {
-                    activityMainBinding.bottomNavigationViewMain.isVisible = (fragment is AccountListFragment
-                            || fragment is ScheduleManageFragment
-                            || fragment is UnvisitedScheduleFragment
-                            || fragment is VisitedScheduleFragment
-                            || fragment is MapFragment
-                            || fragment is MemoFragment)
+                    activityMainBinding.bottomNavigationViewMain.isVisible =
+                        (
+                            fragment is AccountListFragment ||
+                                fragment is ScheduleManageFragment ||
+                                fragment is UnvisitedScheduleFragment ||
+                                fragment is VisitedScheduleFragment ||
+                                fragment is MapFragment ||
+                                fragment is MemoFragment
+                            )
 
                     when (fragment) {
                         is AccountListFragment -> {
@@ -225,6 +230,7 @@ class MainActivity: AppCompatActivity() {
                                 }
                             }
                         }
+
                         is ScheduleManageFragment -> {
                             activityMainBinding.bottomNavigationViewMain.run {
                                 menu.forEach {
@@ -234,6 +240,7 @@ class MainActivity: AppCompatActivity() {
                                 }
                             }
                         }
+
                         is MapFragment -> {
                             activityMainBinding.bottomNavigationViewMain.run {
                                 menu.forEach {
@@ -243,6 +250,7 @@ class MainActivity: AppCompatActivity() {
                                 }
                             }
                         }
+
                         is TransactionFragment -> {
                             activityMainBinding.bottomNavigationViewMain.run {
                                 menu.forEach {
@@ -252,6 +260,7 @@ class MainActivity: AppCompatActivity() {
                                 }
                             }
                         }
+
                         is MemoFragment -> {
                             activityMainBinding.bottomNavigationViewMain.run {
                                 menu.forEach {
@@ -322,8 +331,7 @@ class MainActivity: AppCompatActivity() {
 //    }
 
     // 지정한 Fragment를 보여주는 메서드
-    fun replaceFragment(name:String, addToBackStack:Boolean, bundle:Bundle? = null){
-
+    fun replaceFragment(name: String, addToBackStack: Boolean, bundle: Bundle? = null) {
         SystemClock.sleep(200)
 
         // Fragment 교체 상태로 설정한다.
@@ -331,12 +339,12 @@ class MainActivity: AppCompatActivity() {
 
         // newFragment 에 Fragment가 들어있으면 oldFragment에 넣어준다.
 
-        if(newFragment != null){
+        if (newFragment != null) {
             oldFragment = newFragment
         }
 
         // 새로운 Fragment를 담을 변수
-        newFragment = when(name){
+        newFragment = when (name) {
             ACCOUNT_LIST_FRAGMENT -> AccountListFragment()
             ACCOUNT_DETAIL_FRAGMENT -> AccountDetailFragment()
             ACCOUNT_EDIT_FRAGMENT -> AccountEditFragment()
@@ -368,9 +376,9 @@ class MainActivity: AppCompatActivity() {
 
         newFragment?.arguments = bundle
 
-        if(newFragment != null) {
+        if (newFragment != null) {
             // 애니메이션 설정
-            if(oldFragment != null){
+            if (oldFragment != null) {
                 oldFragment?.exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
                 oldFragment?.reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
                 oldFragment?.enterTransition = null
@@ -396,7 +404,7 @@ class MainActivity: AppCompatActivity() {
     }
 
     // Fragment를 BackStack에서 제거한다.
-    fun removeFragment(name:String){
+    fun removeFragment(name: String) {
         supportFragmentManager.popBackStack(name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
@@ -418,7 +426,7 @@ class MainActivity: AppCompatActivity() {
     // Notification Channel을 등록하는 메서드
     // 첫 번째 : 코드에서 채널을 관리하기 위한 이름
     // 두 번째 : 사용자에게 노출 시킬 이름
-    fun addNotificationChannel(id: String, name:String) {
+    fun addNotificationChannel(id: String, name: String) {
         // 안드로이드 8.0 이상일 때만 동작하게 한다.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // 알림 메시지를 관리하는 객체를 추출한다.
@@ -440,7 +448,6 @@ class MainActivity: AppCompatActivity() {
                 // 채널을 등록한다.
                 notificationManager.createNotificationChannel(newChannel)
             }
-
         }
     }
 
@@ -463,7 +470,8 @@ class MainActivity: AppCompatActivity() {
 
         val diffYears = nowCalendar.get(Calendar.YEAR) - beforeCalendar.get(Calendar.YEAR)
         var diffMonths = diffYears * 12 + nowCalendar.get(Calendar.MONTH) - beforeCalendar.get(
-            Calendar.MONTH)
+            Calendar.MONTH,
+        )
         if (nowCalendar.get(Calendar.DAY_OF_MONTH) < beforeCalendar.get(Calendar.DAY_OF_MONTH)) {
             diffMonths--
         }
@@ -486,7 +494,7 @@ class MainActivity: AppCompatActivity() {
         if (diffSeconds > 0) {
             return "${diffSeconds}초 전"
         }
-        if(diffSeconds > -1){
+        if (diffSeconds > -1) {
             return "방금"
         }
         return ""
@@ -500,7 +508,4 @@ class MainActivity: AppCompatActivity() {
 
         return dateFormat.format(date)
     }
-
 }
-
-

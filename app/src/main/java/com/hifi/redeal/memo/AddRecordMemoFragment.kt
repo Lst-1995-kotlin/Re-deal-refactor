@@ -39,7 +39,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class AddRecordMemoFragment : Fragment() {
-    private lateinit var fragmentAddRecordMemoBinding : FragmentAddRecordMemoBinding
+    private lateinit var fragmentAddRecordMemoBinding: FragmentAddRecordMemoBinding
     private lateinit var mainActivity: MainActivity
 
     private val RECORD_VIEW = 0
@@ -63,10 +63,12 @@ class AddRecordMemoFragment : Fragment() {
     private lateinit var audioLauncher: ActivityResultLauncher<Intent>
     private val userIdx = Firebase.auth.uid!!
 
-    @Inject lateinit var recordMemoRepository: RecordMemoRepository
+    @Inject
+    lateinit var recordMemoRepository: RecordMemoRepository
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View? {
         fragmentAddRecordMemoBinding = FragmentAddRecordMemoBinding.inflate(inflater)
         mainActivity = activity as MainActivity
@@ -74,20 +76,27 @@ class AddRecordMemoFragment : Fragment() {
         clientIdx = arguments?.getLong("clientIdx")!!
         audioLauncher = recordingSetting()
         prepareRecorder()
-        fragmentAddRecordMemoBinding.run{
-            addRecordMemoToolbar.run{
+        fragmentAddRecordMemoBinding.run {
+            addRecordMemoToolbar.run {
                 setNavigationOnClickListener {
                     mainActivity.removeFragment(MainActivity.ADD_RECORD_MEMO_FRAGMENT)
                 }
             }
-            fragmentAddRecordMemoBinding.audioSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            fragmentAddRecordMemoBinding.audioSeekBar.setOnSeekBarChangeListener(object :
+                SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean,
+                ) {
                     if (fromUser) {
                         mediaPlayer?.seekTo(progress)
                     }
                 }
+
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {
                 }
+
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 }
             })
@@ -108,7 +117,7 @@ class AddRecordMemoFragment : Fragment() {
             }
             resetRecordBtn.setOnClickListener {
                 resetRecorder(true)
-                mStateViewSwitcher.displayedChild = RECORD_VIEW;
+                mStateViewSwitcher.displayedChild = RECORD_VIEW
             }
             audioPlayBtn.setOnClickListener {
                 playAudio()
@@ -116,20 +125,30 @@ class AddRecordMemoFragment : Fragment() {
             addRecordFileBtn.setOnClickListener {
                 clickRecordAudio(audioLauncher)
             }
-            addRecordMemoAddBtn.setOnClickListener{
+            addRecordMemoAddBtn.setOnClickListener {
                 val recordMemoContext = addRecordMemoTextInputEditText.text.toString()
                 addRecordMemoAddBtn.isEnabled = false
                 addRecordMemoAddBtn.setBackgroundResource(R.drawable.add_button_loading_container)
                 addRecordMemoAddBtn.text = "등록 중 ..."
-                addRecordMemoAddBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.primary20))
-                if(isUpload) {
+                addRecordMemoAddBtn.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.primary20,
+                    ),
+                )
+                if (isUpload) {
                     if (recordFileLocation.exists()) {
                         recordFileLocation.delete()
                     }
                     setRecordingLocation(audioFileName!!)
                     saveAudioFileFromUri(audioFileUri!!, recordFileLocation.getAbsolutePath())
                 }
-                recordMemoRepository.addRecordMemo(clientIdx,recordMemoContext,audioFileUri!!, audioFileName!!){
+                recordMemoRepository.addRecordMemo(
+                    clientIdx,
+                    recordMemoContext,
+                    audioFileUri!!,
+                    audioFileName!!,
+                ) {
                     mainActivity.removeFragment(MainActivity.ADD_RECORD_MEMO_FRAGMENT)
                 }
             }
@@ -145,7 +164,7 @@ class AddRecordMemoFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        fragmentAddRecordMemoBinding.mStateViewSwitcher.displayedChild = RECORD_VIEW;
+        fragmentAddRecordMemoBinding.mStateViewSwitcher.displayedChild = RECORD_VIEW
     }
 
     private fun stopAudioPlayback() {
@@ -189,7 +208,7 @@ class AddRecordMemoFragment : Fragment() {
         builder.setView(recordingNameEditor)
 
         builder.setTitle("파일 이름 입력")
-        builder.setNeutralButton("확인"){ dialog: DialogInterface, _: Int ->
+        builder.setNeutralButton("확인") { dialog: DialogInterface, _: Int ->
             val changedName = recordingNameEditor.text.toString()
             if (changedName.isNotEmpty()) {
                 val oldLocation = recordFileLocation
@@ -208,30 +227,32 @@ class AddRecordMemoFragment : Fragment() {
             }
         }
 
-        builder.setNegativeButton("취소"){ _: DialogInterface, _: Int ->
+        builder.setNegativeButton("취소") { _: DialogInterface, _: Int ->
             fragmentAddRecordMemoBinding.mStateViewSwitcher.displayedChild = RECORD_VIEW
             resetRecorder(true)
         }
         builder.create().show()
     }
+
     private fun setRecordingLocation(recordingName: String) {
         recordFileLocation = File(getRecordingStorageDirectory(), "$recordingName")
     }
 
-    private fun resetPlayer(){
+    private fun resetPlayer() {
         handler.removeCallbacksAndMessages(null)
         mediaPlayer?.release()
         mediaPlayer = null
         isAudioPlaying = false
         fragmentAddRecordMemoBinding.audioPlayBtn.setBackgroundResource(R.drawable.play_arrow_24px)
     }
+
     private fun resetRecorder(prepare: Boolean) {
         mediaRecorder.release()
         resetPlayer()
         isRecording = false
         fragmentAddRecordMemoBinding.addRecordFileTextView.text = "새로 파일을 등록하거나 녹음 하실 수 있어요"
         isUpload = false
-        if(!isSaveFile) {
+        if (!isSaveFile) {
             if (recordFileLocation.exists()) {
                 recordFileLocation.delete()
             }
@@ -242,8 +263,7 @@ class AddRecordMemoFragment : Fragment() {
         }
     }
 
-    private fun preparePlayer(){
-
+    private fun preparePlayer() {
         mediaPlayer = MediaPlayer.create(requireContext(), audioFileUri)
 
         fragmentAddRecordMemoBinding.audioSeekBar.max = mediaPlayer?.duration!!
@@ -261,17 +281,16 @@ class AddRecordMemoFragment : Fragment() {
         fragmentAddRecordMemoBinding.mStateViewSwitcher.displayedChild = PREVIEW_VIEW
     }
 
-
     private fun playAudio() {
-        if(isAudioPlaying){
+        if (isAudioPlaying) {
             handler.removeCallbacksAndMessages(null)
             mediaPlayer?.pause()
             isAudioPlaying = false
             fragmentAddRecordMemoBinding.audioPlayBtn.setBackgroundResource(R.drawable.play_arrow_24px)
-        }else {
+        } else {
             isAudioPlaying = true
             fragmentAddRecordMemoBinding.audioPlayBtn.setBackgroundResource(R.drawable.pause_24px)
-            if(mediaPlayer == null) {
+            if (mediaPlayer == null) {
                 mediaPlayer = MediaPlayer.create(requireContext(), audioFileUri)
             }
             mediaPlayer?.start()
@@ -282,12 +301,13 @@ class AddRecordMemoFragment : Fragment() {
         }
     }
 
-    private fun updateSeekBar() = object:Runnable {
+    private fun updateSeekBar() = object : Runnable {
         override fun run() {
             if (isAudioPlaying) {
                 val currentPosition = mediaPlayer?.currentPosition!!
                 fragmentAddRecordMemoBinding.audioSeekBar.progress = currentPosition
-                fragmentAddRecordMemoBinding.currentDurationTimeTextView.text = getCurrentDuration(currentPosition)
+                fragmentAddRecordMemoBinding.currentDurationTimeTextView.text =
+                    getCurrentDuration(currentPosition)
                 handler.postDelayed(this, 20)
             }
         }
@@ -295,13 +315,13 @@ class AddRecordMemoFragment : Fragment() {
 
     private fun recordingSetting(): ActivityResultLauncher<Intent> {
         val audioContract = ActivityResultContracts.StartActivityForResult()
-        val audioLauncher = registerForActivityResult(audioContract){
-            if(it.resultCode == AppCompatActivity.RESULT_OK){
-                if(it.data?.data != null){
+        val audioLauncher = registerForActivityResult(audioContract) {
+            if (it.resultCode == AppCompatActivity.RESULT_OK) {
+                if (it.data?.data != null) {
                     isUpload = true
                     isSaveFile = true
                     audioFileUri = it.data?.data
-                    audioFileName = getFileNameFromUri(it.data?.data!!)?:"이름 불러오기 실패"
+                    audioFileName = getFileNameFromUri(it.data?.data!!) ?: "이름 불러오기 실패"
                     preparePlayer()
                 }
             }
@@ -332,7 +352,7 @@ class AddRecordMemoFragment : Fragment() {
         return null
     }
 
-    private fun getRecordingStorageDirectory() : File{
+    private fun getRecordingStorageDirectory(): File {
         // val dir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC), "redeal")
         val dir = File(mainActivity.getExternalFilesDir(null), "recordings")
         dir.mkdirs()
@@ -343,7 +363,7 @@ class AddRecordMemoFragment : Fragment() {
         val inputStream = mainActivity.contentResolver.openInputStream(uri)
         val outputStream = FileOutputStream(outputFilePath)
 
-        inputStream?.use {input ->
+        inputStream?.use { input ->
             outputStream.use { output ->
                 input.copyTo(output)
             }

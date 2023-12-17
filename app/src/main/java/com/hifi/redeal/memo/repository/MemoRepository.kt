@@ -5,13 +5,11 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import com.hifi.redeal.MainActivity
-import com.hifi.redeal.memo.CurrentUserClass
-import dagger.hilt.android.AndroidEntryPoint
+import com.hifi.redeal.CurrentUserClass
 import javax.inject.Inject
 
 class MemoRepository @Inject constructor(
-    private val currentUser:CurrentUserClass
+    private val currentUser: CurrentUserClass
 ) {
     private val db = Firebase.firestore
     private val storage = FirebaseStorage.getInstance()

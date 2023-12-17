@@ -7,10 +7,9 @@ import com.hifi.redeal.databinding.RowTransactionDepositBinding
 import com.hifi.redeal.databinding.RowTransactionWithdrawalBinding
 import com.hifi.redeal.transaction.model.Transaction
 
-class TransactionAdapter(
-    private val transactions: MutableList<Transaction>,
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TransactionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private val transactions = mutableListOf<Transaction>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         when (viewType) {
@@ -59,15 +58,30 @@ class TransactionAdapter(
         return transactions[position].getTransactionType()
     }
 
-    fun addTransaction(transaction: Transaction) {
+    fun adapterAddTransaction(transaction: Transaction) {
         transactions.add(transaction)
         notifyDataSetChanged()
     }
 
-    inner class DepositHolder(private val rowTransactionDepositBinding: RowTransactionDepositBinding) :
+    fun transactionsClear() {
+        transactions.clear()
+    }
+
+    fun sortTransaction(sortValue: Boolean) {
+        if (sortValue) {
+            transactions.sortBy { it.getTransactionDate() }
+            return notifyDataSetChanged()
+        }
+        transactions.sortByDescending { it.getTransactionDate() }
+        notifyDataSetChanged()
+    }
+
+    inner class DepositHolder(
+        private val rowTransactionDepositBinding: RowTransactionDepositBinding,
+    ) :
         RecyclerView.ViewHolder(rowTransactionDepositBinding.root) {
         fun bind(transaction: Transaction) {
-            transaction.getTextViewValue(
+            transaction.setTextViewValue(
                 rowTransactionDepositBinding.textTransactionDate,
                 rowTransactionDepositBinding.transctionClientNameTextView,
                 rowTransactionDepositBinding.depositPriceTextView,
@@ -75,10 +89,12 @@ class TransactionAdapter(
         }
     }
 
-    inner class WithdrawalHolder(private val rowTransactionWithdrawalBinding: RowTransactionWithdrawalBinding) :
+    inner class WithdrawalHolder(
+        private val rowTransactionWithdrawalBinding: RowTransactionWithdrawalBinding,
+    ) :
         RecyclerView.ViewHolder(rowTransactionWithdrawalBinding.root) {
         fun bind(transaction: Transaction) {
-            transaction.getTextViewValue(
+            transaction.setTextViewValue(
                 rowTransactionWithdrawalBinding.textTransactionDate,
                 rowTransactionWithdrawalBinding.transctionClientNameTextView,
                 rowTransactionWithdrawalBinding.textProductName,

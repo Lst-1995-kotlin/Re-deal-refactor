@@ -112,7 +112,7 @@
         tools:layout="@layout/fragment_map_search_region" />
     <fragment
         android:id="@+id/transactionFragment"
-        android:name="com.hifi.redeal.transaction.TransactionFragment"
+        android:name="com.hifi.redeal.transaction.view.TransactionFragment"
         android:label="TransactionFragment"
         tools:layout="@layout/fragment_transaction"/>
 </navigation>

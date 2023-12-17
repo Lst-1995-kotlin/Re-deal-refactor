@@ -8,7 +8,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import com.hifi.redeal.memo.CurrentUserClass
+import com.hifi.redeal.CurrentUserClass
 import java.util.Date
 import javax.inject.Inject
 

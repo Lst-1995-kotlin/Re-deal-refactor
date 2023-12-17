@@ -14,19 +14,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MemoViewModel @Inject constructor(
-    private val memoRepository: MemoRepository
-) : ViewModel(){
+    private val memoRepository: MemoRepository,
+) : ViewModel() {
     val userPhotoMemoList = MutableLiveData<List<PhotoMemoData>>()
     val userRecordMemoList = MutableLiveData<List<UserRecordMemoData>>()
 
-    init{
+    init {
         userPhotoMemoList.value = listOf<PhotoMemoData>()
         userRecordMemoList.value = listOf<UserRecordMemoData>()
     }
-    fun getUserPhotoMemoList(){
-        memoRepository.getUserPhotoMemoAll{ querySnapshot ->
+    fun getUserPhotoMemoList() {
+        memoRepository.getUserPhotoMemoAll { querySnapshot ->
             val photoMemoData = mutableListOf<PhotoMemoData>()
-            for(document in querySnapshot){
+            for (document in querySnapshot) {
                 val clientIdx = document.get("clientIdx") as Long
                 val context = document.get("photoMemoContext") as String
                 val date = document.get("photoMemoDate") as Timestamp
@@ -39,10 +39,10 @@ class MemoViewModel @Inject constructor(
         }
     }
 
-    fun getUserRecordMemoList(mainContext: Context){
-        memoRepository.getUserRecordMemoAll(){ querySnapshot ->
+    fun getUserRecordMemoList(mainContext: Context) {
+        memoRepository.getUserRecordMemoAll() { querySnapshot ->
             val userRecordMemoData = mutableListOf<UserRecordMemoData>()
-            for(document in querySnapshot){
+            for (document in querySnapshot) {
                 val clientIdx = document.get("clientIdx") as Long
                 val context = document.get("recordMemoContext") as String
                 val date = document.get("recordMemoDate") as Timestamp
@@ -50,7 +50,7 @@ class MemoViewModel @Inject constructor(
                 val fileLocation = File(mainContext.getExternalFilesDir(null), "recordings")
                 val recordFileLocation = File(fileLocation, "$audioFilename")
                 var audioFileUri: Uri? = null
-                if(recordFileLocation.exists()){
+                if (recordFileLocation.exists()) {
                     audioFileUri = Uri.fromFile(recordFileLocation)
                     val newPhotoMemo = UserRecordMemoData(clientIdx, context, date, audioFileUri, audioFilename)
                     userRecordMemoData.add(newPhotoMemo)

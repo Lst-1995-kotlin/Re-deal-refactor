@@ -8,24 +8,34 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class Transaction(
-    private val transactionData: ViewTransactionData,
+    private val transactionData: TransactionData,
 ) {
 
     private val numberFormat = NumberFormat.getNumberInstance(Locale.getDefault())
     private val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
+    private var transactionClientName = ""
+
+    fun isTransactionClientSetName() = transactionClientName == ""
+    fun setTransactionClientName(name: String) {
+        transactionClientName = name
+    }
 
     fun getTransactionType(): Int {
         if (transactionData.isDeposit) return DEPOSIT_TRANSACTION
         return WITHDRAWAL_TRANSACTION
     }
 
-    fun getTextViewValue(date: TextView, clientName: TextView, price: TextView) {
+    fun getTransactionDate() = transactionData.date
+
+    fun getTransactionClientIdx() = transactionData.clientIdx
+
+    fun setTextViewValue(date: TextView, clientName: TextView, price: TextView) {
         date.text = dateFormat.format(transactionData.date.toDate())
-        clientName.text = transactionData.clientName
+        clientName.text = transactionClientName
         price.text = numberFormat.format(transactionData.transactionAmountReceived.toLong())
     }
 
-    fun getTextViewValue(
+    fun setTextViewValue(
         date: TextView,
         clientName: TextView,
         productName: TextView,
@@ -36,7 +46,7 @@ class Transaction(
         receivables: TextView,
     ) {
         date.text = dateFormat.format(transactionData.date.toDate())
-        clientName.text = transactionData.clientName
+        clientName.text = transactionClientName
         productName.text = transactionData.transactionName
         productCount.text = numberFormat.format(transactionData.transactionItemCount)
         unitPrice.text = numberFormat.format(transactionData.transactionItemPrice.toLong())

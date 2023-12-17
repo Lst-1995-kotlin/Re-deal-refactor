@@ -6,12 +6,12 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
-fun dpToPx(context:Context, dp: Int): Int {
+fun dpToPx(context: Context, dp: Int): Int {
     val scale = context.resources.displayMetrics.density
     return (dp * scale + 0.5f).toInt()
 }
 
-fun getTotalDuration(mediaPlayer:MediaPlayer?):String{
+fun getTotalDuration(mediaPlayer: MediaPlayer?): String {
     val totalDuration = mediaPlayer?.duration ?: 0
 
     val minutes = (totalDuration / 1000) / 60
@@ -20,7 +20,7 @@ fun getTotalDuration(mediaPlayer:MediaPlayer?):String{
     return String.format("%02d:%02d", minutes, seconds)
 }
 
-fun getCurrentDuration(currentPosition:Int):String{
+fun getCurrentDuration(currentPosition: Int): String {
     val minutes = (currentPosition / 1000) / 60
     val seconds = (currentPosition / 1000) % 60
 
@@ -42,7 +42,8 @@ fun intervalBetweenDateText(beforeDate: String): String {
 
     val diffYears = nowCalendar.get(Calendar.YEAR) - beforeCalendar.get(Calendar.YEAR)
     var diffMonths = diffYears * 12 + nowCalendar.get(Calendar.MONTH) - beforeCalendar.get(
-        Calendar.MONTH)
+        Calendar.MONTH,
+    )
     if (nowCalendar.get(Calendar.DAY_OF_MONTH) < beforeCalendar.get(Calendar.DAY_OF_MONTH)) {
         diffMonths--
     }
@@ -65,7 +66,7 @@ fun intervalBetweenDateText(beforeDate: String): String {
     if (diffSeconds > 0) {
         return "${diffSeconds}초 전"
     }
-    if(diffSeconds > -1){
+    if (diffSeconds > -1) {
         return "방금"
     }
     return ""
