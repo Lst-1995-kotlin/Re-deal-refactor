@@ -9,8 +9,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.databinding.FragmentTransactionBinding
 import com.hifi.redeal.transaction.adapter.TransactionAdapter
-import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.DEPOSIT_TRANSACTION
-import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.WITHDRAWAL_TRANSACTION
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -23,7 +21,6 @@ class TransactionFragment : Fragment() {
 
     @Inject
     lateinit var transactionAdapter: TransactionAdapter
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,11 +42,11 @@ class TransactionFragment : Fragment() {
             }
 
             ImgBtnAddDeposit.setOnClickListener {
-                //transactionDepositDialog.show(DEPOSIT_TRANSACTION)
+                // transactionDepositDialog.show(DEPOSIT_TRANSACTION)
             }
 
             ImgBtnAddTransaction.setOnClickListener {
-                //transactionDepositDialog.show(WITHDRAWAL_TRANSACTION)
+                // transactionDepositDialog.show(WITHDRAWAL_TRANSACTION)
             }
         }
     }

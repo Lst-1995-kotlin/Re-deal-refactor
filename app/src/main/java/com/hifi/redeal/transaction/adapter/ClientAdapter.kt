@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
 import com.hifi.redeal.transaction.model.ClientSimpleData
 
-class ClientAdapter() : RecyclerView.Adapter<ClientAdapter.TransactionClientHolder>() {
+class ClientAdapter : RecyclerView.Adapter<ClientAdapter.TransactionClientHolder>() {
     private val clients = emptyList<ClientSimpleData>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionClientHolder {
         val inflater = LayoutInflater.from(parent.context)

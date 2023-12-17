@@ -1,4 +1,4 @@
-package com.hifi.redeal.memo
+package com.hifi.redeal
 
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase

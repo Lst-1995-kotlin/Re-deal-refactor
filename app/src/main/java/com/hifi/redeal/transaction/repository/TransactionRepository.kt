@@ -7,7 +7,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import com.hifi.redeal.memo.CurrentUserClass
+import com.hifi.redeal.CurrentUserClass
 import com.hifi.redeal.transaction.model.ClientData
 import com.hifi.redeal.transaction.model.TransactionData
 import javax.inject.Inject
