@@ -11,16 +11,15 @@ import com.hifi.redeal.databinding.FragmentTransactionBinding
 import com.hifi.redeal.transaction.adapter.TransactionAdapter
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class TransactionFragment : Fragment() {
 
     private lateinit var fragmentTransactionBinding: FragmentTransactionBinding
     private val transactionViewModel: TransactionViewModel by viewModels()
+    private val transactionAdapter = TransactionAdapter()
 
-    @Inject
-    lateinit var transactionAdapter: TransactionAdapter
+    var depositDialog = TransactionDepositFragment()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,7 +41,7 @@ class TransactionFragment : Fragment() {
             }
 
             ImgBtnAddDeposit.setOnClickListener {
-                // transactionDepositDialog.show(DEPOSIT_TRANSACTION)
+                depositDialog.show(childFragmentManager, "temp")
             }
 
             ImgBtnAddTransaction.setOnClickListener {

@@ -21,15 +21,6 @@ class TransactionViewModel @Inject constructor(
     var clientSimpleDataListVM = MutableLiveData<MutableList<ClientSimpleData>>()
     var tempClientSimpleDataList = mutableListOf<ClientSimpleData>()
 
-    var nextTransactionIdx = 0L
-    fun getNextTransactionIdx() {
-        transactionRepository.getNextTransactionIdx {
-            for (c1 in it.result) {
-                nextTransactionIdx = c1["transactionIdx"] as Long + 1L
-            }
-        }
-    }
-
     fun getAllTransactionData(clientIdx: Long?) {
         tempTransactionList.clear()
         transactionRepository.getAllTransactionData(clientIdx) {
