@@ -17,7 +17,6 @@ import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentPhotoDetailBinding
 import com.hifi.redeal.databinding.RowDetailPhotoBinding
 import com.hifi.redeal.memo.repository.PhotoMemoRepository
-import com.hifi.redeal.memo.utils.SwipeGestureListener
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -45,29 +44,29 @@ class PhotoDetailFragment : Fragment() {
                 .load(url)
                 .into(fragmentPhotoDetailBinding.detailImageView)
         }
-        gestureDetector = GestureDetector(requireContext(), SwipeGestureListener {
-            if (it == SwipeGestureListener.Direction.LEFT) {
-                if(imgOrder + 1 >= imgSrcArr.size){
-                    return@SwipeGestureListener
-                }
-                imgOrder++
-            } else if(it == SwipeGestureListener.Direction.RIGHT){
-                if(imgOrder - 1 < 0){
-                    return@SwipeGestureListener
-                }
-                imgOrder--
-            }
-            photoMemoRepository.getPhotoMemoImgUrl(imgSrcArr[imgOrder]){url ->
-                Glide.with(fragmentPhotoDetailBinding.detailImageView)
-                    .load(url)
-                    .into(fragmentPhotoDetailBinding.detailImageView)
-            }
-            if(previousView != null){
-                previousView.background = null
-            }
-            previousView = fragmentPhotoDetailBinding.photoDetailRecyclerView[imgOrder]
-            fragmentPhotoDetailBinding.photoDetailRecyclerView[imgOrder].setBackgroundResource(R.drawable.row_photo_detail_border)
-        })
+//        gestureDetector = GestureDetector(requireContext(), SwipeGestureListener {
+//            if (it == SwipeGestureListener.Direction.LEFT) {
+//                if(imgOrder + 1 >= imgSrcArr.size){
+//                    return@SwipeGestureListener
+//                }
+//                imgOrder++
+//            } else if(it == SwipeGestureListener.Direction.RIGHT){
+//                if(imgOrder - 1 < 0){
+//                    return@SwipeGestureListener
+//                }
+//                imgOrder--
+//            }
+//            photoMemoRepository.getPhotoMemoImgUrl(imgSrcArr[imgOrder]){url ->
+//                Glide.with(fragmentPhotoDetailBinding.detailImageView)
+//                    .load(url)
+//                    .into(fragmentPhotoDetailBinding.detailImageView)
+//            }
+//            if(previousView != null){
+//                previousView.background = null
+//            }
+//            previousView = fragmentPhotoDetailBinding.photoDetailRecyclerView[imgOrder]
+//            fragmentPhotoDetailBinding.photoDetailRecyclerView[imgOrder].setBackgroundResource(R.drawable.row_photo_detail_border)
+//        })
 
         fragmentPhotoDetailBinding.run{
             photoDetailToolbar.run{
