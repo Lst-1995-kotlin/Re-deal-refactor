@@ -7,12 +7,12 @@ class SwipeGestureListener(private val onSwipe: (direction: Direction) -> Unit) 
     GestureDetector.SimpleOnGestureListener() {
 
     override fun onFling(
-        e1: MotionEvent,
+        e1: MotionEvent?,
         e2: MotionEvent,
         velocityX: Float,
         velocityY: Float
     ): Boolean {
-        if (e1.x < e2.x) {
+        if (e1!!.x < e2.x) {
             // 슬라이드 우측 방향
             onSwipe(Direction.RIGHT)
         } else {

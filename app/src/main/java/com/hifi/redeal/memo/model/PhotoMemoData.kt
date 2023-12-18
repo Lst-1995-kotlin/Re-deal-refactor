@@ -6,6 +6,6 @@ import javax.inject.Inject
 data class PhotoMemoData @Inject constructor(
     val context:String,
     val date: Timestamp,
-    val srcArr:List<String>,
+    val srcArr:List<Any>,
     val clientIdx:Long = -1,
 )

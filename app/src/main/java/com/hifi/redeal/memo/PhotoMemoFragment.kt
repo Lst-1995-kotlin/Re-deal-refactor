@@ -119,7 +119,7 @@ class PhotoMemoFragment : Fragment() {
                         mainActivity.replaceFragment(MainActivity.PHOTO_DETAIL_FRAGMENT, true, newBundle)
                     }
                     linearLayoutHorizontal.addView(imageView)
-                    photoMemoRepository.getPhotoMemoImgUrl(item.srcArr[i]){url ->
+                    photoMemoRepository.getPhotoMemoImgUrl(item.srcArr[i] as String){url ->
                         Glide.with(imageView)
                             .load(url)
                             .into(imageView)
