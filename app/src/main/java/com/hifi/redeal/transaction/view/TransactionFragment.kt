@@ -7,19 +7,23 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.hifi.redeal.MainActivity
+import com.hifi.redeal.MainActivity.Companion.TRANSACTION_DEPOSIT_FRAGMENT
 import com.hifi.redeal.databinding.FragmentTransactionBinding
 import com.hifi.redeal.transaction.adapter.TransactionAdapter
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TransactionFragment : Fragment() {
 
     private lateinit var fragmentTransactionBinding: FragmentTransactionBinding
     private val transactionViewModel: TransactionViewModel by viewModels()
-    private val transactionAdapter = TransactionAdapter()
+    private lateinit var mainActivity: MainActivity
 
-    var depositDialog = TransactionDepositFragment()
+    @Inject
+    lateinit var transactionAdapter: TransactionAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,6 +31,7 @@ class TransactionFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater)
+        mainActivity = activity as MainActivity
 
         setTransactionView()
         setViewModel()
@@ -41,7 +46,7 @@ class TransactionFragment : Fragment() {
             }
 
             ImgBtnAddDeposit.setOnClickListener {
-                depositDialog.show(childFragmentManager, "temp")
+                mainActivity.replaceFragment(TRANSACTION_DEPOSIT_FRAGMENT, true, null)
             }
 
             ImgBtnAddTransaction.setOnClickListener {
@@ -60,7 +65,6 @@ class TransactionFragment : Fragment() {
                 }
             }
             getAllTransactionData(arguments?.getLong("clientIdx"))
-            getUserAllClient()
         }
     }
 }
