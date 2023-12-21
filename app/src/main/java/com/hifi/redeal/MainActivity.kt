@@ -3,17 +3,20 @@ package com.hifi.redeal
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
+import android.os.SystemClock.sleep
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.forEach
 import androidx.core.view.isVisible
@@ -422,7 +425,7 @@ class MainActivity : AppCompatActivity() {
 
         val inputMethodManger = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         thread {
-            SystemClock.sleep(200)
+            sleep(200)
             inputMethodManger.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
         }
     }
@@ -446,7 +449,7 @@ class MainActivity : AppCompatActivity() {
                     // 키보드가 닫혀 있는 상태
                     if (isKeyboardOpen) {
                         // 키보드가 내려갈 때 포커스를 제거합니다.
-                        activityMainBinding.root.clearFocus()
+                        view.clearFocus()
                         isKeyboardOpen = false
                     }
                 }

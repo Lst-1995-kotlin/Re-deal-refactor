@@ -18,8 +18,7 @@ class TransactionViewModel @Inject constructor(
     var transactionList = MutableLiveData<MutableList<Transaction>>()
     var tempTransactionList = mutableListOf<Transaction>()
 
-    var clientSimpleDataListVM = MutableLiveData<MutableList<ClientSimpleData>>()
-    var tempClientSimpleDataList = mutableListOf<ClientSimpleData>()
+
 
     fun getAllTransactionData(clientIdx: Long?) {
         tempTransactionList.clear()
@@ -56,20 +55,5 @@ class TransactionViewModel @Inject constructor(
         }
     }
 
-    fun getUserAllClient() {
-        tempClientSimpleDataList.clear()
-        transactionRepository.getUserAllClient() {
-            for (c1 in it.result) {
-                val newClientData = ClientSimpleData(
-                    c1["clientIdx"] as Long,
-                    c1["clientName"] as String,
-                    c1["clientManagerName"] as String,
-                    c1["clientState"] as Long,
-                    c1["isBookmark"] as Boolean,
-                )
-                tempClientSimpleDataList.add(newClientData)
-                clientSimpleDataListVM.postValue(tempClientSimpleDataList)
-            }
-        }
-    }
+
 }

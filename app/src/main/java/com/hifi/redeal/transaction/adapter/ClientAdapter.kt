@@ -5,9 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
 import com.hifi.redeal.transaction.model.ClientSimpleData
+import com.hifi.redeal.transaction.repository.TransactionRepository
+import javax.inject.Inject
 
-class ClientAdapter : RecyclerView.Adapter<ClientAdapter.TransactionClientHolder>() {
-    private val clients = emptyList<ClientSimpleData>()
+class ClientAdapter @Inject constructor(
+    private val transactionRepository: TransactionRepository,
+) :
+    RecyclerView.Adapter<ClientAdapter.TransactionClientHolder>() {
+    private val clients = mutableListOf<ClientSimpleData>()
+    private var filterClients = listOf<ClientSimpleData>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionClientHolder {
         val inflater = LayoutInflater.from(parent.context)
         val transactionSelectClientItemBinding =
@@ -20,11 +26,39 @@ class ClientAdapter : RecyclerView.Adapter<ClientAdapter.TransactionClientHolder
     }
 
     override fun getItemCount(): Int {
-        return clients.size
+        return filterClients.size
     }
 
     override fun onBindViewHolder(holder: TransactionClientHolder, position: Int) {
-        holder.bind(clients[position])
+        holder.bind(filterClients[position])
+    }
+
+    fun clientFilterResult(value: String) {
+        filterClients =
+            clients.filter { it.clientName.contains(value) || it.clientManagerName.contains(value) }
+        notifyDataSetChanged()
+    }
+
+    fun getClient() {
+        transactionRepository.getUserAllClient {
+            for (c1 in it.result) {
+                addClient(
+                    ClientSimpleData(
+                        c1["clientIdx"] as Long,
+                        c1["clientName"] as String,
+                        c1["clientManagerName"] as String,
+                        c1["clientState"] as Long,
+                        c1["isBookmark"] as Boolean,
+                    ),
+                )
+            }
+        }
+    }
+
+    private fun addClient(csd: ClientSimpleData) {
+        clients.add(csd)
+        filterClients = clients
+        notifyDataSetChanged()
     }
 
     inner class TransactionClientHolder(
