@@ -1,8 +1,8 @@
 package com.hifi.redeal.transaction.model
 
 import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
-import com.hifi.redeal.transaction.util.ClientConfiguration.getClientBookmarkResource
-import com.hifi.redeal.transaction.util.ClientConfiguration.getClientStateResource
+import com.hifi.redeal.transaction.util.ClientConfiguration.Companion.getClientBookmarkResource
+import com.hifi.redeal.transaction.util.ClientConfiguration.Companion.getClientStateResource
 import javax.inject.Inject
 
 class Client @Inject constructor(
