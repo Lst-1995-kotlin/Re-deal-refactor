@@ -1,37 +1,34 @@
 package com.hifi.redeal.transaction.view
 
 import android.content.Context
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
-import androidx.appcompat.app.AlertDialog
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.databinding.DialogSelectTransactionClientBinding
 import com.hifi.redeal.transaction.adapter.ClientAdapter
-import dagger.hilt.android.qualifiers.ActivityContext
+import com.hifi.redeal.transaction.util.DialogConfiguration
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class SelectTransactionClientDialog @Inject constructor(
-    @ActivityContext private val context: Context,
     private val clientAdapter: ClientAdapter,
-) {
-    private val inflater = LayoutInflater.from(context)
-    private val dialogSelectTransactionClientDialog =
-        DialogSelectTransactionClientBinding.inflate(inflater)
-    private var builder = AlertDialog.Builder(context)
-    private var dialog = builder.create()
+) : DialogFragment() {
 
-    init {
-        bind()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        val dialogSelectTransactionClientDialog =
+            DialogSelectTransactionClientBinding.inflate(inflater)
         clientAdapter.getClient()
-        dialog.setView(dialogSelectTransactionClientDialog.root)
-    }
-
-    fun show() {
-        dialog.show()
-    }
-
-    private fun bind() {
         dialogSelectTransactionClientDialog.run {
             searchTransactionClientRecyclerView.adapter = clientAdapter
             searchTransactionClientRecyclerView.layoutManager = LinearLayoutManager(context)
@@ -47,5 +44,21 @@ class SelectTransactionClientDialog @Inject constructor(
                 }
             })
         }
+
+        return dialogSelectTransactionClientDialog.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        context?.dialogResize(this)
+    }
+
+    private fun Context.dialogResize(dialogFragment: DialogFragment) {
+        val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val rect = windowManager.currentWindowMetrics.bounds
+        val window = dialogFragment.dialog?.window
+        val x = (rect.width() * DialogConfiguration.DIALOG_WIDTH.size).toInt()
+        val y = (rect.height() * DialogConfiguration.DIALOG_HEIGHT.size).toInt()
+        window?.setLayout(x, y)
     }
 }

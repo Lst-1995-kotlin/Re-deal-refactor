@@ -37,7 +37,7 @@ class TransactionDepositFragment : Fragment() {
             }
 
             makeDepositBtnSelectClient.setOnClickListener {
-                selectTransactionClientDialog.show()
+                selectTransactionClientDialog.show(childFragmentManager, "test")
             }
 
             mainActivity.hideKeyboardAndClearFocus(addDepositPriceEditTextNumber)

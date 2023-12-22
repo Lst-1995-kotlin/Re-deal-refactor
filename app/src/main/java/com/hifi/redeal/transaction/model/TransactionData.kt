@@ -35,9 +35,9 @@ data class ClientData(
 )
 
 data class ClientSimpleData(
-    var clientIdx: Long,
-    var clientName: String,
-    var clientManagerName: String,
+    val clientIdx: Long,
+    val clientName: String,
+    val clientManagerName: String,
     var clientState: Long,
-    @JvmField var isBookmark: Boolean,
+    @JvmField val isBookmark: Boolean,
 )
