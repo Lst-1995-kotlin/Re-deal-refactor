@@ -2,6 +2,7 @@ package com.hifi.redeal.memo.components
 
 import android.app.Activity
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -17,8 +18,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -192,12 +197,32 @@ fun MyAppToolbar(
 fun PhotoMemoScreen(
     photoMemoViewModel: PhotoMemoViewModel,
     repository: PhotoMemoRepository,
-    mainActivity: MainActivity
+    mainActivity: MainActivity,
+    clientIdx: Long
 ) {
     val photoMemoDataList by photoMemoViewModel.photoMemoList.observeAsState()
 
     Scaffold(
         topBar = { MyAppToolbar(title = "포토 메모", mainActivity = mainActivity) },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    val newBundle = Bundle()
+                    newBundle.putLong("clientIdx", clientIdx)
+                    mainActivity.replaceFragment(
+                        MainActivity.ADD_PHOTO_MEMO_FRAGMENT,
+                        true,
+                        newBundle
+                    )
+                },
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = null
+                )
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End,
         containerColor = Color.White
     ) { padding ->
         photoMemoDataList?.let {
@@ -211,19 +236,3 @@ fun PhotoMemoScreen(
         }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun SearchBarPreview() {
-//    RedealTheme {
-//        PhotoMemoFragment()
-//    }
-//}
-
-private val favoriteCollectionsData = listOf(
-    R.drawable.empty_photo,
-    R.drawable.empty_photo,
-    R.drawable.empty_photo,
-    R.drawable.empty_photo,
-    R.drawable.empty_photo,
-)

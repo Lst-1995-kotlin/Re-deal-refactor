@@ -45,7 +45,8 @@ class PhotoMemoFragment : Fragment() {
                     PhotoMemoScreen(
                         photoMemoViewModel = photoMemoViewModel,
                         repository = photoMemoRepository,
-                        mainActivity = mainActivity)
+                        mainActivity = mainActivity,
+                        clientIdx = clientIdx)
                 }
             }
         }
