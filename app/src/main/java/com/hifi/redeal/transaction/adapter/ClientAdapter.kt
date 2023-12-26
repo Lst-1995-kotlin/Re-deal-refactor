@@ -6,13 +6,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
 import com.hifi.redeal.transaction.model.Client
 import com.hifi.redeal.transaction.model.ClientSimpleData
-import com.hifi.redeal.transaction.repository.TransactionRepository
-import javax.inject.Inject
+import com.hifi.redeal.transaction.repository.ClientRepository
+import com.hifi.redeal.transaction.util.ClientConfiguration
+import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 
-class ClientAdapter @Inject constructor(
-    private val transactionRepository: TransactionRepository,
+class ClientAdapter(
+    private val clientViewModel: ClientViewModel,
 ) :
     RecyclerView.Adapter<ClientAdapter.TransactionClientHolder>() {
+
     private val clients = mutableListOf<Client>()
     private var filterClients = listOf<Client>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionClientHolder {
@@ -39,26 +41,26 @@ class ClientAdapter @Inject constructor(
         notifyDataSetChanged()
     }
 
-    fun getClient() {
-        transactionRepository.getUserAllClient {
+    fun getClient(clientRepository: ClientRepository) {
+        clientRepository.getUserAllClient {
             for (c1 in it.result) {
-                addClient(
-                    Client(
-                        ClientSimpleData(
-                            c1["clientIdx"] as Long,
-                            c1["clientName"] as String,
-                            c1["clientManagerName"] as String,
-                            c1["clientState"] as Long,
-                            c1["isBookmark"] as Boolean,
-                        ),
-                    ),
+                val clientData = ClientSimpleData(
+                    c1["clientIdx"] as Long,
+                    c1["clientName"] as String,
+                    c1["clientManagerName"] as String,
+                    c1["clientState"] as Long,
+                    c1["isBookmark"] as Boolean,
                 )
+
+                if (clientData.clientState != ClientConfiguration.STATE_STOP.state) {
+                    addClient(Client(clientData))
+                }
             }
         }
     }
 
-    private fun addClient(csd: Client) {
-        clients.add(csd)
+    private fun addClient(client: Client) {
+        clients.add(client)
         filterClients = clients
         notifyDataSetChanged()
     }
@@ -68,6 +70,9 @@ class ClientAdapter @Inject constructor(
     ) : RecyclerView.ViewHolder(transactionSelectClientItemBinding.root) {
         fun bind(client: Client) {
             client.bind(transactionSelectClientItemBinding)
+            transactionSelectClientItemBinding.root.setOnClickListener {
+                clientViewModel.clickedClient(client)
+            }
         }
     }
 }

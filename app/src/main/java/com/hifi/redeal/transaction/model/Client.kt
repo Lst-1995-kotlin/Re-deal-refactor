@@ -3,9 +3,8 @@ package com.hifi.redeal.transaction.model
 import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
 import com.hifi.redeal.transaction.util.ClientConfiguration.Companion.getClientBookmarkResource
 import com.hifi.redeal.transaction.util.ClientConfiguration.Companion.getClientStateResource
-import javax.inject.Inject
 
-class Client @Inject constructor(
+class Client(
     private val clientSimpleData: ClientSimpleData,
 ) {
 
@@ -23,5 +22,15 @@ class Client @Inject constructor(
     }
 
     fun filter(value: String) =
-        (clientSimpleData.clientName.contains(value) || clientSimpleData.clientManagerName.contains(value))
+        (
+            clientSimpleData.clientName.contains(value) || clientSimpleData.clientManagerName.contains(
+                value,
+            )
+            )
+
+    fun getClientName() = "${clientSimpleData.clientName} ${clientSimpleData.clientManagerName}"
+
+    fun getClientState() = clientSimpleData.clientState
+
+    fun getClientBookmark() = clientSimpleData.isBookmark
 }

@@ -2,7 +2,7 @@ package com.hifi.redeal.transaction.util
 
 import com.hifi.redeal.R
 
-enum class ClientConfiguration(private val state: Long) {
+enum class ClientConfiguration(val state: Long) {
     STATE_TRADING(1L),
     STATE_TRY(2L),
     STATE_STOP(3L),

@@ -7,16 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.databinding.DialogSelectTransactionClientBinding
 import com.hifi.redeal.transaction.adapter.ClientAdapter
+import com.hifi.redeal.transaction.repository.ClientRepository
+import com.hifi.redeal.transaction.repository.TransactionRepository
 import com.hifi.redeal.transaction.util.DialogConfiguration.Companion.dialogResize
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 
-@AndroidEntryPoint
-class SelectTransactionClientDialog @Inject constructor(
-    private val clientAdapter: ClientAdapter,
+class SelectTransactionClientDialog(
+    private val clientViewModel: ClientViewModel,
+    private val clientRepository: ClientRepository
 ) : DialogFragment() {
 
     override fun onCreateView(
@@ -26,7 +29,10 @@ class SelectTransactionClientDialog @Inject constructor(
     ): View? {
         val dialogSelectTransactionClientDialog =
             DialogSelectTransactionClientBinding.inflate(inflater)
-        clientAdapter.getClient()
+
+        val clientAdapter = ClientAdapter(clientViewModel)
+        clientAdapter.getClient(clientRepository)
+
         dialogSelectTransactionClientDialog.run {
             searchTransactionClientRecyclerView.adapter = clientAdapter
             searchTransactionClientRecyclerView.layoutManager = LinearLayoutManager(context)

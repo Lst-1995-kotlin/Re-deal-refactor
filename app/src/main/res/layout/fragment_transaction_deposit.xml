@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:backgroundTintMode="multiply"
     android:orientation="vertical"
     android:theme="@style/Theme.ReDeal.ToolbarTheme"
     android:transitionGroup="true">
@@ -59,7 +58,8 @@
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_gravity="center_vertical"
-            android:visibility="gone" />
+            android:backgroundTintMode="multiply"
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/depositClientInfo"
@@ -67,6 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:fontFamily="@font/nanumsquareneo_bold"
+            android:singleLine="true"
             android:text="거래처를 선택해주세요."
             android:textColor="@color/black"
             android:textSize="16sp" />
@@ -76,7 +77,8 @@
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_gravity="center_vertical"
-            android:visibility="gone" />
+            android:backgroundTintMode="multiply"
+            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="match_parent"
