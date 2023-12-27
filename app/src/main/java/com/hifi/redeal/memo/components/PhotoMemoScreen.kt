@@ -57,6 +57,49 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun PhotoMemoToolbar(
+    title: String,
+    modifier: Modifier = Modifier,
+    mainActivity: MainActivity
+) {
+    Box {
+        TopAppBar(
+            title = {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                )
+            },
+            navigationIcon = {
+                IconButton(onClick = {
+                    mainActivity.removeFragment(MainActivity.PHOTO_MEMO_FRAGMENT)
+                }) {
+                    Icon(
+                        painter = painterResource(R.drawable.arrow_back_ios_24px),
+                        contentDescription = null,
+                    )
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.White,
+                navigationIconContentColor = MaterialTheme.colorScheme.primary,
+                titleContentColor = MaterialTheme.colorScheme.primary
+            ),
+            modifier = modifier
+        )
+
+        Divider(
+            thickness = 2.dp,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.align(Alignment.BottomStart)
+        )
+    }
+}
 @Composable
 private fun MemoBox(
     text: String = "새로운 메모",
@@ -108,7 +151,7 @@ private fun PhotoMemoItem(
                             repository.getPhotoMemoImgUrlToCoroutine(src)
                         }
                     }
-                    var painter = if (imageUrl == "")
+                    val painter = if (imageUrl == "")
                         painterResource(id = R.drawable.empty_photo) else
                         rememberImagePainter(imageUrl)
                     Image(
@@ -120,8 +163,15 @@ private fun PhotoMemoItem(
                             .clickable {
                                 val newBundle = Bundle()
                                 newBundle.putInt("order", idx)
-                                newBundle.putStringArrayList("srcArr", item.srcArr as ArrayList<String>)
-                                mainActivity.replaceFragment(MainActivity.PHOTO_DETAIL_FRAGMENT, true, newBundle)
+                                newBundle.putStringArrayList(
+                                    "srcArr",
+                                    item.srcArr as ArrayList<String>
+                                )
+                                mainActivity.replaceFragment(
+                                    MainActivity.PHOTO_DETAIL_FRAGMENT,
+                                    true,
+                                    newBundle
+                                )
                             }
                     )
                 }
@@ -144,56 +194,17 @@ private fun PhotoMemoList(
     LazyColumn(
         content = {
             items(photoMemoItemList) { item ->
-                PhotoMemoItem(item = item, mainActivity, Modifier.padding(horizontal = 24.dp), repository)
+                PhotoMemoItem(
+                    item = item,
+                    mainActivity,
+                    Modifier.padding(horizontal = 24.dp),
+                    repository
+                )
                 Divider(Modifier.padding(vertical = 16.dp))
             }
         },
         modifier = modifier
     )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun MyAppToolbar(
-    title: String,
-    modifier: Modifier = Modifier,
-    mainActivity: MainActivity
-) {
-    Box {
-        TopAppBar(
-            title = {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.ExtraBold
-                    )
-                )
-            },
-            navigationIcon = {
-                IconButton(onClick = {
-                    mainActivity.removeFragment(MainActivity.PHOTO_MEMO_FRAGMENT)
-                }) {
-                    Icon(
-                        painter = painterResource(R.drawable.arrow_back_ios_24px),
-                        contentDescription = null,
-                    )
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.White,
-                navigationIconContentColor = MaterialTheme.colorScheme.primary,
-                titleContentColor = MaterialTheme.colorScheme.primary
-            ),
-            modifier = modifier
-        )
-
-        Divider(
-            thickness = 2.dp,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.align(Alignment.BottomStart)
-        )
-    }
 }
 
 @Composable
@@ -206,7 +217,7 @@ fun PhotoMemoScreen(
     val photoMemoDataList by photoMemoViewModel.photoMemoList.observeAsState()
 
     Scaffold(
-        topBar = { MyAppToolbar(title = "포토 메모", mainActivity = mainActivity) },
+        topBar = { PhotoMemoToolbar(title = "포토 메모", mainActivity = mainActivity) },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
