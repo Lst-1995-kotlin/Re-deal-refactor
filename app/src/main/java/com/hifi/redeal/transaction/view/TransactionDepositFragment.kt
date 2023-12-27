@@ -34,18 +34,28 @@ class TransactionDepositFragment : Fragment() {
         fragmentTransactionDepositBinding = FragmentTransactionDepositBinding.inflate(inflater)
         mainActivity = activity as MainActivity
 
+        setBind()
+        setViewModel()
+
+        return fragmentTransactionDepositBinding.root
+    }
+
+    private fun setBind() {
         fragmentTransactionDepositBinding.run {
             addDepositBtn.setOnClickListener {
             }
 
             makeDepositBtnSelectClient.setOnClickListener {
-                selectTransactionClientDialog = SelectTransactionClientDialog(clientViewModel, clientRepository)
+                selectTransactionClientDialog =
+                    SelectTransactionClientDialog(clientViewModel, clientRepository)
                 selectTransactionClientDialog.show(childFragmentManager, null)
             }
 
             mainActivity.hideKeyboardAndClearFocus(addDepositPriceEditTextNumber)
         }
+    }
 
+    private fun setViewModel() {
         clientViewModel.selectedClient.observe(viewLifecycleOwner) {
             selectTransactionClientDialog.dismiss()
             fragmentTransactionDepositBinding.depositClientInfo.text = it.getClientName()
@@ -53,11 +63,10 @@ class TransactionDepositFragment : Fragment() {
                 fragmentTransactionDepositBinding.depositClientState.setBackgroundResource(state)
             }
             getClientBookmarkResource(it.getClientBookmark())?.let { bookmark ->
-                fragmentTransactionDepositBinding.depositClientBookmark.setBackgroundResource(bookmark)
+                fragmentTransactionDepositBinding.depositClientBookmark.setBackgroundResource(
+                    bookmark,
+                )
             }
         }
-
-        return fragmentTransactionDepositBinding.root
     }
-
 }

@@ -7,7 +7,7 @@ import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.CurrentUserClass
 import javax.inject.Inject
 
-class ClientRepository@Inject constructor(
+class ClientRepository @Inject constructor(
     private val currentUser: CurrentUserClass,
 ) {
     private val uid = currentUser.userIdx
@@ -18,7 +18,6 @@ class ClientRepository@Inject constructor(
         .collection("clientData")
 
     fun getUserAllClient(callback1: (Task<QuerySnapshot>) -> Unit) {
-        val db = Firebase.firestore
         dbClientRef
             .get()
             .addOnCompleteListener(callback1)

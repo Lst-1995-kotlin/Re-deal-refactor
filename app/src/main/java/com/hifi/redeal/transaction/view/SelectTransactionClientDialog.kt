@@ -7,53 +7,59 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.hifi.redeal.databinding.DialogSelectTransactionClientBinding
 import com.hifi.redeal.transaction.adapter.ClientAdapter
 import com.hifi.redeal.transaction.repository.ClientRepository
-import com.hifi.redeal.transaction.repository.TransactionRepository
 import com.hifi.redeal.transaction.util.DialogConfiguration.Companion.dialogResize
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 
 class SelectTransactionClientDialog(
     private val clientViewModel: ClientViewModel,
-    private val clientRepository: ClientRepository
+    private val clientRepository: ClientRepository,
 ) : DialogFragment() {
 
+    lateinit var dialogSelectTransactionClientDialog: DialogSelectTransactionClientBinding
+    lateinit var clientAdapter: ClientAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        val dialogSelectTransactionClientDialog =
-            DialogSelectTransactionClientBinding.inflate(inflater)
-
-        val clientAdapter = ClientAdapter(clientViewModel)
+        dialogSelectTransactionClientDialog = DialogSelectTransactionClientBinding.inflate(inflater)
+        clientAdapter = ClientAdapter(clientViewModel)
         clientAdapter.getClient(clientRepository)
-
-        dialogSelectTransactionClientDialog.run {
-            searchTransactionClientRecyclerView.adapter = clientAdapter
-            searchTransactionClientRecyclerView.layoutManager = LinearLayoutManager(context)
-            searchTransactionClientEditText.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    clientAdapter.clientFilterResult("$p0")
-                }
-
-                override fun afterTextChanged(p0: Editable?) {
-                }
-            })
-        }
-
+        setDialog()
         return dialogSelectTransactionClientDialog.root
     }
 
     override fun onResume() {
         super.onResume()
         context?.dialogResize(this)
+    }
+
+    private fun setDialog() {
+        dialogSelectTransactionClientDialog.run {
+            searchTransactionClientRecyclerView.run {
+                adapter = clientAdapter
+                layoutManager = LinearLayoutManager(context)
+                addItemDecoration(MaterialDividerItemDecoration(context, MaterialDividerItemDecoration.VERTICAL))
+            }
+
+            searchTransactionClientEditText.run {
+                addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    }
+
+                    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        clientAdapter.clientFilterResult("$p0")
+                    }
+
+                    override fun afterTextChanged(p0: Editable?) {
+                    }
+                })
+            }
+        }
     }
 }
