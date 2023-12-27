@@ -3,7 +3,6 @@ package com.hifi.redeal.schedule.view
 import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import android.view.WindowManager
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
@@ -39,10 +39,11 @@ class MakeScheduleFragment : Fragment() {
     lateinit var scheduleVM: ScheduleVM
     private var clientIdx = 0L
     private val uid = Firebase.auth.uid!!
-  
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View? {
         fragmentMakeScheduleBinding = FragmentMakeScheduleBinding.inflate(layoutInflater)
         mainActivity = activity as MainActivity
@@ -58,31 +59,37 @@ class MakeScheduleFragment : Fragment() {
         return fragmentMakeScheduleBinding.root
     }
 
-    private fun setViewModel(){
+    private fun setViewModel() {
         scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
 
-        scheduleVM.run{
-            userSelectClientSimpleData.observe(viewLifecycleOwner){
+        scheduleVM.run {
+            userSelectClientSimpleData.observe(viewLifecycleOwner) {
                 val clientName = it.clientName
                 val clientManagerName = it.clientManagerName
                 val clientState = it.clientState
                 val isBookmark = it.isBookmark
                 clientIdx = it.clientIdx
                 fragmentMakeScheduleBinding.makeScheduleClientState.visibility = View.VISIBLE
-                when(clientState){
+                when (clientState) {
                     1L -> {
                         fragmentMakeScheduleBinding.makeScheduleClientState.setBackgroundResource(R.drawable.client_state_circle_trading)
                     }
+
                     2L -> {
                         fragmentMakeScheduleBinding.makeScheduleClientState.setBackgroundResource(R.drawable.client_state_circle_trade_try)
                     }
+
                     3L -> {
                         fragmentMakeScheduleBinding.makeScheduleClientState.setBackgroundResource(R.drawable.client_state_circle_trade_stop)
                     }
-                    else -> fragmentMakeScheduleBinding.makeScheduleClientState.visibility = View.GONE
+
+                    else ->
+                        fragmentMakeScheduleBinding.makeScheduleClientState.visibility =
+                            View.GONE
                 }
-                fragmentMakeScheduleBinding.makeScheduleClientInfo.text = "$clientName $clientManagerName"
-                if(isBookmark){
+                fragmentMakeScheduleBinding.makeScheduleClientInfo.text =
+                    "$clientName $clientManagerName"
+                if (isBookmark) {
                     fragmentMakeScheduleBinding.makeScheduleClientBookmark.setBackgroundResource(R.drawable.star_fill_24px)
                     fragmentMakeScheduleBinding.makeScheduleClientBookmark.visibility = View.VISIBLE
                 } else {
@@ -91,30 +98,34 @@ class MakeScheduleFragment : Fragment() {
             }
         }
     }
-    private fun setBasicView(){
-        fragmentMakeScheduleBinding.run{
-            when(scheduleVM.selectedScheduleIsVisit){
-                true ->{
-                    makeScheduleBtnVisit.run{
+
+    private fun setBasicView() {
+        fragmentMakeScheduleBinding.run {
+            when (scheduleVM.selectedScheduleIsVisit) {
+                true -> {
+                    makeScheduleBtnVisit.run {
                         setBackgroundResource(R.drawable.btn_round_primary20)
                         setTextColor(mainActivity.getColor(R.color.primary99))
                         makeScheduleBtnNotVisit.setBackgroundResource(R.drawable.btn_round_nofill_primary20)
                         makeScheduleBtnNotVisit.setTextColor(mainActivity.getColor(R.color.primary20))
                     }
                 }
-                false ->{
-                    makeScheduleBtnNotVisit.run{
+
+                false -> {
+                    makeScheduleBtnNotVisit.run {
                         setBackgroundResource(R.drawable.btn_round_primary20)
                         setTextColor(mainActivity.getColor(R.color.primary99))
                         makeScheduleBtnVisit.setBackgroundResource(R.drawable.btn_round_nofill_primary20)
                         makeScheduleBtnVisit.setTextColor(mainActivity.getColor(R.color.primary20))
                     }
                 }
+
                 else -> {}
             }
 
-            makeScheduleEditTextScheduleTitle.run{
-                viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            makeScheduleEditTextScheduleTitle.run {
+                viewTreeObserver.addOnGlobalLayoutListener(object :
+                    ViewTreeObserver.OnGlobalLayoutListener {
                     private var isKeyboardOpen = false // 키보드가 열려 있는지 여부를 추적
 
                     override fun onGlobalLayout() {
@@ -139,8 +150,9 @@ class MakeScheduleFragment : Fragment() {
                 requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
             }
 
-            makeScheduleEditTextScheduleContent.run{
-                viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            makeScheduleEditTextScheduleContent.run {
+                viewTreeObserver.addOnGlobalLayoutListener(object :
+                    ViewTreeObserver.OnGlobalLayoutListener {
                     private var isKeyboardOpen = false // 키보드가 열려 있는지 여부를 추적
 
                     override fun onGlobalLayout() {
@@ -168,51 +180,46 @@ class MakeScheduleFragment : Fragment() {
         }
     }
 
-    private fun setTimePicker(){
-        fragmentMakeScheduleBinding.run{
-
+    private fun setTimePicker() {
+        fragmentMakeScheduleBinding.run {
             makeScheduleTimePicker.run {
                 // 시간 선택 이벤트 핸들러
                 setOnTimeChangedListener { view, hourOfDay, minute ->
-                    var amPm = if(hour >= 12) "오후" else "오전"
-                    var hour = if(hourOfDay > 12) hourOfDay - 12 else hourOfDay
-                    if(hourOfDay == 0) hour = 12
-                    var selMinute = if(minute * 5 < 10) "0${minute * 5}" else "${minute * 5}"
+                    var amPm = if (hour >= 12) "오후" else "오전"
+                    var hour = if (hourOfDay > 12) hourOfDay - 12 else hourOfDay
+                    if (hourOfDay == 0) hour = 12
+                    var selMinute = if (minute * 5 < 10) "0${minute * 5}" else "${minute * 5}"
                     makeScheduleBtnSelectTime.text = "$amPm $hour : $selMinute"
                 }
             }
-
         }
-
     }
 
-    private fun setTimeToText(){
+    private fun setTimeToText() {
         fragmentMakeScheduleBinding.run {
             var minute = makeScheduleTimePicker.minute
             var hour = makeScheduleTimePicker.hour
-            if(((minute/5)+1)*5 > 55) {
+            if (((minute / 5) + 1) * 5 > 55) {
                 hour++
                 minute = 0
             } else {
-                minute = ((minute/5)+1)*5
+                minute = ((minute / 5) + 1) * 5
             }
-            if(makeScheduleTimePicker.hour > 12)  hour -= 12
-            if(makeScheduleTimePicker.hour == 0) hour = 12
+            if (makeScheduleTimePicker.hour > 12) hour -= 12
+            if (makeScheduleTimePicker.hour == 0) hour = 12
 
-            var amPm = if(makeScheduleTimePicker.hour >= 12) "오후" else "오전"
-            if(minute < 10){
+            var amPm = if (makeScheduleTimePicker.hour >= 12) "오후" else "오전"
+            if (minute < 10) {
                 makeScheduleBtnSelectTime.text = "$amPm $hour : 0$minute"
             } else {
                 makeScheduleBtnSelectTime.text = "$amPm $hour : $minute"
             }
-
         }
     }
 
-    private fun setClickEvent(){
+    private fun setClickEvent() {
         fragmentMakeScheduleBinding.run {
-
-            makeScheduleBtnVisit.run{
+            makeScheduleBtnVisit.run {
                 setOnClickListener {
                     scheduleVM.selectedScheduleIsVisit = true
                     setBackgroundResource(R.drawable.btn_round_primary20)
@@ -222,7 +229,7 @@ class MakeScheduleFragment : Fragment() {
                 }
             }
 
-            makeScheduleBtnNotVisit.run{
+            makeScheduleBtnNotVisit.run {
                 setOnClickListener {
                     scheduleVM.selectedScheduleIsVisit = false
                     setBackgroundResource(R.drawable.btn_round_primary20)
@@ -232,10 +239,9 @@ class MakeScheduleFragment : Fragment() {
                 }
             }
 
-            makeScheduleBtnSelectCalendar.run{
+            makeScheduleBtnSelectCalendar.run {
                 setOnClickListener {
-
-                    if(makeScheduleCalendarView.isVisible){
+                    if (makeScheduleCalendarView.isVisible) {
                         makeScheduleCalendarView.visibility = View.GONE
                         setBackgroundResource(R.drawable.btn_round_nofill_primary20)
                         setTextColor(mainActivity.getColor(R.color.primary20))
@@ -251,10 +257,9 @@ class MakeScheduleFragment : Fragment() {
                 }
             }
 
-            makeScheduleBtnSelectTime.run{
+            makeScheduleBtnSelectTime.run {
                 setOnClickListener {
-
-                    if(makeScheduleTimePicker.isVisible){
+                    if (makeScheduleTimePicker.isVisible) {
                         makeScheduleTimePicker.visibility = View.GONE
                         setBackgroundResource(R.drawable.btn_round_nofill_primary20)
                         setTextColor(mainActivity.getColor(R.color.primary20))
@@ -270,44 +275,48 @@ class MakeScheduleFragment : Fragment() {
                 }
             }
 
-            makeScheduleBtnSelectAccount.run{
+            makeScheduleBtnSelectAccount.run {
                 setOnClickListener {
-                    mainActivity.replaceFragment(MainActivity.SCHEDULE_SELECT_BY_CLIENT_FRAGMENT, true, null)
+                    mainActivity.replaceFragment(
+                        MainActivity.SCHEDULE_SELECT_BY_CLIENT_FRAGMENT,
+                        true,
+                        null,
+                    )
                 }
             }
 
             makeScheduleBtnComplete.setOnClickListener {
-                if(scheduleVM.selectedScheduleIsVisit == null){
+                if (scheduleVM.selectedScheduleIsVisit == null) {
                     val builder = AlertDialog.Builder(mainActivity)
                     builder.setMessage("일정 종류를 선택해 주세요.")
-                    builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
+                    builder.setNegativeButton("확인") { dialogInterface: DialogInterface, i: Int ->
                         makeScheduleBtnVisit.requestFocus()
                     }
                     builder.show()
                     return@setOnClickListener
                 }
-                if(scheduleVM.userSelectClientSimpleData.value == null){
+                if (scheduleVM.userSelectClientSimpleData.value == null) {
                     val builder = AlertDialog.Builder(mainActivity)
                     builder.setMessage("거래처를 선택해 주세요.")
-                    builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
+                    builder.setNegativeButton("확인") { dialogInterface: DialogInterface, i: Int ->
                         makeScheduleClientInfo.requestFocus()
                     }
                     builder.show()
                     return@setOnClickListener
                 }
-                if(makeScheduleEditTextScheduleTitle.editableText.isNullOrEmpty()){
+                if (makeScheduleEditTextScheduleTitle.editableText.isNullOrEmpty()) {
                     val builder = AlertDialog.Builder(mainActivity)
                     builder.setMessage("일정 제목을 입력해 주세요.")
-                    builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
+                    builder.setNegativeButton("확인") { dialogInterface: DialogInterface, i: Int ->
                         makeScheduleClientInfo.requestFocus()
                     }
                     builder.show()
                     return@setOnClickListener
                 }
-                if(makeScheduleEditTextScheduleContent.editableText.isNullOrEmpty()){
+                if (makeScheduleEditTextScheduleContent.editableText.isNullOrEmpty()) {
                     val builder = AlertDialog.Builder(mainActivity)
                     builder.setMessage("일정에 대한 내용을 입력해 주세요.")
-                    builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
+                    builder.setNegativeButton("확인") { dialogInterface: DialogInterface, i: Int ->
                         makeScheduleClientInfo.requestFocus()
                     }
                     builder.show()
@@ -319,7 +328,7 @@ class MakeScheduleFragment : Fragment() {
                 val calendar = Calendar.getInstance()
                 calendar.time = scheduleDeadlineTime
                 calendar.set(Calendar.HOUR_OF_DAY, makeScheduleTimePicker.hour)
-                calendar.set(Calendar.MINUTE, makeScheduleTimePicker.minute*5)
+                calendar.set(Calendar.MINUTE, makeScheduleTimePicker.minute * 5)
 
                 val newScheduleData = ScheduleData(
                     0L,
@@ -330,33 +339,34 @@ class MakeScheduleFragment : Fragment() {
                     Timestamp(Date()),
                     Timestamp(Date(calendar.timeInMillis)),
                     Timestamp(Date()),
-                    makeScheduleEditTextScheduleTitle.editableText.toString()
+                    makeScheduleEditTextScheduleTitle.editableText.toString(),
                 )
 
-                scheduleVM.addUserSchedule(uid, newScheduleData){
+                scheduleVM.addUserSchedule(uid, newScheduleData) {
                     val builder = AlertDialog.Builder(mainActivity)
                     builder.setMessage("일정을 성공적으로 저장하였습니다.")
-                    builder.setNegativeButton("확인"){ dialogInterface: DialogInterface, i: Int ->
+                    builder.setNegativeButton("확인") { dialogInterface: DialogInterface, i: Int ->
                         mainActivity.removeFragment(MainActivity.MAKE_SCHEDULE_FRAGMENT)
                     }
                     builder.show()
                 }
-
             }
-
         }
     }
 
-    private fun setDateToText(){
+    private fun setDateToText() {
         // 중간 날짜 셋팅
-        val selectMonth = if(scheduleVM.selectDate.month.value < 10) "0${scheduleVM.selectDate.month.value}" else scheduleVM.selectDate.month.value.toString()
-        val selectDay = if(scheduleVM.selectDate.dayOfMonth < 10) "0${scheduleVM.selectDate.dayOfMonth}" else scheduleVM.selectDate.dayOfMonth.toString()
+        val selectMonth =
+            if (scheduleVM.selectDate.month.value < 10) "0${scheduleVM.selectDate.month.value}" else scheduleVM.selectDate.month.value.toString()
+        val selectDay =
+            if (scheduleVM.selectDate.dayOfMonth < 10) "0${scheduleVM.selectDate.dayOfMonth}" else scheduleVM.selectDate.dayOfMonth.toString()
 
-        fragmentMakeScheduleBinding.makeScheduleBtnSelectCalendar.text ="${scheduleVM.selectDate.year}.${selectMonth}.${selectDay}"
+        fragmentMakeScheduleBinding.makeScheduleBtnSelectCalendar.text =
+            "${scheduleVM.selectDate.year}.$selectMonth.$selectDay"
     }
-    private fun setCalendarView(){
-        fragmentMakeScheduleBinding.run{
 
+    private fun setCalendarView() {
+        fragmentMakeScheduleBinding.run {
             val currentMonth = YearMonth.now()
             val firstMonth = currentMonth.minusMonths(240)
             val lastMonth = currentMonth.plusMonths(240)
@@ -385,33 +395,34 @@ class MakeScheduleFragment : Fragment() {
                             textView.background = null
                         }
                         // 일요일 텍스트 색상 설정
-                        if(day.date.dayOfWeek.value == 7){
+                        if (day.date.dayOfWeek.value == 7) {
                             textView.setTextColor(Color.RED)
                         }
                         // 토요일 텍스트 색상 설정
-                        if(day.date.dayOfWeek.value == 6){
+                        if (day.date.dayOfWeek.value == 6) {
                             textView.setTextColor(mainActivity.getColor(R.color.primary30))
                         }
-
                     } else {
                         // Hide in and out dates
                         textView.setTextColor(mainActivity.getColor(R.color.text80))
                     }
                 }
             }
-            makeScheduleCalendarView.monthHeaderBinder = object : MonthHeaderFooterBinder<MonthViewContainer> {
-                // 캘린더 상단 설정
-                override fun create(view: View) = MonthViewContainer(view)
-                override fun bind(container: MonthViewContainer, month: CalendarMonth) {
-                    container.headerMonthTextView.text = "${month.month}월"
-                    container.headerYearTextView.text = "${month.year}"
+            makeScheduleCalendarView.monthHeaderBinder =
+                object : MonthHeaderFooterBinder<MonthViewContainer> {
+                    // 캘린더 상단 설정
+                    override fun create(view: View) = MonthViewContainer(view)
+                    override fun bind(container: MonthViewContainer, month: CalendarMonth) {
+                        container.headerMonthTextView.text = "${month.month}월"
+                        container.headerYearTextView.text = "${month.year}"
+                    }
                 }
-            }
         }
     }
 
     private inner class DayViewContainer(view: View) : ViewContainer(view) {
         val textView = view.findViewById<TextView>(R.id.calendarDayText)
+
         // Will be set when this container is bound
         lateinit var day: CalendarDay
 
@@ -426,9 +437,10 @@ class MakeScheduleFragment : Fragment() {
                 setDateToText()
                 fragmentMakeScheduleBinding.makeScheduleCalendarView.notifyDateChanged(day.date)
                 if (currentSelection != null) {
-                    fragmentMakeScheduleBinding.makeScheduleCalendarView.notifyDateChanged(currentSelection)
+                    fragmentMakeScheduleBinding.makeScheduleCalendarView.notifyDateChanged(
+                        currentSelection,
+                    )
                 }
-
             }
         }
     }
@@ -437,5 +449,4 @@ class MakeScheduleFragment : Fragment() {
         val headerMonthTextView = view.findViewById<TextView>(R.id.headerMonthTextView)
         val headerYearTextView = view.findViewById<TextView>(R.id.headerYearTextView)
     }
-
 }

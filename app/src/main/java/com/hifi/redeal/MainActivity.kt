@@ -3,16 +3,20 @@ package com.hifi.redeal
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
+import android.os.SystemClock.sleep
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.forEach
 import androidx.core.view.isVisible
@@ -47,6 +51,7 @@ import com.hifi.redeal.schedule.view.ScheduleSelectByClientFragment
 import com.hifi.redeal.schedule.view.UnvisitedScheduleFragment
 import com.hifi.redeal.schedule.view.VisitedScheduleFragment
 import com.hifi.redeal.schedule.vm.ScheduleVM
+import com.hifi.redeal.transaction.view.TransactionDepositFragment
 import com.hifi.redeal.transaction.view.TransactionFragment
 import com.skt.tmap.TMapTapi
 import com.skt.tmap.TMapTapi.OnAuthenticationListenerCallback
@@ -114,6 +119,7 @@ class MainActivity : AppCompatActivity() {
         val MY_PAGE_FRAGMENT = "MyPageFragment"
         val MY_PAGE_EDIT_NAME_FRAGMENT = "MyPageEditNameFragment"
         val MY_PAGE_REQUEST_FRAGMENT = "MyPageRequestFragment"
+        val TRANSACTION_DEPOSIT_FRAGMENT = "TransactionDepositFragment"
 
         const val BASE_URL = "https://dapi.kakao.com/"
         const val REGION_BASE_URL = "http://api.vworld.kr/"
@@ -371,6 +377,7 @@ class MainActivity : AppCompatActivity() {
             MY_PAGE_FRAGMENT -> MyPageFragment()
             MY_PAGE_EDIT_NAME_FRAGMENT -> MyPageEditNameFragment()
             MY_PAGE_REQUEST_FRAGMENT -> MyPageRequestFragment()
+            TRANSACTION_DEPOSIT_FRAGMENT -> TransactionDepositFragment()
             else -> Fragment()
         }
 
@@ -418,9 +425,36 @@ class MainActivity : AppCompatActivity() {
 
         val inputMethodManger = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         thread {
-            SystemClock.sleep(200)
+            sleep(200)
             inputMethodManger.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
         }
+    }
+
+    fun hideKeyboardAndClearFocus(view: View) {
+        view.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            private var isKeyboardOpen = false // 키보드가 열려 있는지 여부를 추적
+
+            override fun onGlobalLayout() {
+                val rect = android.graphics.Rect()
+                activityMainBinding.root.getWindowVisibleDisplayFrame(rect)
+                val screenHeight = activityMainBinding.root.height
+
+                // 화면 높이와 키보드의 높이를 비교하여 키보드 상태를 확인합니다.
+                val keypadHeight = screenHeight - rect.bottom
+                if (keypadHeight > screenHeight * 0.15) {
+                    // 키보드가 열려 있는 상태
+                    isKeyboardOpen = true
+                } else {
+                    // 키보드가 닫혀 있는 상태
+                    if (isKeyboardOpen) {
+                        // 키보드가 내려갈 때 포커스를 제거합니다.
+                        view.clearFocus()
+                        isKeyboardOpen = false
+                    }
+                }
+            }
+        })
     }
 
     // Notification Channel을 등록하는 메서드

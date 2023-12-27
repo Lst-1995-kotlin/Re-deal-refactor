@@ -1,22 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical"
+    android:theme="@style/Theme.ReDeal.ToolbarTheme"
     android:transitionGroup="true">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/transactionDepositAppBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:transitionGroup="true"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/materialToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/arrow_back_ios_24px"
+        app:title="입금 내역 추가"
+        app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance" />
+
+    <View
+        android:id="@+id/view6"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/primary20"
+        android:backgroundTint="@color/primary20"
+        app:layout_constraintTop_toBottomOf="@+id/materialToolbar"
+        tools:layout_editor_absoluteX="-2dp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view6">
+
+        <View
+            android:id="@+id/depositClientState"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center_vertical"
+            android:backgroundTintMode="multiply"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/depositClientInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="@font/nanumsquareneo_bold"
+            android:singleLine="true"
+            android:text="거래처를 선택해주세요."
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <View
+            android:id="@+id/depositClientBookmark"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center_vertical"
+            android:backgroundTintMode="multiply"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/makeDepositBtnSelectClient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:background="@color/primary20"
+                android:backgroundTintMode="multiply"
+                android:padding="4dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/card_account_detail_24px_primary99" />
+        </LinearLayout>
+
+    </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/addDepositPriceinputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
         android:hint="금액"
         android:textColorHint="@color/text30"
         app:boxStrokeColor="@color/primary20"
-        app:endIconMode="clear_text">
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout8">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/addDepositPriceEditTextNumber"
@@ -28,27 +125,20 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/addSelectClientDepositBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:background="@drawable/btn_round_primary20"
-        android:fontFamily="@font/nanumsquareneo_bold"
-        android:text="거래처 선택"
-        android:textColor="@color/primary99"
-        android:textSize="20sp" />
-
-    <Button
         android:id="@+id/addDepositBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/btn_round_primary20"
         android:fontFamily="@font/nanumsquareneo_bold"
-        android:text="입금 추가"
+        android:text="입금 내역 추가"
         android:textColor="@color/primary99"
-        android:textSize="20sp" />
-</LinearLayout>
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
