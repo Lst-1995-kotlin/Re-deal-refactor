@@ -5,4 +5,5 @@
     <string name="memo_toolbar_title">메모 전체 보기</string>
     <string name="memo_tab_item_name_photo">포토 메모</string>
     <string name="memo_tab_item_name_voice">음성 메모</string>
+    <string name="testImage">testImage</string>
 </resources>

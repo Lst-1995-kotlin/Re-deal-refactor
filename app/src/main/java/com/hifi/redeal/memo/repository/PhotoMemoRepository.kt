@@ -9,6 +9,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.hifi.redeal.CurrentUserClass
+import kotlinx.coroutines.tasks.await
 import java.util.Date
 import javax.inject.Inject
 
@@ -65,6 +66,20 @@ class PhotoMemoRepository @Inject constructor(
         val fileRef = storage.reference.child("user${currentUser.userIdx}/$filename")
         fileRef.downloadUrl.addOnCompleteListener{
             callback(it.result.toString())
+        }
+    }
+
+    suspend fun getPhotoMemoImgUrlToCoroutine(filename: String): String {
+        val fileRef = storage.reference.child("user${currentUser.userIdx}/$filename")
+
+        return try {
+            val downloadUrl = fileRef.downloadUrl.await()
+            downloadUrl.toString()
+        } catch (e: Exception) {
+            // 예외 처리를 여기에 추가
+            // 예를 들어, 이미지를 찾을 수 없거나 다운로드에 실패하는 경우
+            e.printStackTrace()
+            ""
         }
     }
 
