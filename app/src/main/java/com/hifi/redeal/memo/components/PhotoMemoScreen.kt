@@ -1,9 +1,6 @@
 package com.hifi.redeal.memo.components
 
-import android.app.Activity
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -60,7 +58,7 @@ import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 
 @Composable
-fun MemoBox(
+private fun MemoBox(
     text: String = "새로운 메모",
     modifier: Modifier = Modifier
 ) {
@@ -82,8 +80,9 @@ fun MemoBox(
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun PhotoMemoItem(
+private fun PhotoMemoItem(
     item: PhotoMemoData,
+    mainActivity: MainActivity,
     modifier: Modifier = Modifier,
     repository: PhotoMemoRepository
 ) {
@@ -102,7 +101,7 @@ fun PhotoMemoItem(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(horizontal = 2.dp),
             content = {
-                items(item.srcArr) { src ->
+                itemsIndexed(item.srcArr) { idx, src ->
                     var imageUrl by remember { mutableStateOf("") }
                     LaunchedEffect(Unit) {
                         imageUrl = withContext(Dispatchers.IO) {
@@ -119,7 +118,10 @@ fun PhotoMemoItem(
                         modifier = Modifier
                             .size(100.dp)
                             .clickable {
-                                // todo : 이미지 클릭 처리
+                                val newBundle = Bundle()
+                                newBundle.putInt("order", idx)
+                                newBundle.putStringArrayList("srcArr", item.srcArr as ArrayList<String>)
+                                mainActivity.replaceFragment(MainActivity.PHOTO_DETAIL_FRAGMENT, true, newBundle)
                             }
                     )
                 }
@@ -133,15 +135,16 @@ fun PhotoMemoItem(
 }
 
 @Composable
-fun PhotoMemoList(
+private fun PhotoMemoList(
     photoMemoItemList: List<PhotoMemoData>,
+    mainActivity: MainActivity,
+    repository: PhotoMemoRepository,
     modifier: Modifier = Modifier,
-    repository: PhotoMemoRepository
 ) {
     LazyColumn(
         content = {
             items(photoMemoItemList) { item ->
-                PhotoMemoItem(item = item, Modifier.padding(horizontal = 24.dp), repository)
+                PhotoMemoItem(item = item, mainActivity, Modifier.padding(horizontal = 24.dp), repository)
                 Divider(Modifier.padding(vertical = 16.dp))
             }
         },
@@ -151,7 +154,7 @@ fun PhotoMemoList(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyAppToolbar(
+private fun MyAppToolbar(
     title: String,
     modifier: Modifier = Modifier,
     mainActivity: MainActivity
@@ -228,10 +231,11 @@ fun PhotoMemoScreen(
         photoMemoDataList?.let {
             PhotoMemoList(
                 photoMemoItemList = photoMemoDataList!!,
+                mainActivity = mainActivity,
+                repository = repository,
                 modifier = Modifier
                     .padding(padding)
                     .padding(top = 8.dp),
-                repository
             )
         }
     }
