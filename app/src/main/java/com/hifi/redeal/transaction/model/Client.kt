@@ -21,12 +21,8 @@ class Client(
         }
     }
 
-    fun filter(value: String) =
-        (
-            clientSimpleData.clientName.contains(value) || clientSimpleData.clientManagerName.contains(
-                value,
-            )
-            )
+    fun filter(value: String) = clientSimpleData.clientName.contains(value) ||
+        clientSimpleData.clientManagerName.contains(value)
 
     fun getClientName() = "${clientSimpleData.clientName} ${clientSimpleData.clientManagerName}"
 
