@@ -184,7 +184,9 @@ private fun BottomImageList(
         },
         contentPadding = PaddingValues(20.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier.background(Color.White)
+        modifier = modifier
+            .fillMaxWidth()
+            .background(Color.White)
     )
 }
 

@@ -76,8 +76,6 @@ class PhotoMemoRepository @Inject constructor(
             val downloadUrl = fileRef.downloadUrl.await()
             downloadUrl.toString()
         } catch (e: Exception) {
-            // 예외 처리를 여기에 추가
-            // 예를 들어, 이미지를 찾을 수 없거나 다운로드에 실패하는 경우
             e.printStackTrace()
             ""
         }
