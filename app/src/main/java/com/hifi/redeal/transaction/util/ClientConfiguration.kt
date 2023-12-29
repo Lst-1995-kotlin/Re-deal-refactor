@@ -2,11 +2,12 @@ package com.hifi.redeal.transaction.util
 
 import com.hifi.redeal.R
 
-enum class ClientConfiguration(val state: Long) {
+enum class ClientConfiguration(private val state: Long) {
     STATE_TRADING(1L),
     STATE_TRY(2L),
     STATE_STOP(3L),
     ;
+
     companion object {
         fun getClientStateResource(value: Long): Int? {
             return when (value) {
@@ -20,6 +21,10 @@ enum class ClientConfiguration(val state: Long) {
         fun getClientBookmarkResource(value: Boolean): Int? {
             if (value) return R.drawable.star_fill_24px
             return null
+        }
+
+        fun isClientStateNotStop(value: Long): Boolean {
+            return value != STATE_STOP.state
         }
     }
 }

@@ -12,11 +12,18 @@ import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 
 class ClientAdapter(
     private val clientViewModel: ClientViewModel,
-) :
-    RecyclerView.Adapter<ClientAdapter.TransactionClientHolder>() {
+) : RecyclerView.Adapter<ClientAdapter.TransactionClientHolder>() {
 
-    private val clients = mutableListOf<Client>()
+    private var clients = listOf<Client>()
     private var filterClients = listOf<Client>()
+
+    init {
+        clientViewModel.clients.observeForever {
+            clients = it
+            filterClients = clients
+            notifyDataSetChanged()
+        }
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionClientHolder {
         val inflater = LayoutInflater.from(parent.context)
         val transactionSelectClientItemBinding =
@@ -41,28 +48,8 @@ class ClientAdapter(
         notifyDataSetChanged()
     }
 
-    fun getClient(clientRepository: ClientRepository) {
-        clientRepository.getUserAllClient {
-            for (c1 in it.result) {
-                val clientData = ClientSimpleData(
-                    c1["clientIdx"] as Long,
-                    c1["clientName"] as String,
-                    c1["clientManagerName"] as String,
-                    c1["clientState"] as Long,
-                    c1["isBookmark"] as Boolean,
-                )
-
-                if (clientData.clientState != ClientConfiguration.STATE_STOP.state) {
-                    addClient(Client(clientData))
-                }
-            }
-        }
-    }
-
-    private fun addClient(client: Client) {
-        clients.add(client)
-        filterClients = clients
-        notifyDataSetChanged()
+    fun getClient() {
+        clientViewModel.clients.value ?: clientViewModel.getUserAllClient()
     }
 
     inner class TransactionClientHolder(
@@ -71,7 +58,7 @@ class ClientAdapter(
         fun bind(client: Client) {
             client.bind(transactionSelectClientItemBinding)
             transactionSelectClientItemBinding.root.setOnClickListener {
-                clientViewModel.clickedClient(client)
+                clientViewModel.setSelectClient(client)
             }
         }
     }

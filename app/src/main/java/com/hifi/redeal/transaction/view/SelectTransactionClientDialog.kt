@@ -11,17 +11,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.hifi.redeal.databinding.DialogSelectTransactionClientBinding
 import com.hifi.redeal.transaction.adapter.ClientAdapter
-import com.hifi.redeal.transaction.repository.ClientRepository
 import com.hifi.redeal.transaction.util.DialogConfiguration.Companion.dialogResize
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 
 class SelectTransactionClientDialog(
     private val clientViewModel: ClientViewModel,
-    private val clientRepository: ClientRepository,
 ) : DialogFragment() {
 
     lateinit var dialogSelectTransactionClientDialog: DialogSelectTransactionClientBinding
-    lateinit var clientAdapter: ClientAdapter
+    private lateinit var clientAdapter: ClientAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -29,7 +27,7 @@ class SelectTransactionClientDialog(
     ): View? {
         dialogSelectTransactionClientDialog = DialogSelectTransactionClientBinding.inflate(inflater)
         clientAdapter = ClientAdapter(clientViewModel)
-        clientAdapter.getClient(clientRepository)
+        clientAdapter.getClient()
         setDialog()
         return dialogSelectTransactionClientDialog.root
     }
@@ -44,7 +42,12 @@ class SelectTransactionClientDialog(
             searchTransactionClientRecyclerView.run {
                 adapter = clientAdapter
                 layoutManager = LinearLayoutManager(context)
-                addItemDecoration(MaterialDividerItemDecoration(context, MaterialDividerItemDecoration.VERTICAL))
+                addItemDecoration(
+                    MaterialDividerItemDecoration(
+                        context,
+                        MaterialDividerItemDecoration.VERTICAL,
+                    ),
+                )
             }
 
             searchTransactionClientEditText.run {
