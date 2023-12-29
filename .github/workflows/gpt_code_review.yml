@@ -6,11 +6,10 @@ permissions:
 
 on:
   pull_request:
-    types: [opened]
+    types: [opened, synchronize]
 
 jobs:
   test:
-    if: ${{ contains(github.event.*.labels.*.name, 'gpt review') }}
     runs-on: ubuntu-latest
     steps:
       - uses: anc95/ChatGPT-CodeReview@main
