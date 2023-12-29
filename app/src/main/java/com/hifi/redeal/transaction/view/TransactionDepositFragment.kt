@@ -38,6 +38,7 @@ class TransactionDepositFragment : Fragment() {
     private fun setBind() {
         fragmentTransactionDepositBinding.run {
             addDepositBtn.setOnClickListener {
+                //테스트
             }
 
             makeDepositBtnSelectClient.setOnClickListener {
