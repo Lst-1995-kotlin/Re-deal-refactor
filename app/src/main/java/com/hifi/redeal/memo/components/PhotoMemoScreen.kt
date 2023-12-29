@@ -143,17 +143,15 @@ private fun PhotoMemoItem(
             modifier = Modifier.fillMaxWidth()
         )
 
-        // 변경 : 기존 nx3 행 -> 1행
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(horizontal = 2.dp),
             content = {
                 itemsIndexed(item.srcArr) { idx, src ->
                     var imageUrl by remember { mutableStateOf("") }
-                    LaunchedEffect(Unit) {
-                        imageUrl = withContext(Dispatchers.IO) {
-                            repository.getPhotoMemoImgUrlToCoroutine(src)
-                        }
+                    val coroutineScope = rememberCoroutineScope()
+                    LaunchedEffect(coroutineScope) {
+                        imageUrl = repository.getPhotoMemoImgUrlToCoroutine(src)
                     }
                     val painter = if (imageUrl == "")
                         painterResource(id = R.drawable.empty_photo) else
@@ -219,7 +217,6 @@ fun PhotoMemoScreen(
     clientIdx: Long
 ) {
     val photoMemoDataList by photoMemoViewModel.photoMemoList.observeAsState()
-
     Scaffold(
         topBar = { PhotoMemoToolbar(title = "포토 메모", mainActivity = mainActivity) },
         floatingActionButton = {

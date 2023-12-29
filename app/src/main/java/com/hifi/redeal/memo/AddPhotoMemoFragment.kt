@@ -15,16 +15,23 @@ import android.widget.LinearLayout
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentAddPhotoMemoBinding
+import com.hifi.redeal.memo.components.AddPhotoMemoScreen
+import com.hifi.redeal.memo.components.PhotoMemoScreen
 import com.hifi.redeal.memo.repository.PhotoMemoRepository
 import com.hifi.redeal.memo.utils.dpToPx
+import com.hifi.redeal.memo.vm.PhotoMemoViewModel
+import com.hifi.redeal.theme.RedealTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -32,54 +39,55 @@ import javax.inject.Inject
 class AddPhotoMemoFragment : Fragment() {
     private lateinit var fragmentAddPhotoMemoBinding: FragmentAddPhotoMemoBinding
     private lateinit var mainActivity: MainActivity
-    private lateinit var albumLauncher: ActivityResultLauncher<Intent>
+    // private lateinit var albumLauncher: ActivityResultLauncher<Intent>
     private var uriList = mutableListOf<Uri>()
-    private var clientIdx = 1L
     @Inject lateinit var photoMemoRepository: PhotoMemoRepository
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        fragmentAddPhotoMemoBinding = FragmentAddPhotoMemoBinding.inflate(inflater)
-        mainActivity = activity as MainActivity
-        clientIdx = arguments?.getLong("clientIdx")?:1L
-        albumLauncher = albumSetting()
-        fragmentAddPhotoMemoBinding.run {
-            addPhotoMemoToolbar.run {
-                setNavigationOnClickListener {
-                    mainActivity.removeFragment(MainActivity.ADD_PHOTO_MEMO_FRAGMENT)
-                }
-                setOnMenuItemClickListener {
-                    when (it.itemId) {
-                        R.id.albumBtn -> {
-                            clickAlbumLaunch(albumLauncher)
-                        }
-                    }
-                    true
-                }
-            }
-            addPhotoMemoBtn.run {
-                isEnabled = false
-                setBackgroundResource(R.drawable.add_button_loading_container)
-                text = "사진을 등록해주세요."
-                setOnClickListener {
-                    val photoMemoContext = photoMemoTextInputEditText.text.toString()
-                    addPhotoMemoBtn.isEnabled = false
-                    addPhotoMemoBtn.setBackgroundResource(R.drawable.add_button_loading_container)
-                    addPhotoMemoBtn.text = "등록 중 ..."
-                    addPhotoMemoBtn.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.primary20
+        return ComposeView(
+            requireContext()
+        ).apply{
+            val photoMemoViewModel: PhotoMemoViewModel by viewModels()
+            val mainActivity = activity as MainActivity
+            val albumLauncher = albumSetting()
+            val clientIdx = arguments?.getLong("clientIdx")?:1L
+            photoMemoViewModel.getPhotoMemoList(clientIdx)
+            setViewCompositionStrategy(
+                ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+            )
+            setContent {
+                RedealTheme {
+                    AddPhotoMemoScreen(
+                        onClickAlbum = { clickAlbumLaunch(albumLauncher) }
                         )
-                    )
-                    photoMemoRepository.addPhotoMemo(clientIdx, photoMemoContext, uriList) {
-                        mainActivity.removeFragment(MainActivity.ADD_PHOTO_MEMO_FRAGMENT)
-                    }
                 }
             }
         }
-        return fragmentAddPhotoMemoBinding.root
+//        fragmentAddPhotoMemoBinding.run {
+//            addPhotoMemoBtn.run {
+//                isEnabled = false
+//                setBackgroundResource(R.drawable.add_button_loading_container)
+//                text = "사진을 등록해주세요."
+//                setOnClickListener {
+//                    val photoMemoContext = photoMemoTextInputEditText.text.toString()
+//                    addPhotoMemoBtn.isEnabled = false
+//                    addPhotoMemoBtn.setBackgroundResource(R.drawable.add_button_loading_container)
+//                    addPhotoMemoBtn.text = "등록 중 ..."
+//                    addPhotoMemoBtn.setTextColor(
+//                        ContextCompat.getColor(
+//                            requireContext(),
+//                            R.color.primary20
+//                        )
+//                    )
+//                    photoMemoRepository.addPhotoMemo(clientIdx, photoMemoContext, uriList) {
+//                        mainActivity.removeFragment(MainActivity.ADD_PHOTO_MEMO_FRAGMENT)
+//                    }
+//                }
+//            }
+//        }
+//        return fragmentAddPhotoMemoBinding.root
     }
 
     private fun resumeImageListView(){

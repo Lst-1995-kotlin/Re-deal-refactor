@@ -21,7 +21,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class PhotoMemoFragment : Fragment() {
-    private var clientIdx = 1L
     @Inject lateinit var photoMemoRepository:PhotoMemoRepository
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,8 +33,7 @@ class PhotoMemoFragment : Fragment() {
         ).apply{
             val photoMemoViewModel: PhotoMemoViewModel by viewModels()
             val mainActivity = activity as MainActivity
-            clientIdx = arguments?.getLong("clientIdx")?:1L
-            Log.d("testaaa", "$clientIdx")
+            val clientIdx = arguments?.getLong("clientIdx")?:1L
             photoMemoViewModel.getPhotoMemoList(clientIdx)
             setViewCompositionStrategy(
                 ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
