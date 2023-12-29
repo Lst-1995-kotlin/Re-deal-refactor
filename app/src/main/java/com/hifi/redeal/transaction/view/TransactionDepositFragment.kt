@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.api.ResourceProto.resource
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentTransactionDepositBinding
 import com.hifi.redeal.transaction.util.ClientConfiguration.Companion.getClientBookmarkResource
@@ -55,19 +54,17 @@ class TransactionDepositFragment : Fragment() {
     }
 
     private fun setViewModel() {
-        clientViewModel.selectedClient.observe(viewLifecycleOwner) {
+        clientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
             selectTransactionClientDialog.dismiss()
-            fragmentTransactionDepositBinding.depositClientInfo.text = it.getClientInfo()
+            fragmentTransactionDepositBinding.depositClientInfo.text = client.getClientInfo()
 
-            val clientState = it.getClientState()
-            val stateResource = getClientStateResource(clientState)
+            val stateResource = getClientStateResource(client.getClientState())
             fragmentTransactionDepositBinding.depositClientState.run {
                 setImageResource(stateResource ?: 0)
                 visibility = stateResource?.let { View.VISIBLE } ?: View.GONE
             }
 
-            val clientBookmark = it.getClientBookmark()
-            val bookmarkResource = getClientBookmarkResource(clientBookmark)
+            val bookmarkResource = getClientBookmarkResource(client.getClientBookmark())
             fragmentTransactionDepositBinding.depositClientBookmark.run {
                 setImageResource(bookmarkResource ?: 0)
                 visibility = bookmarkResource?.let { View.VISIBLE } ?: View.GONE
