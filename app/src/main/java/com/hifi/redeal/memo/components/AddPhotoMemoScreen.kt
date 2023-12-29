@@ -1,10 +1,11 @@
 package com.hifi.redeal.memo.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -106,36 +107,6 @@ private fun AddPhotoMemoToolbar(
     }
 }
 
-//<com.google.android.material.textfield.TextInputLayout
-//android:id="@+id/photoMemoTextInputLayout"
-//android:layout_width="match_parent"
-//android:layout_height="wrap_content"
-//android:paddingStart="36dp"
-//android:paddingEnd="36dp"
-//android:textColorHint="@color/text50"
-//android:transitionGroup="true"
-//app:boxStrokeColor="@color/primary20"
-//app:counterTextColor="@color/primary20"
-//app:helperTextTextColor="@color/primary20"
-//app:hintTextColor="@color/primary20"
-//app:layout_constraintEnd_toEndOf="parent"
-//app:layout_constraintStart_toStartOf="parent"
-//app:layout_constraintTop_toBottomOf="@id/emptyPhotoTextView"
-//app:placeholderTextColor="@color/primary20"
-//app:prefixTextColor="@color/primary20"
-//app:suffixTextColor="@color/primary20">
-//
-//<com.google.android.material.textfield.TextInputEditText
-//android:id="@+id/photoMemoTextInputEditText"
-//android:layout_width="match_parent"
-//android:layout_height="wrap_content"
-//android:fontFamily="@font/nanumsquareneo_regular"
-//android:hint="메모"
-//android:inputType="text|textMultiLine"
-//android:textColor="@color/text10"
-//android:textSize="16sp" />
-//</com.google.android.material.textfield.TextInputLayout>
-
 @Composable
 private fun AddPhotoMemoBody(
     modifier:Modifier = Modifier
@@ -193,8 +164,6 @@ private fun BottomButton(
         enabled = enabled,
         shape = RoundedCornerShape(4.dp),
         modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp, horizontal = 28.dp)
             .height(48.dp)
     ) {
         Text(
@@ -209,7 +178,8 @@ private fun BottomButton(
 
 @Composable
 fun AddPhotoMemoScreen(
-    onClickAlbum: () -> Unit
+    onClickAlbum: () -> Unit,
+    modifier:Modifier = Modifier
 ){
     RedealTheme {
         Scaffold(
@@ -218,13 +188,26 @@ fun AddPhotoMemoScreen(
                     title = "포토메모 등록",
                     onClickAlbum = onClickAlbum
                 )
-            }
+            },
+            containerColor = Color.White,
+            modifier = modifier
         ) { padding ->
             Column(
-                modifier = Modifier.padding(padding)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(padding)
             ) {
                 AddPhotoMemoBody(
-                    Modifier.fillMaxWidth()
+                    Modifier
+                        .weight(1f)
+                )
+
+                BottomButton(
+                    enabled = false,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 24.dp, horizontal = 28.dp)
+                        .imePadding()
                 )
             }
         }
@@ -242,18 +225,24 @@ fun PreviewToolbar(){
                     onClickAlbum = {}
                 )
             },
-            bottomBar = {
-                BottomButton(
-                    enabled = false
-                )
-            },
-            containerColor = Color.White
+            containerColor = Color.White,
+            modifier = Modifier
         ) { padding ->
             Column(
-                modifier = Modifier.padding(padding)
+                modifier = Modifier
+                    .padding(padding)
+                    .fillMaxWidth()
             ) {
                 AddPhotoMemoBody(
-                    Modifier.fillMaxWidth()
+                    Modifier
+                        .weight(1f)
+                )
+
+                BottomButton(
+                    enabled = false,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 24.dp, horizontal = 28.dp)
                 )
             }
         }

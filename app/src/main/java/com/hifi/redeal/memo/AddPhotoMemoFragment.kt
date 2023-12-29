@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.firebase.auth.ktx.auth
@@ -54,6 +55,11 @@ class AddPhotoMemoFragment : Fragment() {
             val albumLauncher = albumSetting()
             val clientIdx = arguments?.getLong("clientIdx")?:1L
             photoMemoViewModel.getPhotoMemoList(clientIdx)
+
+            requireActivity().window.apply {
+                WindowCompat.setDecorFitsSystemWindows(this, false)
+            }
+
             setViewCompositionStrategy(
                 ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
             )
