@@ -1,6 +1,5 @@
 package com.hifi.redeal.transaction.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
@@ -47,7 +46,6 @@ class TransactionViewModel @Inject constructor(
 
     private fun getAllTransactionData() {
         transactionRepository.getAllTransactionData {
-            Log.d("tttt", "클리어 진행됨")
             tempTransactionList.clear()
             for (c1 in it.result) {
                 val transactionData = TransactionData(
