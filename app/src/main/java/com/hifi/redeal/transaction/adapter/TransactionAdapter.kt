@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class TransactionAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val transactions = mutableListOf<Transaction>()
+    private var transactions = mutableListOf<Transaction>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         when (viewType) {
@@ -59,13 +59,9 @@ class TransactionAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVi
         return transactions[position].getTransactionType()
     }
 
-    fun adapterAddTransaction(transaction: Transaction) {
-        transactions.add(transaction)
+    fun setTransactions(transactions: List<Transaction>) {
+        this.transactions = transactions.toMutableList()
         notifyDataSetChanged()
-    }
-
-    fun transactionsClear() {
-        transactions.clear()
     }
 
     fun sortTransaction(sortValue: Boolean) {

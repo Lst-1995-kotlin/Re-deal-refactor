@@ -1,8 +1,10 @@
 package com.hifi.redeal.transaction.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
+import com.hifi.redeal.transaction.model.Client
 import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.model.TransactionData
 import com.hifi.redeal.transaction.repository.TransactionRepository
@@ -14,12 +16,39 @@ class TransactionViewModel @Inject constructor(
     private val transactionRepository: TransactionRepository,
 ) : ViewModel() {
 
-    var transactionList = MutableLiveData<MutableList<Transaction>>()
-    var tempTransactionList = mutableListOf<Transaction>()
+    val transactionList = MutableLiveData<MutableList<Transaction>>()
+    private val tempTransactionList = mutableListOf<Transaction>()
+    private var newTransactionIdx = 0L
 
-    fun getAllTransactionData(clientIdx: Long?) {
-        tempTransactionList.clear()
-        transactionRepository.getAllTransactionData(clientIdx) {
+    init {
+        getNextTransactionIdx()
+        getAllTransactionData()
+    }
+
+    fun addDepositTransaction(client: Client, amount: String) {
+        val newDepositTransactionData = TransactionData(
+            client.getClientIdx(),
+            Timestamp.now(),
+            true,
+            amount,
+            newTransactionIdx,
+            0,
+            "",
+            "",
+        )
+        transactionRepository.setTransactionData(newDepositTransactionData) {
+            val newTransaction = Transaction(newDepositTransactionData)
+            tempTransactionList.add(newTransaction)
+            transactionList.postValue(tempTransactionList)
+            getClientName()
+            getNextTransactionIdx()
+        }
+    }
+
+    private fun getAllTransactionData() {
+        transactionRepository.getAllTransactionData {
+            Log.d("tttt", "클리어 진행됨")
+            tempTransactionList.clear()
             for (c1 in it.result) {
                 val transactionData = TransactionData(
                     c1["clientIdx"] as Long,
@@ -48,6 +77,14 @@ class TransactionViewModel @Inject constructor(
                     transaction.setTransactionClientName(clientName)
                     transactionList.postValue(tempTransactionList)
                 }
+            }
+        }
+    }
+
+    private fun getNextTransactionIdx() {
+        transactionRepository.getNextTransactionIdx {
+            for (c1 in it.result) {
+                newTransactionIdx = c1["transactionIdx"] as Long + 1L
             }
         }
     }

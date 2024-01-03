@@ -5,14 +5,13 @@ import androidx.lifecycle.ViewModel
 import com.hifi.redeal.transaction.model.Client
 import com.hifi.redeal.transaction.model.ClientSimpleData
 import com.hifi.redeal.transaction.repository.ClientRepository
-import com.hifi.redeal.transaction.util.ClientConfiguration
 import com.hifi.redeal.transaction.util.ClientConfiguration.Companion.isClientStateNotStop
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class ClientViewModel @Inject constructor(
-    private val clientRepository: ClientRepository
+    private val clientRepository: ClientRepository,
 ) : ViewModel() {
 
     val selectedClient = MutableLiveData<Client>()

@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.snapshots.Snapshot.Companion.observe
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.MainActivity.Companion.TRANSACTION_DEPOSIT_FRAGMENT
@@ -19,7 +20,7 @@ import javax.inject.Inject
 class TransactionFragment : Fragment() {
 
     private lateinit var fragmentTransactionBinding: FragmentTransactionBinding
-    private val transactionViewModel: TransactionViewModel by viewModels()
+    private val transactionViewModel: TransactionViewModel by activityViewModels()
     private lateinit var mainActivity: MainActivity
 
     @Inject
@@ -56,15 +57,13 @@ class TransactionFragment : Fragment() {
     }
 
     private fun setViewModel() {
-        transactionViewModel.run {
-            transactionList.observe(viewLifecycleOwner) {
-                transactionAdapter.transactionsClear()
-                it.forEach { transaction ->
-                    transactionAdapter.adapterAddTransaction(transaction)
-                    transactionAdapter.sortTransaction(false)
-                }
-            }
-            getAllTransactionData(arguments?.getLong("clientIdx"))
+        transactionViewModel.transactionList.observe(viewLifecycleOwner) { value ->
+            val clientIdx = arguments?.getLong("clientIdx")
+            clientIdx?.let {
+                transactionAdapter.setTransactions(value.filter { it.getTransactionClientIdx() == clientIdx })
+            } ?: transactionAdapter.setTransactions(value)
+
+            transactionAdapter.sortTransaction(false)
         }
     }
 }

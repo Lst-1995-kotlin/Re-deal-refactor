@@ -1,5 +1,8 @@
 package com.hifi.redeal.transaction.model
 
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
 import com.hifi.redeal.transaction.util.ClientConfiguration.Companion.getClientBookmarkResource
 import com.hifi.redeal.transaction.util.ClientConfiguration.Companion.getClientStateResource
@@ -24,9 +27,21 @@ class Client(
     fun filter(value: String) = clientSimpleData.clientName.contains(value) ||
         clientSimpleData.clientManagerName.contains(value)
 
-    fun getClientInfo() = "${clientSimpleData.clientName} ${clientSimpleData.clientManagerName}"
+    fun setClientInfoView(textView: TextView) {
+        textView.text = "${clientSimpleData.clientName} ${clientSimpleData.clientManagerName}"
+    }
 
-    fun getClientState() = clientSimpleData.clientState
+    fun setClientStateView(imageView: ImageView) {
+        val clientStateResource = getClientStateResource(clientSimpleData.clientState)
+        imageView.setImageResource(clientStateResource ?: 0)
+        imageView.visibility = clientStateResource?.let { View.VISIBLE } ?: View.GONE
+    }
 
-    fun getClientBookmark() = clientSimpleData.isBookmark
+    fun setClientBookmarkView(imageView: ImageView) {
+        val clientBookmarkResource = getClientBookmarkResource(clientSimpleData.isBookmark)
+        imageView.setImageResource(clientBookmarkResource ?: 0)
+        imageView.visibility = clientBookmarkResource?.let { View.VISIBLE } ?: View.GONE
+    }
+
+    fun getClientIdx() = clientSimpleData.clientIdx
 }
