@@ -3,7 +3,7 @@ package com.hifi.redeal.transaction.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.hifi.redeal.transaction.model.Client
-import com.hifi.redeal.transaction.model.ClientSimpleData
+import com.hifi.redeal.transaction.model.ClientData
 import com.hifi.redeal.transaction.repository.ClientRepository
 import com.hifi.redeal.transaction.util.ClientConfiguration.Companion.isClientStateNotStop
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,7 +26,7 @@ class ClientViewModel @Inject constructor(
         clientRepository.getUserAllClient {
             _clients.clear()
             for (c1 in it.result) {
-                val clientData = ClientSimpleData(
+                val clientData = ClientData(
                     c1["clientIdx"] as Long,
                     c1["clientName"] as String,
                     c1["clientManagerName"] as String,

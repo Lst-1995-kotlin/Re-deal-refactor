@@ -5,9 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
 import com.hifi.redeal.transaction.model.Client
-import com.hifi.redeal.transaction.model.ClientSimpleData
-import com.hifi.redeal.transaction.repository.ClientRepository
-import com.hifi.redeal.transaction.util.ClientConfiguration
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 
 class ClientAdapter(

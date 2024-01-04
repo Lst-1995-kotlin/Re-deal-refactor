@@ -8,40 +8,40 @@ import com.hifi.redeal.transaction.util.ClientConfiguration.Companion.getClientB
 import com.hifi.redeal.transaction.util.ClientConfiguration.Companion.getClientStateResource
 
 class Client(
-    private val clientSimpleData: ClientSimpleData,
+    private val clientData: ClientData,
 ) {
 
     fun bind(transactionSelectClientItemBinding: TransactionSelectClientItemBinding) {
         transactionSelectClientItemBinding.run {
-            getClientStateResource(clientSimpleData.clientState)?.let {
+            getClientStateResource(clientData.clientState)?.let {
                 selectTransactionClinetState.setBackgroundResource(it)
             }
-            getClientBookmarkResource(clientSimpleData.isBookmark)?.let {
+            getClientBookmarkResource(clientData.isBookmark)?.let {
                 selectTransactionClientBookmarkView.setBackgroundResource(it)
             }
-            selectTransactionClientName.text = clientSimpleData.clientName
-            selectTransactionClientManagerName.text = clientSimpleData.clientManagerName
+            selectTransactionClientName.text = clientData.clientName
+            selectTransactionClientManagerName.text = clientData.clientManagerName
         }
     }
 
-    fun filter(value: String) = clientSimpleData.clientName.contains(value) ||
-        clientSimpleData.clientManagerName.contains(value)
+    fun filter(value: String) = clientData.clientName.contains(value) ||
+        clientData.clientManagerName.contains(value)
 
     fun setClientInfoView(textView: TextView) {
-        textView.text = "${clientSimpleData.clientName} ${clientSimpleData.clientManagerName}"
+        textView.text = "${clientData.clientName} ${clientData.clientManagerName}"
     }
 
     fun setClientStateView(imageView: ImageView) {
-        val clientStateResource = getClientStateResource(clientSimpleData.clientState)
+        val clientStateResource = getClientStateResource(clientData.clientState)
         imageView.setImageResource(clientStateResource ?: 0)
         imageView.visibility = clientStateResource?.let { View.VISIBLE } ?: View.GONE
     }
 
     fun setClientBookmarkView(imageView: ImageView) {
-        val clientBookmarkResource = getClientBookmarkResource(clientSimpleData.isBookmark)
+        val clientBookmarkResource = getClientBookmarkResource(clientData.isBookmark)
         imageView.setImageResource(clientBookmarkResource ?: 0)
         imageView.visibility = clientBookmarkResource?.let { View.VISIBLE } ?: View.GONE
     }
 
-    fun getClientIdx() = clientSimpleData.clientIdx
+    fun getClientIdx() = clientData.clientIdx
 }
