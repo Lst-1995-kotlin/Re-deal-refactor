@@ -125,7 +125,6 @@ private fun MemoBox(
     }
 }
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 private fun PhotoMemoItem(
     item: PhotoMemoData,

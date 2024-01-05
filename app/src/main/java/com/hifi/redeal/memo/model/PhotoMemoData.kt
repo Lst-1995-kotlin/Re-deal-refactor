@@ -24,3 +24,9 @@ data class PhotoMemoData @Inject constructor(
     val srcArr:List<String>,
     val clientIdx:Long = -1
 )
+
+enum class BottomButtonState {
+    IDLE,
+    PRESSED,
+    DISABLED
+}
