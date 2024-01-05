@@ -34,7 +34,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -47,17 +46,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.memo.model.PhotoMemoData
 import com.hifi.redeal.memo.repository.PhotoMemoRepository
 import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.PhotoMemoViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -106,8 +101,8 @@ private fun PhotoMemoToolbar(
 }
 @Composable
 private fun MemoBox(
-    text: String = "새로운 메모",
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    text: String = "새로운 메모"
 ) {
     Surface(
         modifier = modifier,
@@ -154,7 +149,7 @@ private fun PhotoMemoItem(
                     }
                     val painter = if (imageUrl == "")
                         painterResource(id = R.drawable.empty_photo) else
-                        rememberImagePainter(imageUrl)
+                        rememberAsyncImagePainter(imageUrl)
                     Image(
                         painter = painter,
                         contentDescription = null,
@@ -181,7 +176,7 @@ private fun PhotoMemoItem(
                 .fillMaxWidth()
                 .padding(top = 8.dp)
         )
-        MemoBox(item.context, modifier = Modifier.padding(top = 6.dp))
+        MemoBox(modifier = Modifier.padding(top = 6.dp), text = item.context)
     }
 }
 
