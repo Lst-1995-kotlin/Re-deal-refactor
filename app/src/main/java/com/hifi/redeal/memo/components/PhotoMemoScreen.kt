@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -99,6 +100,7 @@ private fun PhotoMemoToolbar(
         )
     }
 }
+
 @Composable
 private fun MemoBox(
     modifier: Modifier = Modifier,
@@ -212,7 +214,12 @@ fun PhotoMemoScreen(
 ) {
     val photoMemoDataList by photoMemoViewModel.photoMemoList.observeAsState()
     Scaffold(
-        topBar = { PhotoMemoToolbar(title = "포토 메모", mainActivity = mainActivity) },
+        topBar = {
+            PhotoMemoToolbar(
+                title = stringResource(id = R.string.photo_memo_toolbar),
+                mainActivity = mainActivity
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
