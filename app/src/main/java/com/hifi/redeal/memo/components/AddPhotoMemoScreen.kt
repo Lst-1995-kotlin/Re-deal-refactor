@@ -248,7 +248,7 @@ fun AddPhotoMemoScreen(
 
     val onClickBottomButton = {
         bottomButtonState = BottomButtonState.PRESSED
-        repository.addPhotoMemo(clientIdx, memoValue, selectedImageList.toMutableList()) {
+        repository.addPhotoMemo(clientIdx, memoValue, selectedImageList.toList()) {
             mainActivity.removeFragment(MainActivity.ADD_PHOTO_MEMO_FRAGMENT)
         }
     }

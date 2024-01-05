@@ -32,7 +32,7 @@ class PhotoMemoRepository @Inject constructor(
     fun addPhotoMemo(
         clientIdx: Long,
         photoMemoContext: String,
-        uriList: MutableList<Uri>,
+        uriList: List<Uri>,
         callback: (Task<Void>) -> Unit
     ) {
         val photoMemoRef = photoMemoDataCollection
@@ -47,7 +47,7 @@ class PhotoMemoRepository @Inject constructor(
                 }
                 var uploadCnt = 0
                 val fileNameList = mutableListOf<String>()
-                for (i in 0 until uriList.size) {
+                for (i in uriList.indices) {
                     val fileName =
                         "image_user${currentUser.userIdx}_client${clientIdx}_photoMemo${photoMemoIdx}_$i"
                     uploadImage(uriList[i], fileName) { isSuccessful ->
