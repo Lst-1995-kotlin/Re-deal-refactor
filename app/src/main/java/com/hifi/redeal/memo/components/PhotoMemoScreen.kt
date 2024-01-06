@@ -54,8 +54,6 @@ import com.hifi.redeal.memo.model.PhotoMemoData
 import com.hifi.redeal.memo.repository.PhotoMemoRepository
 import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.PhotoMemoViewModel
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -129,10 +127,9 @@ private fun PhotoMemoItem(
     modifier: Modifier = Modifier,
     repository: PhotoMemoRepository
 ) {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA)
     Column(modifier) {
         Text(
-            text = intervalBetweenDateText(dateFormat.format(item.date.toDate())),
+            text = intervalBetweenDateText(item.date.toDate()),
             style = MaterialTheme.typography.bodySmall.copy(
                 fontWeight = FontWeight.ExtraBold
             ),

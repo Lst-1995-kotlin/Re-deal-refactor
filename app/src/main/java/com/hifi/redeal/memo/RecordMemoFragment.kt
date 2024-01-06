@@ -114,7 +114,7 @@ class RecordMemoFragment : Fragment() {
                 }
             }
             fun bindItem(item: RecordMemoData){
-                recordDateTextView.text = intervalBetweenDateText(dateFormat.format(item.date.toDate()))
+                recordDateTextView.text = intervalBetweenDateText(item.date.toDate())
                 recordMemoTextView.text = item.context.ifEmpty { "메모를 등록하지 않았어요" }
                 recordMemoFilenameTextView.text = item.audioFilename
                 recordMemoAudioSeekBar.progress = 0
