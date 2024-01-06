@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
+import com.hifi.redeal.memo.model.PhotoMemoData
 import com.hifi.redeal.memo.model.RecordMemoData
 import com.hifi.redeal.memo.repository.RecordMemoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +19,8 @@ class RecordMemoViewModel @Inject constructor(
 ) : ViewModel() {
     val recordMemoList = MutableLiveData<List<RecordMemoData>>()
 
+    private val _photoMemoList = MutableLiveData<List<RecordMemoData>>()
+    val recordMemoListTest: LiveData<List<RecordMemoData>> get() = _photoMemoList
     init{
         recordMemoList.value = listOf<RecordMemoData>()
     }
@@ -39,6 +42,7 @@ class RecordMemoViewModel @Inject constructor(
             }
             recordMemoData.reverse()
             recordMemoList.postValue(recordMemoData)
+            _photoMemoList.value = recordMemoData
         }
     }
 }
