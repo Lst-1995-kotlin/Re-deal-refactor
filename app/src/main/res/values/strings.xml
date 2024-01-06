@@ -6,6 +6,7 @@
     <string name="memo_tab_item_name_photo">포토 메모</string>
     <string name="memo_tab_item_name_voice">음성 메모</string>
 
+    <string name="record_memo_toolbar">음성 메모</string>
     <string name="photo_memo_toolbar">포토 메모</string>
     <string name="photo_memo_detail_toolbar">메모 전체 보기</string>
     <string name="testImage">testImage</string>
