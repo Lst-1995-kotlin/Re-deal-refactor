@@ -2,9 +2,7 @@ package com.hifi.redeal.memo.components
 
 import android.os.Bundle
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,23 +11,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
@@ -44,9 +38,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -84,6 +76,16 @@ private fun RecordMemoToolbar(
             navigationIcon = {
                 IconButton(onClick = {
                     mainActivity.removeFragment(MainActivity.RECORD_MEMO_FRAGMENT)
+                }) {
+                    Icon(
+                        painter = painterResource(R.drawable.arrow_back_ios_24px),
+                        contentDescription = null,
+                    )
+                }
+            },
+            actions = {
+                IconButton(onClick = {
+
                 }) {
                     Icon(
                         painter = painterResource(R.drawable.arrow_back_ios_24px),
@@ -201,6 +203,21 @@ private fun RecordMemoToolbarTest(
                     )
                 }
             },
+            actions = {
+                IconButton(
+                    onClick = {
+                        // todo : 편집 버튼 클릭시 삭제, 이름 변경, 즐겨찾기 등록할 수 있도록
+                    },
+                    colors = IconButtonDefaults.iconButtonColors(
+                        contentColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.EditNote,
+                        contentDescription = null,
+                    )
+                }
+            },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = Color.White,
                 navigationIconContentColor = MaterialTheme.colorScheme.primary,
@@ -220,10 +237,10 @@ private fun RecordMemoToolbarTest(
 @Composable
 private fun RecordMemoItemTest(
     item: RecordMemoData,
-    isPlay:Boolean,
+    isPlay: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val time = if(isPlay) "00:00:01 / 00:00:15" else "00:00:15"
+    val time = if (isPlay) "00:00:01 / 00:00:15" else "00:00:15"
     Column(modifier) {
         Text(
             text = intervalBetweenDateText(item.date.toDate()),
@@ -233,25 +250,25 @@ private fun RecordMemoItemTest(
             modifier = Modifier
                 .fillMaxWidth()
         )
-        MemoBox(modifier = Modifier.padding(top = 6.dp), text = item.context)
+        MemoBox(modifier = Modifier.padding(top = 8.dp), text = item.context)
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 20.dp)
-        ){
+        ) {
             OutlinedIconButton(
                 onClick = { /*TODO*/ },
                 colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = if(isPlay) MaterialTheme.colorScheme.primary else Color.White,
-                    contentColor = if(isPlay) Color.White else MaterialTheme.colorScheme.primary
+                    containerColor = if (isPlay) MaterialTheme.colorScheme.primary else Color.White,
+                    contentColor = if (isPlay) Color.White else MaterialTheme.colorScheme.primary
                 ),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                 modifier = Modifier
                     .size(36.dp)
             ) {
                 Icon(
-                    imageVector = if(isPlay) Icons.Default.Pause else Icons.Default.PlayArrow,
+                    imageVector = if (isPlay) Icons.Default.Pause else Icons.Default.PlayArrow,
                     contentDescription = null,
                     modifier = Modifier
                 )
@@ -261,10 +278,10 @@ private fun RecordMemoItemTest(
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 16.dp)
-            ){
+            ) {
                 Text(
                     text = item.audioFilename,
-                    color = if(isPlay) MaterialTheme.colorScheme.primary else Color.Black,
+                    color = if (isPlay) MaterialTheme.colorScheme.primary else Color.Black,
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold
                     ),
@@ -277,7 +294,7 @@ private fun RecordMemoItemTest(
                     modifier = Modifier.padding(top = 8.dp)
                 )
 
-                if(isPlay) {
+                if (isPlay) {
                     Slider(
                         value = 0.0f,
                         onValueChange = {
