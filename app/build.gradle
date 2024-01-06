@@ -121,8 +121,9 @@ dependencies {
     implementation 'androidx.compose.runtime:runtime-rxjava2'
     implementation 'io.coil-kt:coil-compose:2.4.0'
     implementation "com.google.accompanist:accompanist-pager:0.28.0"
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.19.1'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.19.1'
+    implementation("androidx.media3:media3-exoplayer:1.2.0")
+    implementation("androidx.media3:media3-exoplayer-dash:1.2.0")
+    implementation("androidx.media3:media3-ui:1.2.0")
 }
 
 kapt {
