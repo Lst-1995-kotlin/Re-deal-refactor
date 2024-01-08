@@ -29,7 +29,6 @@ class TransactionDepositFragment : Fragment() {
     ): View? {
         fragmentTransactionDepositBinding = FragmentTransactionDepositBinding.inflate(inflater)
         mainActivity = activity as MainActivity
-        selectTransactionClientDialog = null
 
         setViewModel()
         setBind()

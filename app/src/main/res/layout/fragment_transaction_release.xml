@@ -8,42 +8,43 @@
     android:orientation="vertical"
     android:transitionGroup="true">
 
+
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/materialToolbar"
-        android:layout_width="match_parent"
+        android:id="@+id/materialToolbar2"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
+        android:transitionGroup="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/arrow_back_ios_24px"
-        app:title="입금 내역 추가"
+        app:title="거래 내역 추가"
         app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance" />
 
     <LinearLayout
+        android:id="@+id/linearLayout11"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@color/primary20"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/materialToolbar"
-        app:layout_constraintTop_toBottomOf="@+id/materialToolbar2"
-        tools:layout_editor_absoluteX="0dp"></LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/materialToolbar2"></LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout8"
+        android:id="@+id/linearLayout12"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="20dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialToolbar">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout11">
 
         <ImageView
-            android:id="@+id/depositClientState"
+            android:id="@+id/releaseClientState"
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_gravity="center_vertical"
@@ -51,7 +52,7 @@
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/depositClientInfo"
+            android:id="@+id/releaseClientInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -62,7 +63,7 @@
             android:textSize="16sp" />
 
         <ImageView
-            android:id="@+id/depositClientBookmark"
+            android:id="@+id/releaseClientBookmark"
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_gravity="center_vertical"
@@ -75,7 +76,7 @@
             android:orientation="vertical">
 
             <ImageButton
-                android:id="@+id/makeDepositBtnSelectClient"
+                android:id="@+id/makeReleaseBtnSelectClient"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
@@ -89,23 +90,94 @@
     </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/addDepositPriceinputLayout"
+        android:id="@+id/transactionNameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        android:hint="금액"
+        android:hint="품명"
         android:textColorHint="@color/text30"
         app:boxStrokeColor="@color/primary20"
         app:endIconMode="clear_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout8">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout12">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/addDepositPriceEditTextNumber"
+            android:id="@+id/transactionNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nanumsquareneo_regular"
+            android:inputType="text"
+            android:textColor="@color/text10" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/transactionItemCountLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint="수량"
+        android:textColorHint="@color/text30"
+        app:boxStrokeColor="@color/primary20"
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/transactionNameLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/transactionItemCountEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nanumsquareneo_regular"
+            android:inputType="number"
+            android:textColor="@color/text10" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/transactionItemPriceLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint="단가"
+        android:textColorHint="@color/text30"
+        app:boxStrokeColor="@color/primary20"
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/transactionItemCountLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/transactionItemPriceEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nanumsquareneo_regular"
+            android:inputType="number"
+            android:textColor="@color/text10" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/transactionAmountReceivedLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint="받은금액"
+        android:textColorHint="@color/text30"
+        app:boxStrokeColor="@color/primary20"
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/transactionItemPriceLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/transactionAmountReceivedEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nanumsquareneo_regular"
@@ -114,20 +186,19 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/addDepositBtn"
+        android:id="@+id/addReleaseBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/btn_round_primary20"
         android:fontFamily="@font/nanumsquareneo_bold"
-        android:text="입금 내역 추가"
+        android:text="거래 추가"
         android:textColor="@color/primary99"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

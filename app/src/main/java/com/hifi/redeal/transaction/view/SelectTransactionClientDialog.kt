@@ -27,7 +27,6 @@ class SelectTransactionClientDialog(
     ): View? {
         dialogSelectTransactionClientDialog = DialogSelectTransactionClientBinding.inflate(inflater)
         clientAdapter = ClientAdapter(clientViewModel)
-        clientAdapter.getClient()
         setDialog()
         return dialogSelectTransactionClientDialog.root
     }

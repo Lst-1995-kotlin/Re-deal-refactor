@@ -3,7 +3,6 @@ package com.hifi.redeal
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
@@ -16,7 +15,6 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.forEach
 import androidx.core.view.isVisible
@@ -53,6 +51,7 @@ import com.hifi.redeal.schedule.view.VisitedScheduleFragment
 import com.hifi.redeal.schedule.vm.ScheduleVM
 import com.hifi.redeal.transaction.view.TransactionDepositFragment
 import com.hifi.redeal.transaction.view.TransactionFragment
+import com.hifi.redeal.transaction.view.TransactionReleaseFragment
 import com.skt.tmap.TMapTapi
 import com.skt.tmap.TMapTapi.OnAuthenticationListenerCallback
 import dagger.hilt.android.AndroidEntryPoint
@@ -120,6 +119,7 @@ class MainActivity : AppCompatActivity() {
         val MY_PAGE_EDIT_NAME_FRAGMENT = "MyPageEditNameFragment"
         val MY_PAGE_REQUEST_FRAGMENT = "MyPageRequestFragment"
         val TRANSACTION_DEPOSIT_FRAGMENT = "TransactionDepositFragment"
+        val TRANSACTION_RELEASE_FRAGMENT = "TransactionReleaseFragment"
 
         const val BASE_URL = "https://dapi.kakao.com/"
         const val REGION_BASE_URL = "http://api.vworld.kr/"
@@ -378,6 +378,7 @@ class MainActivity : AppCompatActivity() {
             MY_PAGE_EDIT_NAME_FRAGMENT -> MyPageEditNameFragment()
             MY_PAGE_REQUEST_FRAGMENT -> MyPageRequestFragment()
             TRANSACTION_DEPOSIT_FRAGMENT -> TransactionDepositFragment()
+            TRANSACTION_RELEASE_FRAGMENT -> TransactionReleaseFragment()
             else -> Fragment()
         }
 

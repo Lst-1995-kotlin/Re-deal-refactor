@@ -45,10 +45,6 @@ class ClientAdapter(
         notifyDataSetChanged()
     }
 
-    fun getClient() {
-        clientViewModel.clients.value ?: clientViewModel.getUserAllClient()
-    }
-
     inner class TransactionClientHolder(
         private val transactionSelectClientItemBinding: TransactionSelectClientItemBinding,
     ) : RecyclerView.ViewHolder(transactionSelectClientItemBinding.root) {

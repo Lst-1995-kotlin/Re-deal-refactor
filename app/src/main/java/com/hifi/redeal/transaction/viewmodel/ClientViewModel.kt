@@ -18,11 +18,15 @@ class ClientViewModel @Inject constructor(
     private val _clients = mutableListOf<Client>()
     val clients = MutableLiveData<List<Client>>()
 
+    init {
+        getUserAllClient()
+    }
+
     fun setSelectClient(client: Client) {
         selectedClient.postValue(client)
     }
 
-    fun getUserAllClient() {
+    private fun getUserAllClient() {
         clientRepository.getUserAllClient {
             _clients.clear()
             for (c1 in it.result) {

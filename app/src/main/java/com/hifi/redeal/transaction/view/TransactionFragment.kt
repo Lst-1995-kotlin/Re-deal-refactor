@@ -4,17 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.runtime.snapshots.Snapshot.Companion.observe
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.MainActivity.Companion.TRANSACTION_DEPOSIT_FRAGMENT
+import com.hifi.redeal.MainActivity.Companion.TRANSACTION_RELEASE_FRAGMENT
 import com.hifi.redeal.databinding.FragmentTransactionBinding
 import com.hifi.redeal.transaction.adapter.TransactionAdapter
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class TransactionFragment : Fragment() {
@@ -50,7 +49,7 @@ class TransactionFragment : Fragment() {
             }
 
             ImgBtnAddTransaction.setOnClickListener {
-                // transactionDepositDialog.show(WITHDRAWAL_TRANSACTION)
+                mainActivity.replaceFragment(TRANSACTION_RELEASE_FRAGMENT, true, null)
             }
         }
     }

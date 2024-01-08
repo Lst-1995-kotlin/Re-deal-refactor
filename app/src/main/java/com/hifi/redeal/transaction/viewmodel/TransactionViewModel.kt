@@ -44,6 +44,32 @@ class TransactionViewModel @Inject constructor(
         }
     }
 
+    fun addReleaseTransaction(
+        client: Client,
+        itemName: String,
+        itemCount: String,
+        itemPrice: String,
+        amount: String,
+    ) {
+        val newDepositTransactionData = TransactionData(
+            client.getClientIdx(),
+            Timestamp.now(),
+            false,
+            amount,
+            newTransactionIdx,
+            itemCount.toLong(),
+            itemPrice,
+            itemName,
+        )
+        transactionRepository.setTransactionData(newDepositTransactionData) {
+            val newTransaction = Transaction(newDepositTransactionData)
+            tempTransactionList.add(newTransaction)
+            transactionList.postValue(tempTransactionList)
+            getClientName()
+            getNextTransactionIdx()
+        }
+    }
+
     private fun getAllTransactionData() {
         transactionRepository.getAllTransactionData {
             tempTransactionList.clear()
