@@ -4,9 +4,12 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -34,9 +37,9 @@ import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,15 +52,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.rememberPagerState
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.memo.repository.PhotoMemoRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MyAppToolbar(
+private fun PhotoDetailToolbar(
     title: String,
     modifier: Modifier = Modifier,
     mainActivity: MainActivity
@@ -75,7 +83,7 @@ private fun MyAppToolbar(
             },
             navigationIcon = {
                 IconButton(onClick = {
-                    mainActivity.removeFragment(MainActivity.PHOTO_MEMO_FRAGMENT)
+                    mainActivity.removeFragment(MainActivity.PHOTO_DETAIL_FRAGMENT)
                 }) {
                     Icon(
                         painter = painterResource(R.drawable.arrow_back_ios_24px),
@@ -99,129 +107,90 @@ private fun MyAppToolbar(
     }
 }
 
-@OptIn(ExperimentalCoilApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalCoilApi::class)
 @Composable
-private fun MainImage(
-    src: String,
+private fun ImageSlider(
+    pagerState: PagerState,
+    images: List<String>,
     repository: PhotoMemoRepository,
-    onClick:(isLeft:Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var imageUrl by remember { mutableStateOf("") }
-    LaunchedEffect(Unit) {
-        imageUrl = withContext(Dispatchers.IO) {
-            repository.getPhotoMemoImgUrlToCoroutine(src)
-        }
-    }
-    val painter = if (imageUrl == "")
-        painterResource(id = R.drawable.empty_photo) else
-        rememberImagePainter(imageUrl)
-
-    val backgroundColor = Color(240, 240, 240)
-    val dismissState = rememberDismissState(confirmValueChange = { dismissValue ->
-        when (dismissValue) {
-            DismissValue.Default -> { // dismissThresholds 만족 안한 상태
-                false
-            }
-            DismissValue.DismissedToEnd -> { // -> 방향 스와이프 (수정)
-                onClick(false)
-                false
-            }
-            DismissValue.DismissedToStart -> { // <- 방향 스와이프 (삭제)
-                onClick(true)
-                true
-            }
-        }
-    })
-
-    SwipeToDismiss(
-        state = dismissState,
+    HorizontalPager(
+        count = images.size,
+        state = pagerState,
+        itemSpacing = 16.dp,
+        verticalAlignment = Alignment.CenterVertically,
+        contentPadding = PaddingValues(vertical = 16.dp),
         modifier = modifier
             .fillMaxWidth()
-            .height(100.dp),
-        dismissContent = { // content
-            Image(
-                painter = painter,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-        },
-        background = { // dismiss content
-            val direction = dismissState.dismissDirection ?: return@SwipeToDismiss
-            val color by animateColorAsState(
-                when (dismissState.targetValue) {
-                    DismissValue.Default -> backgroundColor.copy(alpha = 0.5f) // dismissThresholds 만족 안한 상태
-                    DismissValue.DismissedToEnd -> Color.Green.copy(alpha = 0.4f) // -> 방향 스와이프 (수정)
-                    DismissValue.DismissedToStart -> Color.Red.copy(alpha = 0.5f) // <- 방향 스와이프 (삭제)
-                }, label = ""
-            )
-            val icon = when (dismissState.targetValue) {
-                DismissValue.Default -> Icons.Default.Circle
-                DismissValue.DismissedToEnd -> Icons.Default.Edit
-                DismissValue.DismissedToStart -> Icons.Default.Delete
-            }
-            val scale by animateFloatAsState(
-                when (dismissState.targetValue == DismissValue.Default) {
-                    true -> 0.8f
-                    else -> 1.5f
-                }, label = ""
-            )
-            val alignment = when (direction) {
-                DismissDirection.EndToStart -> Alignment.CenterEnd
-                DismissDirection.StartToEnd -> Alignment.CenterStart
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color)
-                    .padding(horizontal = 30.dp),
-                contentAlignment = alignment
-            ) {
-                Icon(
-                    modifier = Modifier.scale(scale),
-                    imageVector = icon,
-                    contentDescription = null
-                )
+            .background(Color.White)
+    ) { page ->
+        var imageUrl by remember { mutableStateOf("") }
+        LaunchedEffect(Unit) {
+            imageUrl = withContext(Dispatchers.IO) {
+                repository.getPhotoMemoImgUrlToCoroutine(images[page])
             }
         }
-    )
+
+        val painter = if (imageUrl == "")
+            painterResource(id = R.drawable.empty_photo) else
+            rememberImagePainter(imageUrl)
+        Image(
+            painter = painter,
+            contentDescription = "$page",
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .fillMaxSize()
+        )
+    }
 }
 
-@OptIn(ExperimentalCoilApi::class)
+@OptIn(ExperimentalCoilApi::class, ExperimentalPagerApi::class)
 @Composable
 private fun BottomImageList(
+    pagerState: PagerState,
     srcArr: List<String>,
     repository: PhotoMemoRepository,
     onClick: (order: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyRow(content = {
-        itemsIndexed(srcArr) { idx, src ->
-            var imageUrl by remember { mutableStateOf("") }
-            LaunchedEffect(Unit) {
-                imageUrl = withContext(Dispatchers.IO) {
-                    repository.getPhotoMemoImgUrlToCoroutine(src)
-                }
-            }
-            val painter = if (imageUrl == "")
-                painterResource(id = R.drawable.empty_photo) else
-                rememberImagePainter(imageUrl)
-            Image(
-                painter = painter,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(60.dp)
-                    .clickable {
-                        onClick(idx)
+    LazyRow(
+        content = {
+            itemsIndexed(srcArr) { idx, src ->
+                var imageUrl by remember { mutableStateOf("") }
+                LaunchedEffect(Unit) {
+                    imageUrl = withContext(Dispatchers.IO) {
+                        repository.getPhotoMemoImgUrlToCoroutine(src)
                     }
-            )
-        }
-    })
+                }
+                val painter = if (imageUrl == "")
+                    painterResource(id = R.drawable.empty_photo) else
+                    rememberImagePainter(imageUrl)
+                Image(
+                    painter = painter,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(60.dp)
+                        .clickable {
+                            onClick(idx)
+                        }
+                        .border(
+                            width = if (pagerState.currentPage == idx) 4.dp else 0.dp,
+                            MaterialTheme.colorScheme.primary
+                        )
+                )
+            }
+        },
+        contentPadding = PaddingValues(20.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .background(Color.White)
+    )
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun PhotoDetailScreen(
     imgOrder: Int,
@@ -229,42 +198,33 @@ fun PhotoDetailScreen(
     repository: PhotoMemoRepository,
     mainActivity: MainActivity
 ) {
-    var order by remember {
-        mutableIntStateOf(imgOrder)
-    }
-
+    val pagerState = rememberPagerState(initialPage = imgOrder)
+    val coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = {
-            MyAppToolbar(
+            PhotoDetailToolbar(
                 title = "상세 이미지", mainActivity = mainActivity
             )
         }
-    ) {
-            padding ->
+    ) { padding ->
         Column(
             modifier = Modifier.padding(padding)
         ) {
-            MainImage(
-                src = imgSrcArr[order],
+            ImageSlider(
+                pagerState = pagerState,
+                images = imgSrcArr,
                 repository = repository,
-                onClick= {isLeft ->
-                    if(isLeft){
-                        if(order - 1 > 0) {
-                            order--
-                        }
-                    }else{
-                        if(order + 1 < imgSrcArr.size) {
-                            order++
-                        }
-                    }
-                }
+                modifier = Modifier.weight(1f)
             )
 
             BottomImageList(
+                pagerState = pagerState,
                 srcArr = imgSrcArr,
                 repository = repository,
                 onClick = {
-                    order = it
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(page = it)
+                    }
                 }
             )
         }

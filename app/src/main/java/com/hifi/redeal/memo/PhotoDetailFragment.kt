@@ -1,6 +1,7 @@
 package com.hifi.redeal.memo
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +29,7 @@ class PhotoDetailFragment : Fragment() {
             val mainActivity = activity as MainActivity
             val imgSrcArr = arguments?.getStringArrayList("srcArr")!!
             val imgOrder = arguments?.getInt("order")!!
+            Log.d("testaaa", "${imgSrcArr}")
             setViewCompositionStrategy(
                 ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
             )
