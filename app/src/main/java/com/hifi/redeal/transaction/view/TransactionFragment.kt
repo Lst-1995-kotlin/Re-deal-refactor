@@ -22,9 +22,7 @@ class TransactionFragment : Fragment() {
     private lateinit var fragmentTransactionBinding: FragmentTransactionBinding
     private val transactionViewModel: TransactionViewModel by activityViewModels()
     private lateinit var mainActivity: MainActivity
-
-    @Inject
-    lateinit var transactionAdapter: TransactionAdapter
+    private lateinit var transactionAdapter: TransactionAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +31,7 @@ class TransactionFragment : Fragment() {
     ): View {
         fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater)
         mainActivity = activity as MainActivity
+        transactionAdapter = TransactionAdapter(transactionViewModel)
 
         setTransactionView()
         setViewModel()
@@ -57,12 +56,8 @@ class TransactionFragment : Fragment() {
     }
 
     private fun setViewModel() {
-        transactionViewModel.transactionList.observe(viewLifecycleOwner) { value ->
-            val clientIdx = arguments?.getLong("clientIdx")
-            clientIdx?.let {
-                transactionAdapter.setTransactions(value.filter { it.getTransactionClientIdx() == clientIdx })
-            } ?: transactionAdapter.setTransactions(value)
-
+        transactionViewModel.transactionList.observe(viewLifecycleOwner) {
+            transactionAdapter.setTransactions(arguments?.getLong("clientIdx"))
             transactionAdapter.sortTransaction(false)
         }
     }

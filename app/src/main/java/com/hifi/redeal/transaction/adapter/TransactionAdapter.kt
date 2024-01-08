@@ -6,11 +6,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.databinding.RowTransactionDepositBinding
 import com.hifi.redeal.databinding.RowTransactionWithdrawalBinding
 import com.hifi.redeal.transaction.model.Transaction
-import javax.inject.Inject
+import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 
-class TransactionAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TransactionAdapter(
+    private val transactionViewModel: TransactionViewModel,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var transactions = mutableListOf<Transaction>()
+
+    init {
+        transactionViewModel.transactionList.observeForever {
+            transactions = it
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         when (viewType) {
@@ -59,9 +68,12 @@ class TransactionAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVi
         return transactions[position].getTransactionType()
     }
 
-    fun setTransactions(transactions: List<Transaction>) {
-        this.transactions = transactions.toMutableList()
-        notifyDataSetChanged()
+    fun setTransactions(clientIdx: Long?) {
+        clientIdx?.let {
+            transactions =
+                (transactions.filter { it.getTransactionClientIdx() == clientIdx }).toMutableList()
+            notifyDataSetChanged()
+        }
     }
 
     fun sortTransaction(sortValue: Boolean) {
