@@ -40,7 +40,7 @@ class ClientAdapter(
         holder.bind(filterClients[position])
     }
 
-    fun clientFilterResult(value: String) {
+    fun clientFind(value: String) {
         filterClients = clients.filter { it.filter(value) }
         notifyDataSetChanged()
     }

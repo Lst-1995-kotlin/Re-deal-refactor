@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentTransactionReleaseBinding
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
@@ -42,18 +44,25 @@ class TransactionReleaseFragment : Fragment() {
                 selectTransactionClientDialog?.show(childFragmentManager, null)
             }
 
+            materialToolbar2.setNavigationOnClickListener {
+                mainActivity.removeFragment(MainActivity.TRANSACTION_RELEASE_FRAGMENT)
+            }
+
             addReleaseBtn.setOnClickListener {
-                clientViewModel.selectedClient.value ?: return@setOnClickListener
-                if (transactionNameEditText.text.isNullOrEmpty()) return@setOnClickListener
-                if (transactionItemCountEditText.text.isNullOrEmpty()) return@setOnClickListener
-                if (transactionItemPriceEditText.text.isNullOrEmpty()) return@setOnClickListener
-                if (transactionAmountReceivedEditText.text.isNullOrEmpty()) return@setOnClickListener
+                if (clientSelectedCheck() ||
+                    inputValueCheck(transactionNameEditText) ||
+                    inputValueCheck(transactionItemCountEditText) ||
+                    inputValueCheck(transactionItemPriceEditText) ||
+                    inputValueCheck(transactionAmountReceivedEditText)
+                ) {
+                    return@setOnClickListener
+                }
                 transactionViewModel.addReleaseTransaction(
                     clientViewModel.selectedClient.value!!,
                     transactionNameEditText.text.toString(),
                     transactionItemCountEditText.text.toString(),
                     transactionItemPriceEditText.text.toString(),
-                    transactionAmountReceivedEditText.text.toString()
+                    transactionAmountReceivedEditText.text.toString(),
                 )
                 mainActivity.removeFragment(MainActivity.TRANSACTION_RELEASE_FRAGMENT)
             }
@@ -72,5 +81,28 @@ class TransactionReleaseFragment : Fragment() {
             client.setClientStateView(fragmentTransactionReleaseBinding.releaseClientState)
             client.setClientBookmarkView(fragmentTransactionReleaseBinding.releaseClientBookmark)
         }
+    }
+
+    private fun inputValueCheck(textInputEditText: TextInputEditText): Boolean {
+        transactionViewModel.inputValueCheck(textInputEditText)?.let {
+            it.apply {
+                anchorView = fragmentTransactionReleaseBinding.addReleaseBtn
+            }.show()
+            return true
+        } ?: return false
+    }
+
+    private fun clientSelectedCheck(): Boolean {
+        if (clientViewModel.selectedClient.value == null) {
+            Snackbar.make(
+                fragmentTransactionReleaseBinding.root,
+                "선택된 거래처가 없습니다..",
+                Snackbar.LENGTH_SHORT,
+            ).apply {
+                anchorView = fragmentTransactionReleaseBinding.addReleaseBtn
+            }.show()
+            return true
+        }
+        return false
     }
 }

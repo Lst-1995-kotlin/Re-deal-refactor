@@ -2,6 +2,8 @@ package com.hifi.redeal.transaction.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import com.hifi.redeal.transaction.model.Client
 import com.hifi.redeal.transaction.model.Transaction
@@ -22,6 +24,17 @@ class TransactionViewModel @Inject constructor(
     init {
         getNextTransactionIdx()
         getAllTransactionData()
+    }
+
+    fun inputValueCheck(textInputEditText: TextInputEditText): Snackbar? {
+        if (textInputEditText.text.isNullOrEmpty()) {
+            return Snackbar.make(
+                textInputEditText,
+                "${textInputEditText.hint}(이)가 입력되지 않았습니다.",
+                Snackbar.LENGTH_SHORT,
+            )
+        }
+        return null
     }
 
     fun addDepositTransaction(client: Client, amount: String) {

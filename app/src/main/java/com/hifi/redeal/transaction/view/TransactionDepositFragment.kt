@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentTransactionDepositBinding
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
@@ -29,21 +31,24 @@ class TransactionDepositFragment : Fragment() {
     ): View? {
         fragmentTransactionDepositBinding = FragmentTransactionDepositBinding.inflate(inflater)
         mainActivity = activity as MainActivity
-
-        setViewModel()
         setBind()
-
+        setViewModel()
         return fragmentTransactionDepositBinding.root
     }
 
     private fun setBind() {
         fragmentTransactionDepositBinding.run {
             addDepositBtn.setOnClickListener {
-                if (addDepositPriceEditTextNumber.text.isNullOrEmpty()) return@setOnClickListener
-                clientViewModel.selectedClient.value?.let {
-                    transactionViewModel.addDepositTransaction(it, addDepositPriceEditTextNumber.text.toString())
-                    mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_FRAGMENT)
-                } ?: return@setOnClickListener
+                if (clientSelectedCheck() ||
+                    inputValueCheck(addDepositPriceEditTextNumber)
+                ) {
+                    return@setOnClickListener
+                }
+                transactionViewModel.addDepositTransaction(
+                    clientViewModel.selectedClient.value!!,
+                    addDepositPriceEditTextNumber.text.toString(),
+                )
+                mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_FRAGMENT)
             }
 
             makeDepositBtnSelectClient.setOnClickListener {
@@ -66,5 +71,27 @@ class TransactionDepositFragment : Fragment() {
             client.setClientStateView(fragmentTransactionDepositBinding.depositClientState)
             client.setClientBookmarkView(fragmentTransactionDepositBinding.depositClientBookmark)
         }
+    }
+
+    private fun inputValueCheck(textInputEditText: TextInputEditText): Boolean {
+        transactionViewModel.inputValueCheck(textInputEditText)?.let {
+            it.apply {
+                anchorView = fragmentTransactionDepositBinding.addDepositBtn
+            }.show()
+            return true
+        } ?: return false
+    }
+
+    private fun clientSelectedCheck(): Boolean {
+        clientViewModel.selectedClient.value?.let {
+            return false
+        } ?: Snackbar.make(
+            fragmentTransactionDepositBinding.root,
+            "선택된 거래처가 없습니다..",
+            Snackbar.LENGTH_SHORT,
+        ).apply {
+            anchorView = fragmentTransactionDepositBinding.addDepositBtn
+        }.show()
+        return true
     }
 }
