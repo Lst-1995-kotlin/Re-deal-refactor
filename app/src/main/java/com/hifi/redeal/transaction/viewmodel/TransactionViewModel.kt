@@ -1,5 +1,7 @@
 package com.hifi.redeal.transaction.viewmodel
 
+import android.view.View
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -17,13 +19,23 @@ class TransactionViewModel @Inject constructor(
     private val transactionRepository: TransactionRepository,
 ) : ViewModel() {
 
-    val transactionList = MutableLiveData<MutableList<Transaction>>()
     private val tempTransactionList = mutableListOf<Transaction>()
+    private val _transactionList = MutableLiveData<List<Transaction>>()
+    val transactionList: LiveData<List<Transaction>> get() = _transactionList
     private var newTransactionIdx = 0L
 
     init {
         getNextTransactionIdx()
         getAllTransactionData()
+    }
+
+    fun deleteTransactionData(transaction: Transaction, view: View) {
+        transactionRepository.deleteTransactionData(transaction.getTransactionIdx()) {
+            _transactionList.value?.indexOfFirst { it == transaction }
+                ?.let { it1 -> tempTransactionList.removeAt(it1) }
+            _transactionList.postValue(tempTransactionList)
+            Snackbar.make(view, "삭제가 완료되었습니다.", Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     fun inputValueCheck(textInputEditText: TextInputEditText): Snackbar? {
@@ -51,7 +63,7 @@ class TransactionViewModel @Inject constructor(
         transactionRepository.setTransactionData(newDepositTransactionData) {
             val newTransaction = Transaction(newDepositTransactionData)
             tempTransactionList.add(newTransaction)
-            transactionList.postValue(tempTransactionList)
+            _transactionList.postValue(tempTransactionList)
             getClientName()
             getNextTransactionIdx()
         }
@@ -77,7 +89,7 @@ class TransactionViewModel @Inject constructor(
         transactionRepository.setTransactionData(newDepositTransactionData) {
             val newTransaction = Transaction(newDepositTransactionData)
             tempTransactionList.add(newTransaction)
-            transactionList.postValue(tempTransactionList)
+            _transactionList.postValue(tempTransactionList)
             getClientName()
             getNextTransactionIdx()
         }
@@ -99,7 +111,7 @@ class TransactionViewModel @Inject constructor(
                 )
                 val transaction = Transaction(transactionData)
                 tempTransactionList.add(transaction)
-                transactionList.postValue(tempTransactionList)
+                _transactionList.postValue(tempTransactionList)
                 getClientName()
             }
         }
@@ -112,7 +124,7 @@ class TransactionViewModel @Inject constructor(
                 for (c1 in it.result) {
                     val clientName = c1["clientName"] as String
                     transaction.setTransactionClientName(clientName)
-                    transactionList.postValue(tempTransactionList)
+                    _transactionList.postValue(tempTransactionList)
                 }
             }
         }

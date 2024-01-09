@@ -1,10 +1,13 @@
 package com.hifi.redeal.transaction.adapter
 
 import android.view.LayoutInflater
+import android.view.MenuInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.hifi.redeal.R
 import com.hifi.redeal.databinding.RowTransactionDepositBinding
-import com.hifi.redeal.databinding.RowTransactionWithdrawalBinding
+import com.hifi.redeal.databinding.RowTransactionReleaseBinding
 import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 
@@ -12,7 +15,7 @@ class TransactionAdapter(
     private val transactionViewModel: TransactionViewModel,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var transactions = mutableListOf<Transaction>()
+    private var transactions = listOf<Transaction>()
 
     init {
         transactionViewModel.transactionList.observeForever {
@@ -33,13 +36,14 @@ class TransactionAdapter(
             }
 
             WITHDRAWAL_TRANSACTION -> {
-                val rowTransactionWithdrawalBinding =
-                    RowTransactionWithdrawalBinding.inflate(inflater)
-                rowTransactionWithdrawalBinding.root.layoutParams = ViewGroup.LayoutParams(
+                val rowTransactionReleaseBinding =
+                    RowTransactionReleaseBinding.inflate(inflater)
+
+                rowTransactionReleaseBinding.root.layoutParams = ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                 )
-                return WithdrawalHolder(rowTransactionWithdrawalBinding)
+                return ReleaseHolder(rowTransactionReleaseBinding)
             }
 
             else -> return throw IllegalArgumentException()
@@ -54,11 +58,13 @@ class TransactionAdapter(
         when (holder.itemViewType) {
             DEPOSIT_TRANSACTION -> {
                 val item = holder as DepositHolder
+                contextMenuSetting(item.itemView, position)
                 item.bind(transactions[position])
             }
 
             WITHDRAWAL_TRANSACTION -> {
-                val item = holder as WithdrawalHolder
+                val item = holder as ReleaseHolder
+                contextMenuSetting(item.itemView, position)
                 item.bind(transactions[position])
             }
         }
@@ -68,21 +74,31 @@ class TransactionAdapter(
         return transactions[position].getTransactionType()
     }
 
+    fun sortTransaction(sortValue: Boolean) {
+        if (sortValue) {
+            transactions = transactions.sortedBy { it.getTransactionDate() }
+            return notifyDataSetChanged()
+        }
+        transactions = transactions.sortedByDescending { it.getTransactionDate() }
+        notifyDataSetChanged()
+    }
+
     fun setTransactions(clientIdx: Long?) {
         clientIdx?.let {
-            transactions =
-                (transactions.filter { it.getTransactionClientIdx() == clientIdx }).toMutableList()
+            transactions = transactions.filter { it.getTransactionClientIdx() == clientIdx }
             notifyDataSetChanged()
         }
     }
 
-    fun sortTransaction(sortValue: Boolean) {
-        if (sortValue) {
-            transactions.sortBy { it.getTransactionDate() }
-            return notifyDataSetChanged()
+    private fun contextMenuSetting(view: View, position: Int) {
+        view.setOnCreateContextMenuListener { contextMenu, view, _ ->
+            MenuInflater(view.context).inflate(R.menu.transaction_menu, contextMenu)
+            contextMenu.findItem(R.id.transactionDeleteMenu).setOnMenuItemClickListener {
+                transactionViewModel.deleteTransactionData(transactions[position], view)
+                notifyDataSetChanged()
+                true
+            }
         }
-        transactions.sortByDescending { it.getTransactionDate() }
-        notifyDataSetChanged()
     }
 
     inner class DepositHolder(
@@ -98,20 +114,20 @@ class TransactionAdapter(
         }
     }
 
-    inner class WithdrawalHolder(
-        private val rowTransactionWithdrawalBinding: RowTransactionWithdrawalBinding,
+    inner class ReleaseHolder(
+        private val rowTransactionReleaseBinding: RowTransactionReleaseBinding,
     ) :
-        RecyclerView.ViewHolder(rowTransactionWithdrawalBinding.root) {
+        RecyclerView.ViewHolder(rowTransactionReleaseBinding.root) {
         fun bind(transaction: Transaction) {
             transaction.setTextViewValue(
-                rowTransactionWithdrawalBinding.textTransactionDate,
-                rowTransactionWithdrawalBinding.transctionClientNameTextView,
-                rowTransactionWithdrawalBinding.textProductName,
-                rowTransactionWithdrawalBinding.textProductCount,
-                rowTransactionWithdrawalBinding.textUnitPrice,
-                rowTransactionWithdrawalBinding.textTotalAmount,
-                rowTransactionWithdrawalBinding.textRecievedAmount,
-                rowTransactionWithdrawalBinding.textRecievables,
+                rowTransactionReleaseBinding.textTransactionDate,
+                rowTransactionReleaseBinding.transctionClientNameTextView,
+                rowTransactionReleaseBinding.textProductName,
+                rowTransactionReleaseBinding.textProductCount,
+                rowTransactionReleaseBinding.textUnitPrice,
+                rowTransactionReleaseBinding.textTotalAmount,
+                rowTransactionReleaseBinding.textRecievedAmount,
+                rowTransactionReleaseBinding.textRecievables,
             )
         }
     }

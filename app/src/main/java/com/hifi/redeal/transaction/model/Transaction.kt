@@ -29,6 +29,8 @@ class Transaction(
 
     fun getTransactionClientIdx() = transactionData.clientIdx
 
+    fun getTransactionIdx() = transactionData.transactionIdx
+
     fun setTextViewValue(date: TextView, clientName: TextView, price: TextView) {
         date.text = dateFormat.format(transactionData.date.toDate())
         clientName.text = transactionClientName

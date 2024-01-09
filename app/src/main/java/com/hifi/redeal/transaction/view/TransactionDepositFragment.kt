@@ -28,7 +28,7 @@ class TransactionDepositFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         fragmentTransactionDepositBinding = FragmentTransactionDepositBinding.inflate(inflater)
         mainActivity = activity as MainActivity
         setBind()
@@ -46,7 +46,7 @@ class TransactionDepositFragment : Fragment() {
                 }
                 transactionViewModel.addDepositTransaction(
                     clientViewModel.selectedClient.value!!,
-                    addDepositPriceEditTextNumber.text.toString(),
+                    addDepositPriceEditTextNumber.text.toString().trim(),
                 )
                 mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_FRAGMENT)
             }

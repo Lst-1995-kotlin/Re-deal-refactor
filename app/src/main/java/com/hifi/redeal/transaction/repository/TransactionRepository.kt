@@ -25,6 +25,13 @@ class TransactionRepository @Inject constructor(
         .document(uid)
         .collection("clientData")
 
+    fun deleteTransactionData(transactionIdx: Long, callback: (Task<Void>) -> Unit) {
+        dbTransactionRef
+            .document("$transactionIdx")
+            .delete()
+            .addOnCompleteListener(callback)
+    }
+
     fun setTransactionData(
         transactionData: TransactionData,
         callback: (Task<Void>) -> (Unit),
