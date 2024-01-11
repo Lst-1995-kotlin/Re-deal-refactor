@@ -27,7 +27,7 @@ class RecordMemoViewModel @Inject constructor(
                 val audioFilename = item.get("recordMemoFilename") as String
                 val fileLocation = File(mainContext.getExternalFilesDir(null), "recordings")
                 val recordFileLocation = File(fileLocation, audioFilename)
-                var audioFileUri:Uri? = null
+                var audioFileUri:Uri?
                 if(recordFileLocation.exists()){
                     audioFileUri = Uri.fromFile(recordFileLocation)
                     val newRecordMemo = RecordMemoData(context, date, audioFileUri, audioFilename)
