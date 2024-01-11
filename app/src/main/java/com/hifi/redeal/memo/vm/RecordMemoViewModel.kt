@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
-import com.hifi.redeal.memo.model.PhotoMemoData
 import com.hifi.redeal.memo.model.RecordMemoData
 import com.hifi.redeal.memo.repository.RecordMemoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,13 +16,8 @@ import javax.inject.Inject
 class RecordMemoViewModel @Inject constructor(
     private val recordMemoRepository: RecordMemoRepository
 ) : ViewModel() {
-    val recordMemoList = MutableLiveData<List<RecordMemoData>>()
-
-    private val _photoMemoList = MutableLiveData<List<RecordMemoData>>()
-    val recordMemoListTest: LiveData<List<RecordMemoData>> get() = _photoMemoList
-    init{
-        recordMemoList.value = listOf<RecordMemoData>()
-    }
+    val recordMemoList: LiveData<List<RecordMemoData>> get() = _recordMemoList
+    private val _recordMemoList = MutableLiveData<List<RecordMemoData>>()
     fun getRecordMemoList(clientIdx:Long, mainContext:Context){
         recordMemoRepository.getRecordMemoAll(clientIdx){ documentSnapshot ->
             val recordMemoData = mutableListOf<RecordMemoData>()
@@ -36,13 +30,12 @@ class RecordMemoViewModel @Inject constructor(
                 var audioFileUri:Uri? = null
                 if(recordFileLocation.exists()){
                     audioFileUri = Uri.fromFile(recordFileLocation)
-                    val newPhotoMemo = RecordMemoData(context, date, audioFileUri, audioFilename)
-                    recordMemoData.add(newPhotoMemo)
+                    val newRecordMemo = RecordMemoData(context, date, audioFileUri, audioFilename)
+                    recordMemoData.add(newRecordMemo)
                 }
             }
             recordMemoData.reverse()
-            recordMemoList.postValue(recordMemoData)
-            _photoMemoList.value = recordMemoData
+            _recordMemoList.value = recordMemoData
         }
     }
 }
