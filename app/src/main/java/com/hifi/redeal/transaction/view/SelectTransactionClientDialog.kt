@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.hifi.redeal.databinding.DialogSelectTransactionClientBinding
 import com.hifi.redeal.transaction.adapter.ClientAdapter
-import com.hifi.redeal.transaction.util.DialogConfiguration.Companion.dialogResize
+import com.hifi.redeal.transaction.configuration.DialogConfiguration.Companion.dialogResize
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 
 class SelectTransactionClientDialog(

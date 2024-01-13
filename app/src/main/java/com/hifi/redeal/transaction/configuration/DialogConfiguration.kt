@@ -1,4 +1,4 @@
-package com.hifi.redeal.transaction.util
+package com.hifi.redeal.transaction.configuration
 
 import android.content.Context
 import android.view.WindowManager

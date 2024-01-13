@@ -17,7 +17,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class TransactionFragment : Fragment() {
-
     private lateinit var fragmentTransactionBinding: FragmentTransactionBinding
     private val transactionViewModel: TransactionViewModel by activityViewModels()
     private lateinit var mainActivity: MainActivity

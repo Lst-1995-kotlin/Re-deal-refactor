@@ -29,12 +29,11 @@ class TransactionViewModel @Inject constructor(
         getAllTransactionData()
     }
 
-    fun deleteTransactionData(transaction: Transaction, view: View) {
+    fun deleteTransactionData(transaction: Transaction) {
         transactionRepository.deleteTransactionData(transaction.getTransactionIdx()) {
             _transactionList.value?.indexOfFirst { it == transaction }
                 ?.let { it1 -> tempTransactionList.removeAt(it1) }
             _transactionList.postValue(tempTransactionList)
-            Snackbar.make(view, "삭제가 완료되었습니다.", Snackbar.LENGTH_SHORT).show()
         }
     }
 
@@ -107,7 +106,7 @@ class TransactionViewModel @Inject constructor(
                     c1["transactionIdx"] as Long,
                     c1["transactionItemCount"] as Long,
                     c1["transactionItemPrice"] as String,
-                    c1["transactionName"] as String,
+                    c1["transactionItemName"] as String,
                 )
                 val transaction = Transaction(transactionData)
                 tempTransactionList.add(transaction)

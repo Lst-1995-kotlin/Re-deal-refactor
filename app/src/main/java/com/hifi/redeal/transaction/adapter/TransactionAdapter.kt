@@ -4,18 +4,21 @@ import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.RowTransactionDepositBinding
 import com.hifi.redeal.databinding.RowTransactionReleaseBinding
 import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
+import java.text.NumberFormat
+import java.util.Locale
 
 class TransactionAdapter(
     private val transactionViewModel: TransactionViewModel,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
     private var transactions = listOf<Transaction>()
+    private val numberFormat = NumberFormat.getNumberInstance(Locale.getDefault())
 
     init {
         transactionViewModel.transactionList.observeForever {
@@ -23,15 +26,19 @@ class TransactionAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         when (viewType) {
             DEPOSIT_TRANSACTION -> {
                 val rowTransactionDepositBinding = RowTransactionDepositBinding.inflate(inflater)
-                rowTransactionDepositBinding.root.layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                )
+                rowTransactionDepositBinding.root.layoutParams =
+                    ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                    )
                 return DepositHolder(rowTransactionDepositBinding)
             }
 
@@ -39,14 +46,15 @@ class TransactionAdapter(
                 val rowTransactionReleaseBinding =
                     RowTransactionReleaseBinding.inflate(inflater)
 
-                rowTransactionReleaseBinding.root.layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                )
+                rowTransactionReleaseBinding.root.layoutParams =
+                    ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                    )
                 return ReleaseHolder(rowTransactionReleaseBinding)
             }
 
-            else -> return throw IllegalArgumentException()
+            else -> return throw IllegalArgumentException("올바르지 못한 거래 타입 입니다.")
         }
     }
 
@@ -54,7 +62,10 @@ class TransactionAdapter(
         return transactions.size
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+    ) {
         when (holder.itemViewType) {
             DEPOSIT_TRANSACTION -> {
                 val item = holder as DepositHolder
@@ -90,11 +101,15 @@ class TransactionAdapter(
         }
     }
 
-    private fun contextMenuSetting(view: View, position: Int) {
+
+    private fun contextMenuSetting(
+        view: View,
+        position: Int,
+    ) {
         view.setOnCreateContextMenuListener { contextMenu, view, _ ->
             MenuInflater(view.context).inflate(R.menu.transaction_menu, contextMenu)
             contextMenu.findItem(R.id.transactionDeleteMenu).setOnMenuItemClickListener {
-                transactionViewModel.deleteTransactionData(transactions[position], view)
+                transactionViewModel.deleteTransactionData(transactions[position])
                 notifyDataSetChanged()
                 true
             }

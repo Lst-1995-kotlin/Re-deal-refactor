@@ -107,5 +107,10 @@
         <item name="textEndPadding">0dp</item>
         <item name="textStartPadding">0dp</item>
     </style>
+
+    <style name="transaction_text_input_edit_text_style" parent="Widget.Material3.TextInputEditText.OutlinedBox">
+        <item name="colorControlActivated">@color/primary20</item>
+        <item name="android:paddingStart">0dp</item>
+    </style>
     
 </resources>

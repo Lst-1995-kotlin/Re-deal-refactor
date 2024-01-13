@@ -11,7 +11,7 @@ data class TransactionData(
     val transactionIdx: Long,
     val transactionItemCount: Long,
     val transactionItemPrice: String,
-    val transactionName: String,
+    val transactionItemName: String,
 )
 
 data class ClientData(

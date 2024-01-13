@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.hifi.redeal.transaction.model.Client
 import com.hifi.redeal.transaction.model.ClientData
 import com.hifi.redeal.transaction.repository.ClientRepository
-import com.hifi.redeal.transaction.util.ClientConfiguration.Companion.isClientStateNotStop
+import com.hifi.redeal.transaction.configuration.ClientConfiguration.Companion.isClientStateNotStop
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

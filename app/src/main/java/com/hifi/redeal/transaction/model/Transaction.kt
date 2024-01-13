@@ -10,14 +10,31 @@ import java.util.Locale
 class Transaction(
     private val transactionData: TransactionData,
 ) {
-
     private val numberFormat = NumberFormat.getNumberInstance(Locale.getDefault())
     private val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
     private var transactionClientName = ""
 
     fun isTransactionClientSetName() = transactionClientName == ""
+
     fun setTransactionClientName(name: String) {
         transactionClientName = name
+    }
+
+    fun calculateSaleAmount(): Long {
+        if (getTransactionType() == WITHDRAWAL_TRANSACTION) {
+            return transactionData.transactionItemPrice.toLong() *
+                transactionData.transactionItemCount -
+                transactionData.transactionAmountReceived.toLong()
+        }
+        return 0L
+    }
+
+    fun calculateReceivables(): Long {
+        if (getTransactionType() == DEPOSIT_TRANSACTION) {
+            return transactionData.transactionAmountReceived.toLong() * -1L
+        }
+        return transactionData.transactionItemPrice.toLong() *
+            transactionData.transactionItemCount
     }
 
     fun getTransactionType(): Int {
@@ -31,7 +48,11 @@ class Transaction(
 
     fun getTransactionIdx() = transactionData.transactionIdx
 
-    fun setTextViewValue(date: TextView, clientName: TextView, price: TextView) {
+    fun setTextViewValue(
+        date: TextView,
+        clientName: TextView,
+        price: TextView,
+    ) {
         date.text = dateFormat.format(transactionData.date.toDate())
         clientName.text = transactionClientName
         price.text = numberFormat.format(transactionData.transactionAmountReceived.toLong())
@@ -49,21 +70,21 @@ class Transaction(
     ) {
         date.text = dateFormat.format(transactionData.date.toDate())
         clientName.text = transactionClientName
-        productName.text = transactionData.transactionName
+        productName.text = transactionData.transactionItemName
         productCount.text = numberFormat.format(transactionData.transactionItemCount)
         unitPrice.text = numberFormat.format(transactionData.transactionItemPrice.toLong())
-        totalAmount.text = numberFormat.format(
-            transactionData.transactionItemPrice.toLong() *
-                transactionData.transactionItemCount,
-        )
+        totalAmount.text =
+            numberFormat.format(
+                transactionData.transactionItemPrice.toLong() *
+                    transactionData.transactionItemCount,
+            )
         receivedAmount.text =
             numberFormat.format(transactionData.transactionAmountReceived.toLong())
-        receivables.text = numberFormat.format(
-            (
+        receivables.text =
+            numberFormat.format(
                 transactionData.transactionItemPrice.toLong() *
-                    transactionData.transactionItemCount
-                ) -
-                transactionData.transactionAmountReceived.toLong(),
-        )
+                    transactionData.transactionItemCount -
+                    transactionData.transactionAmountReceived.toLong(),
+            )
     }
 }

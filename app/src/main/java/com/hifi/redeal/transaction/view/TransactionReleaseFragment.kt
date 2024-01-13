@@ -17,7 +17,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class TransactionReleaseFragment : Fragment() {
-
     private lateinit var mainActivity: MainActivity
     private lateinit var fragmentTransactionReleaseBinding: FragmentTransactionReleaseBinding
     private var selectTransactionClientDialog: SelectTransactionClientDialog? = null
@@ -57,6 +56,7 @@ class TransactionReleaseFragment : Fragment() {
                 ) {
                     return@setOnClickListener
                 }
+
                 transactionViewModel.addReleaseTransaction(
                     clientViewModel.selectedClient.value!!,
                     transactionNameEditText.text.toString(),

@@ -4,8 +4,8 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
-import com.hifi.redeal.transaction.util.ClientConfiguration.Companion.getClientBookmarkResource
-import com.hifi.redeal.transaction.util.ClientConfiguration.Companion.getClientStateResource
+import com.hifi.redeal.transaction.configuration.ClientConfiguration.Companion.getClientBookmarkResource
+import com.hifi.redeal.transaction.configuration.ClientConfiguration.Companion.getClientStateResource
 
 class Client(
     private val clientData: ClientData,
