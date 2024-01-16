@@ -2,7 +2,6 @@ package com.hifi.redeal.memo.components
 
 import android.os.Bundle
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,7 +25,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -40,6 +38,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -54,6 +53,7 @@ import com.hifi.redeal.memo.model.PhotoMemoData
 import com.hifi.redeal.memo.repository.PhotoMemoRepository
 import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.PhotoMemoViewModel
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -100,24 +100,76 @@ private fun PhotoMemoToolbar(
 }
 
 @Composable
-private fun MemoBox(
-    modifier: Modifier = Modifier,
-    text: String = "새로운 메모"
+private fun DateText(
+    date: Date,
+    modifier: Modifier = Modifier
 ) {
-    Surface(
-        modifier = modifier,
-        color = Color.White
+    Text(
+        text = intervalBetweenDateText(date),
+        style = MaterialTheme.typography.bodySmall.copy(
+            fontWeight = FontWeight.Bold
+        ),
+        modifier = modifier
     )
-    {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier
-                .border(1.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(4.dp))
-                .padding(12.dp)
-                .fillMaxWidth()
-        )
-    }
+}
+
+@Composable
+private fun MemoMultiText(
+    modifier: Modifier = Modifier,
+    text: String
+) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.bodyMedium,
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun LazyRowImageList(
+    srcArr: List<String>,
+    repository: PhotoMemoRepository,
+    mainActivity: MainActivity,
+    modifier: Modifier = Modifier
+) {
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(horizontal = 2.dp),
+        content = {
+            itemsIndexed(srcArr) { idx, src ->
+                var imageUrl by remember { mutableStateOf("") }
+                val coroutineScope = rememberCoroutineScope()
+                LaunchedEffect(coroutineScope) {
+                    imageUrl = repository.getPhotoMemoImgUrlToCoroutine(src)
+                }
+                val painter = if (imageUrl == "")
+                    painterResource(id = R.drawable.empty_photo) else
+                    rememberAsyncImagePainter(imageUrl)
+                Image(
+                    painter = painter,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(shape = RoundedCornerShape(8.dp))
+                        .clickable {
+                            val newBundle = Bundle()
+                            newBundle.putInt("order", idx)
+                            newBundle.putStringArrayList(
+                                "srcArr",
+                                srcArr as ArrayList<String>
+                            )
+                            mainActivity.replaceFragment(
+                                MainActivity.PHOTO_DETAIL_FRAGMENT,
+                                true,
+                                newBundle
+                            )
+                        }
+                )
+            }
+        },
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -128,54 +180,21 @@ private fun PhotoMemoItem(
     repository: PhotoMemoRepository
 ) {
     Column(modifier) {
-        Text(
-            text = intervalBetweenDateText(item.date.toDate()),
-            style = MaterialTheme.typography.bodySmall.copy(
-                fontWeight = FontWeight.ExtraBold
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(horizontal = 2.dp),
-            content = {
-                itemsIndexed(item.srcArr) { idx, src ->
-                    var imageUrl by remember { mutableStateOf("") }
-                    val coroutineScope = rememberCoroutineScope()
-                    LaunchedEffect(coroutineScope) {
-                        imageUrl = repository.getPhotoMemoImgUrlToCoroutine(src)
-                    }
-                    val painter = if (imageUrl == "")
-                        painterResource(id = R.drawable.empty_photo) else
-                        rememberAsyncImagePainter(imageUrl)
-                    Image(
-                        painter = painter,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(100.dp)
-                            .clickable {
-                                val newBundle = Bundle()
-                                newBundle.putInt("order", idx)
-                                newBundle.putStringArrayList(
-                                    "srcArr",
-                                    item.srcArr as ArrayList<String>
-                                )
-                                mainActivity.replaceFragment(
-                                    MainActivity.PHOTO_DETAIL_FRAGMENT,
-                                    true,
-                                    newBundle
-                                )
-                            }
-                    )
-                }
-            },
+        DateText(
+            date = item.date.toDate(),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp)
+                .padding(start = 4.dp)
         )
-        MemoBox(modifier = Modifier.padding(top = 6.dp), text = item.context)
+        LazyRowImageList(
+            srcArr = item.srcArr,
+            repository = repository,
+            mainActivity = mainActivity,
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth()
+        )
+        MemoMultiText(modifier = Modifier.padding(top = 20.dp, start = 4.dp), text = item.context)
     }
 }
 
@@ -191,9 +210,8 @@ private fun PhotoMemoList(
             items(photoMemoItemList) { item ->
                 PhotoMemoItem(
                     item = item,
-                    mainActivity,
-                    Modifier.padding(horizontal = 24.dp),
-                    repository
+                    mainActivity = mainActivity,
+                    repository = repository
                 )
                 Divider(Modifier.padding(vertical = 16.dp))
             }
@@ -245,8 +263,10 @@ fun PhotoMemoScreen(
                 repository = repository,
                 modifier = Modifier
                     .padding(padding)
-                    .padding(top = 8.dp),
+                    .padding(vertical = 16.dp, horizontal = 20.dp),
             )
         }
+
+        // todo : 리스트 마지막 부분에 맨위로 가는 기능 등 처리 해주기
     }
 }
