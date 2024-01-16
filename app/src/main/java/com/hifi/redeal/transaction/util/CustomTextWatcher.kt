@@ -4,30 +4,27 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
-import androidx.lifecycle.ViewModel
 import com.google.android.material.textfield.TextInputEditText
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 import java.text.NumberFormat
 import java.util.Locale
 
 class CustomTextWatcher(
-    private val viewModel: ViewModel,
+    private val viewModel: ClientViewModel,
     private val textInputEditText: TextInputEditText,
     private val button: Button
-): TextWatcher {
+) : TextWatcher {
 
     private val numberFormat = NumberFormat.getNumberInstance(Locale.getDefault())
 
     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
     override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-        if (viewModel is ClientViewModel) {
-            if (p0.isNullOrEmpty() || viewModel.selectedClient.value == null) {
-                button.visibility = View.GONE
-                return
-            }
-            button.visibility = View.VISIBLE
+        if (p0.isNullOrEmpty() || viewModel.selectedClient.value == null) {
+            button.visibility = View.GONE
+            return
         }
+        button.visibility = View.VISIBLE
     }
 
     override fun afterTextChanged(p0: Editable?) {

@@ -79,10 +79,10 @@ class TransactionViewModel @Inject constructor(
             client.getClientIdx(),
             Timestamp.now(),
             false,
-            amount,
+            amount.replace(",", ""),
             newTransactionIdx,
-            itemCount.toLong(),
-            itemPrice,
+            itemCount.replace(",", "").toLong(),
+            itemPrice.replace(",", ""),
             itemName,
         )
         transactionRepository.setTransactionData(newDepositTransactionData) {

@@ -62,65 +62,6 @@
             android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayout8"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addDepositPriceinputLayout">
-
-        <ImageView
-            android:id="@+id/depositClientState"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="4dp"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/depositClientInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:fontFamily="@font/nanumsquareneo_bold"
-            android:singleLine="true"
-            android:text="거래처 선택"
-            android:textColor="@color/text50"
-            android:textSize="20sp" />
-
-        <ImageView
-            android:id="@+id/depositClientBookmark"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_gravity="center_vertical"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <ImageButton
-                android:id="@+id/makeDepositBtnSelectClient"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical"
-                android:background="@color/primary20"
-                android:backgroundTintMode="multiply"
-                android:padding="4dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/card_account_detail_24px_primary99" />
-        </LinearLayout>
-
-    </LinearLayout>
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/addDepositPriceinputLayout2"
         android:layout_width="match_parent"

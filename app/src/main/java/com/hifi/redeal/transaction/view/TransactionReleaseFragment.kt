@@ -11,6 +11,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentTransactionReleaseBinding
+import com.hifi.redeal.transaction.util.CustomInputEditTextFocusListener
+import com.hifi.redeal.transaction.util.CustomSelectEditTextFocusListener
+import com.hifi.redeal.transaction.util.CustomTextWatcher
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,28 +41,15 @@ class TransactionReleaseFragment : Fragment() {
 
     private fun setBind() {
         fragmentTransactionReleaseBinding.run {
-            makeReleaseBtnSelectClient.setOnClickListener {
-                selectTransactionClientDialog = SelectTransactionClientDialog(clientViewModel)
-                selectTransactionClientDialog?.show(childFragmentManager, null)
-            }
 
             materialToolbar2.setNavigationOnClickListener {
                 mainActivity.removeFragment(MainActivity.TRANSACTION_RELEASE_FRAGMENT)
             }
 
             addReleaseBtn.setOnClickListener {
-                if (clientSelectedCheck() ||
-                    inputValueCheck(transactionNameEditText) ||
-                    inputValueCheck(transactionItemCountEditText) ||
-                    inputValueCheck(transactionItemPriceEditText) ||
-                    inputValueCheck(transactionAmountReceivedEditText)
-                ) {
-                    return@setOnClickListener
-                }
-
                 transactionViewModel.addReleaseTransaction(
                     clientViewModel.selectedClient.value!!,
-                    transactionNameEditText.text.toString(),
+                    transactionItemNameEditText.text.toString(),
                     transactionItemCountEditText.text.toString(),
                     transactionItemPriceEditText.text.toString(),
                     transactionAmountReceivedEditText.text.toString(),
@@ -67,7 +57,52 @@ class TransactionReleaseFragment : Fragment() {
                 mainActivity.removeFragment(MainActivity.TRANSACTION_RELEASE_FRAGMENT)
             }
 
-            mainActivity.hideKeyboardAndClearFocus(transactionNameEditText)
+            transactionItemNameEditText.onFocusChangeListener = CustomInputEditTextFocusListener()
+            transactionItemCountEditText.onFocusChangeListener = CustomInputEditTextFocusListener()
+            transactionItemPriceEditText.onFocusChangeListener = CustomInputEditTextFocusListener()
+            transactionAmountReceivedEditText.onFocusChangeListener =
+                CustomInputEditTextFocusListener()
+            transactionAmountReceivedEditText2.onFocusChangeListener =
+                CustomSelectEditTextFocusListener(
+                    SelectTransactionClientDialog(clientViewModel),
+                    childFragmentManager
+                )
+
+            transactionItemNameEditText.addTextChangedListener(
+                CustomTextWatcher(
+                    clientViewModel,
+                    transactionItemNameEditText,
+                    addReleaseBtn
+                )
+            )
+
+            transactionItemCountEditText.addTextChangedListener(
+                CustomTextWatcher(
+                    clientViewModel,
+                    transactionItemNameEditText,
+                    addReleaseBtn
+                )
+            )
+
+            transactionItemPriceEditText.addTextChangedListener(
+                CustomTextWatcher(
+                    clientViewModel,
+                    transactionItemNameEditText,
+                    addReleaseBtn
+                )
+            )
+
+            transactionAmountReceivedEditText.addTextChangedListener(
+                CustomTextWatcher(
+                    clientViewModel,
+                    transactionItemNameEditText,
+                    addReleaseBtn
+                )
+            )
+
+
+
+            mainActivity.hideKeyboardAndClearFocus(transactionItemNameEditText)
             mainActivity.hideKeyboardAndClearFocus(transactionItemCountEditText)
             mainActivity.hideKeyboardAndClearFocus(transactionItemPriceEditText)
             mainActivity.hideKeyboardAndClearFocus(transactionAmountReceivedEditText)
@@ -76,33 +111,16 @@ class TransactionReleaseFragment : Fragment() {
 
     private fun setViewModel() {
         clientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
-            selectTransactionClientDialog?.dismiss()
-            client.setClientInfoView(fragmentTransactionReleaseBinding.releaseClientInfo)
-            client.setClientStateView(fragmentTransactionReleaseBinding.releaseClientState)
-            client.setClientBookmarkView(fragmentTransactionReleaseBinding.releaseClientBookmark)
+            client.setClientInfoView(fragmentTransactionReleaseBinding.transactionAmountReceivedEditText2)
+            if (fragmentTransactionReleaseBinding.transactionItemNameEditText.text.isNullOrEmpty() ||
+                fragmentTransactionReleaseBinding.transactionItemCountEditText.text.isNullOrEmpty() ||
+                fragmentTransactionReleaseBinding.transactionItemPriceEditText.text.isNullOrEmpty() ||
+                fragmentTransactionReleaseBinding.transactionAmountReceivedEditText.text.isNullOrEmpty()
+            ) {
+                fragmentTransactionReleaseBinding.addReleaseBtn.visibility = View.GONE
+                return@observe
+            }
+            fragmentTransactionReleaseBinding.addReleaseBtn.visibility = View.VISIBLE
         }
-    }
-
-    private fun inputValueCheck(textInputEditText: TextInputEditText): Boolean {
-        transactionViewModel.inputValueCheck(textInputEditText)?.let {
-            it.apply {
-                anchorView = fragmentTransactionReleaseBinding.addReleaseBtn
-            }.show()
-            return true
-        } ?: return false
-    }
-
-    private fun clientSelectedCheck(): Boolean {
-        if (clientViewModel.selectedClient.value == null) {
-            Snackbar.make(
-                fragmentTransactionReleaseBinding.root,
-                "선택된 거래처가 없습니다..",
-                Snackbar.LENGTH_SHORT,
-            ).apply {
-                anchorView = fragmentTransactionReleaseBinding.addReleaseBtn
-            }.show()
-            return true
-        }
-        return false
     }
 }
