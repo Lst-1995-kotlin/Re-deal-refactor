@@ -7,9 +7,6 @@ import com.google.firebase.Timestamp
 import com.hifi.redeal.memo.model.PhotoMemoData
 import com.hifi.redeal.memo.repository.PhotoMemoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,11 +23,10 @@ class PhotoMemoViewModel @Inject constructor(
                 val context = item.get("photoMemoContext") as String
                 val date = item.get("photoMemoDate") as Timestamp
                 val srcArr = item.get("photoMemoSrcArr") as List<String>
-                val newPhotoMemo = PhotoMemoData(context, date, srcArr, clientIdx)
+                val newPhotoMemo = PhotoMemoData(context, date.toDate(), srcArr, clientIdx)
                 updatedList.add(newPhotoMemo)
             }
-            updatedList.reverse()
-            _photoMemoList.value = updatedList
+            _photoMemoList.value = updatedList.sortedByDescending { it.date }
         }
     }
 }
