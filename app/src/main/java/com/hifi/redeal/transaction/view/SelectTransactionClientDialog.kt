@@ -20,6 +20,12 @@ class SelectTransactionClientDialog(
 
     lateinit var dialogSelectTransactionClientDialog: DialogSelectTransactionClientBinding
     private lateinit var clientAdapter: ClientAdapter
+
+    init {
+        clientViewModel.selectedClient.observeForever{
+            dismiss()
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

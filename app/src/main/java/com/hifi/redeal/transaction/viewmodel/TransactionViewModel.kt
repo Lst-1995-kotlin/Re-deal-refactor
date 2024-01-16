@@ -53,7 +53,7 @@ class TransactionViewModel @Inject constructor(
             client.getClientIdx(),
             Timestamp.now(),
             true,
-            amount,
+            amount.replace(",", ""),
             newTransactionIdx,
             0,
             "",

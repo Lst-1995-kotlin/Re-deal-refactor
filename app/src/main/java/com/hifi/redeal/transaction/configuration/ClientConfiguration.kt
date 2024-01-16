@@ -1,5 +1,6 @@
 package com.hifi.redeal.transaction.configuration
 
+import android.view.View
 import com.hifi.redeal.R
 
 enum class ClientConfiguration(private val state: Long) {
@@ -9,18 +10,23 @@ enum class ClientConfiguration(private val state: Long) {
     ;
 
     companion object {
-        fun getClientStateResource(value: Long): Int? {
-            return when (value) {
-                STATE_TRADING.state -> R.drawable.client_state_circle_trading
-                STATE_TRY.state -> R.drawable.client_state_circle_trade_try
-                STATE_STOP.state -> R.drawable.client_state_circle_trade_stop
-                else -> null
+        fun setClientStateResource(value: Long, view: View) {
+            view.visibility = View.VISIBLE
+            when (value) {
+                STATE_TRADING.state -> view.setBackgroundResource(R.drawable.client_state_circle_trading)
+                STATE_TRY.state -> view.setBackgroundResource(R.drawable.client_state_circle_trade_try)
+                STATE_STOP.state -> view.setBackgroundResource(R.drawable.client_state_circle_trade_stop)
+                else -> view.visibility = View.GONE
             }
         }
 
-        fun getClientBookmarkResource(value: Boolean): Int? {
-            if (value) return R.drawable.star_fill_24px
-            return null
+        fun setClientBookmarkResource(value: Boolean, view: View) {
+            if (value) {
+                view.visibility = View.VISIBLE
+                view.setBackgroundResource(R.drawable.star_fill_24px)
+                return
+            }
+            view.visibility = View.GONE
         }
 
         fun isClientStateNotStop(value: Long): Boolean {
