@@ -30,7 +30,7 @@ class RecordMemoViewModel @Inject constructor(
                 var audioFileUri:Uri?
                 if(recordFileLocation.exists()){
                     audioFileUri = Uri.fromFile(recordFileLocation)
-                    val newRecordMemo = RecordMemoData(context, date, audioFileUri, audioFilename)
+                    val newRecordMemo = RecordMemoData(context, date.toDate(), audioFileUri, audioFilename)
                     recordMemoData.add(newRecordMemo)
                 }
             }
