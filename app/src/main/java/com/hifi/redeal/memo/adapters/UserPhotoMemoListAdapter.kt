@@ -56,7 +56,7 @@ class UserPhotoMemoListAdapter @Inject constructor(
         private val userPhotoMemoClientName = rowUserPhotoMemoBinding.userPhotoMemoClientName
         private val userPhotoMemoClientManagerName = rowUserPhotoMemoBinding.userPhotoMemoClientManagerName
         fun bindItem(item: PhotoMemoData){
-            userPhotoDateTextView.text = intervalBetweenDateText(item.date.toDate())
+            userPhotoDateTextView.text = intervalBetweenDateText(item.date)
             userPhotoMemoTextView.text = item.context.ifEmpty { "메모를 등록하지 않았어요" }
 
             userPhotoMemoClientName.text = "로딩 중"
