@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.MediaPlayer
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Date
 
@@ -32,10 +33,8 @@ fun intervalBetweenDateText(date: Date): String {
     val beforeFormat = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
     val nowFormat = LocalDateTime.now()
 
-    val units = arrayOf("년", "개월", "일", "시간", "분", "초")
+    val units = arrayOf("시간", "분", "초")
     val amounts = arrayOf(
-        ChronoUnit.YEARS.between(beforeFormat, nowFormat),
-        ChronoUnit.MONTHS.between(beforeFormat, nowFormat),
         ChronoUnit.DAYS.between(beforeFormat, nowFormat),
         ChronoUnit.HOURS.between(beforeFormat, nowFormat),
         ChronoUnit.MINUTES.between(beforeFormat, nowFormat),
@@ -44,7 +43,10 @@ fun intervalBetweenDateText(date: Date): String {
 
     for (i in units.indices) {
         if (amounts[i] > 0) {
-            return "${amounts[i]}${units[i]} 전"
+            return if(i == 0){
+                beforeFormat.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+            }else
+                "${amounts[i]}${units[i]} 전"
         }
     }
 
