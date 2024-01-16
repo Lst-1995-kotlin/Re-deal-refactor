@@ -19,6 +19,10 @@ https://drive.google.com/file/d/19v7tGV3CEGbPOIVZjAf8gBDInMVaxyqm/view?usp=drive
 - 개발기간 : 2023/09/1 ~ 2023/9/26
 - 개발 인원 : 안드로이드 5명
 
+- ### 📆 리팩토링 인원 및 기간
+- 개발기간 : 2023/9/26 ~
+- 개발 인원 : 안드로이드 2명
+
 
 ## 🙌 팀원소개
 역할|이름|GitHub 주소|
@@ -27,6 +31,13 @@ Android|이성태|https://github.com/Lst-1995-kotlin
 Android|김소윤|https://github.com/iiolo
 Android|김현승|https://github.com/KHSSE
 Android|임보성|https://github.com/brudenell
+Android|유민국|https://github.com/jlkim909
+<br>
+
+## 🙌 리팩토링 팀원소개
+역할|이름|GitHub 주소|
+---|---|---|
+Android|이성태|https://github.com/Lst-1995-kotlin
 Android|유민국|https://github.com/jlkim909
 <br>
 
