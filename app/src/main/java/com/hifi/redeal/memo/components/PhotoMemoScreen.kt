@@ -181,7 +181,7 @@ private fun PhotoMemoItem(
 ) {
     Column(modifier) {
         DateText(
-            date = item.date.toDate(),
+            date = item.date,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 4.dp)
