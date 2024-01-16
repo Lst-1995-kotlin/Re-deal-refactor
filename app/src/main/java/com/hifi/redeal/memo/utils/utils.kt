@@ -40,7 +40,7 @@ fun intervalBetweenDateText(date: Date): String {
         ChronoUnit.MINUTES.between(beforeFormat, nowFormat)
     )
 
-    for (i in units.indices) {
+    for (i in amounts.indices) {
         if (amounts[i] > 0) {
             return if(i == 0){
                 beforeFormat.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
