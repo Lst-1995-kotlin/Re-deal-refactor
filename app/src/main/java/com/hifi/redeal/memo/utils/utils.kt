@@ -33,12 +33,11 @@ fun intervalBetweenDateText(date: Date): String {
     val beforeFormat = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
     val nowFormat = LocalDateTime.now()
 
-    val units = arrayOf("시간", "분", "초")
+    val units = arrayOf("시간", "분")
     val amounts = arrayOf(
         ChronoUnit.DAYS.between(beforeFormat, nowFormat),
         ChronoUnit.HOURS.between(beforeFormat, nowFormat),
-        ChronoUnit.MINUTES.between(beforeFormat, nowFormat),
-        ChronoUnit.SECONDS.between(beforeFormat, nowFormat)
+        ChronoUnit.MINUTES.between(beforeFormat, nowFormat)
     )
 
     for (i in units.indices) {
@@ -46,7 +45,7 @@ fun intervalBetweenDateText(date: Date): String {
             return if(i == 0){
                 beforeFormat.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
             }else
-                "${amounts[i]}${units[i]} 전"
+                "${amounts[i]}${units[i-1]} 전"
         }
     }
 
