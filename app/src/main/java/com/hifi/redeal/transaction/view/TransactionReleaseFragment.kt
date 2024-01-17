@@ -22,7 +22,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class TransactionReleaseFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
     private lateinit var fragmentTransactionReleaseBinding: FragmentTransactionReleaseBinding
-    private var selectTransactionClientDialog: SelectTransactionClientDialog? = null
     private val clientViewModel: ClientViewModel by viewModels()
     private val transactionViewModel: TransactionViewModel by activityViewModels()
 
@@ -30,7 +29,7 @@ class TransactionReleaseFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         fragmentTransactionReleaseBinding = FragmentTransactionReleaseBinding.inflate(inflater)
         mainActivity = activity as MainActivity
         setViewModel()
@@ -79,7 +78,7 @@ class TransactionReleaseFragment : Fragment() {
             transactionItemCountEditText.addTextChangedListener(
                 CustomTextWatcher(
                     clientViewModel,
-                    transactionItemNameEditText,
+                    transactionItemCountEditText,
                     addReleaseBtn
                 )
             )
@@ -87,7 +86,7 @@ class TransactionReleaseFragment : Fragment() {
             transactionItemPriceEditText.addTextChangedListener(
                 CustomTextWatcher(
                     clientViewModel,
-                    transactionItemNameEditText,
+                    transactionItemPriceEditText,
                     addReleaseBtn
                 )
             )
@@ -95,12 +94,10 @@ class TransactionReleaseFragment : Fragment() {
             transactionAmountReceivedEditText.addTextChangedListener(
                 CustomTextWatcher(
                     clientViewModel,
-                    transactionItemNameEditText,
+                    transactionAmountReceivedEditText,
                     addReleaseBtn
                 )
             )
-
-
 
             mainActivity.hideKeyboardAndClearFocus(transactionItemNameEditText)
             mainActivity.hideKeyboardAndClearFocus(transactionItemCountEditText)

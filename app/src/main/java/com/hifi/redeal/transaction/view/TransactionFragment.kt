@@ -56,7 +56,7 @@ class TransactionFragment : Fragment() {
     private fun setViewModel() {
         transactionViewModel.transactionList.observe(viewLifecycleOwner) {
             transactionAdapter.run {
-                setTransactions(arguments?.getLong("clientIdx"))
+                findTransactions(arguments?.getLong("clientIdx"))
                 sortTransaction(false)
             }
         }

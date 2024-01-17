@@ -7,50 +7,45 @@
     android:padding="4dp"
     android:transitionGroup="true">
 
-    <LinearLayout
-        android:id="@+id/linearLayout4"
-        android:layout_width="350dp"
+    <TextView
+        android:id="@+id/textTransactionDate"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/cardViewTrasaction"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/nanumsquareneo_regular"
+        android:text="2000.01.01"
+        android:textColor="@color/text10"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.416">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textTransactionDate"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/nanumsquareneo_regular"
-            android:text="2000.01.01"
-            android:textColor="@color/text10"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/transctionClientNameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/nanumsquareneo_regular"
-            android:text="거래처 이름"
-            android:textSize="14sp" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/transctionClientNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:fontFamily="@font/nanumsquareneo_regular"
+        android:text="거래처 이름"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/textTransactionDate"
+        app:layout_constraintTop_toTopOf="@+id/textTransactionDate" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewTrasaction"
-        android:layout_width="350dp"
+        android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="4dp"
         app:cardBackgroundColor="@color/background"
         app:cardCornerRadius="4dp"
         app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+        app:layout_constraintTop_toBottomOf="@+id/textTransactionDate">
 
         <LinearLayout
             android:layout_width="match_parent"

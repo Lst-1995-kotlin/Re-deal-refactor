@@ -11,14 +11,11 @@ import com.hifi.redeal.databinding.RowTransactionDepositBinding
 import com.hifi.redeal.databinding.RowTransactionReleaseBinding
 import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
-import java.text.NumberFormat
-import java.util.Locale
 
 class TransactionAdapter(
     private val transactionViewModel: TransactionViewModel,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var transactions = listOf<Transaction>()
-    private val numberFormat = NumberFormat.getNumberInstance(Locale.getDefault())
 
     init {
         transactionViewModel.transactionList.observeForever {
@@ -26,10 +23,7 @@ class TransactionAdapter(
         }
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int,
-    ): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         when (viewType) {
             DEPOSIT_TRANSACTION -> {
@@ -62,10 +56,7 @@ class TransactionAdapter(
         return transactions.size
     }
 
-    override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
-        position: Int,
-    ) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             DEPOSIT_TRANSACTION -> {
                 val item = holder as DepositHolder
@@ -94,7 +85,7 @@ class TransactionAdapter(
         notifyDataSetChanged()
     }
 
-    fun setTransactions(clientIdx: Long?) {
+    fun findTransactions(clientIdx: Long?) {
         clientIdx?.let {
             transactions = transactions.filter { it.getTransactionClientIdx() == clientIdx }
             notifyDataSetChanged()
@@ -102,11 +93,8 @@ class TransactionAdapter(
     }
 
 
-    private fun contextMenuSetting(
-        view: View,
-        position: Int,
-    ) {
-        view.setOnCreateContextMenuListener { contextMenu, view, _ ->
+    private fun contextMenuSetting(view: View, position: Int) {
+        view.setOnCreateContextMenuListener { contextMenu, _, _ ->
             MenuInflater(view.context).inflate(R.menu.transaction_menu, contextMenu)
             contextMenu.findItem(R.id.transactionDeleteMenu).setOnMenuItemClickListener {
                 transactionViewModel.deleteTransactionData(transactions[position])

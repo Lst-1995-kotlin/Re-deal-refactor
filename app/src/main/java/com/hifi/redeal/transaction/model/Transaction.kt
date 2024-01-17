@@ -23,8 +23,7 @@ class Transaction(
     fun calculateSaleAmount(): Long {
         if (getTransactionType() == WITHDRAWAL_TRANSACTION) {
             return transactionData.transactionItemPrice.toLong() *
-                transactionData.transactionItemCount -
-                transactionData.transactionAmountReceived.toLong()
+                    transactionData.transactionItemCount
         }
         return 0L
     }
@@ -33,8 +32,9 @@ class Transaction(
         if (getTransactionType() == DEPOSIT_TRANSACTION) {
             return transactionData.transactionAmountReceived.toLong() * -1L
         }
-        return transactionData.transactionItemPrice.toLong() *
-            transactionData.transactionItemCount
+        return transactionData.transactionAmountReceived.toLong() -
+                transactionData.transactionItemPrice.toLong() *
+                transactionData.transactionItemCount
     }
 
     fun getTransactionType(): Int {
@@ -76,15 +76,15 @@ class Transaction(
         totalAmount.text =
             numberFormat.format(
                 transactionData.transactionItemPrice.toLong() *
-                    transactionData.transactionItemCount,
+                        transactionData.transactionItemCount,
             )
         receivedAmount.text =
             numberFormat.format(transactionData.transactionAmountReceived.toLong())
         receivables.text =
             numberFormat.format(
                 transactionData.transactionItemPrice.toLong() *
-                    transactionData.transactionItemCount -
-                    transactionData.transactionAmountReceived.toLong(),
+                        transactionData.transactionItemCount -
+                        transactionData.transactionAmountReceived.toLong(),
             )
     }
 }

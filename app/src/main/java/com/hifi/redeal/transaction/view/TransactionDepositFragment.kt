@@ -41,7 +41,7 @@ class TransactionDepositFragment : Fragment() {
             addDepositBtn.setOnClickListener {
                 clientViewModel.selectedClient.value?.let {
                     transactionViewModel.addDepositTransaction(
-                        it, "${addDepositPriceEditTextNumber.text}"
+                        it, addDepositPriceEditTextNumber.text.toString()
                     )
                 }
                 mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_FRAGMENT)
