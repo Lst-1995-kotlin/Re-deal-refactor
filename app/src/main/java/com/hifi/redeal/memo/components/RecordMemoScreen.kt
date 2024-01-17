@@ -31,9 +31,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -42,7 +44,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.media3.common.MediaItem
@@ -52,8 +56,27 @@ import com.hifi.redeal.R
 import com.hifi.redeal.memo.model.RecordMemoData
 import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.RecordMemoViewModel
+import com.hifi.redeal.theme.RedealTheme
+import kotlinx.coroutines.delay
 import java.util.Date
 
+private fun Long.convertToText(): String {
+    val sec = this / 1000
+    val minutes = sec / 60
+    val seconds = sec % 60
+
+    val minutesString = if (minutes < 10) {
+        "0$minutes"
+    } else {
+        minutes.toString()
+    }
+    val secondsString = if (seconds < 10) {
+        "0$seconds"
+    } else {
+        seconds.toString()
+    }
+    return "$minutesString:$secondsString"
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RecordMemoToolbar(
@@ -183,6 +206,7 @@ private fun AudioPlayerFileName(
 @Composable
 private fun AudioPlayerDurationTimeText(
     text: String,
+    isFocusing: Boolean,
     modifier: Modifier = Modifier
 ){
     Text(
@@ -191,12 +215,18 @@ private fun AudioPlayerDurationTimeText(
         modifier = modifier
     )
 }
+
 @Composable
 private fun AudioPlayer(
     audioFilename: String,
+    duration: String,
     isPlaying: Boolean,
     isFocusing:Boolean,
+    sliderPosition:Long,
+    currentPosition:Long,
     onClickPlayer:() -> Unit,
+    onValueChange: (newValue: Float) -> Unit,
+    onValueChangeFinished: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier) {
@@ -212,13 +242,38 @@ private fun AudioPlayer(
                 .padding(start = 16.dp)
         ) {
             AudioPlayerFileName(text = audioFilename, isFocusing = isFocusing)
-            AudioPlayerDurationTimeText(text = "")
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+
+                Text(
+                    text = (currentPosition).convertToText(),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(8.dp),
+                    color = Color.Black,
+                    style = TextStyle(fontWeight = FontWeight.Bold)
+                )
+
+                val remainTime = 10000 - currentPosition
+                Text(
+                    text = if (remainTime >= 0) remainTime.convertToText() else "",
+                    modifier = Modifier
+                        .padding(8.dp),
+                    color = Color.Black,
+                    style = TextStyle(fontWeight = FontWeight.Bold)
+                )
+            }
             if (isFocusing) {
                 Slider(
-                    value = 0.0f,
+                    value = sliderPosition.toFloat(),
                     onValueChange = {
+                        onValueChange(it)
                     },
-                    valueRange = 0f..100f, // Define the range of values
+                    onValueChangeFinished = {
+                        onValueChangeFinished()
+                    },
+                    valueRange = 0f..10000f, // Define the range of values todo: 범위 변경
                     steps = 1, // Define the step size
                     modifier = Modifier
                 )
@@ -227,12 +282,34 @@ private fun AudioPlayer(
     }
 }
 
+@Preview(name = "AudioPlayer", showBackground = true)
+@Composable
+private fun AudioPlayerPreview(){
+    RedealTheme {
+        AudioPlayer(
+            audioFilename = "테스트 파일",
+            duration = "03:24",
+            isPlaying = false,
+            isFocusing = true,
+            currentPosition = 0,
+            sliderPosition = 0,
+            onClickPlayer = {},
+            onValueChange = {},
+            onValueChangeFinished = {}
+        )
+    }
+}
+
 @Composable
 private fun RecordMemoItem(
     item: RecordMemoData,
     isPlaying:Boolean,
     isFocusing:Boolean,
+    sliderPosition:Long,
+    currentPosition:Long,
     onClickPlayer:() -> Unit,
+    onValueChange: (newValue: Float) -> Unit,
+    onValueChangeFinished: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier) {
@@ -247,7 +324,12 @@ private fun RecordMemoItem(
             audioFilename = item.audioFilename,
             isPlaying = isPlaying,
             isFocusing = isFocusing,
+            sliderPosition = sliderPosition,
+            currentPosition = currentPosition,
+            duration = item.duration,
             onClickPlayer = onClickPlayer,
+            onValueChange = onValueChange,
+            onValueChangeFinished = onValueChangeFinished,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 20.dp)
@@ -261,15 +343,27 @@ private fun RecordMemoList(
     mainActivity: MainActivity,
     modifier: Modifier = Modifier,
 ) {
-    val player by remember { mutableStateOf(ExoPlayer.Builder(mainActivity).build()) }
+    var currentPosition by remember { mutableLongStateOf(0) }
+    var sliderPosition by remember { mutableLongStateOf(0) }
     var currentAudioIndex by remember { mutableIntStateOf(-1) }
     var isPlaying by remember { mutableStateOf(false) }
+    val player = remember { ExoPlayer.Builder(mainActivity).build() }
+
+    LaunchedEffect(key1 = player.currentPosition, key2 = player.isPlaying, key3 = isPlaying) {
+        delay(1000)
+        currentPosition = player.currentPosition
+    }
+
+    LaunchedEffect(currentPosition) {
+        sliderPosition = currentPosition
+    }
 
     DisposableEffect(player) {
         onDispose {
             player.release()
         }
     }
+
     LazyColumn(
         content = {
             itemsIndexed(recordMemoItemList) { idx, item ->
@@ -277,18 +371,30 @@ private fun RecordMemoList(
                     item = item,
                     isPlaying = isPlaying,
                     isFocusing = currentAudioIndex == idx,
+                    sliderPosition = sliderPosition,
+                    currentPosition = currentPosition,
                     onClickPlayer = {
                         if(currentAudioIndex == idx){
-                            isPlaying = !isPlaying
-                            player.playWhenReady = isPlaying
+                            if(isPlaying) {
+                                player.pause()
+                            }else {
+                                player.play()
+                            }
+                            isPlaying = player.isPlaying
                         }else{
+                            currentPosition = 0
                             player.setMediaItem(MediaItem.fromUri(item.audioFileUri!!))
                             player.prepare()
                             player.play()
                             isPlaying = true
                         }
                         currentAudioIndex = idx
-                    }
+                    },
+                    onValueChange = {sliderPosition = it.toLong()},
+                    onValueChangeFinished = {
+                        currentPosition = sliderPosition
+                        player.seekTo(sliderPosition)
+                    },
                 )
                 Divider(modifier = Modifier.padding(vertical = 16.dp))
             }
