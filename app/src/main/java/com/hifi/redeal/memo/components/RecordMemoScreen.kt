@@ -53,36 +53,12 @@ import androidx.media3.exoplayer.ExoPlayer
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.memo.model.RecordMemoData
+import com.hifi.redeal.memo.utils.convertToDurationTime
 import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.RecordMemoViewModel
 import com.hifi.redeal.theme.RedealTheme
 import kotlinx.coroutines.delay
 import java.util.Date
-
-private fun Long.convertToDurationTime(): String {
-    val sec = this / 1000
-    val min = sec / 60
-    val hours = min / 60
-    val seconds = sec % 60
-    val minutes = min % 60
-
-    val hoursString = if (hours < 10) {
-        "0$hours"
-    } else {
-        hours.toString()
-    }
-    val minutesString = if (minutes < 10) {
-        "0$minutes"
-    } else {
-        minutes.toString()
-    }
-    val secondsString = if (seconds < 10) {
-        "0$seconds"
-    } else {
-        seconds.toString()
-    }
-    return "$hoursString:$minutesString:$secondsString"
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

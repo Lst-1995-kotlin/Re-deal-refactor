@@ -51,3 +51,28 @@ fun intervalBetweenDateText(date: Date): String {
 
     return "방금"
 }
+
+fun Long.convertToDurationTime(): String {
+    val sec = this / 1000
+    val min = sec / 60
+    val hours = min / 60
+    val seconds = sec % 60
+    val minutes = min % 60
+
+    val hoursString = if (hours < 10) {
+        "0$hours"
+    } else {
+        hours.toString()
+    }
+    val minutesString = if (minutes < 10) {
+        "0$minutes"
+    } else {
+        minutes.toString()
+    }
+    val secondsString = if (seconds < 10) {
+        "0$seconds"
+    } else {
+        seconds.toString()
+    }
+    return "$hoursString:$minutesString:$secondsString"
+}
