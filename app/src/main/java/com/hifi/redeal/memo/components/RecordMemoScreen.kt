@@ -353,6 +353,10 @@ private fun RecordMemoList(
     LaunchedEffect(key1 = player.currentPosition, key2 = player.isPlaying, key3 = isPlaying) {
         delay(1000)
         currentPosition = player.currentPosition
+        if(currentPosition >= player.duration){
+            isPlaying = false
+            currentAudioIndex = -1
+        }
     }
 
     LaunchedEffect(currentPosition) {
