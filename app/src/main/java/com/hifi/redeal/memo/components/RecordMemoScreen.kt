@@ -44,7 +44,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -60,11 +59,18 @@ import com.hifi.redeal.theme.RedealTheme
 import kotlinx.coroutines.delay
 import java.util.Date
 
-private fun Long.convertToText(): String {
+private fun Long.convertToDurationTime(): String {
     val sec = this / 1000
-    val minutes = sec / 60
+    val min = sec / 60
+    val hours = min / 60
     val seconds = sec % 60
+    val minutes = min % 60
 
+    val hoursString = if (hours < 10) {
+        "0$hours"
+    } else {
+        hours.toString()
+    }
     val minutesString = if (minutes < 10) {
         "0$minutes"
     } else {
@@ -75,8 +81,9 @@ private fun Long.convertToText(): String {
     } else {
         seconds.toString()
     }
-    return "$minutesString:$secondsString"
+    return "$hoursString:$minutesString:$secondsString"
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RecordMemoToolbar(
@@ -166,7 +173,7 @@ private fun MemoMultiText(
 private fun AudioPlayerToggleButton(
     isPlaying: Boolean,
     isFocusing: Boolean,
-    onClickPlayer:() -> Unit,
+    onClickPlayer: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     OutlinedIconButton(
@@ -190,7 +197,7 @@ private fun AudioPlayerToggleButton(
 @Composable
 private fun AudioPlayerFileName(
     text: String,
-    isFocusing:Boolean,
+    isFocusing: Boolean,
     modifier: Modifier = Modifier
 ) {
     Text(
@@ -205,26 +212,38 @@ private fun AudioPlayerFileName(
 
 @Composable
 private fun AudioPlayerDurationTimeText(
-    text: String,
+    duration: Long,
+    currentPosition: Long,
     isFocusing: Boolean,
     modifier: Modifier = Modifier
-){
-    Text(
-        text = text,
-        style = MaterialTheme.typography.bodySmall,
+) {
+
+    Row(
         modifier = modifier
-    )
+    ) {
+        if (isFocusing) {
+            Text(
+                text = "${(currentPosition).convertToDurationTime()} / ",
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
+        Text(
+            text = duration.convertToDurationTime(),
+            modifier = Modifier,
+            style = MaterialTheme.typography.bodySmall,
+        )
+    }
 }
 
 @Composable
 private fun AudioPlayer(
     audioFilename: String,
-    duration: String,
+    duration: Long,
     isPlaying: Boolean,
-    isFocusing:Boolean,
-    sliderPosition:Long,
-    currentPosition:Long,
-    onClickPlayer:() -> Unit,
+    isFocusing: Boolean,
+    sliderPosition: Long,
+    currentPosition: Long,
+    onClickPlayer: () -> Unit,
     onValueChange: (newValue: Float) -> Unit,
     onValueChangeFinished: () -> Unit,
     modifier: Modifier = Modifier
@@ -242,28 +261,12 @@ private fun AudioPlayer(
                 .padding(start = 16.dp)
         ) {
             AudioPlayerFileName(text = audioFilename, isFocusing = isFocusing)
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-
-                Text(
-                    text = (currentPosition).convertToText(),
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(8.dp),
-                    color = Color.Black,
-                    style = TextStyle(fontWeight = FontWeight.Bold)
-                )
-
-                val remainTime = 10000 - currentPosition
-                Text(
-                    text = if (remainTime >= 0) remainTime.convertToText() else "",
-                    modifier = Modifier
-                        .padding(8.dp),
-                    color = Color.Black,
-                    style = TextStyle(fontWeight = FontWeight.Bold)
-                )
-            }
+            AudioPlayerDurationTimeText(
+                duration = duration,
+                isFocusing = isFocusing,
+                currentPosition = currentPosition,
+                modifier = Modifier.padding(top = 4.dp)
+            )
             if (isFocusing) {
                 Slider(
                     value = sliderPosition.toFloat(),
@@ -273,9 +276,7 @@ private fun AudioPlayer(
                     onValueChangeFinished = {
                         onValueChangeFinished()
                     },
-                    valueRange = 0f..10000f, // Define the range of values todo: 범위 변경
-                    steps = 1, // Define the step size
-                    modifier = Modifier
+                    valueRange = 0f..duration.toFloat(),
                 )
             }
         }
@@ -284,13 +285,13 @@ private fun AudioPlayer(
 
 @Preview(name = "AudioPlayer", showBackground = true)
 @Composable
-private fun AudioPlayerPreview(){
+private fun AudioPlayerPreview() {
     RedealTheme {
         AudioPlayer(
             audioFilename = "테스트 파일",
-            duration = "03:24",
+            duration = 30000000L,
             isPlaying = false,
-            isFocusing = true,
+            isFocusing = false,
             currentPosition = 0,
             sliderPosition = 0,
             onClickPlayer = {},
@@ -303,11 +304,11 @@ private fun AudioPlayerPreview(){
 @Composable
 private fun RecordMemoItem(
     item: RecordMemoData,
-    isPlaying:Boolean,
-    isFocusing:Boolean,
-    sliderPosition:Long,
-    currentPosition:Long,
-    onClickPlayer:() -> Unit,
+    isPlaying: Boolean,
+    isFocusing: Boolean,
+    sliderPosition: Long,
+    currentPosition: Long,
+    onClickPlayer: () -> Unit,
     onValueChange: (newValue: Float) -> Unit,
     onValueChangeFinished: () -> Unit,
     modifier: Modifier = Modifier
@@ -374,14 +375,14 @@ private fun RecordMemoList(
                     sliderPosition = sliderPosition,
                     currentPosition = currentPosition,
                     onClickPlayer = {
-                        if(currentAudioIndex == idx){
-                            if(isPlaying) {
+                        if (currentAudioIndex == idx) {
+                            if (isPlaying) {
                                 player.pause()
-                            }else {
+                            } else {
                                 player.play()
                             }
                             isPlaying = player.isPlaying
-                        }else{
+                        } else {
                             currentPosition = 0
                             player.setMediaItem(MediaItem.fromUri(item.audioFileUri!!))
                             player.prepare()
@@ -390,7 +391,7 @@ private fun RecordMemoList(
                         }
                         currentAudioIndex = idx
                     },
-                    onValueChange = {sliderPosition = it.toLong()},
+                    onValueChange = { sliderPosition = it.toLong() },
                     onValueChangeFinished = {
                         currentPosition = sliderPosition
                         player.seekTo(sliderPosition)
