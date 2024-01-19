@@ -29,10 +29,11 @@ class TransactionFragment : Fragment() {
     ): View {
         fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater)
         mainActivity = activity as MainActivity
-        transactionAdapter = TransactionAdapter(transactionViewModel)
+        transactionAdapter =
+            TransactionAdapter(transactionViewModel, arguments?.getLong("clientIdx"))
 
         setTransactionView()
-        setViewModel()
+
         return fragmentTransactionBinding.root
     }
 
@@ -49,15 +50,6 @@ class TransactionFragment : Fragment() {
 
             ImgBtnAddTransaction.setOnClickListener {
                 mainActivity.replaceFragment(TRANSACTION_RELEASE_FRAGMENT, true, null)
-            }
-        }
-    }
-
-    private fun setViewModel() {
-        transactionViewModel.transactionList.observe(viewLifecycleOwner) {
-            transactionAdapter.run {
-                findTransactions(arguments?.getLong("clientIdx"))
-                sortTransaction(false)
             }
         }
     }

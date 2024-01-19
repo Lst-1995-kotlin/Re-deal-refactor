@@ -1,11 +1,8 @@
 package com.hifi.redeal.transaction.viewmodel
 
-import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import com.hifi.redeal.transaction.model.Client
 import com.hifi.redeal.transaction.model.Transaction
@@ -19,7 +16,6 @@ class TransactionViewModel @Inject constructor(
     private val transactionRepository: TransactionRepository,
 ) : ViewModel() {
 
-    private val tempTransactionList = mutableListOf<Transaction>()
     private val _transactionList = MutableLiveData<List<Transaction>>()
     val transactionList: LiveData<List<Transaction>> get() = _transactionList
     private var newTransactionIdx = 0L
@@ -29,23 +25,15 @@ class TransactionViewModel @Inject constructor(
         getAllTransactionData()
     }
 
-    fun deleteTransactionData(transaction: Transaction) {
-        transactionRepository.deleteTransactionData(transaction.getTransactionIdx()) {
-            _transactionList.value?.indexOfFirst { it == transaction }
-                ?.let { it1 -> tempTransactionList.removeAt(it1) }
-            _transactionList.postValue(tempTransactionList)
-        }
+    private fun updateTransaction(newData: List<Transaction>?) {
+        newData?.let { _transactionList.postValue(it.sortedByDescending { it.getTransactionDate() }) }
+            ?: _transactionList.postValue(emptyList())
     }
 
-    fun inputValueCheck(textInputEditText: TextInputEditText): Snackbar? {
-        if (textInputEditText.text.isNullOrEmpty()) {
-            return Snackbar.make(
-                textInputEditText,
-                "${textInputEditText.hint}(이)가 입력되지 않았습니다.",
-                Snackbar.LENGTH_SHORT,
-            )
+    fun deleteTransactionData(transaction: Transaction) {
+        transactionRepository.deleteTransactionData(transaction.getTransactionIdx()) {
+            updateTransaction(_transactionList.value?.filter { it != transaction })
         }
-        return null
     }
 
     fun addDepositTransaction(client: Client, amount: String) {
@@ -61,9 +49,7 @@ class TransactionViewModel @Inject constructor(
         )
         transactionRepository.setTransactionData(newDepositTransactionData) {
             val newTransaction = Transaction(newDepositTransactionData)
-            tempTransactionList.add(newTransaction)
-            _transactionList.postValue(tempTransactionList)
-            getClientName()
+            getClientName(_transactionList.value?.plus(newTransaction))
             getNextTransactionIdx()
         }
     }
@@ -75,7 +61,7 @@ class TransactionViewModel @Inject constructor(
         itemPrice: String,
         amount: String,
     ) {
-        val newDepositTransactionData = TransactionData(
+        val newReleaseTransactionData = TransactionData(
             client.getClientIdx(),
             Timestamp.now(),
             false,
@@ -85,45 +71,43 @@ class TransactionViewModel @Inject constructor(
             itemPrice.replace(",", ""),
             itemName,
         )
-        transactionRepository.setTransactionData(newDepositTransactionData) {
-            val newTransaction = Transaction(newDepositTransactionData)
-            tempTransactionList.add(newTransaction)
-            _transactionList.postValue(tempTransactionList)
-            getClientName()
+        transactionRepository.setTransactionData(newReleaseTransactionData) {
+            val newTransaction = Transaction(newReleaseTransactionData)
+            getClientName(_transactionList.value?.plus(newTransaction))
             getNextTransactionIdx()
         }
     }
 
     private fun getAllTransactionData() {
         transactionRepository.getAllTransactionData {
-            tempTransactionList.clear()
-            for (c1 in it.result) {
-                val transactionData = TransactionData(
-                    c1["clientIdx"] as Long,
-                    c1["date"] as Timestamp,
-                    c1["isDeposit"] as Boolean,
-                    c1["transactionAmountReceived"] as String,
-                    c1["transactionIdx"] as Long,
-                    c1["transactionItemCount"] as Long,
-                    c1["transactionItemPrice"] as String,
-                    c1["transactionItemName"] as String,
+            val temp = mutableListOf<Transaction>()
+            it.result.forEach { c1 ->
+                val transaction = Transaction(
+                    TransactionData(
+                        c1["clientIdx"] as Long,
+                        c1["date"] as Timestamp,
+                        c1["isDeposit"] as Boolean,
+                        c1["transactionAmountReceived"] as String,
+                        c1["transactionIdx"] as Long,
+                        c1["transactionItemCount"] as Long,
+                        c1["transactionItemPrice"] as String,
+                        c1["transactionItemName"] as String,
+                    )
                 )
-                val transaction = Transaction(transactionData)
-                tempTransactionList.add(transaction)
-                _transactionList.postValue(tempTransactionList)
-                getClientName()
+                temp.add(transaction)
+                getClientName(temp)
             }
         }
     }
 
-    private fun getClientName() {
-        for (transaction in tempTransactionList) {
-            if (!transaction.isTransactionClientSetName()) continue
-            transactionRepository.getClientInfo(transaction.getTransactionClientIdx()) {
-                for (c1 in it.result) {
-                    val clientName = c1["clientName"] as String
-                    transaction.setTransactionClientName(clientName)
-                    _transactionList.postValue(tempTransactionList)
+    private fun getClientName(transactions: List<Transaction>?) {
+        transactions?.forEach { transaction ->
+            if (transaction.isNotSettingClientName()) {
+                transactionRepository.getClientInfo(transaction.getTransactionClientIdx()) {
+                    for (c1 in it.result) {
+                        transaction.setTransactionClientName(c1["clientName"] as String)
+                        updateTransaction(transactions)
+                    }
                 }
             }
         }

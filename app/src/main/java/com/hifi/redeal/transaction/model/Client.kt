@@ -1,6 +1,5 @@
 package com.hifi.redeal.transaction.model
 
-import android.widget.ImageView
 import android.widget.TextView
 import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
 import com.hifi.redeal.transaction.configuration.ClientConfiguration.Companion.setClientBookmarkResource
@@ -25,14 +24,6 @@ class Client(
 
     fun setClientInfoView(textView: TextView) {
         textView.text = "${clientData.clientName} ${clientData.clientManagerName}"
-    }
-
-    fun setClientStateView(imageView: ImageView) {
-        setClientStateResource(clientData.clientState, imageView)
-    }
-
-    fun setClientBookmarkView(imageView: ImageView) {
-        setClientBookmarkResource(clientData.isBookmark, imageView)
     }
 
     fun getClientIdx() = clientData.clientIdx
