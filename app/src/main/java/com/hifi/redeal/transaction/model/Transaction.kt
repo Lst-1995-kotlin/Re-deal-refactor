@@ -12,7 +12,7 @@ class Transaction(
 ) {
     private val numberFormat = NumberFormat.getNumberInstance(Locale.getDefault())
     private val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
-    private var transactionClientName = ""
+    private var transactionClientName: String? = null
 
     override fun equals(other: Any?): Boolean {
         val temp = other as Transaction
@@ -26,7 +26,7 @@ class Transaction(
         return result
     }
 
-    fun isNotSettingClientName() = transactionClientName == ""
+    fun isNotSettingClientName() = transactionClientName.isNullOrEmpty()
 
     fun setTransactionClientName(name: String) {
         transactionClientName = name
