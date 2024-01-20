@@ -25,9 +25,9 @@ class TransactionViewModel @Inject constructor(
         getAllTransactionData()
     }
 
-    fun deleteTransactionData(transaction: Transaction) {
-        transactionRepository.deleteTransactionData(transaction.getTransactionIdx()) {
-            updateTransaction(_transactionList.value?.filter { it != transaction })
+    fun deleteTransactionData(transactionIdx: Long) {
+        transactionRepository.deleteTransactionData(transactionIdx) {
+            updateTransaction(_transactionList.value?.filter { it.getTransactionIdx() != transactionIdx })
         }
     }
 

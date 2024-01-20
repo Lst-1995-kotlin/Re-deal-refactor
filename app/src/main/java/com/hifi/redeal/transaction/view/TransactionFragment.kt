@@ -29,8 +29,6 @@ class TransactionFragment : Fragment() {
     ): View {
         fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater)
         mainActivity = activity as MainActivity
-        transactionAdapter =
-            TransactionAdapter(transactionViewModel, arguments?.getLong("clientIdx"))
 
         setTransactionView()
 
@@ -39,6 +37,15 @@ class TransactionFragment : Fragment() {
 
     private fun setTransactionView() {
         fragmentTransactionBinding.run {
+
+            transactionAdapter = TransactionAdapter(
+                transactionViewModel,
+                arguments?.getLong("clientIdx"),
+                textTotalSalesCount,
+                textTotalSales,
+                textTotalReceivables
+            )
+
             transactionRecyclerView.run {
                 adapter = transactionAdapter
                 layoutManager = LinearLayoutManager(context)
@@ -52,5 +59,6 @@ class TransactionFragment : Fragment() {
                 mainActivity.replaceFragment(TRANSACTION_RELEASE_FRAGMENT, true, null)
             }
         }
+
     }
 }

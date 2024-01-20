@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.R
@@ -15,13 +16,26 @@ import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 
 class TransactionAdapter(
     private val transactionViewModel: TransactionViewModel,
-    private val clientIdx: Long?
+    private val clientIdx: Long?,
+    private val releaseTransactionCountView: TextView, // 매출 건수
+    private val releaseAmountView: TextView, // 매출 금액
+    private val receivedAmountView: TextView, // 미수금
 ) : ListAdapter<Transaction, RecyclerView.ViewHolder>(TransactionDiffCallback()) {
+
     init {
         transactionViewModel.transactionList.observeForever { transactions ->
-            clientIdx?.let {
-                submitList(transactions.filter { it.getTransactionClientIdx() == clientIdx })
-            } ?: submitList(transactions)
+            val filteredTransactions = clientIdx?.let {
+                transactions.filter { it.getTransactionClientIdx() == clientIdx }
+            } ?: transactions
+
+            submitList(filteredTransactions) {
+                releaseTransactionCountView.text =
+                    "${currentList.filter { it.getTransactionType() == RELEASE_TRANSACTION }.size}"
+                releaseAmountView.text =
+                    "${currentList.sumOf { it.calculateSalesAmount() }}"
+                receivedAmountView.text =
+                    "${currentList.sumOf { it.calculateReceivables() }}"
+            }
         }
     }
 
@@ -39,7 +53,7 @@ class TransactionAdapter(
                 DepositHolder(rowTransactionDepositBinding)
             }
 
-            WITHDRAWAL_TRANSACTION -> {
+            RELEASE_TRANSACTION -> {
                 val rowTransactionReleaseBinding =
                     RowTransactionReleaseBinding.inflate(inflater)
 
@@ -57,30 +71,32 @@ class TransactionAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val transaction = getItem(position)
+        holder.itemView.tag = transaction.getTransactionIdx()
         when (holder.itemViewType) {
             DEPOSIT_TRANSACTION -> {
                 val item = holder as DepositHolder
-                setContextMenu(item.itemView, position)
+                setContextMenu(item.itemView)
                 item.bind(transaction)
             }
 
-            WITHDRAWAL_TRANSACTION -> {
+            RELEASE_TRANSACTION -> {
                 val item = holder as ReleaseHolder
-                setContextMenu(item.itemView, position)
+                setContextMenu(item.itemView)
                 item.bind(transaction)
             }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return getItem(position).getTransactionType()
+        return currentList[position].getTransactionType()
     }
 
-    private fun setContextMenu(view: View, position: Int) {
+    private fun setContextMenu(view: View) {
         view.setOnCreateContextMenuListener { contextMenu, _, _ ->
             MenuInflater(view.context).inflate(R.menu.transaction_menu, contextMenu)
             contextMenu.findItem(R.id.transactionDeleteMenu).setOnMenuItemClickListener {
-                transactionViewModel.deleteTransactionData(getItem(position))
+                val transactionIdx = view.tag as Long // 태그에서 위치 가져오기
+                transactionViewModel.deleteTransactionData(transactionIdx)
                 true
             }
         }
@@ -119,7 +135,7 @@ class TransactionAdapter(
 
     companion object {
         const val DEPOSIT_TRANSACTION = 1
-        const val WITHDRAWAL_TRANSACTION = 2
+        const val RELEASE_TRANSACTION = 2
     }
 }
 

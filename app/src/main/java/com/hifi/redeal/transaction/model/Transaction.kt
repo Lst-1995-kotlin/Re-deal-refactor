@@ -2,7 +2,7 @@ package com.hifi.redeal.transaction.model
 
 import android.widget.TextView
 import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.DEPOSIT_TRANSACTION
-import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.WITHDRAWAL_TRANSACTION
+import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.RELEASE_TRANSACTION
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -27,6 +27,15 @@ class Transaction(
                 otherTransaction.transactionClientName == this.transactionClientName
     }
 
+    fun calculateSalesAmount(): Long {
+        if (transactionData.isDeposit) return 0L
+        return transactionData.transactionItemCount * transactionData.transactionItemPrice.toLong()
+    }
+
+    fun calculateReceivables() =
+        calculateSalesAmount() - transactionData.transactionAmountReceived.toLong()
+
+
     fun isNotSettingClientName() = transactionClientName.isNullOrEmpty()
 
     fun setTransactionClientName(name: String) {
@@ -35,7 +44,7 @@ class Transaction(
 
     fun getTransactionType(): Int {
         if (transactionData.isDeposit) return DEPOSIT_TRANSACTION
-        return WITHDRAWAL_TRANSACTION
+        return RELEASE_TRANSACTION
     }
 
     fun getTransactionDate() = transactionData.date
