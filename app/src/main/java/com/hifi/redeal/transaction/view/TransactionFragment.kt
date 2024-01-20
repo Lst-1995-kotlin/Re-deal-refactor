@@ -9,9 +9,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.MainActivity.Companion.TRANSACTION_DEPOSIT_FRAGMENT
-import com.hifi.redeal.MainActivity.Companion.TRANSACTION_RELEASE_FRAGMENT
+import com.hifi.redeal.MainActivity.Companion.TRANSACTION_SALES_FRAGMENT
 import com.hifi.redeal.databinding.FragmentTransactionBinding
 import com.hifi.redeal.transaction.adapter.TransactionAdapter
+import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.SALES_TRANSACTION
+import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,6 +33,7 @@ class TransactionFragment : Fragment() {
         mainActivity = activity as MainActivity
 
         setTransactionView()
+        setViewModel()
 
         return fragmentTransactionBinding.root
     }
@@ -38,13 +41,7 @@ class TransactionFragment : Fragment() {
     private fun setTransactionView() {
         fragmentTransactionBinding.run {
 
-            transactionAdapter = TransactionAdapter(
-                transactionViewModel,
-                arguments?.getLong("clientIdx"),
-                textTotalSalesCount,
-                textTotalSales,
-                textTotalReceivables
-            )
+            transactionAdapter = TransactionAdapter(transactionViewModel)
 
             transactionRecyclerView.run {
                 adapter = transactionAdapter
@@ -56,9 +53,22 @@ class TransactionFragment : Fragment() {
             }
 
             ImgBtnAddTransaction.setOnClickListener {
-                mainActivity.replaceFragment(TRANSACTION_RELEASE_FRAGMENT, true, null)
+                mainActivity.replaceFragment(TRANSACTION_SALES_FRAGMENT, true, null)
             }
         }
+    }
 
+    private fun setViewModel() {
+        transactionViewModel.transactionList.observe(viewLifecycleOwner) { transactions ->
+            fragmentTransactionBinding.run {
+                textTotalSalesCount.text =
+                    replaceNumberFormat(transactions.filter { it.getTransactionType() == SALES_TRANSACTION }.size)
+                textTotalSales.text =
+                    replaceNumberFormat(transactions.sumOf { it.calculateSalesAmount() })
+                textTotalReceivables.text =
+                    replaceNumberFormat(transactions.sumOf { it.calculateReceivables() })
+            }
+        }
+        transactionViewModel.setSelectClientIndex(arguments?.getLong("clientIdx"))
     }
 }

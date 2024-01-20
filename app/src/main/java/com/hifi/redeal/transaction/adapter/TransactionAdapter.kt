@@ -4,38 +4,22 @@ import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.RowTransactionDepositBinding
-import com.hifi.redeal.databinding.RowTransactionReleaseBinding
+import com.hifi.redeal.databinding.RowTransactionSalesBinding
 import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.util.TransactionDiffCallback
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 
 class TransactionAdapter(
     private val transactionViewModel: TransactionViewModel,
-    private val clientIdx: Long?,
-    private val releaseTransactionCountView: TextView, // 매출 건수
-    private val releaseAmountView: TextView, // 매출 금액
-    private val receivedAmountView: TextView, // 미수금
 ) : ListAdapter<Transaction, RecyclerView.ViewHolder>(TransactionDiffCallback()) {
 
     init {
         transactionViewModel.transactionList.observeForever { transactions ->
-            val filteredTransactions = clientIdx?.let {
-                transactions.filter { it.getTransactionClientIdx() == clientIdx }
-            } ?: transactions
-
-            submitList(filteredTransactions) {
-                releaseTransactionCountView.text =
-                    "${currentList.filter { it.getTransactionType() == RELEASE_TRANSACTION }.size}"
-                releaseAmountView.text =
-                    "${currentList.sumOf { it.calculateSalesAmount() }}"
-                receivedAmountView.text =
-                    "${currentList.sumOf { it.calculateReceivables() }}"
-            }
+            submitList(transactions.sortedByDescending { it.getTransactionDate() })
         }
     }
 
@@ -53,16 +37,16 @@ class TransactionAdapter(
                 DepositHolder(rowTransactionDepositBinding)
             }
 
-            RELEASE_TRANSACTION -> {
-                val rowTransactionReleaseBinding =
-                    RowTransactionReleaseBinding.inflate(inflater)
+            SALES_TRANSACTION -> {
+                val rowTransactionSalesBinding =
+                    RowTransactionSalesBinding.inflate(inflater)
 
-                rowTransactionReleaseBinding.root.layoutParams =
+                rowTransactionSalesBinding.root.layoutParams =
                     ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                     )
-                ReleaseHolder(rowTransactionReleaseBinding)
+                ReleaseHolder(rowTransactionSalesBinding)
             }
 
             else -> throw IllegalArgumentException("올바르지 못한 거래 타입 입니다.")
@@ -79,7 +63,7 @@ class TransactionAdapter(
                 item.bind(transaction)
             }
 
-            RELEASE_TRANSACTION -> {
+            SALES_TRANSACTION -> {
                 val item = holder as ReleaseHolder
                 setContextMenu(item.itemView)
                 item.bind(transaction)
@@ -116,26 +100,26 @@ class TransactionAdapter(
     }
 
     inner class ReleaseHolder(
-        private val rowTransactionReleaseBinding: RowTransactionReleaseBinding,
+        private val rowTransactionReleaseBinding: RowTransactionSalesBinding,
     ) :
         RecyclerView.ViewHolder(rowTransactionReleaseBinding.root) {
         fun bind(transaction: Transaction) {
             transaction.setTextViewValue(
                 rowTransactionReleaseBinding.textTransactionDate,
                 rowTransactionReleaseBinding.transctionClientNameTextView,
-                rowTransactionReleaseBinding.textProductName,
-                rowTransactionReleaseBinding.textProductCount,
-                rowTransactionReleaseBinding.textUnitPrice,
-                rowTransactionReleaseBinding.textTotalAmount,
-                rowTransactionReleaseBinding.textRecievedAmount,
-                rowTransactionReleaseBinding.textRecievables,
+                rowTransactionReleaseBinding.itemNameTextView,
+                rowTransactionReleaseBinding.itemSalesCountTextView,
+                rowTransactionReleaseBinding.itemPriceTextView,
+                rowTransactionReleaseBinding.totalSalesAmountTextView,
+                rowTransactionReleaseBinding.recievedAmountTextView,
+                rowTransactionReleaseBinding.recievablesTextView,
             )
         }
     }
 
     companion object {
         const val DEPOSIT_TRANSACTION = 1
-        const val RELEASE_TRANSACTION = 2
+        const val SALES_TRANSACTION = 2
     }
 }
 

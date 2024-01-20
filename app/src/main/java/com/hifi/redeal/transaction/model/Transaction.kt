@@ -2,7 +2,7 @@ package com.hifi.redeal.transaction.model
 
 import android.widget.TextView
 import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.DEPOSIT_TRANSACTION
-import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.RELEASE_TRANSACTION
+import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.SALES_TRANSACTION
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -44,7 +44,7 @@ class Transaction(
 
     fun getTransactionType(): Int {
         if (transactionData.isDeposit) return DEPOSIT_TRANSACTION
-        return RELEASE_TRANSACTION
+        return SALES_TRANSACTION
     }
 
     fun getTransactionDate() = transactionData.date

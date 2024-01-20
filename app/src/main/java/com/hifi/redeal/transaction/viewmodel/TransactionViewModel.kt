@@ -16,9 +16,11 @@ class TransactionViewModel @Inject constructor(
     private val transactionRepository: TransactionRepository,
 ) : ViewModel() {
 
+    private val totalTransactionData = mutableListOf<Transaction>()
     private val _transactionList = MutableLiveData<List<Transaction>>()
     val transactionList: LiveData<List<Transaction>> get() = _transactionList
     private var newTransactionIdx = 0L
+    private var selectClientIndex: Long? = null
 
     init {
         getNextTransactionIdx()
@@ -27,7 +29,8 @@ class TransactionViewModel @Inject constructor(
 
     fun deleteTransactionData(transactionIdx: Long) {
         transactionRepository.deleteTransactionData(transactionIdx) {
-            updateTransaction(_transactionList.value?.filter { it.getTransactionIdx() != transactionIdx })
+            totalTransactionData.removeAll { it.getTransactionIdx() == transactionIdx }
+            updateTransaction()
         }
     }
 
@@ -44,12 +47,13 @@ class TransactionViewModel @Inject constructor(
         )
         transactionRepository.setTransactionData(newDepositTransactionData) {
             val newTransaction = Transaction(newDepositTransactionData)
-            getClientName(_transactionList.value?.plus(newTransaction))
+            totalTransactionData.add(newTransaction)
+            getClientName()
             getNextTransactionIdx()
         }
     }
 
-    fun addReleaseTransaction(
+    fun addSalesTransaction(
         client: Client,
         itemName: String,
         itemCount: String,
@@ -68,14 +72,20 @@ class TransactionViewModel @Inject constructor(
         )
         transactionRepository.setTransactionData(newReleaseTransactionData) {
             val newTransaction = Transaction(newReleaseTransactionData)
-            getClientName(_transactionList.value?.plus(newTransaction))
+            totalTransactionData.add(newTransaction)
+            getClientName()
             getNextTransactionIdx()
         }
     }
 
+    fun setSelectClientIndex(clientIndex: Long?) {
+        selectClientIndex = clientIndex
+        updateTransaction()
+    }
+
     private fun getAllTransactionData() {
         transactionRepository.getAllTransactionData {
-            val temp = mutableListOf<Transaction>()
+            totalTransactionData.clear()
             it.result.forEach { c1 ->
                 val transaction = Transaction(
                     TransactionData(
@@ -89,28 +99,29 @@ class TransactionViewModel @Inject constructor(
                         c1["transactionItemName"] as String,
                     )
                 )
-                temp.add(transaction)
-                getClientName(temp)
+                totalTransactionData.add(transaction)
+                getClientName()
             }
         }
     }
 
-    private fun getClientName(transactions: List<Transaction>?) {
-        transactions?.forEach { transaction ->
+    private fun getClientName() {
+        totalTransactionData.forEach { transaction ->
             if (transaction.isNotSettingClientName()) {
                 transactionRepository.getClientInfo(transaction.getTransactionClientIdx()) {
                     for (c1 in it.result) {
                         transaction.setTransactionClientName(c1["clientName"] as String)
-                        updateTransaction(transactions)
+                        updateTransaction()
                     }
                 }
             }
         }
     }
 
-    private fun updateTransaction(newData: List<Transaction>?) {
-        newData?.let { _transactionList.postValue(it.sortedByDescending { it.getTransactionDate() }) }
-            ?: _transactionList.postValue(emptyList())
+    private fun updateTransaction() {
+        selectClientIndex?.let { index ->
+            _transactionList.postValue(totalTransactionData.filter { it.getTransactionClientIdx() == index })
+        } ?: _transactionList.postValue(totalTransactionData)
     }
 
     private fun getNextTransactionIdx() {

@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputEditText
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentTransactionReleaseBinding
 import com.hifi.redeal.transaction.util.CustomInputEditTextFocusListener
@@ -19,7 +17,7 @@ import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TransactionReleaseFragment : Fragment() {
+class TransactionSalesFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
     private lateinit var fragmentTransactionReleaseBinding: FragmentTransactionReleaseBinding
     private val clientViewModel: ClientViewModel by viewModels()
@@ -42,18 +40,18 @@ class TransactionReleaseFragment : Fragment() {
         fragmentTransactionReleaseBinding.run {
 
             materialToolbar2.setNavigationOnClickListener {
-                mainActivity.removeFragment(MainActivity.TRANSACTION_RELEASE_FRAGMENT)
+                mainActivity.removeFragment(MainActivity.TRANSACTION_SALES_FRAGMENT)
             }
 
             addReleaseBtn.setOnClickListener {
-                transactionViewModel.addReleaseTransaction(
+                transactionViewModel.addSalesTransaction(
                     clientViewModel.selectedClient.value!!,
                     transactionItemNameEditText.text.toString(),
                     transactionItemCountEditText.text.toString(),
                     transactionItemPriceEditText.text.toString(),
                     transactionAmountReceivedEditText.text.toString(),
                 )
-                mainActivity.removeFragment(MainActivity.TRANSACTION_RELEASE_FRAGMENT)
+                mainActivity.removeFragment(MainActivity.TRANSACTION_SALES_FRAGMENT)
             }
 
             transactionItemNameEditText.onFocusChangeListener = CustomInputEditTextFocusListener()
