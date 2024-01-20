@@ -30,7 +30,7 @@ class SelectTransactionClientDialog(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         dialogSelectTransactionClientDialog = DialogSelectTransactionClientBinding.inflate(inflater)
         clientAdapter = ClientAdapter(clientViewModel)
         setDialog()
@@ -51,7 +51,7 @@ class SelectTransactionClientDialog(
                     MaterialDividerItemDecoration(
                         context,
                         MaterialDividerItemDecoration.VERTICAL,
-                    ),
+                    )
                 )
             }
 

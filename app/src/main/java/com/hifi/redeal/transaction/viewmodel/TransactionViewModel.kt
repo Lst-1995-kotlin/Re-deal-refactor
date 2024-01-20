@@ -25,11 +25,6 @@ class TransactionViewModel @Inject constructor(
         getAllTransactionData()
     }
 
-    private fun updateTransaction(newData: List<Transaction>?) {
-        newData?.let { _transactionList.postValue(it.sortedByDescending { it.getTransactionDate() }) }
-            ?: _transactionList.postValue(emptyList())
-    }
-
     fun deleteTransactionData(transaction: Transaction) {
         transactionRepository.deleteTransactionData(transaction.getTransactionIdx()) {
             updateTransaction(_transactionList.value?.filter { it != transaction })
@@ -111,6 +106,11 @@ class TransactionViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun updateTransaction(newData: List<Transaction>?) {
+        newData?.let { _transactionList.postValue(it.sortedByDescending { it.getTransactionDate() }) }
+            ?: _transactionList.postValue(emptyList())
     }
 
     private fun getNextTransactionIdx() {

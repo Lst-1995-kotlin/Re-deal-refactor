@@ -2,25 +2,23 @@ package com.hifi.redeal.transaction.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
 import com.hifi.redeal.transaction.model.Client
+import com.hifi.redeal.transaction.util.ClientDiffCallback
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 
 class ClientAdapter(
     private val clientViewModel: ClientViewModel,
-) : RecyclerView.Adapter<ClientAdapter.TransactionClientHolder>() {
-
-    private var clients = listOf<Client>()
-    private var filterClients = listOf<Client>()
+) : ListAdapter<Client, ClientAdapter.TransactionClientHolder>(ClientDiffCallback()) {
 
     init {
         clientViewModel.clients.observeForever {
-            clients = it
-            filterClients = clients
-            notifyDataSetChanged()
+            submitList(it)
         }
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionClientHolder {
         val inflater = LayoutInflater.from(parent.context)
         val transactionSelectClientItemBinding =
@@ -32,17 +30,14 @@ class ClientAdapter(
         return TransactionClientHolder(transactionSelectClientItemBinding)
     }
 
-    override fun getItemCount(): Int {
-        return filterClients.size
-    }
-
     override fun onBindViewHolder(holder: TransactionClientHolder, position: Int) {
-        holder.bind(filterClients[position])
+        holder.bind(getItem(position))
     }
 
     fun clientFind(value: String) {
-        filterClients = clients.filter { it.filter(value) }
-        notifyDataSetChanged()
+        val filterList =
+            clientViewModel.clients.value?.filter { it.filter(value) }
+        submitList(filterList)
     }
 
     inner class TransactionClientHolder(

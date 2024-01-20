@@ -1,5 +1,6 @@
 package com.hifi.redeal.transaction.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.hifi.redeal.transaction.model.Client
@@ -15,8 +16,8 @@ class ClientViewModel @Inject constructor(
 ) : ViewModel() {
 
     val selectedClient = MutableLiveData<Client>()
-    private val _clients = mutableListOf<Client>()
-    val clients = MutableLiveData<List<Client>>()
+    private val _clients = MutableLiveData<List<Client>>()
+    val clients: LiveData<List<Client>> get() = _clients
 
     init {
         getUserAllClient()
@@ -26,9 +27,14 @@ class ClientViewModel @Inject constructor(
         selectedClient.postValue(client)
     }
 
+    private fun updateClients(newData: List<Client>?) {
+        newData?.let { _clients.postValue(it.sortedByDescending { it.getClientIdx() }) }
+            ?: _clients.postValue(emptyList())
+    }
+
     private fun getUserAllClient() {
         clientRepository.getUserAllClient {
-            _clients.clear()
+            val temp = mutableListOf<Client>()
             for (c1 in it.result) {
                 val clientData = ClientData(
                     c1["clientIdx"] as Long,
@@ -39,8 +45,8 @@ class ClientViewModel @Inject constructor(
                 )
 
                 if (isClientStateNotStop(clientData.clientState)) {
-                    _clients.add(Client(clientData))
-                    clients.postValue(_clients)
+                    temp.add(Client(clientData))
+                    updateClients(temp)
                 }
             }
         }

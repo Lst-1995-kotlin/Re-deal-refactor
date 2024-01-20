@@ -14,16 +14,17 @@ class Transaction(
     private val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
     private var transactionClientName: String? = null
 
-    override fun equals(other: Any?): Boolean {
-        val temp = other as Transaction
-        return temp.transactionData == this.transactionData &&
-                temp.transactionClientName == this.transactionClientName
-    }
 
     override fun hashCode(): Int {
         var result = transactionData.hashCode()
         result = 31 * result + transactionClientName.hashCode()
         return result
+    }
+
+    override fun equals(other: Any?): Boolean {
+        val otherTransaction = other as Transaction
+        return otherTransaction.transactionData == this.transactionData &&
+                otherTransaction.transactionClientName == this.transactionClientName
     }
 
     fun isNotSettingClientName() = transactionClientName.isNullOrEmpty()

@@ -7,9 +7,16 @@ import com.hifi.redeal.transaction.configuration.ClientConfiguration.Companion.s
 
 
 class Client(
-    private val clientData: ClientData,
+    private val clientData: ClientData
 ) {
 
+    override fun hashCode(): Int {
+        return clientData.hashCode()
+    }
+    override fun equals(other: Any?): Boolean {
+        val otherClient = other as Client
+        return otherClient.clientData == this.clientData
+    }
     fun bind(transactionSelectClientItemBinding: TransactionSelectClientItemBinding) {
         transactionSelectClientItemBinding.run {
             setClientStateResource(clientData.clientState, selectTransactionClinetState)
