@@ -10,7 +10,7 @@
 
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/materialToolbar2"
+        android:id="@+id/addSalesFragmentToolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
@@ -23,13 +23,15 @@
         app:title="거래 내역 추가"
         app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout11"
+    <View
+        android:id="@+id/transactionSalesDivider"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@color/primary20"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/materialToolbar2"></LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addSalesFragmentToolbar" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/transactionNameLayout"
@@ -44,7 +46,7 @@
         app:endIconMode="clear_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout11">
+        app:layout_constraintTop_toBottomOf="@+id/transactionSalesDivider">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/transactionItemNameEditText"
@@ -81,6 +83,7 @@
             android:background="@drawable/bottom_border_not_focus"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:inputType="number"
+            android:maxLength="19"
             android:textColor="@color/text10"
             android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -108,6 +111,7 @@
             android:background="@drawable/bottom_border_not_focus"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:inputType="number"
+            android:maxLength="19"
             android:textColor="@color/text10"
             android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -135,16 +139,26 @@
             android:background="@drawable/bottom_border_not_focus"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:inputType="number"
+            android:maxLength="19"
             android:textColor="@color/text10"
             android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <TextView
+        android:id="@+id/amountMessageTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="거래 1회 최대 금액은 1백억원 입니다."
+        android:textColor="@color/text60"
+        app:layout_constraintEnd_toEndOf="@+id/transactionAmountReceivedLayout"
+        app:layout_constraintTop_toBottomOf="@+id/transactionAmountReceivedLayout" />
+
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/transactionAmountReceivedLayout2"
+        android:id="@+id/transactionClientSelectLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:hint="거래처 선택"
         android:textColorHint="@color/text30"
@@ -155,7 +169,7 @@
         app:layout_constraintTop_toBottomOf="@+id/transactionAmountReceivedLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/transactionAmountReceivedEditText2"
+            android:id="@+id/transactionClientSelectEditText"
             style="@style/transaction_text_input_edit_text_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -168,7 +182,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/addReleaseBtn"
+        android:id="@+id/addSalesBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
