@@ -97,6 +97,10 @@ class TransactionAdapter(
                 rowTransactionDepositBinding.depositPriceTextView,
             )
         }
+
+        fun requestFocus() {
+            rowTransactionDepositBinding.root.requestFocus()
+        }
     }
 
     inner class ReleaseHolder(
@@ -114,6 +118,9 @@ class TransactionAdapter(
                 rowTransactionReleaseBinding.recievedAmountTextView,
                 rowTransactionReleaseBinding.recievablesTextView,
             )
+        }
+        fun requestFocus() {
+            rowTransactionReleaseBinding.root.requestFocus()
         }
     }
 

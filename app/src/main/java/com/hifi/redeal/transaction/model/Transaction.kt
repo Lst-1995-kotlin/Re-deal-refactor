@@ -3,64 +3,51 @@ package com.hifi.redeal.transaction.model
 import android.widget.TextView
 import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.DEPOSIT_TRANSACTION
 import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.SALES_TRANSACTION
-import java.text.NumberFormat
+import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class Transaction(
-    private val transactionData: TransactionData,
+    private val loadTransactionData: LoadTransactionData
 ) {
-    private val numberFormat = NumberFormat.getNumberInstance(Locale.getDefault())
     private val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
-    private var transactionClientName: String? = null
-
-
     override fun hashCode(): Int {
-        var result = transactionData.hashCode()
-        result = 31 * result + transactionClientName.hashCode()
-        return result
+        return loadTransactionData.hashCode()
     }
 
     override fun equals(other: Any?): Boolean {
         val otherTransaction = other as Transaction
-        return otherTransaction.transactionData == this.transactionData &&
-                otherTransaction.transactionClientName == this.transactionClientName
+        return otherTransaction.loadTransactionData == this.loadTransactionData
     }
 
     fun calculateSalesAmount(): Long {
-        if (transactionData.isDeposit) return 0L
-        return transactionData.transactionItemCount * transactionData.transactionItemPrice.toLong()
+        if (loadTransactionData.isDeposit) return 0L
+        return loadTransactionData.transactionItemCount * loadTransactionData.transactionItemPrice
     }
 
     fun calculateReceivables() =
-        calculateSalesAmount() - transactionData.transactionAmountReceived.toLong()
+        calculateSalesAmount() - loadTransactionData.transactionAmountReceived
 
-
-    fun isNotSettingClientName() = transactionClientName.isNullOrEmpty()
-
-    fun setTransactionClientName(name: String) {
-        transactionClientName = name
-    }
 
     fun getTransactionType(): Int {
-        if (transactionData.isDeposit) return DEPOSIT_TRANSACTION
+        if (loadTransactionData.isDeposit) return DEPOSIT_TRANSACTION
         return SALES_TRANSACTION
     }
 
-    fun getTransactionDate() = transactionData.date
+    fun getTransactionDate() = loadTransactionData.date
 
-    fun getTransactionClientIdx() = transactionData.clientIdx
+    fun getTransactionClientIdx() = loadTransactionData.clientIdx
 
-    fun getTransactionIdx() = transactionData.transactionIdx
+    fun getTransactionIdx() = loadTransactionData.transactionIdx
 
     fun setTextViewValue(
         date: TextView,
         clientName: TextView,
         price: TextView,
     ) {
-        date.text = dateFormat.format(transactionData.date.toDate())
-        clientName.text = transactionClientName
-        price.text = numberFormat.format(transactionData.transactionAmountReceived.toLong())
+        date.text = dateFormat.format(loadTransactionData.date.toDate())
+        clientName.text = loadTransactionData.clientName
+        price.text = replaceNumberFormat(loadTransactionData.transactionAmountReceived)
     }
 
     fun setTextViewValue(
@@ -73,23 +60,23 @@ class Transaction(
         receivedAmount: TextView,
         receivables: TextView,
     ) {
-        date.text = dateFormat.format(transactionData.date.toDate())
-        clientName.text = transactionClientName
-        itemName.text = transactionData.transactionItemName
-        itemCount.text = numberFormat.format(transactionData.transactionItemCount)
-        itemAmount.text = numberFormat.format(transactionData.transactionItemPrice.toLong())
+        date.text = dateFormat.format(loadTransactionData.date.toDate())
+        clientName.text = loadTransactionData.clientName
+        itemName.text = loadTransactionData.transactionItemName
+        itemCount.text = replaceNumberFormat(loadTransactionData.transactionItemCount)
+        itemAmount.text = replaceNumberFormat(loadTransactionData.transactionItemPrice)
         totalAmount.text =
-            numberFormat.format(
-                transactionData.transactionItemPrice.toLong() *
-                        transactionData.transactionItemCount,
+            replaceNumberFormat(
+                loadTransactionData.transactionItemPrice *
+                        loadTransactionData.transactionItemCount
             )
         receivedAmount.text =
-            numberFormat.format(transactionData.transactionAmountReceived.toLong())
+            replaceNumberFormat(loadTransactionData.transactionAmountReceived)
         receivables.text =
-            numberFormat.format(
-                transactionData.transactionItemPrice.toLong() *
-                        transactionData.transactionItemCount -
-                        transactionData.transactionAmountReceived.toLong(),
+            replaceNumberFormat(
+                loadTransactionData.transactionItemPrice *
+                        loadTransactionData.transactionItemCount -
+                        loadTransactionData.transactionAmountReceived,
             )
     }
 }

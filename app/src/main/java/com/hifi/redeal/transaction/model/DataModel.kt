@@ -1,16 +1,28 @@
 package com.hifi.redeal.transaction.model
 
 import com.google.firebase.Timestamp
-
 data class TransactionData(
     val clientIdx: Long,
     val date: Timestamp,
     @JvmField
     val isDeposit: Boolean,
-    val transactionAmountReceived: String,
+    val transactionAmountReceived: Long,
     val transactionIdx: Long,
     val transactionItemCount: Long,
-    val transactionItemPrice: String,
+    val transactionItemPrice: Long,
+    val transactionItemName: String,
+)
+
+data class LoadTransactionData(
+    val clientIdx: Long,
+    val clientName: String,
+    val date: Timestamp,
+    @JvmField
+    val isDeposit: Boolean,
+    val transactionAmountReceived: Long,
+    val transactionIdx: Long,
+    val transactionItemCount: Long,
+    val transactionItemPrice: Long,
     val transactionItemName: String,
 )
 

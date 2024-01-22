@@ -1,10 +1,12 @@
 package com.hifi.redeal.transaction.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.hifi.redeal.transaction.model.Client
+import com.hifi.redeal.transaction.model.LoadTransactionData
 import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.model.TransactionData
 import com.hifi.redeal.transaction.repository.TransactionRepository
@@ -34,21 +36,29 @@ class TransactionViewModel @Inject constructor(
         }
     }
 
-    fun addDepositTransaction(client: Client, amount: String) {
+    fun addDepositTransaction(client: Client, amount: Long) {
+        val createTime = Timestamp.now()
         val newDepositTransactionData = TransactionData(
             client.getClientIdx(),
-            Timestamp.now(),
+            createTime,
             true,
-            amount.replace(",", ""),
+            amount,
             newTransactionIdx,
             0,
-            "",
-            "",
+            0,
+            ""
         )
         transactionRepository.setTransactionData(newDepositTransactionData) {
-            val newTransaction = Transaction(newDepositTransactionData)
-            totalTransactionData.add(newTransaction)
-            getClientName()
+            getClientName(
+                client.getClientIdx(),
+                createTime,
+                true,
+                amount,
+                newTransactionIdx,
+                0,
+                0,
+                ""
+            )
             getNextTransactionIdx()
         }
     }
@@ -56,24 +66,33 @@ class TransactionViewModel @Inject constructor(
     fun addSalesTransaction(
         client: Client,
         itemName: String,
-        itemCount: String,
-        itemPrice: String,
-        amount: String,
+        itemCount: Long,
+        itemPrice: Long,
+        amount: Long,
     ) {
-        val newReleaseTransactionData = TransactionData(
-            client.getClientIdx(),
-            Timestamp.now(),
-            false,
-            amount.replace(",", ""),
-            newTransactionIdx,
-            itemCount.replace(",", "").toLong(),
-            itemPrice.replace(",", ""),
-            itemName,
-        )
-        transactionRepository.setTransactionData(newReleaseTransactionData) {
-            val newTransaction = Transaction(newReleaseTransactionData)
-            totalTransactionData.add(newTransaction)
-            getClientName()
+        val createTime = Timestamp.now()
+        val newSalesTransactionData =
+            TransactionData(
+                client.getClientIdx(),
+                createTime,
+                false,
+                amount,
+                newTransactionIdx,
+                itemCount,
+                itemPrice,
+                itemName
+            )
+        transactionRepository.setTransactionData(newSalesTransactionData) {
+            getClientName(
+                client.getClientIdx(),
+                createTime,
+                false,
+                amount,
+                newTransactionIdx,
+                itemCount,
+                itemPrice,
+                itemName
+            )
             getNextTransactionIdx()
         }
     }
@@ -87,33 +106,48 @@ class TransactionViewModel @Inject constructor(
         transactionRepository.getAllTransactionData {
             totalTransactionData.clear()
             it.result.forEach { c1 ->
-                val transaction = Transaction(
-                    TransactionData(
-                        c1["clientIdx"] as Long,
-                        c1["date"] as Timestamp,
-                        c1["isDeposit"] as Boolean,
-                        c1["transactionAmountReceived"] as String,
-                        c1["transactionIdx"] as Long,
-                        c1["transactionItemCount"] as Long,
-                        c1["transactionItemPrice"] as String,
-                        c1["transactionItemName"] as String,
-                    )
+                getClientName(
+                    c1["clientIdx"] as Long,
+                    c1["date"] as Timestamp,
+                    c1["isDeposit"] as Boolean,
+                    c1["transactionAmountReceived"] as Long,
+                    c1["transactionIdx"] as Long,
+                    c1["transactionItemCount"] as Long,
+                    c1["transactionItemPrice"] as Long,
+                    c1["transactionItemName"] as String
                 )
-                totalTransactionData.add(transaction)
-                getClientName()
             }
         }
     }
 
-    private fun getClientName() {
-        totalTransactionData.forEach { transaction ->
-            if (transaction.isNotSettingClientName()) {
-                transactionRepository.getClientInfo(transaction.getTransactionClientIdx()) {
-                    for (c1 in it.result) {
-                        transaction.setTransactionClientName(c1["clientName"] as String)
-                        updateTransaction()
-                    }
-                }
+    private fun getClientName(
+        clientIdx: Long,
+        date: Timestamp,
+        isDeposit: Boolean,
+        transactionAmountReceived: Long,
+        transactionIdx: Long,
+        transactionItemCount: Long,
+        transactionItemPrice: Long,
+        transactionItemName: String
+    ) {
+        transactionRepository.getClientInfo(clientIdx) {
+            for (c1 in it.result) {
+                totalTransactionData.add(
+                    Transaction(
+                        LoadTransactionData(
+                            clientIdx,
+                            c1["clientName"] as String,
+                            date,
+                            isDeposit,
+                            transactionAmountReceived,
+                            transactionIdx,
+                            transactionItemCount,
+                            transactionItemPrice,
+                            transactionItemName
+                        )
+                    )
+                )
+                updateTransaction()
             }
         }
     }

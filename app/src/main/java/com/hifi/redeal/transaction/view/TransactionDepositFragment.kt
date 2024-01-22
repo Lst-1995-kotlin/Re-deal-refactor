@@ -9,9 +9,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentTransactionDepositBinding
-import com.hifi.redeal.transaction.util.CustomInputEditTextFocusListener
-import com.hifi.redeal.transaction.util.CustomSelectEditTextFocusListener
-import com.hifi.redeal.transaction.util.CustomTextWatcher
+import com.hifi.redeal.transaction.util.AmountTextWatcher
+import com.hifi.redeal.transaction.util.TransactionInputEditTextFocusListener
+import com.hifi.redeal.transaction.util.TransactionSelectEditTextFocusListener
+import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.removeNumberFormat
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,16 +42,16 @@ class TransactionDepositFragment : Fragment() {
             addDepositBtn.setOnClickListener {
                 clientViewModel.selectedClient.value?.let {
                     transactionViewModel.addDepositTransaction(
-                        it, addDepositPriceEditTextNumber.text.toString()
+                        it, removeNumberFormat(addDepositPriceEditTextNumber.text.toString())
                     )
                 }
                 mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_FRAGMENT)
             }
 
-            addDepositPriceEditTextNumber.onFocusChangeListener = CustomInputEditTextFocusListener()
+            addDepositPriceEditTextNumber.onFocusChangeListener = TransactionInputEditTextFocusListener()
 
             addDepositPriceEditTextNumber.addTextChangedListener(
-                CustomTextWatcher(
+                AmountTextWatcher(
                     clientViewModel,
                     addDepositPriceEditTextNumber,
                     addDepositBtn
@@ -58,7 +59,7 @@ class TransactionDepositFragment : Fragment() {
             )
 
             selectDepositClientTextInputEditText.onFocusChangeListener =
-                CustomSelectEditTextFocusListener(
+                TransactionSelectEditTextFocusListener(
                     SelectTransactionClientDialog(clientViewModel),
                     childFragmentManager
                 )
