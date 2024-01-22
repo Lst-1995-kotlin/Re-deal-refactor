@@ -3,7 +3,7 @@ package com.hifi.redeal.transaction.util
 import android.view.View
 import com.hifi.redeal.transaction.configuration.FocusBackgroundConfiguration
 
-class CustomInputEditTextFocusListener: View.OnFocusChangeListener {
+class TransactionInputEditTextFocusListener: View.OnFocusChangeListener {
     override fun onFocusChange(v: View, hasFocus: Boolean) {
         if (v.hasFocus()) {
             v.setBackgroundResource(FocusBackgroundConfiguration.FOCUSED_BACKGROUND.resource)

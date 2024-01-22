@@ -3,9 +3,8 @@ package com.hifi.redeal.transaction.util
 import android.view.View
 import androidx.fragment.app.FragmentManager
 import com.hifi.redeal.transaction.view.SelectTransactionClientDialog
-import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 
-class CustomSelectEditTextFocusListener(
+class TransactionSelectEditTextFocusListener(
     private val selectTransactionClientDialog: SelectTransactionClientDialog,
     private val childFragmentManager: FragmentManager
     ):  View.OnFocusChangeListener {
