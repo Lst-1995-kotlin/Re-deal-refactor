@@ -34,4 +34,6 @@ class Client(
     }
 
     fun getClientIdx() = clientData.clientIdx
+
+    fun getClientName() =clientData.clientName
 }

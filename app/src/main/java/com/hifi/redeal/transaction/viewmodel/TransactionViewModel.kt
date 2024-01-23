@@ -49,16 +49,21 @@ class TransactionViewModel @Inject constructor(
             ""
         )
         transactionRepository.setTransactionData(newDepositTransactionData) {
-            getClientName(
-                client.getClientIdx(),
-                createTime,
-                true,
-                amount,
-                newTransactionIdx,
-                0,
-                0,
-                ""
+            val newTransaction = Transaction(
+                LoadTransactionData(
+                    client.getClientIdx(),
+                    client.getClientName(),
+                    createTime,
+                    true,
+                    amount,
+                    newTransactionIdx,
+                    0,
+                    0,
+                    ""
+                )
             )
+            totalTransactionData.add(newTransaction)
+            updateTransaction()
             getNextTransactionIdx()
         }
     }
@@ -71,28 +76,32 @@ class TransactionViewModel @Inject constructor(
         amount: Long,
     ) {
         val createTime = Timestamp.now()
-        val newSalesTransactionData =
-            TransactionData(
-                client.getClientIdx(),
-                createTime,
-                false,
-                amount,
-                newTransactionIdx,
-                itemCount,
-                itemPrice,
-                itemName
-            )
+        val newSalesTransactionData = TransactionData(
+            client.getClientIdx(),
+            createTime,
+            false,
+            amount,
+            newTransactionIdx,
+            itemCount,
+            itemPrice,
+            itemName
+        )
         transactionRepository.setTransactionData(newSalesTransactionData) {
-            getClientName(
-                client.getClientIdx(),
-                createTime,
-                false,
-                amount,
-                newTransactionIdx,
-                itemCount,
-                itemPrice,
-                itemName
+            val newTransaction = Transaction(
+                LoadTransactionData(
+                    client.getClientIdx(),
+                    client.getClientName(),
+                    createTime,
+                    false,
+                    amount,
+                    newTransactionIdx,
+                    itemCount,
+                    itemPrice,
+                    itemName
+                )
             )
+            totalTransactionData.add(newTransaction)
+            updateTransaction()
             getNextTransactionIdx()
         }
     }
