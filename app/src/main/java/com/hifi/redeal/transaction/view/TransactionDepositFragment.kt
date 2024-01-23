@@ -82,5 +82,4 @@ class TransactionDepositFragment : Fragment() {
             fragmentTransactionDepositBinding.addDepositBtn.visibility = View.VISIBLE
         }
     }
-
 }
