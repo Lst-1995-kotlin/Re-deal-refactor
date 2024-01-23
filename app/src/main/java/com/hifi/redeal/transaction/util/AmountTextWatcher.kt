@@ -5,12 +5,14 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import com.google.android.material.textfield.TextInputEditText
+import com.hifi.redeal.transaction.configuration.TransactionAmountConfiguration
+import com.hifi.redeal.transaction.configuration.TransactionAmountConfiguration.Companion.transactionAmountCheck
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.removeNumberFormat
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 
-class CustomTextWatcher(
-    private val viewModel: ClientViewModel,
+class AmountTextWatcher(
+    private val clientViewModel: ClientViewModel,
     private val textInputEditText: TextInputEditText,
     private val button: Button
 ) : TextWatcher {
@@ -18,25 +20,27 @@ class CustomTextWatcher(
     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
     override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-        if (p0.isNullOrEmpty() || viewModel.selectedClient.value == null) {
-            button.visibility = View.GONE
-            return
-        }
-        button.visibility = View.VISIBLE
+        button.visibility =
+            if (p0.isNullOrEmpty() || clientViewModel.selectedClient.value == null) View.GONE else View.VISIBLE
     }
 
     override fun afterTextChanged(p0: Editable?) {
         if (p0.isNullOrEmpty()) {
             textInputEditText.removeTextChangedListener(this)
-            textInputEditText.setText("")
+            textInputEditText.text = null
             textInputEditText.addTextChangedListener(this)
         } else if ("$p0".all { it.isDigit() || it == ',' }) {
-            val number = removeNumberFormat("$p0")
+            var inputNumber = removeNumberFormat("$p0")
+            while (!transactionAmountCheck(inputNumber)) {
+                inputNumber /= 10L
+            }
+            val replaceNumber = replaceNumberFormat(inputNumber)
+
             textInputEditText.removeTextChangedListener(this)
-            val replaceNumber = replaceNumberFormat(number)
             textInputEditText.setText(replaceNumber)
             textInputEditText.setSelection(replaceNumber.length)
             textInputEditText.addTextChangedListener(this)
+
         }
     }
 }
