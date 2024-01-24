@@ -10,7 +10,7 @@ class TransactionSelectEditTextFocusListener(
     ):  View.OnFocusChangeListener {
     override fun onFocusChange(v: View, hasFocus: Boolean) {
         if (v.hasFocus()) {
-            selectTransactionClientDialog?.show(childFragmentManager, null)
+            selectTransactionClientDialog.show(childFragmentManager, null)
         }
         v.clearFocus()
     }

@@ -41,7 +41,7 @@ class TransactionFragment : Fragment() {
     private fun setTransactionView() {
         fragmentTransactionBinding.run {
 
-            transactionAdapter = TransactionAdapter(transactionViewModel)
+            transactionAdapter = TransactionAdapter(transactionViewModel, mainActivity)
 
             transactionRecyclerView.run {
                 adapter = transactionAdapter
@@ -60,13 +60,14 @@ class TransactionFragment : Fragment() {
 
     private fun setViewModel() {
         transactionViewModel.transactionList.observe(viewLifecycleOwner) { transactions ->
+            val totalSalesCount =
+                transactions.filter { it.getTransactionType() == SALES_TRANSACTION }.size
+            val totalSalesAmount = transactions.sumOf { it.calculateSalesAmount() }
+            val totalReceivables = transactions.sumOf { it.getReceivables() }
             fragmentTransactionBinding.run {
-                textTotalSalesCount.text =
-                    replaceNumberFormat(transactions.filter { it.getTransactionType() == SALES_TRANSACTION }.size)
-                textTotalSales.text =
-                    replaceNumberFormat(transactions.sumOf { it.calculateSalesAmount() })
-                textTotalReceivables.text =
-                    replaceNumberFormat(transactions.sumOf { it.calculateReceivables() })
+                textTotalSalesCount.text = replaceNumberFormat(totalSalesCount)
+                textTotalSales.text = replaceNumberFormat(totalSalesAmount)
+                textTotalReceivables.text = replaceNumberFormat(totalSalesAmount - totalReceivables)
             }
         }
         transactionViewModel.setSelectClientIndex(arguments?.getLong("clientIdx"))

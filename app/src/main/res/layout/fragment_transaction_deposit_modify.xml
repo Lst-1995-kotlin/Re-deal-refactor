@@ -8,7 +8,7 @@
     android:transitionGroup="true">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/materialToolbar"
+        android:id="@+id/depositModifyMaterialToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
@@ -17,21 +17,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/arrow_back_ios_24px"
-        app:title="입금 내역 추가"
+        app:title="입금 내역 수정"
         app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance" />
 
     <View
-        android:id="@+id/transactionDepositDivider"
+        android:id="@+id/depositModifyDivider"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@color/primary20"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialToolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/depositModifyMaterialToolbar" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/addDepositPriceInputLayout"
+        android:id="@+id/depositModifyPriceInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -43,10 +43,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialToolbar">
+        app:layout_constraintTop_toBottomOf="@+id/depositModifyMaterialToolbar">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/addDepositPriceEditTextNumber"
+            android:id="@+id/depositModifyPriceEditTextNumber"
             style="@style/transaction_text_input_edit_text_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/selectDepositClientTextInputLayout"
+        android:id="@+id/depositModifyPriceInputLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -75,16 +75,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addDepositPriceInputLayout">
+        app:layout_constraintTop_toBottomOf="@+id/depositModifyPriceInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/selectDepositClientTextInputEditText"
+            android:id="@+id/modifyDepositClientTextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bottom_border_not_focus"
             android:drawableEnd="@drawable/search_24px_primary20"
             android:fontFamily="@font/nanumsquareneo_regular"
-            android:hint="거래처 선택"
+            android:hint="거래처 수정"
             android:inputType="number"
             android:paddingStart="0dp"
             android:textColor="@color/text10"
@@ -93,7 +93,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/addDepositBtn"
+        android:id="@+id/modifyDepositBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -101,7 +101,7 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/btn_round_primary20"
         android:fontFamily="@font/nanumsquareneo_bold"
-        android:text="입금 내역 추가"
+        android:text="입금 내역 수정"
         android:textColor="@color/primary99"
         android:textSize="20sp"
         android:visibility="gone"

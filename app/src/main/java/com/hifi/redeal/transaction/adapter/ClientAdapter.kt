@@ -6,12 +6,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
 import com.hifi.redeal.transaction.model.Client
-import com.hifi.redeal.transaction.util.ClientDiffCallback
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 
 class ClientAdapter(
     private val clientViewModel: ClientViewModel,
-) : ListAdapter<Client, ClientAdapter.TransactionClientHolder>(ClientDiffCallback()) {
+) : ListAdapter<Client, ClientAdapter.TransactionClientHolder>(ClientAdapterDiffCallback()) {
 
     init {
         clientViewModel.clients.observeForever {

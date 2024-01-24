@@ -6,16 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.RowTransactionDepositBinding
 import com.hifi.redeal.databinding.RowTransactionSalesBinding
 import com.hifi.redeal.transaction.model.Transaction
-import com.hifi.redeal.transaction.util.TransactionDiffCallback
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 
 class TransactionAdapter(
     private val transactionViewModel: TransactionViewModel,
-) : ListAdapter<Transaction, RecyclerView.ViewHolder>(TransactionDiffCallback()) {
+    private val mainActivity: MainActivity
+) : ListAdapter<Transaction, RecyclerView.ViewHolder>(TransactionAdapterDiffCallback()) {
 
     init {
         transactionViewModel.transactionList.observeForever { transactions ->
@@ -55,17 +56,16 @@ class TransactionAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val transaction = getItem(position)
-        holder.itemView.tag = transaction.getTransactionIdx()
         when (holder.itemViewType) {
             DEPOSIT_TRANSACTION -> {
                 val item = holder as DepositHolder
-                setContextMenu(item.itemView)
+                setContextMenu(item.itemView, transaction)
                 item.bind(transaction)
             }
 
             SALES_TRANSACTION -> {
                 val item = holder as ReleaseHolder
-                setContextMenu(item.itemView)
+                setContextMenu(item.itemView, transaction)
                 item.bind(transaction)
             }
         }
@@ -75,13 +75,19 @@ class TransactionAdapter(
         return currentList[position].getTransactionType()
     }
 
-    private fun setContextMenu(view: View) {
+    private fun setContextMenu(view: View, transaction: Transaction) {
         view.setOnCreateContextMenuListener { contextMenu, _, _ ->
             MenuInflater(view.context).inflate(R.menu.transaction_menu, contextMenu)
             contextMenu.findItem(R.id.transactionDeleteMenu).setOnMenuItemClickListener {
-                val transactionIdx = view.tag as Long // 태그에서 위치 가져오기
-                transactionViewModel.deleteTransactionData(transactionIdx)
+                transactionViewModel.deleteTransactionData(transaction.getTransactionIdx())
                 true
+            }
+            contextMenu.findItem(R.id.transactionEditMenu).setOnMenuItemClickListener {
+                if (transaction.getTransactionType() == DEPOSIT_TRANSACTION){
+                    mainActivity.replaceFragment(MainActivity.TRANSACTION_DEPOSIT_MODIFY_FRAGMENT, true, null)
+                    return@setOnMenuItemClickListener true
+                }
+                return@setOnMenuItemClickListener true
             }
         }
     }

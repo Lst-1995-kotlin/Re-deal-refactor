@@ -25,8 +25,7 @@ class Transaction(
         return loadTransactionData.transactionItemCount * loadTransactionData.transactionItemPrice
     }
 
-    fun calculateReceivables() =
-        calculateSalesAmount() - loadTransactionData.transactionAmountReceived
+    fun getReceivables() = loadTransactionData.transactionAmountReceived
 
 
     fun getTransactionType(): Int {
