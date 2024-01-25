@@ -15,12 +15,15 @@ import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 
 class TransactionAdapter(
     private val transactionViewModel: TransactionViewModel,
+    private val recyclerView: RecyclerView,
     private val mainActivity: MainActivity
 ) : ListAdapter<Transaction, RecyclerView.ViewHolder>(TransactionAdapterDiffCallback()) {
 
     init {
         transactionViewModel.transactionList.observeForever { transactions ->
-            submitList(transactions.sortedByDescending { it.getTransactionDate() })
+            submitList(transactions.sortedByDescending { it.getTransactionDate() }) {
+                recyclerView.layoutManager?.scrollToPosition(0)
+            }
         }
     }
 
@@ -75,6 +78,7 @@ class TransactionAdapter(
         return currentList[position].getTransactionType()
     }
 
+
     private fun setContextMenu(view: View, transaction: Transaction) {
         view.setOnCreateContextMenuListener { contextMenu, _, _ ->
             MenuInflater(view.context).inflate(R.menu.transaction_menu, contextMenu)
@@ -84,8 +88,12 @@ class TransactionAdapter(
             }
             contextMenu.findItem(R.id.transactionEditMenu).setOnMenuItemClickListener {
                 transactionViewModel.setModifyTransaction(transaction)
-                if (transaction.getTransactionType() == DEPOSIT_TRANSACTION){
-                    mainActivity.replaceFragment(MainActivity.TRANSACTION_DEPOSIT_MODIFY_FRAGMENT, true, null)
+                if (transaction.getTransactionType() == DEPOSIT_TRANSACTION) {
+                    mainActivity.replaceFragment(
+                        MainActivity.TRANSACTION_DEPOSIT_MODIFY_FRAGMENT,
+                        true,
+                        null
+                    )
                     return@setOnMenuItemClickListener true
                 }
                 return@setOnMenuItemClickListener true

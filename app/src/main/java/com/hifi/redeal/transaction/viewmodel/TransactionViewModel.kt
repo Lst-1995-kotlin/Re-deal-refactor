@@ -151,7 +151,7 @@ class TransactionViewModel @Inject constructor(
         updateTransaction()
     }
 
-    private fun getAllTransactionData() {
+    fun getAllTransactionData() {
         transactionRepository.getAllTransactionData {
             totalTransactionData.clear()
             it.result.forEach { c1 ->

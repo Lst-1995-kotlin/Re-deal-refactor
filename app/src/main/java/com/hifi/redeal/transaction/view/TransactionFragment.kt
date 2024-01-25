@@ -1,12 +1,14 @@
 package com.hifi.redeal.transaction.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.MainActivity.Companion.TRANSACTION_DEPOSIT_FRAGMENT
 import com.hifi.redeal.MainActivity.Companion.TRANSACTION_SALES_FRAGMENT
@@ -43,11 +45,27 @@ class TransactionFragment : Fragment() {
     private fun setTransactionView() {
         fragmentTransactionBinding.run {
 
-            transactionAdapter = TransactionAdapter(transactionViewModel, mainActivity)
+            transactionAdapter =
+                TransactionAdapter(transactionViewModel, transactionRecyclerView, mainActivity)
 
             transactionRecyclerView.run {
                 adapter = transactionAdapter
                 layoutManager = LinearLayoutManager(context)
+                addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                        super.onScrollStateChanged(recyclerView, newState)
+
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                            val firstVisibleItemPosition =
+                                layoutManager.findFirstVisibleItemPosition()
+                            if (firstVisibleItemPosition == 0) {
+                                transactionViewModel.getAllTransactionData()
+                                Log.d("tttt", "새로고침 적용됨.")
+                            }
+                        }
+                    }
+                })
             }
 
             ImgBtnAddDeposit.setOnClickListener {
