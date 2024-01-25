@@ -8,7 +8,7 @@
     android:transitionGroup="true">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/depositModifyMaterialToolbar"
+        android:id="@+id/modifyDepositMaterialToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
@@ -21,17 +21,17 @@
         app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance" />
 
     <View
-        android:id="@+id/depositModifyDivider"
+        android:id="@+id/modifyDepositDivider"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@color/primary20"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/depositModifyMaterialToolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/modifyDepositMaterialToolbar" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/depositModifyPriceInputLayout"
+        android:id="@+id/modifyDepositPriceInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -43,10 +43,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/depositModifyMaterialToolbar">
+        app:layout_constraintTop_toBottomOf="@+id/modifyDepositMaterialToolbar">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/depositModifyPriceEditTextNumber"
+            android:id="@+id/modifyDepositPriceEditTextNumber"
             style="@style/transaction_text_input_edit_text_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/depositModifyPriceInputLayout2"
+        android:id="@+id/modifyDepositClientInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -75,7 +75,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/depositModifyPriceInputLayout">
+        app:layout_constraintTop_toBottomOf="@+id/modifyDepositPriceInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/modifyDepositClientTextInputEditText"

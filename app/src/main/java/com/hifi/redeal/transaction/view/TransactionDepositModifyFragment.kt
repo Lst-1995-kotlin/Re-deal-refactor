@@ -43,10 +43,10 @@ class TransactionDepositModifyFragment : Fragment() {
                     childFragmentManager
                 )
 
-            depositModifyPriceEditTextNumber.addTextChangedListener(
+            modifyDepositPriceEditTextNumber.addTextChangedListener(
                 AmountTextWatcher(
                     clientViewModel,
-                    depositModifyPriceEditTextNumber,
+                    modifyDepositPriceEditTextNumber,
                     modifyDepositBtn
                 )
             )
@@ -55,7 +55,7 @@ class TransactionDepositModifyFragment : Fragment() {
                 clientViewModel.selectedClient.value?.let {
                     transactionViewModel.updateModifyDepositTransaction(
                         it,
-                        removeNumberFormat("${depositModifyPriceEditTextNumber.text}")
+                        removeNumberFormat("${modifyDepositPriceEditTextNumber.text}")
                     )
                     mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_MODIFY_FRAGMENT)
                 }
@@ -65,13 +65,13 @@ class TransactionDepositModifyFragment : Fragment() {
 
     private fun setViewModel() {
         transactionViewModel.modifyTransaction.observe(viewLifecycleOwner) { transaction ->
-            fragmentTransactionDepositModifyBinding.depositModifyPriceEditTextNumber
+            fragmentTransactionDepositModifyBinding.modifyDepositPriceEditTextNumber
                 .setText(replaceNumberFormat(transaction.getReceivables()))
             clientViewModel.setSelectClient(transaction.getTransactionClientIdx())
         }
         clientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
             client?.setClientInfoView(fragmentTransactionDepositModifyBinding.modifyDepositClientTextInputEditText)
-            if (fragmentTransactionDepositModifyBinding.depositModifyPriceEditTextNumber.text.isNullOrEmpty()) {
+            if (fragmentTransactionDepositModifyBinding.modifyDepositPriceEditTextNumber.text.isNullOrEmpty()) {
                 fragmentTransactionDepositModifyBinding.modifyDepositBtn.visibility = View.GONE
                 return@observe
             }
