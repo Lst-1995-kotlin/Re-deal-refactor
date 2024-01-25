@@ -83,6 +83,7 @@ class TransactionAdapter(
                 true
             }
             contextMenu.findItem(R.id.transactionEditMenu).setOnMenuItemClickListener {
+                transactionViewModel.setModifyTransaction(transaction)
                 if (transaction.getTransactionType() == DEPOSIT_TRANSACTION){
                     mainActivity.replaceFragment(MainActivity.TRANSACTION_DEPOSIT_MODIFY_FRAGMENT, true, null)
                     return@setOnMenuItemClickListener true

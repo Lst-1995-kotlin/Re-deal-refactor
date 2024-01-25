@@ -2,6 +2,7 @@ package com.hifi.redeal.transaction.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
@@ -10,6 +11,7 @@ import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 
 class ClientAdapter(
     private val clientViewModel: ClientViewModel,
+    private val dialogFragment: DialogFragment
 ) : ListAdapter<Client, ClientAdapter.TransactionClientHolder>(ClientAdapterDiffCallback()) {
 
     init {
@@ -46,6 +48,7 @@ class ClientAdapter(
             client.bind(transactionSelectClientItemBinding)
             transactionSelectClientItemBinding.root.setOnClickListener {
                 clientViewModel.setSelectClient(client)
+                dialogFragment.dismiss()
             }
         }
     }

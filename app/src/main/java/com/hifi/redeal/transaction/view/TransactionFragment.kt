@@ -14,6 +14,7 @@ import com.hifi.redeal.databinding.FragmentTransactionBinding
 import com.hifi.redeal.transaction.adapter.TransactionAdapter
 import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.SALES_TRANSACTION
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
+import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class TransactionFragment : Fragment() {
     private lateinit var fragmentTransactionBinding: FragmentTransactionBinding
     private val transactionViewModel: TransactionViewModel by activityViewModels()
+    private val clientViewModel: ClientViewModel by activityViewModels()
     private lateinit var mainActivity: MainActivity
     private lateinit var transactionAdapter: TransactionAdapter
 
@@ -70,6 +72,11 @@ class TransactionFragment : Fragment() {
                 textTotalReceivables.text = replaceNumberFormat(totalSalesAmount - totalReceivables)
             }
         }
-        transactionViewModel.setSelectClientIndex(arguments?.getLong("clientIdx"))
+        clientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
+            client?.let { transactionViewModel.setSelectClientIndex(it.getClientIdx()) }
+                ?: transactionViewModel.setSelectClientIndex(null)
+        }
+
+        clientViewModel.setSelectClient(arguments?.getLong("clientIdx"))
     }
 }

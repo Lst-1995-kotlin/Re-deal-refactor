@@ -1,6 +1,5 @@
 package com.hifi.redeal.transaction.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,14 +19,55 @@ class TransactionViewModel @Inject constructor(
 
     private val totalTransactionData = mutableListOf<Transaction>()
     private val _transactionList = MutableLiveData<List<Transaction>>()
-    val transactionList: LiveData<List<Transaction>> get() = _transactionList
+
+    private val _modifyTransaction = MutableLiveData<Transaction>()
+
     private var newTransactionIdx = 0L
     private var selectClientIndex: Long? = null
+    val transactionList: LiveData<List<Transaction>> get() = _transactionList
+    val modifyTransaction: LiveData<Transaction> get() = _modifyTransaction
 
     init {
         getNextTransactionIdx()
         getAllTransactionData()
     }
+
+    fun setModifyTransaction(transaction: Transaction) {
+        _modifyTransaction.postValue(transaction)
+    }
+
+    fun updateModifyDepositTransaction(client: Client, amount: Long) {
+        modifyTransaction.value?.let { transaction ->
+            val updatedTransaction = Transaction(
+                LoadTransactionData(
+                    client.getClientIdx(),
+                    client.getClientName(),
+                    transaction.getTransactionDate(),
+                    true,
+                    amount,
+                    transaction.getTransactionIdx(),
+                    0,
+                    0,
+                    ""
+                )
+            )
+            totalTransactionData.replaceAll { if (it.getTransactionIdx() == transaction.getTransactionIdx()) updatedTransaction else it }
+            val updateDepositTransactionData = TransactionData(
+                client.getClientIdx(),
+                transaction.getTransactionDate(),
+                true,
+                amount,
+                transaction.getTransactionIdx(),
+                0,
+                0,
+                ""
+            )
+            transactionRepository.setTransactionData(updateDepositTransactionData) {
+                updateTransaction()
+            }
+        }
+    }
+
 
     fun deleteTransactionData(transactionIdx: Long) {
         transactionRepository.deleteTransactionData(transactionIdx) {

@@ -18,21 +18,15 @@ class SelectTransactionClientDialog(
     private val clientViewModel: ClientViewModel,
 ) : DialogFragment() {
 
-    lateinit var dialogSelectTransactionClientDialog: DialogSelectTransactionClientBinding
+    private lateinit var dialogSelectTransactionClientDialog: DialogSelectTransactionClientBinding
     private lateinit var clientAdapter: ClientAdapter
-
-    init {
-        clientViewModel.selectedClient.observeForever{
-            dismiss()
-        }
-    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         dialogSelectTransactionClientDialog = DialogSelectTransactionClientBinding.inflate(inflater)
-        clientAdapter = ClientAdapter(clientViewModel)
+        clientAdapter = ClientAdapter(clientViewModel, this)
         setDialog()
         return dialogSelectTransactionClientDialog.root
     }

@@ -15,7 +15,7 @@ class ClientViewModel @Inject constructor(
     private val clientRepository: ClientRepository,
 ) : ViewModel() {
 
-    val selectedClient = MutableLiveData<Client>()
+    val selectedClient = MutableLiveData<Client?>()
     private val _clients = MutableLiveData<List<Client>>()
     val clients: LiveData<List<Client>> get() = _clients
 
@@ -25,6 +25,13 @@ class ClientViewModel @Inject constructor(
 
     fun setSelectClient(client: Client) {
         selectedClient.postValue(client)
+    }
+
+    fun setSelectClient(clientIdx: Long?) {
+        clientIdx?.let {
+            val selectClient = _clients.value?.firstOrNull { it.getClientIdx() == clientIdx }
+            selectClient?.let { selectedClient.postValue(it) }
+        } ?: selectedClient.postValue(null)
     }
 
     private fun updateClients(newData: List<Client>?) {

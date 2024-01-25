@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentTransactionDepositBinding
 import com.hifi.redeal.transaction.util.AmountTextWatcher
@@ -22,7 +21,7 @@ class TransactionDepositFragment : Fragment() {
 
     private lateinit var mainActivity: MainActivity
     private lateinit var fragmentTransactionDepositBinding: FragmentTransactionDepositBinding
-    private val clientViewModel: ClientViewModel by viewModels()
+    private val clientViewModel: ClientViewModel by activityViewModels()
     private val transactionViewModel: TransactionViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -36,7 +35,6 @@ class TransactionDepositFragment : Fragment() {
         setViewModel()
         return fragmentTransactionDepositBinding.root
     }
-
     private fun setBind() {
         fragmentTransactionDepositBinding.run {
             addDepositBtn.setOnClickListener {
@@ -74,7 +72,7 @@ class TransactionDepositFragment : Fragment() {
 
     private fun setViewModel() {
         clientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
-            client.setClientInfoView(fragmentTransactionDepositBinding.selectDepositClientTextInputEditText)
+            client?.setClientInfoView(fragmentTransactionDepositBinding.selectDepositClientTextInputEditText)
             if (fragmentTransactionDepositBinding.addDepositPriceEditTextNumber.text.isNullOrEmpty()) {
                 fragmentTransactionDepositBinding.addDepositBtn.visibility = View.GONE
                 return@observe
