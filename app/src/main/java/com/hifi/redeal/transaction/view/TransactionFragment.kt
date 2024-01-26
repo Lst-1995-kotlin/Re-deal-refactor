@@ -61,7 +61,6 @@ class TransactionFragment : Fragment() {
                                 layoutManager.findFirstVisibleItemPosition()
                             if (firstVisibleItemPosition == 0) {
                                 transactionViewModel.getAllTransactionData()
-                                Log.d("tttt", "새로고침 적용됨.")
                             }
                         }
                     }
@@ -81,7 +80,7 @@ class TransactionFragment : Fragment() {
     private fun setViewModel() {
         transactionViewModel.transactionList.observe(viewLifecycleOwner) { transactions ->
             val totalSalesCount =
-                transactions.filter { it.getTransactionType() == SALES_TRANSACTION }.size
+                transactions.count { it.getTransactionType() == SALES_TRANSACTION }
             val totalSalesAmount = transactions.sumOf { it.calculateSalesAmount() }
             val totalReceivables = transactions.sumOf { it.getReceivables() }
             fragmentTransactionBinding.run {
