@@ -69,13 +69,28 @@ class Transaction(
                 loadTransactionData.transactionItemPrice *
                         loadTransactionData.transactionItemCount
             )
-        receivedAmount.text =
-            replaceNumberFormat(loadTransactionData.transactionAmountReceived)
+        receivedAmount.text = replaceNumberFormat(loadTransactionData.transactionAmountReceived)
         receivables.text =
             replaceNumberFormat(
                 loadTransactionData.transactionItemPrice *
                         loadTransactionData.transactionItemCount -
                         loadTransactionData.transactionAmountReceived,
             )
+    }
+
+    fun setModifyViewValue(
+        itemName: TextView,
+        itemCount: TextView,
+        itemAmount: TextView,
+        receivedAmount: TextView,
+    ) {
+        itemName.text = loadTransactionData.transactionItemName
+        itemCount.text = replaceNumberFormat(loadTransactionData.transactionItemCount)
+        itemAmount.text = replaceNumberFormat(loadTransactionData.transactionItemPrice)
+        receivedAmount.text = replaceNumberFormat(loadTransactionData.transactionAmountReceived)
+    }
+
+    fun setModifyViewValue(receivedAmount: TextView) {
+        receivedAmount.text = replaceNumberFormat(loadTransactionData.transactionAmountReceived)
     }
 }

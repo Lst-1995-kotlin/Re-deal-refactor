@@ -36,35 +36,44 @@ class TransactionViewModel @Inject constructor(
         _modifyTransaction.postValue(transaction)
     }
 
+    fun updateModifySalesTransaction(
+        client: Client,
+        itemName: String,
+        itemCount: Long,
+        itemPrice: Long,
+        amount: Long
+    ) {
+        val currentTransaction = modifyTransaction.value
+
+        currentTransaction?.let {
+            val updatedTransaction =
+                createUpdatedTransaction(client, it, itemName, itemCount, itemPrice, amount)
+
+            replaceTransactionInList(it, updatedTransaction)
+
+            reflectUpdatedTransactionToRepository(
+                client,
+                it,
+                itemName,
+                itemCount,
+                itemPrice,
+                amount
+            )
+        }
+    }
+
     fun updateModifyDepositTransaction(client: Client, amount: Long) {
-        modifyTransaction.value?.let { transaction ->
-            val updatedTransaction = Transaction(
-                LoadTransactionData(
-                    client.getClientIdx(),
-                    client.getClientName(),
-                    transaction.getTransactionDate(),
-                    true,
-                    amount,
-                    transaction.getTransactionIdx(),
-                    0,
-                    0,
-                    ""
-                )
+        val currentTransaction = modifyTransaction.value
+
+        currentTransaction?.let {
+            val updatedTransaction = createUpdatedTransaction(client, it, amount)
+
+            replaceTransactionInList(it, updatedTransaction)
+            reflectUpdatedTransactionToRepository(
+                client,
+                it,
+                amount
             )
-            totalTransactionData.replaceAll { if (it.getTransactionIdx() == transaction.getTransactionIdx()) updatedTransaction else it }
-            val updateDepositTransactionData = TransactionData(
-                client.getClientIdx(),
-                transaction.getTransactionDate(),
-                true,
-                amount,
-                transaction.getTransactionIdx(),
-                0,
-                0,
-                ""
-            )
-            transactionRepository.setTransactionData(updateDepositTransactionData) {
-                updateTransaction()
-            }
         }
     }
 
@@ -203,7 +212,9 @@ class TransactionViewModel @Inject constructor(
 
     private fun updateTransaction() {
         selectClientIndex?.let { index ->
-            _transactionList.postValue(totalTransactionData.filter { it.getTransactionClientIdx() == index })
+            _transactionList.postValue(totalTransactionData.filter {
+                it.getTransactionClientIdx() == index
+            })
         } ?: _transactionList.postValue(totalTransactionData)
     }
 
@@ -212,6 +223,104 @@ class TransactionViewModel @Inject constructor(
             for (c1 in it.result) {
                 newTransactionIdx = c1["transactionIdx"] as Long + 1L
             }
+        }
+    }
+
+    private fun createUpdatedTransaction(
+        client: Client,
+        currentTransaction: Transaction,
+        itemName: String,
+        itemCount: Long,
+        itemPrice: Long,
+        amount: Long
+    ): Transaction {
+        return Transaction(
+            LoadTransactionData(
+                client.getClientIdx(),
+                client.getClientName(),
+                currentTransaction.getTransactionDate(),
+                false,
+                amount,
+                currentTransaction.getTransactionIdx(),
+                itemCount,
+                itemPrice,
+                itemName
+            )
+        )
+    }
+
+    private fun createUpdatedTransaction(
+        client: Client,
+        currentTransaction: Transaction,
+        amount: Long
+    ): Transaction {
+        return Transaction(
+            LoadTransactionData(
+                client.getClientIdx(),
+                client.getClientName(),
+                currentTransaction.getTransactionDate(),
+                true,
+                amount,
+                currentTransaction.getTransactionIdx(),
+                0,
+                0,
+                ""
+            )
+        )
+    }
+
+    private fun replaceTransactionInList(
+        currentTransaction: Transaction,
+        updatedTransaction: Transaction
+    ) {
+        totalTransactionData.replaceAll { transactionData ->
+            if (transactionData == currentTransaction) updatedTransaction
+            else transactionData
+        }
+    }
+
+    private fun reflectUpdatedTransactionToRepository(
+        client: Client,
+        currentTransaction: Transaction,
+        itemName: String,
+        itemCount: Long,
+        itemPrice: Long,
+        amount: Long
+    ) {
+        val updatedTransactionData = TransactionData(
+            client.getClientIdx(),
+            currentTransaction.getTransactionDate(),
+            false,
+            amount,
+            currentTransaction.getTransactionIdx(),
+            itemCount,
+            itemPrice,
+            itemName
+        )
+
+        transactionRepository.setTransactionData(updatedTransactionData) {
+            updateTransaction()
+        }
+    }
+
+    private fun reflectUpdatedTransactionToRepository(
+        client: Client,
+        currentTransaction: Transaction,
+        amount: Long
+    ) {
+        val updatedTransactionData = TransactionData(
+            client.getClientIdx(),
+            currentTransaction.getTransactionDate(),
+            false,
+            amount,
+            currentTransaction.getTransactionIdx(),
+            0,
+            0,
+            ""
+        )
+
+        transactionRepository.setTransactionData(updatedTransactionData) {
+            updateTransaction()
         }
     }
 }

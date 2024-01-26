@@ -54,7 +54,7 @@ class TransactionSalesFragment : Fragment() {
                     transactionItemNameEditText.text.toString(),
                     itemCount,
                     itemPrice,
-                    amountReceived,
+                    amountReceived
                 )
                 mainActivity.removeFragment(MainActivity.TRANSACTION_SALES_FRAGMENT)
             }

@@ -96,6 +96,11 @@ class TransactionAdapter(
                     )
                     return@setOnMenuItemClickListener true
                 }
+                mainActivity.replaceFragment(
+                    MainActivity.TRANSACTION_SALES_MODIFY_FRAGMENT,
+                    true,
+                    null
+                )
                 return@setOnMenuItemClickListener true
             }
         }

@@ -65,8 +65,7 @@ class TransactionDepositModifyFragment : Fragment() {
 
     private fun setViewModel() {
         transactionViewModel.modifyTransaction.observe(viewLifecycleOwner) { transaction ->
-            fragmentTransactionDepositModifyBinding.modifyDepositPriceEditTextNumber
-                .setText(replaceNumberFormat(transaction.getReceivables()))
+            transaction.setModifyViewValue(fragmentTransactionDepositModifyBinding.modifyDepositPriceEditTextNumber)
             clientViewModel.setSelectClient(transaction.getTransactionClientIdx())
         }
         clientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->

@@ -53,6 +53,7 @@ import com.hifi.redeal.transaction.view.TransactionDepositFragment
 import com.hifi.redeal.transaction.view.TransactionDepositModifyFragment
 import com.hifi.redeal.transaction.view.TransactionFragment
 import com.hifi.redeal.transaction.view.TransactionSalesFragment
+import com.hifi.redeal.transaction.view.TransactionSalesModifyFragment
 import com.skt.tmap.TMapTapi
 import com.skt.tmap.TMapTapi.OnAuthenticationListenerCallback
 import dagger.hilt.android.AndroidEntryPoint
@@ -122,6 +123,7 @@ class MainActivity : AppCompatActivity() {
         val TRANSACTION_DEPOSIT_FRAGMENT = "TransactionDepositFragment"
         val TRANSACTION_SALES_FRAGMENT = "TransactionSalesFragment"
         val TRANSACTION_DEPOSIT_MODIFY_FRAGMENT = "TransactionDepositModifyFragment"
+        val TRANSACTION_SALES_MODIFY_FRAGMENT = "TransactionSalesModifyFragment"
 
         const val BASE_URL = "https://dapi.kakao.com/"
         const val REGION_BASE_URL = "http://api.vworld.kr/"
@@ -382,6 +384,7 @@ class MainActivity : AppCompatActivity() {
             TRANSACTION_DEPOSIT_FRAGMENT -> TransactionDepositFragment()
             TRANSACTION_SALES_FRAGMENT -> TransactionSalesFragment()
             TRANSACTION_DEPOSIT_MODIFY_FRAGMENT -> TransactionDepositModifyFragment()
+            TRANSACTION_SALES_MODIFY_FRAGMENT -> TransactionSalesModifyFragment()
             else -> Fragment()
         }
 
