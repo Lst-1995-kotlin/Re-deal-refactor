@@ -48,9 +48,9 @@ class TransactionFragment : Fragment() {
             transactionAdapter =
                 TransactionAdapter(
                     transactionViewModel,
-                    viewLifecycleOwner,
                     transactionRecyclerView,
-                    mainActivity
+                    mainActivity,
+                    viewLifecycleOwner
                 )
 
             transactionRecyclerView.run {

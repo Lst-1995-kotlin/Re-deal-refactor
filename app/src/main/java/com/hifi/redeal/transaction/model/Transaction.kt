@@ -2,6 +2,7 @@ package com.hifi.redeal.transaction.model
 
 import android.widget.TextView
 import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.DEPOSIT_TRANSACTION
+import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.ERROR_TRANSACTION
 import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.SALES_TRANSACTION
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
 import java.text.SimpleDateFormat
@@ -30,8 +31,11 @@ class Transaction(
 
 
     fun getTransactionType(): Int {
-        if (loadTransactionData.isDeposit) return DEPOSIT_TRANSACTION
-        return SALES_TRANSACTION
+        return when (loadTransactionData.isDeposit) {
+            true -> DEPOSIT_TRANSACTION
+            false -> SALES_TRANSACTION
+            else -> ERROR_TRANSACTION
+        }
     }
 
     fun getTransactionDate() = loadTransactionData.date

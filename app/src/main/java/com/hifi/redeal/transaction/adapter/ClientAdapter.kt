@@ -3,6 +3,8 @@ package com.hifi.redeal.transaction.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
@@ -11,12 +13,16 @@ import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 
 class ClientAdapter(
     private val clientViewModel: ClientViewModel,
-    private val dialogFragment: DialogFragment
-) : ListAdapter<Client, ClientAdapter.TransactionClientHolder>(ClientAdapterDiffCallback()) {
+    private val dialogFragment: DialogFragment,
+    private val viewLifecycleOwner: LifecycleOwner
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private val diffCallback = ClientAdapterDiffCallback()
+    private val differ = AsyncListDiffer(this, diffCallback)
 
     init {
-        clientViewModel.clients.observeForever {
-            submitList(it)
+        clientViewModel.clients.observe(viewLifecycleOwner) {
+            differ.submitList(it)
         }
     }
 
@@ -31,14 +37,18 @@ class ClientAdapter(
         return TransactionClientHolder(transactionSelectClientItemBinding)
     }
 
-    override fun onBindViewHolder(holder: TransactionClientHolder, position: Int) {
-        holder.bind(getItem(position))
+    override fun getItemCount(): Int {
+        return differ.currentList.size
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val transactionClientHolder = holder as TransactionClientHolder
+        transactionClientHolder.bind(differ.currentList[position])
     }
 
     fun clientFind(value: String) {
-        val filterList =
-            clientViewModel.clients.value?.filter { it.filter(value) }
-        submitList(filterList)
+        val filterList = clientViewModel.clients.value?.filter { it.filter(value) }
+        differ.submitList(filterList)
     }
 
     inner class TransactionClientHolder(

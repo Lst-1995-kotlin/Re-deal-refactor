@@ -26,7 +26,7 @@ class SelectTransactionClientDialog(
         savedInstanceState: Bundle?,
     ): View {
         dialogSelectTransactionClientDialog = DialogSelectTransactionClientBinding.inflate(inflater)
-        clientAdapter = ClientAdapter(clientViewModel, this)
+        clientAdapter = ClientAdapter(clientViewModel, this, viewLifecycleOwner)
         setDialog()
         return dialogSelectTransactionClientDialog.root
     }
