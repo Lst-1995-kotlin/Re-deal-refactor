@@ -22,7 +22,8 @@ class ItemTextWatcher(
 
     override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
         button.visibility =
-            if (p0.isNullOrEmpty() || clientViewModel.selectedClient.value == null) View.GONE else View.VISIBLE
+            if (p0.isNullOrEmpty() || clientViewModel.selectedClient.value == null) View.GONE
+            else View.VISIBLE
     }
 
     override fun afterTextChanged(p0: Editable?) {
@@ -44,11 +45,6 @@ class ItemTextWatcher(
                     inputNumber /= 10L
                 }
                 amountEditText.setText("${inputNumber * removeNumberFormat("${notEditText.text}")}")
-            }
-
-            if (inputNumber == 0L) {
-                nowEditText.text = null
-                return
             }
 
             val replaceNumber = replaceNumberFormat(inputNumber)

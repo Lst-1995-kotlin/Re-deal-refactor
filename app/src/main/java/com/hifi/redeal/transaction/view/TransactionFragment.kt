@@ -1,6 +1,7 @@
 package com.hifi.redeal.transaction.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -70,6 +71,7 @@ class TransactionFragment : Fragment() {
                             val firstVisibleItemPosition =
                                 layoutManager.findFirstVisibleItemPosition()
                             if (firstVisibleItemPosition == 0) {
+                                Log.d("ttt", "새로고침 진행됨.")
                                 transactionViewModel.getAllTransactionData()
                             }
                         }
@@ -89,22 +91,24 @@ class TransactionFragment : Fragment() {
 
     private fun setViewModel() {
         transactionViewModel.transactionList.observe(viewLifecycleOwner) { transactions ->
+            transactionAdapter.setTransactions(transactions)
             val totalSalesCount =
                 transactions.count { it.getTransactionType() == TransactionType.SALES.type }
             val totalSalesAmount = transactions.sumOf { it.calculateSalesAmount() }
             val totalReceivables = transactions.sumOf { it.getReceivables() }
+
             fragmentTransactionBinding.run {
                 textTotalSalesCount.text = replaceNumberFormat(totalSalesCount)
                 textTotalSales.text = replaceNumberFormat(totalSalesAmount)
                 textTotalReceivables.text = replaceNumberFormat(totalSalesAmount - totalReceivables)
+                transactionRecyclerView.layoutManager?.scrollToPosition(0)
             }
-            transactionAdapter.setTransactions(transactions)
         }
+
         clientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
             client?.let { transactionViewModel.setSelectClientIndex(it.getClientIdx()) }
                 ?: transactionViewModel.setSelectClientIndex(null)
         }
-
         clientViewModel.setSelectClient(arguments?.getLong("clientIdx"))
     }
 }
