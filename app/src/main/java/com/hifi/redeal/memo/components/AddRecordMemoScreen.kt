@@ -9,17 +9,22 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.UploadFile
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.Rectangle
 import androidx.compose.material.icons.rounded.Stop
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
@@ -30,6 +35,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -45,16 +51,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
+import com.hifi.redeal.memo.model.BottomButtonState
 import com.hifi.redeal.memo.utils.convertToDurationTime
+import com.hifi.redeal.memo.utils.formatRecordTime
+import com.hifi.redeal.memo.utils.formatRecordTimeToGray
 import com.hifi.redeal.theme.RedealTheme
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 
 private enum class RecordState {
     BEFORE_RECORDING,
@@ -162,33 +175,28 @@ private fun VoiceRecorder(
     time: Long,
     isRecording: Boolean,
     onClickRecord: (recordState: RecordState) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val iconImage = if(isRecording) Icons.Rounded.Pause else Icons.Default.Circle
+    val iconImage = if (isRecording) Icons.Rounded.Pause else Icons.Default.Circle
+
+    val tempTime = 120000L
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier
     ) {
         Text(
-            text = time.convertToDurationTime(),
-            style = MaterialTheme.typography.bodyLarge
+            text = formatRecordTime(tempTime),
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontSize = 40.sp
+            )
         )
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp)
+                .padding(vertical = 20.dp)
         ) {
-            if(isRecording){
-                IconButton(
-                    onClick = {},
-                    colors = IconButtonDefaults.iconButtonColors(
-                        contentColor = Color.Black
-                    )
-                ){
-                    Icon(imageVector = Icons.Rounded.PlayArrow, contentDescription = null, modifier = Modifier.size(52.dp))
-                }
-            }
             OutlinedIconButton(
                 onClick = {
                     val nextState =
@@ -196,27 +204,27 @@ private fun VoiceRecorder(
                     onClickRecord(nextState)
                 },
                 colors = IconButtonDefaults.outlinedIconButtonColors(
-                    contentColor = MaterialTheme.colorScheme.primary
+                    contentColor = if (!isRecording) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        Color.Black
+                    }
                 ),
                 border = BorderStroke(1.dp, Color.Gray),
-                shape = CircleShape,
                 modifier = Modifier.size(64.dp)
             ) {
-                Icon(
-                    imageVector = iconImage,
-                    contentDescription = null,
-                    modifier = Modifier.size(56.dp)
-                )
-            }
-
-            if(isRecording){
-                IconButton(
-                    onClick = {},
-                    colors = IconButtonDefaults.iconButtonColors(
-                        contentColor = Color.Black
+                if (!isRecording) {
+                    Icon(
+                        imageVector = Icons.Default.Circle,
+                        contentDescription = null,
+                        modifier = Modifier.size(56.dp)
                     )
-                ){
-                    Icon(imageVector = Icons.Rounded.Stop, contentDescription = null, modifier = Modifier.size(52.dp))
+                } else {
+                    Icon(
+                        imageVector = Icons.Rounded.Pause,
+                        contentDescription = null,
+                        modifier = Modifier.size(32.dp)
+                    )
                 }
             }
         }
@@ -257,7 +265,10 @@ private fun VoiceMemoPlayer(
                     VoiceRecorder(
                         time = time,
                         isRecording = true,
-                        onClickRecord = {}
+                        onClickRecord = {},
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 28.dp)
                     )
                 }
 
@@ -269,6 +280,48 @@ private fun VoiceMemoPlayer(
                 }
             }
         }
+    }
+}
+
+
+@Composable
+private fun BottomButton(
+    state: BottomButtonState,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val buttonText = when (state) {
+        BottomButtonState.IDLE -> {
+            stringResource(id = R.string.add_photo_memo_bottom_button)
+        }
+
+        BottomButtonState.PRESSED -> {
+            stringResource(id = R.string.add_photo_memo_bottom_button_clicked)
+        }
+
+        BottomButtonState.DISABLED -> {
+            stringResource(id = R.string.add_photo_memo_bottom_button_disable)
+        }
+    }
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            disabledContentColor = MaterialTheme.colorScheme.onSecondary,
+            disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+        ),
+        enabled = state == BottomButtonState.IDLE,
+        shape = RoundedCornerShape(4.dp),
+        modifier = modifier
+            .height(48.dp)
+    ) {
+        Text(
+            text = buttonText,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+        )
     }
 }
 
@@ -285,150 +338,48 @@ private fun RecordPlayerPreview() {
     }
 }
 
-//<ViewFlipper
-//android:id="@+id/mStateViewSwitcher"
-//android:layout_width="match_parent"
-//android:layout_height="wrap_content"
-//android:layout_marginTop="40dp"
-//android:inAnimation="@anim/slide_in_right"
-//android:outAnimation="@anim/slide_out_left"
-//android:padding="20dp"
-//app:layout_constraintEnd_toEndOf="parent"
-//app:layout_constraintStart_toStartOf="parent"
-//app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-//
-//<LinearLayout
-//android:id="@+id/linearLayout2"
-//android:layout_width="match_parent"
-//android:layout_height="match_parent"
-//android:layout_gravity="center"
-//android:gravity="center"
-//android:orientation="vertical">
-//
-//<Chronometer
-//android:id="@+id/record_chronometer"
-//android:layout_width="wrap_content"
-//android:layout_height="wrap_content"
-//android:layout_weight="1"
-//android:fontFamily="@font/nanumsquareneo_regular"
-//android:textColor="@color/text10"
-//android:textSize="16sp" />
-//
-//<androidx.appcompat.widget.AppCompatButton
-//android:id="@+id/recordBtn"
-//android:layout_width="48dp"
-//android:layout_height="48dp"
-//android:layout_marginTop="16dp"
-//android:layout_weight="1"
-//android:background="@drawable/audio_start_btn" />
-//</LinearLayout>
-//
-//<LinearLayout
-//android:id="@+id/linearLayout3"
-//android:layout_width="match_parent"
-//android:layout_height="wrap_content"
-//android:gravity="center"
-//android:orientation="vertical">
-//
-//<androidx.appcompat.widget.AppCompatSeekBar
-//android:id="@+id/audioSeekBar"
-//android:layout_width="match_parent"
-//android:layout_height="wrap_content"
-//android:progressBackgroundTint="@color/text10"
-//android:progressTint="@color/primary20"
-//android:thumbTint="@color/primary20" />
-//
-//<LinearLayout
-//android:layout_width="match_parent"
-//android:layout_height="match_parent"
-//android:layout_weight="1"
-//android:orientation="horizontal"
-//android:padding="8dp">
-//
-//<TextView
-//android:id="@+id/currentDurationTimeTextView"
-//android:layout_width="wrap_content"
-//android:layout_height="wrap_content"
-//android:layout_weight="1"
-//android:fontFamily="@font/nanumsquareneo_regular"
-//android:textColor="@color/text10"
-//tools:text="0:00" />
-//
-//<TextView
-//android:id="@+id/totalDurationTimeTextView"
-//android:layout_width="wrap_content"
-//android:layout_height="wrap_content"
-//android:layout_weight="1"
-//android:fontFamily="@font/nanumsquareneo_regular"
-//android:gravity="right"
-//tools:text="3:28" />
-//</LinearLayout>
-//
-//<LinearLayout
-//android:id="@+id/linearLayout1"
-//android:layout_width="match_parent"
-//android:layout_height="wrap_content"
-//android:layout_weight="1">
-//
-//<androidx.appcompat.widget.AppCompatButton
-//android:id="@+id/audioPlayBtn"
-//android:layout_width="36dp"
-//android:layout_height="36dp"
-//android:background="@drawable/play_arrow_24px" />
-//
-//<com.google.android.material.divider.MaterialDivider
-//android:id="@+id/materialDivider2"
-//android:layout_width="match_parent"
-//android:layout_height="wrap_content"
-//android:layout_weight="1"
-//app:dividerColor="@color/background"
-//app:layout_constraintEnd_toEndOf="parent"
-//app:layout_constraintStart_toStartOf="parent"
-//app:layout_constraintTop_toBottomOf="@+id/addRecordMemoToolbar" />
-//
-//<ImageButton
-//android:id="@+id/resetRecordBtn"
-//android:layout_width="36dp"
-//android:layout_height="36dp"
-//android:layout_marginEnd="8dp"
-//android:background="@drawable/btn_round_primary20"
-//android:src="@drawable/delete_24px_primary99" />
-//</LinearLayout>
-//</LinearLayout>
-//
-//</ViewFlipper>
-//@RequiresApi(Build.VERSION_CODES.S)
-//@Preview(name = "AddRecordMemoScreen", showBackground = true)
-//@Composable
-//private fun AddRecordMemoScreenPreview() {
-//    RedealTheme() {
-//        Scaffold(
-//            topBar = {
-//                AddRecordMemoToolbar(
-//                    title = "음성메모 등록", onClickNavigation = {})
-//            },
-//            containerColor = Color.White
-//        ) { padding ->
-//            Column(
-//                modifier = Modifier
-//                    .padding(padding)
-//                    .padding(horizontal = 28.dp)
-//                    .padding(top = 40.dp)
-//            ) {
-//                MemoTextField(
-//                    value = "",
-//                    onChangeValue = {},
-//                    modifier = Modifier.fillMaxWidth()
-//                )
-//                AddFileButton(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(top = 8.dp)
-//                        .height(52.dp)
-//                )
-//                RecordPlayer(MainActivity(), "")
-//            }
-//        }
-//    }
-//}
+@RequiresApi(Build.VERSION_CODES.S)
+@Preview(name = "AddRecordMemoScreen", showBackground = true)
+@Composable
+private fun AddRecordMemoScreenPreview() {
+    RedealTheme() {
+        Scaffold(
+            topBar = {
+                AddRecordMemoToolbar(
+                    title = "음성메모 등록", onClickNavigation = {})
+            },
+            bottomBar = {
+                BottomButton(
+                    state = BottomButtonState.IDLE,
+                    onClick = {},
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 24.dp, horizontal = 28.dp)
+                        .imePadding()
+                )
+            },
+            containerColor = Color.White
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .padding(padding)
+                    .padding(horizontal = 28.dp)
+                    .padding(top = 40.dp)
+            ) {
+                MemoTextField(
+                    value = "",
+                    onChangeValue = {},
+                    modifier = Modifier.fillMaxWidth()
+                )
+                AddFileButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                        .height(52.dp)
+                )
+                VoiceMemoPlayer(MainActivity(), "")
+            }
+        }
+    }
+}
 

@@ -16,4 +16,6 @@
     <string name="add_photo_memo_bottom_button">포토 메모 등록</string>
     <string name="add_photo_memo_bottom_button_disable">사진을 등록해주세요</string>
     <string name="add_photo_memo_bottom_button_clicked">등록 중..</string>
+
+    <string name="add_record_memo_body_text_field_placeholder">메모</string>
 </resources>

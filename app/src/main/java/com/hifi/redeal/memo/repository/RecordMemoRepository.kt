@@ -17,23 +17,32 @@ class RecordMemoRepository @Inject constructor(
     private val db = Firebase.firestore
     private val userIdx = currentUser.userIdx
     private val userDataCollection = db.collection("userData")
-    private val recordMemoDataCollection = userDataCollection.document(userIdx).collection("recordMemoData")
-    fun getRecordMemoAll(clientIdx:Long, callback1: (QuerySnapshot) -> Unit){
+    private val recordMemoDataCollection =
+        userDataCollection.document(userIdx).collection("recordMemoData")
+
+    fun getRecordMemoAll(clientIdx: Long, callback1: (QuerySnapshot) -> Unit) {
         val photoMemoRef = recordMemoDataCollection
             .whereEqualTo("clientIdx", clientIdx)
         photoMemoRef.get()
             .addOnSuccessListener(callback1)
     }
 
-    fun addRecordMemo(clientIdx:Long, recordMemoContext:String, audioFileUri:Uri, audioFileName:String, callback:(Task<Void>) -> Unit){
+    fun addRecordMemo(
+        clientIdx: Long,
+        recordMemoContext: String,
+        audioFileUri: Uri,
+        audioFileName: String,
+        audioFileDurationTime: Long,
+        callback: (Task<Void>) -> Unit
+    ) {
         val recordMemoRef = recordMemoDataCollection
         recordMemoRef
             .orderBy("recordMemoIdx", Query.Direction.DESCENDING)
             .limit(1)
-            .get().addOnSuccessListener{querySnapshot ->
-                val recordMemoIdx = if(!querySnapshot.isEmpty){
+            .get().addOnSuccessListener { querySnapshot ->
+                val recordMemoIdx = if (!querySnapshot.isEmpty) {
                     querySnapshot.documents[0].getLong("recordMemoIdx")!! + 1
-                }else{
+                } else {
                     1
                 }
                 val photoMemo = hashMapOf(
@@ -42,9 +51,11 @@ class RecordMemoRepository @Inject constructor(
                     "recordMemoSrc" to audioFileUri,
                     "recordMemoDate" to Timestamp(Date()),
                     "recordMemoIdx" to recordMemoIdx,
-                    "recordMemoFilename" to audioFileName
+                    "recordMemoFilename" to audioFileName,
+                    "recordMemoDuration" to audioFileDurationTime
                 )
-                recordMemoRef.document("$recordMemoIdx").set(photoMemo).addOnCompleteListener(callback)
+                recordMemoRef.document("$recordMemoIdx").set(photoMemo)
+                    .addOnCompleteListener(callback)
             }
     }
 }

@@ -18,24 +18,30 @@ class RecordMemoViewModel @Inject constructor(
 ) : ViewModel() {
     val recordMemoList: LiveData<List<RecordMemoData>> get() = _recordMemoList
     private val _recordMemoList = MutableLiveData<List<RecordMemoData>>()
-    fun getRecordMemoList(clientIdx:Long, mainContext:Context){
-        recordMemoRepository.getRecordMemoAll(clientIdx){ documentSnapshot ->
+    fun getRecordMemoList(clientIdx: Long, mainContext: Context) {
+        recordMemoRepository.getRecordMemoAll(clientIdx) { documentSnapshot ->
             val recordMemoData = mutableListOf<RecordMemoData>()
-            for(item in documentSnapshot){
+            for (item in documentSnapshot) {
                 val context = item.get("recordMemoContext") as String
                 val date = item.get("recordMemoDate") as Timestamp
                 val audioFilename = item.get("recordMemoFilename") as String
+                val duration = item.get("recordMemoDuration") as Long
                 val fileLocation = File(mainContext.getExternalFilesDir(null), "recordings")
                 val recordFileLocation = File(fileLocation, audioFilename)
-                var audioFileUri:Uri?
-                if(recordFileLocation.exists()){
+                var audioFileUri: Uri?
+                if (recordFileLocation.exists()) {
                     audioFileUri = Uri.fromFile(recordFileLocation)
-                    val newRecordMemo = RecordMemoData(context, date.toDate(), audioFileUri, audioFilename)
+                    val newRecordMemo = RecordMemoData(
+                        context,
+                        date.toDate(),
+                        audioFileUri,
+                        audioFilename,
+                        duration
+                    )
                     recordMemoData.add(newRecordMemo)
                 }
             }
-            recordMemoData.reverse()
-            _recordMemoList.value = recordMemoData
+            _recordMemoList.value = recordMemoData.sortedByDescending { it.date }
         }
     }
 }

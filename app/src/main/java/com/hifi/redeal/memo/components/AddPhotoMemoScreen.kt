@@ -59,12 +59,11 @@ private fun AddPhotoMemoToolbar(
     title: String,
     modifier: Modifier = Modifier,
     mainActivity: MainActivity,
-    onAlbumResult: (uris:List<Uri>) -> Unit
+    onAlbumResult: (uris: List<Uri>) -> Unit
 ) {
     val albumLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(),
-        onResult = {
-                uris ->
+        onResult = { uris ->
             onAlbumResult(uris)
         }
     )
@@ -131,15 +130,15 @@ private fun AddPhotoMemoToolbar(
 
 @Composable
 private fun AddPhotoMemoBody(
-    memoValue:String,
-    onChangeMemoValue:(text:String) -> Unit,
+    memoValue: String,
+    onChangeMemoValue: (text: String) -> Unit,
     selectedImageList: List<Uri>,
-    modifier:Modifier = Modifier
-){
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier
     ) {
-        if(selectedImageList.isEmpty()) {
+        if (selectedImageList.isEmpty()) {
             Text(
                 text = stringResource(id = R.string.add_photo_memo_body_empty_photo),
                 color = MaterialTheme.colorScheme.primary,
@@ -150,7 +149,7 @@ private fun AddPhotoMemoBody(
                     .padding(vertical = 32.dp)
                     .align(Alignment.CenterHorizontally)
             )
-        }else{
+        } else {
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(horizontal = 2.dp),
@@ -188,19 +187,22 @@ private fun AddPhotoMemoBody(
         )
     }
 }
+
 @Composable
 private fun BottomButton(
-    state:BottomButtonState,
-    onClick:() -> Unit,
-    modifier:Modifier = Modifier
-){
-    val buttonText  = when(state){
+    state: BottomButtonState,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val buttonText = when (state) {
         BottomButtonState.IDLE -> {
             stringResource(id = R.string.add_photo_memo_bottom_button)
         }
+
         BottomButtonState.PRESSED -> {
             stringResource(id = R.string.add_photo_memo_bottom_button_clicked)
         }
+
         BottomButtonState.DISABLED -> {
             stringResource(id = R.string.add_photo_memo_bottom_button_disable)
         }
@@ -229,20 +231,20 @@ private fun BottomButton(
 
 @Composable
 fun AddPhotoMemoScreen(
-    clientIdx:Long,
-    repository:PhotoMemoRepository,
+    clientIdx: Long,
+    repository: PhotoMemoRepository,
     mainActivity: MainActivity,
-    modifier:Modifier = Modifier
-){
+    modifier: Modifier = Modifier
+) {
 
     var selectedImageList by remember { mutableStateOf<List<Uri>>(emptyList()) }
     var bottomButtonState by remember { mutableStateOf(BottomButtonState.DISABLED) }
-    val onAlbumResult = { uriList:List<Uri> ->
+    val onAlbumResult = { uriList: List<Uri> ->
         bottomButtonState = BottomButtonState.IDLE
         selectedImageList = uriList
     }
-    var memoValue by remember {mutableStateOf("")}
-    val onChangeMemoValue = {text:String ->
+    var memoValue by remember { mutableStateOf("") }
+    val onChangeMemoValue = { text: String ->
         memoValue = text
     }
 
@@ -252,41 +254,39 @@ fun AddPhotoMemoScreen(
             mainActivity.removeFragment(MainActivity.ADD_PHOTO_MEMO_FRAGMENT)
         }
     }
-    RedealTheme {
-        Scaffold(
-            topBar = {
-                AddPhotoMemoToolbar(
-                    title = stringResource(id = R.string.add_photo_memo_toolbar),
-                    onAlbumResult = onAlbumResult,
-                    mainActivity = mainActivity
-                )
-            },
-            containerColor = Color.White,
-            modifier = modifier
-        ) { padding ->
-            Column(
+    Scaffold(
+        topBar = {
+            AddPhotoMemoToolbar(
+                title = stringResource(id = R.string.add_photo_memo_toolbar),
+                onAlbumResult = onAlbumResult,
+                mainActivity = mainActivity
+            )
+        },
+        containerColor = Color.White,
+        modifier = modifier
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(padding)
+        ) {
+            AddPhotoMemoBody(
+                memoValue = memoValue,
+                onChangeMemoValue = onChangeMemoValue,
+                selectedImageList = selectedImageList,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 20.dp)
+            )
+
+            BottomButton(
+                state = bottomButtonState,
+                onClick = onClickBottomButton,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(padding)
-            ) {
-                AddPhotoMemoBody(
-                    memoValue = memoValue,
-                    onChangeMemoValue = onChangeMemoValue,
-                    selectedImageList = selectedImageList,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 20.dp)
-                )
-
-                BottomButton(
-                    state = bottomButtonState,
-                    onClick = onClickBottomButton,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 24.dp, horizontal = 28.dp)
-                        .imePadding()
-                )
-            }
+                    .padding(vertical = 24.dp, horizontal = 28.dp)
+                    .imePadding()
+            )
         }
     }
 }
