@@ -1,9 +1,12 @@
 package com.hifi.redeal.transaction.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.MainActivity
@@ -15,13 +18,17 @@ import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 
 class TransactionAdapter(
     private val transactionViewModel: TransactionViewModel,
+    lifecycleOwner: LifecycleOwner,
     private val recyclerView: RecyclerView,
     private val mainActivity: MainActivity
-) : ListAdapter<Transaction, RecyclerView.ViewHolder>(TransactionAdapterDiffCallback()) {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private val diffCallback = TransactionAdapterDiffCallback()
+    private val differ = AsyncListDiffer(this, diffCallback)
 
     init {
-        transactionViewModel.transactionList.observeForever { transactions ->
-            submitList(transactions.sortedByDescending { it.getTransactionDate() }) {
+        transactionViewModel.transactionList.observe(lifecycleOwner) { transactions ->
+            differ.submitList(transactions.sortedByDescending { it.getTransactionDate() }) {
                 recyclerView.layoutManager?.scrollToPosition(0)
             }
         }
@@ -53,12 +60,16 @@ class TransactionAdapter(
                 ReleaseHolder(rowTransactionSalesBinding)
             }
 
-            else -> throw IllegalArgumentException("올바르지 못한 거래 타입 입니다.")
+            else -> {
+                Log.e("TransactionAdapter", "올바르지 못한 거래 타입 입니다: $viewType")
+                val view = View(parent.context)
+                object : RecyclerView.ViewHolder(view) {}
+            }
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val transaction = getItem(position)
+        val transaction = differ.currentList[position]
         when (holder.itemViewType) {
             DEPOSIT_TRANSACTION -> {
                 val item = holder as DepositHolder
@@ -75,7 +86,11 @@ class TransactionAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return currentList[position].getTransactionType()
+        return differ.currentList[position].getTransactionType()
+    }
+
+    override fun getItemCount(): Int {
+        return differ.currentList.size
     }
 
 
@@ -108,32 +123,28 @@ class TransactionAdapter(
 
     inner class DepositHolder(
         private val rowTransactionDepositBinding: RowTransactionDepositBinding,
-    ) :
-        RecyclerView.ViewHolder(rowTransactionDepositBinding.root) {
+    ) : RecyclerView.ViewHolder(rowTransactionDepositBinding.root) {
         fun bind(transaction: Transaction) {
-            transaction.setTextViewValue(
-                rowTransactionDepositBinding.textTransactionDate,
-                rowTransactionDepositBinding.transctionClientNameTextView,
-                rowTransactionDepositBinding.depositPriceTextView,
-            )
+            val valuesMap = transaction.getTransactionValueMap()
+            rowTransactionDepositBinding.textTransactionDate.text = valuesMap["date"]
+            rowTransactionDepositBinding.transctionClientNameTextView.text = valuesMap["clientName"]
+            rowTransactionDepositBinding.depositPriceTextView.text = valuesMap["amountReceived"]
         }
     }
 
     inner class ReleaseHolder(
         private val rowTransactionReleaseBinding: RowTransactionSalesBinding,
-    ) :
-        RecyclerView.ViewHolder(rowTransactionReleaseBinding.root) {
+    ) : RecyclerView.ViewHolder(rowTransactionReleaseBinding.root) {
         fun bind(transaction: Transaction) {
-            transaction.setTextViewValue(
-                rowTransactionReleaseBinding.textTransactionDate,
-                rowTransactionReleaseBinding.transctionClientNameTextView,
-                rowTransactionReleaseBinding.itemNameTextView,
-                rowTransactionReleaseBinding.itemSalesCountTextView,
-                rowTransactionReleaseBinding.itemPriceTextView,
-                rowTransactionReleaseBinding.totalSalesAmountTextView,
-                rowTransactionReleaseBinding.recievedAmountTextView,
-                rowTransactionReleaseBinding.recievablesTextView,
-            )
+            val valuesMap = transaction.getTransactionValueMap()
+            rowTransactionReleaseBinding.textTransactionDate.text = valuesMap["date"]
+            rowTransactionReleaseBinding.transctionClientNameTextView.text = valuesMap["clientName"]
+            rowTransactionReleaseBinding.itemNameTextView.text = valuesMap["itemName"]
+            rowTransactionReleaseBinding.itemSalesCountTextView.text = valuesMap["itemCount"]
+            rowTransactionReleaseBinding.itemPriceTextView.text = valuesMap["itemPrice"]
+            rowTransactionReleaseBinding.totalSalesAmountTextView.text = valuesMap["totalAmount"]
+            rowTransactionReleaseBinding.recievedAmountTextView.text = valuesMap["amountReceived"]
+            rowTransactionReleaseBinding.recievablesTextView.text = valuesMap["receivables"]
         }
     }
 

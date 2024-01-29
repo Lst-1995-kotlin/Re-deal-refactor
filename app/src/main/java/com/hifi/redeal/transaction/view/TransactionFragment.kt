@@ -46,7 +46,12 @@ class TransactionFragment : Fragment() {
         fragmentTransactionBinding.run {
 
             transactionAdapter =
-                TransactionAdapter(transactionViewModel, transactionRecyclerView, mainActivity)
+                TransactionAdapter(
+                    transactionViewModel,
+                    viewLifecycleOwner,
+                    transactionRecyclerView,
+                    mainActivity
+                )
 
             transactionRecyclerView.run {
                 adapter = transactionAdapter

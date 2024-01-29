@@ -20,6 +20,7 @@ class Transaction(
         return otherTransaction.loadTransactionData == this.loadTransactionData
     }
 
+
     fun calculateSalesAmount(): Long {
         if (loadTransactionData.isDeposit) return 0L
         return loadTransactionData.transactionItemCount * loadTransactionData.transactionItemPrice
@@ -47,6 +48,37 @@ class Transaction(
         date.text = dateFormat.format(loadTransactionData.date.toDate())
         clientName.text = loadTransactionData.clientName
         price.text = replaceNumberFormat(loadTransactionData.transactionAmountReceived)
+    }
+
+    fun getTransactionValueMap(): HashMap<String, String> {
+        val currentTransactionData = HashMap<String, String>()
+        if (loadTransactionData.isDeposit) { // 입금 내역일 경우
+            currentTransactionData["date"] = dateFormat.format(loadTransactionData.date.toDate())
+            currentTransactionData["clientName"] = loadTransactionData.clientName
+            currentTransactionData["amountReceived"] =
+                replaceNumberFormat(loadTransactionData.transactionAmountReceived)
+            return currentTransactionData
+        }
+        currentTransactionData["date"] = dateFormat.format(loadTransactionData.date.toDate())
+        currentTransactionData["clientName"] = loadTransactionData.clientName
+        currentTransactionData["itemName"] = loadTransactionData.transactionItemName
+        currentTransactionData["itemCount"] =
+            replaceNumberFormat(loadTransactionData.transactionItemCount)
+        currentTransactionData["itemPrice"] =
+            replaceNumberFormat(loadTransactionData.transactionItemPrice)
+        currentTransactionData["totalAmount"] =
+            replaceNumberFormat(
+                loadTransactionData.transactionItemPrice *
+                        loadTransactionData.transactionItemCount
+            )
+        currentTransactionData["amountReceived"] =
+            replaceNumberFormat(loadTransactionData.transactionAmountReceived)
+        currentTransactionData["receivables"] = replaceNumberFormat(
+            loadTransactionData.transactionItemPrice *
+                    loadTransactionData.transactionItemCount -
+                    loadTransactionData.transactionAmountReceived,
+        )
+        return currentTransactionData
     }
 
     fun setTextViewValue(

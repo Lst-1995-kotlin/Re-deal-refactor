@@ -47,7 +47,14 @@ class TransactionViewModel @Inject constructor(
 
         currentTransaction?.let {
             val updatedTransaction =
-                createUpdatedTransaction(client, it, itemName, itemCount, itemPrice, amount)
+                createUpdatedTransaction(
+                    client,
+                    it,
+                    itemName,
+                    itemCount,
+                    itemPrice,
+                    amount
+                )
 
             replaceTransactionInList(it, updatedTransaction)
 
@@ -63,20 +70,17 @@ class TransactionViewModel @Inject constructor(
     }
 
     fun updateModifyDepositTransaction(client: Client, amount: Long) {
-        val currentTransaction = modifyTransaction.value
-
-        currentTransaction?.let {
-            val updatedTransaction = createUpdatedTransaction(client, it, amount)
-
-            replaceTransactionInList(it, updatedTransaction)
-            reflectUpdatedTransactionToRepository(
+        modifyTransaction.value?.let { currentTransaction ->
+            val updatedTransaction = createUpdatedTransaction(
                 client,
-                it,
+                currentTransaction,
                 amount
             )
+
+            replaceTransactionInList(currentTransaction, updatedTransaction)
+            reflectUpdatedTransactionToRepository(client, currentTransaction, amount)
         }
     }
-
 
     fun deleteTransactionData(transactionIdx: Long) {
         transactionRepository.deleteTransactionData(transactionIdx) {
