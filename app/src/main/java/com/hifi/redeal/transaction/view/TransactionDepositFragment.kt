@@ -40,7 +40,7 @@ class TransactionDepositFragment : Fragment() {
             addDepositBtn.setOnClickListener {
                 clientViewModel.selectedClient.value?.let {
                     transactionViewModel.addDepositTransaction(
-                        it, removeNumberFormat(addDepositPriceEditTextNumber.text.toString())
+                        it, removeNumberFormat("${addDepositPriceEditTextNumber.text}")
                     )
                 }
                 mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_FRAGMENT)

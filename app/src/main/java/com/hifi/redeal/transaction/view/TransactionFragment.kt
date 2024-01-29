@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.MainActivity
@@ -24,6 +23,7 @@ import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TransactionFragment : Fragment() {
@@ -32,6 +32,9 @@ class TransactionFragment : Fragment() {
     private val clientViewModel: ClientViewModel by activityViewModels()
     private lateinit var mainActivity: MainActivity
     private lateinit var transactionAdapter: TransactionAdapter
+
+    @Inject
+    lateinit var transactionAdapterDiffCallback: TransactionAdapterDiffCallback
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,15 +51,15 @@ class TransactionFragment : Fragment() {
             SalesHolderFactory(mainActivity, transactionViewModel)
 
         transactionAdapter =
-            TransactionAdapter(viewHolderFactories, TransactionAdapterDiffCallback())
+            TransactionAdapter(viewHolderFactories, transactionAdapterDiffCallback)
 
-        setTransactionView()
+        setBind()
         setViewModel()
 
         return fragmentTransactionBinding.root
     }
 
-    private fun setTransactionView() {
+    private fun setBind() {
         fragmentTransactionBinding.run {
 
             transactionRecyclerView.run {
@@ -91,7 +94,10 @@ class TransactionFragment : Fragment() {
 
     private fun setViewModel() {
         transactionViewModel.transactionList.observe(viewLifecycleOwner) { transactions ->
-            transactionAdapter.setTransactions(transactions)
+            transactionAdapter.setTransactions(
+                transactions,
+                fragmentTransactionBinding.transactionRecyclerView
+            )
             val totalSalesCount =
                 transactions.count { it.getTransactionType() == TransactionType.SALES.type }
             val totalSalesAmount = transactions.sumOf { it.calculateSalesAmount() }
@@ -101,7 +107,6 @@ class TransactionFragment : Fragment() {
                 textTotalSalesCount.text = replaceNumberFormat(totalSalesCount)
                 textTotalSales.text = replaceNumberFormat(totalSalesAmount)
                 textTotalReceivables.text = replaceNumberFormat(totalSalesAmount - totalReceivables)
-                transactionRecyclerView.layoutManager?.scrollToPosition(0)
             }
         }
 

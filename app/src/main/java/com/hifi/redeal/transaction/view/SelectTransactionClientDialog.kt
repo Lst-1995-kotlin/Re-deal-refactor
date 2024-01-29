@@ -27,7 +27,7 @@ class SelectTransactionClientDialog(
     ): View {
         dialogSelectTransactionClientDialog = DialogSelectTransactionClientBinding.inflate(inflater)
         clientAdapter = ClientAdapter(clientViewModel, this, viewLifecycleOwner)
-        setDialog()
+        setBind()
         return dialogSelectTransactionClientDialog.root
     }
 
@@ -36,7 +36,7 @@ class SelectTransactionClientDialog(
         context?.dialogResize(this)
     }
 
-    private fun setDialog() {
+    private fun setBind() {
         dialogSelectTransactionClientDialog.run {
             searchTransactionClientRecyclerView.run {
                 adapter = clientAdapter

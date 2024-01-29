@@ -3,18 +3,13 @@ package com.hifi.redeal.transaction.adapter
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
-import com.hifi.redeal.MainActivity
 import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.viewHolder.DepositHolder
-import com.hifi.redeal.transaction.viewHolder.DepositHolderFactory
 import com.hifi.redeal.transaction.viewHolder.SalesHolder
-import com.hifi.redeal.transaction.viewHolder.SalesHolderFactory
 import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
-import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 
 class TransactionAdapter(
     private val viewHolderFactories: HashMap<Int, ViewHolderFactory>,
@@ -51,9 +46,12 @@ class TransactionAdapter(
         return differ.currentList.size
     }
 
-    fun setTransactions(newTransactions: List<Transaction>) {
-        differ.submitList(newTransactions.sortedByDescending { it.getTransactionDate() })
+    fun setTransactions(newTransactions: List<Transaction>, recyclerView: RecyclerView) {
+        differ.submitList(newTransactions.sortedByDescending { it.getTransactionDate() }) {
+            recyclerView.smoothScrollToPosition(0)
+        }
     }
+
     private fun createDefaultViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         Log.e("TransactionAdapter", "올바르지 못한 거래 타입 입니다")
         val view = View(parent.context)

@@ -19,7 +19,6 @@ class TransactionViewModel @Inject constructor(
 
     private val totalTransactionData = mutableListOf<Transaction>()
     private val _transactionList = MutableLiveData<List<Transaction>>()
-
     private val _modifyTransaction = MutableLiveData<Transaction>()
 
     private var newTransactionIdx = 0L
@@ -169,46 +168,40 @@ class TransactionViewModel @Inject constructor(
             totalTransactionData.clear()
             it.result.forEach { c1 ->
                 getClientName(
-                    c1["clientIdx"] as Long,
-                    c1["date"] as Timestamp,
-                    c1["isDeposit"] as Boolean,
-                    c1["transactionAmountReceived"] as Long,
-                    c1["transactionIdx"] as Long,
-                    c1["transactionItemCount"] as Long,
-                    c1["transactionItemPrice"] as Long,
-                    c1["transactionItemName"] as String
+                    TransactionData(
+                        c1["clientIdx"] as Long,
+                        c1["date"] as Timestamp,
+                        c1["isDeposit"] as Boolean,
+                        c1["transactionAmountReceived"] as Long,
+                        c1["transactionIdx"] as Long,
+                        c1["transactionItemCount"] as Long,
+                        c1["transactionItemPrice"] as Long,
+                        c1["transactionItemName"] as String
+                    )
                 )
             }
         }
     }
 
     private fun getClientName(
-        clientIdx: Long,
-        date: Timestamp,
-        isDeposit: Boolean,
-        transactionAmountReceived: Long,
-        transactionIdx: Long,
-        transactionItemCount: Long,
-        transactionItemPrice: Long,
-        transactionItemName: String
+        transactionData: TransactionData
     ) {
-        transactionRepository.getClientInfo(clientIdx) {
+        transactionRepository.getClientInfo(transactionData.clientIdx) {
             for (c1 in it.result) {
-                totalTransactionData.add(
-                    Transaction(
-                        LoadTransactionData(
-                            clientIdx,
-                            c1["clientName"] as String,
-                            date,
-                            isDeposit,
-                            transactionAmountReceived,
-                            transactionIdx,
-                            transactionItemCount,
-                            transactionItemPrice,
-                            transactionItemName
-                        )
+                val newTransactionData = Transaction(
+                    LoadTransactionData(
+                        transactionData.clientIdx,
+                        c1["clientName"] as String,
+                        transactionData.date,
+                        transactionData.isDeposit,
+                        transactionData.transactionAmountReceived,
+                        transactionData.transactionIdx,
+                        transactionData.transactionItemCount,
+                        transactionData.transactionItemPrice,
+                        transactionData.transactionItemName
                     )
                 )
+                totalTransactionData.add(newTransactionData)
                 updateTransaction()
             }
         }

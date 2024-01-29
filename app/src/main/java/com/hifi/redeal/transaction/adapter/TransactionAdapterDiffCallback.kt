@@ -2,8 +2,10 @@ package com.hifi.redeal.transaction.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.hifi.redeal.transaction.model.Transaction
+import javax.inject.Inject
 
-class TransactionAdapterDiffCallback : DiffUtil.ItemCallback<Transaction>() {
+class TransactionAdapterDiffCallback @Inject constructor() : DiffUtil.ItemCallback<Transaction>() {
+
     override fun areItemsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
         return oldItem.getTransactionIdx() == newItem.getTransactionIdx()
     }
