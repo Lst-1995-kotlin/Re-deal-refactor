@@ -13,16 +13,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.UploadFile
 import androidx.compose.material.icons.rounded.Pause
-import androidx.compose.material.icons.rounded.PlayArrow
-import androidx.compose.material.icons.rounded.Rectangle
-import androidx.compose.material.icons.rounded.Stop
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
@@ -36,6 +33,7 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -51,9 +49,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -62,12 +58,8 @@ import com.hifi.redeal.R
 import com.hifi.redeal.memo.model.BottomButtonState
 import com.hifi.redeal.memo.utils.convertToDurationTime
 import com.hifi.redeal.memo.utils.formatRecordTime
-import com.hifi.redeal.memo.utils.formatRecordTimeToGray
 import com.hifi.redeal.theme.RedealTheme
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
 
 private enum class RecordState {
     BEFORE_RECORDING,
@@ -177,15 +169,12 @@ private fun VoiceRecorder(
     onClickRecord: (recordState: RecordState) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val iconImage = if (isRecording) Icons.Rounded.Pause else Icons.Default.Circle
-
-    val tempTime = 120000L
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
         Text(
-            text = formatRecordTime(tempTime),
+            text = formatRecordTime(time),
             style = MaterialTheme.typography.bodyLarge.copy(
                 fontSize = 40.sp
             )
@@ -195,7 +184,7 @@ private fun VoiceRecorder(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 20.dp)
+                .padding(top = 40.dp)
         ) {
             OutlinedIconButton(
                 onClick = {
@@ -231,6 +220,110 @@ private fun VoiceRecorder(
     }
 }
 
+@Composable
+private fun AudioPlayerToggleButton(
+    isPlaying: Boolean,
+    onClickPlayer: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    OutlinedIconButton(
+        onClick = {
+            onClickPlayer()
+        },
+        colors = IconButtonDefaults.iconButtonColors(
+            containerColor = if (isPlaying) MaterialTheme.colorScheme.primary else Color.White,
+            contentColor = if (isPlaying) Color.White else MaterialTheme.colorScheme.primary
+        ),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+        modifier = modifier
+    ) {
+        Icon(
+            imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+            contentDescription = null
+        )
+    }
+}
+
+@Composable
+private fun AudioPlayerFileName(
+    text: String,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = text,
+        color = Color.Black,
+        style = MaterialTheme.typography.bodyLarge.copy(
+            fontWeight = FontWeight.Bold
+        ),
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun AudioPlayerDurationTimeText(
+    duration: Long,
+    currentPosition: Long,
+    modifier: Modifier = Modifier
+) {
+
+    Row(
+        modifier = modifier
+    ) {
+        Text(
+            text = "${(currentPosition).convertToDurationTime()} / ",
+            style = MaterialTheme.typography.bodySmall,
+        )
+        Text(
+            text = duration.convertToDurationTime(),
+            modifier = Modifier,
+            style = MaterialTheme.typography.bodySmall,
+        )
+    }
+}
+
+@Composable
+private fun AudioPlayer(
+    audioFilename: String,
+    duration: Long,
+    isPlaying: Boolean,
+    sliderPosition: Long,
+    currentPosition: Long,
+    onClickPlayer: () -> Unit,
+    onValueChange: (newValue: Float) -> Unit,
+    onValueChangeFinished: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = modifier) {
+        AudioPlayerToggleButton(
+            isPlaying = isPlaying,
+            onClickPlayer = onClickPlayer,
+            modifier = Modifier.size(36.dp)
+        )
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 16.dp)
+        ) {
+            AudioPlayerFileName(text = audioFilename)
+            AudioPlayerDurationTimeText(
+                duration = duration,
+                currentPosition = currentPosition,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+            Slider(
+                value = sliderPosition.toFloat(),
+                onValueChange = {
+                    onValueChange(it)
+                },
+                onValueChangeFinished = {
+                    onValueChangeFinished()
+                },
+                valueRange = 0f..duration.toFloat(),
+            )
+        }
+    }
+}
+
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 private fun VoiceMemoPlayer(
@@ -239,20 +332,19 @@ private fun VoiceMemoPlayer(
     modifier: Modifier = Modifier
 ) {
     // var recordingFilePath by remember { mutableStateOf(path)}
-    var recordState by remember { mutableStateOf(RecordState.BEFORE_RECORDING) }
+    var recordState by remember { mutableStateOf(RecordState.AFTER_RECORDING) }
 //    val recorder by remember { mutableStateOf(MediaRecorder().apply{
 //            setAudioSource(MediaRecorder.AudioSource.MIC)
 //            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
 //            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
 //            setOutputFile(recordingFilePath)
 //    }) }
-    var job by remember { mutableStateOf<Job?>(null) }
     var time by remember { mutableLongStateOf(0) }
 
     LaunchedEffect(recordState, time) {
         if (recordState == RecordState.ON_RECORDING) {
-            delay(1000)
-            time += 1000
+            delay(10)
+            time += 10
         }
     }
     Column(
@@ -273,10 +365,17 @@ private fun VoiceMemoPlayer(
                 }
 
                 RecordState.AFTER_RECORDING -> {
-                    Text("레코딩 완료")
-                    Button(onClick = { recordState = RecordState.BEFORE_RECORDING }) {
-                        Text("초기화")
-                    }
+                    AudioPlayer(
+                        audioFilename = "테스트 파일",
+                        duration = 30000000L,
+                        isPlaying = false,
+                        currentPosition = 0,
+                        sliderPosition = 0,
+                        onClickPlayer = {},
+                        onValueChange = {},
+                        onValueChangeFinished = {},
+                        modifier = Modifier.fillMaxWidth().padding(top = 28.dp)
+                    )
                 }
             }
         }

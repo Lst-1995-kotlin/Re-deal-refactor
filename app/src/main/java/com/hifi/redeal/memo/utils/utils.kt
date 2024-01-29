@@ -91,30 +91,6 @@ fun formatRecordTime(time:Long):String{
 
     return "$hoursString$minutesString:$secondsString.$milliSecondsString"
 }
-
-fun formatRecordTimeToGray(time:Long):String{
-    val sec = time / 1000
-    val min = sec / 60
-    val seconds = sec % 60
-    val minutes = min % 60
-
-    val minutesString = if (minutes >= 10) {
-        ""
-    } else if(minutes > 0) {
-        "0"
-    } else{
-        "00:"
-    }
-    val secondsString = if (seconds > 10) {
-        ""
-    } else if(seconds > 0){
-        "0"
-    } else{
-        "00"
-    }
-
-    return "$minutesString$secondsString"
-}
 fun Long.convertToDurationTime(): String {
     val sec = this / 1000
     val min = sec / 60
