@@ -1,12 +1,12 @@
 package com.hifi.redeal.transaction.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.MainActivity
@@ -14,8 +14,12 @@ import com.hifi.redeal.MainActivity.Companion.TRANSACTION_DEPOSIT_FRAGMENT
 import com.hifi.redeal.MainActivity.Companion.TRANSACTION_SALES_FRAGMENT
 import com.hifi.redeal.databinding.FragmentTransactionBinding
 import com.hifi.redeal.transaction.adapter.TransactionAdapter
-import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.SALES_TRANSACTION
+import com.hifi.redeal.transaction.adapter.TransactionAdapterDiffCallback
+import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
+import com.hifi.redeal.transaction.viewHolder.DepositHolderFactory
+import com.hifi.redeal.transaction.viewHolder.SalesHolderFactory
+import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,6 +40,15 @@ class TransactionFragment : Fragment() {
         fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater)
         mainActivity = activity as MainActivity
 
+        val viewHolderFactories = HashMap<Int, ViewHolderFactory>()
+        viewHolderFactories[TransactionType.DEPOSIT.type] =
+            DepositHolderFactory(mainActivity, transactionViewModel)
+        viewHolderFactories[TransactionType.SALES.type] =
+            SalesHolderFactory(mainActivity, transactionViewModel)
+
+        transactionAdapter =
+            TransactionAdapter(viewHolderFactories, TransactionAdapterDiffCallback())
+
         setTransactionView()
         setViewModel()
 
@@ -44,14 +57,6 @@ class TransactionFragment : Fragment() {
 
     private fun setTransactionView() {
         fragmentTransactionBinding.run {
-
-            transactionAdapter =
-                TransactionAdapter(
-                    transactionViewModel,
-                    transactionRecyclerView,
-                    mainActivity,
-                    viewLifecycleOwner
-                )
 
             transactionRecyclerView.run {
                 adapter = transactionAdapter
@@ -85,7 +90,7 @@ class TransactionFragment : Fragment() {
     private fun setViewModel() {
         transactionViewModel.transactionList.observe(viewLifecycleOwner) { transactions ->
             val totalSalesCount =
-                transactions.count { it.getTransactionType() == SALES_TRANSACTION }
+                transactions.count { it.getTransactionType() == TransactionType.SALES.type }
             val totalSalesAmount = transactions.sumOf { it.calculateSalesAmount() }
             val totalReceivables = transactions.sumOf { it.getReceivables() }
             fragmentTransactionBinding.run {
@@ -93,6 +98,7 @@ class TransactionFragment : Fragment() {
                 textTotalSales.text = replaceNumberFormat(totalSalesAmount)
                 textTotalReceivables.text = replaceNumberFormat(totalSalesAmount - totalReceivables)
             }
+            transactionAdapter.setTransactions(transactions)
         }
         clientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
             client?.let { transactionViewModel.setSelectClientIndex(it.getClientIdx()) }

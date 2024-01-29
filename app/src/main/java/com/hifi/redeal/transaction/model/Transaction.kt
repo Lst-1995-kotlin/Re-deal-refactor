@@ -1,9 +1,7 @@
 package com.hifi.redeal.transaction.model
 
 import android.widget.TextView
-import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.DEPOSIT_TRANSACTION
-import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.ERROR_TRANSACTION
-import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.SALES_TRANSACTION
+import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -32,9 +30,9 @@ class Transaction(
 
     fun getTransactionType(): Int {
         return when (loadTransactionData.isDeposit) {
-            true -> DEPOSIT_TRANSACTION
-            false -> SALES_TRANSACTION
-            else -> ERROR_TRANSACTION
+            true -> TransactionType.DEPOSIT.type
+            false -> TransactionType.SALES.type
+            else -> TransactionType.ERROR.type
         }
     }
 
@@ -43,16 +41,6 @@ class Transaction(
     fun getTransactionClientIdx() = loadTransactionData.clientIdx
 
     fun getTransactionIdx() = loadTransactionData.transactionIdx
-
-    fun setTextViewValue(
-        date: TextView,
-        clientName: TextView,
-        price: TextView,
-    ) {
-        date.text = dateFormat.format(loadTransactionData.date.toDate())
-        clientName.text = loadTransactionData.clientName
-        price.text = replaceNumberFormat(loadTransactionData.transactionAmountReceived)
-    }
 
     fun getTransactionValueMap(): HashMap<String, String> {
         val currentTransactionData = HashMap<String, String>()
@@ -83,35 +71,6 @@ class Transaction(
                     loadTransactionData.transactionAmountReceived,
         )
         return currentTransactionData
-    }
-
-    fun setTextViewValue(
-        date: TextView,
-        clientName: TextView,
-        itemName: TextView,
-        itemCount: TextView,
-        itemAmount: TextView,
-        totalAmount: TextView,
-        receivedAmount: TextView,
-        receivables: TextView,
-    ) {
-        date.text = dateFormat.format(loadTransactionData.date.toDate())
-        clientName.text = loadTransactionData.clientName
-        itemName.text = loadTransactionData.transactionItemName
-        itemCount.text = replaceNumberFormat(loadTransactionData.transactionItemCount)
-        itemAmount.text = replaceNumberFormat(loadTransactionData.transactionItemPrice)
-        totalAmount.text =
-            replaceNumberFormat(
-                loadTransactionData.transactionItemPrice *
-                        loadTransactionData.transactionItemCount
-            )
-        receivedAmount.text = replaceNumberFormat(loadTransactionData.transactionAmountReceived)
-        receivables.text =
-            replaceNumberFormat(
-                loadTransactionData.transactionItemPrice *
-                        loadTransactionData.transactionItemCount -
-                        loadTransactionData.transactionAmountReceived,
-            )
     }
 
     fun setModifyViewValue(
