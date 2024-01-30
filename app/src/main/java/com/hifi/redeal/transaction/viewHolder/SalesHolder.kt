@@ -38,12 +38,12 @@ class SalesHolder(
             }
             contextMenu.findItem(R.id.transactionEditMenu).setOnMenuItemClickListener {
                 transactionViewModel.setModifyTransaction(transaction)
+                transactionViewModel.setMoveToPosition(position)
                 mainActivity.replaceFragment(
                     MainActivity.TRANSACTION_SALES_MODIFY_FRAGMENT,
                     true,
                     null
                 )
-                transactionViewModel.setMoveToPosition(position)
                 true
             }
         }
