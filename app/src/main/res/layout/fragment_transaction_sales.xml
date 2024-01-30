@@ -10,7 +10,7 @@
 
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/addSalesFragmentToolbar"
+        android:id="@+id/addSalesMaterialToolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
@@ -31,7 +31,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addSalesFragmentToolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/addSalesMaterialToolbar" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/transactionNameLayout"

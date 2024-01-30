@@ -35,18 +35,21 @@ class TransactionDepositFragment : Fragment() {
         setViewModel()
         return fragmentTransactionDepositBinding.root
     }
+
     private fun setBind() {
         fragmentTransactionDepositBinding.run {
             addDepositBtn.setOnClickListener {
-                clientViewModel.selectedClient.value?.let {
+                clientViewModel.selectedClient.value?.let { client ->
                     transactionViewModel.addDepositTransaction(
-                        it, removeNumberFormat("${addDepositPriceEditTextNumber.text}")
+                        client, removeNumberFormat("${addDepositPriceEditTextNumber.text}")
                     )
+                    transactionViewModel.setMoveToPosition(0)
                 }
                 mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_FRAGMENT)
             }
 
-            addDepositPriceEditTextNumber.onFocusChangeListener = TransactionInputEditTextFocusListener()
+            addDepositPriceEditTextNumber.onFocusChangeListener =
+                TransactionInputEditTextFocusListener()
 
             addDepositPriceEditTextNumber.addTextChangedListener(
                 AmountTextWatcher(
@@ -62,7 +65,7 @@ class TransactionDepositFragment : Fragment() {
                     childFragmentManager
                 )
 
-            materialToolbar.setNavigationOnClickListener {
+            addDepositMaterialToolbar.setNavigationOnClickListener {
                 mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_FRAGMENT)
             }
 

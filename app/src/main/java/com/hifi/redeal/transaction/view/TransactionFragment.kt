@@ -94,10 +94,8 @@ class TransactionFragment : Fragment() {
 
     private fun setViewModel() {
         transactionViewModel.transactionList.observe(viewLifecycleOwner) { transactions ->
-            transactionAdapter.setTransactions(
-                transactions,
-                fragmentTransactionBinding.transactionRecyclerView
-            )
+            transactionAdapter.setTransactions(transactions)
+            transactionViewModel.postValueScrollPosition()
             val totalSalesCount =
                 transactions.count { it.getTransactionType() == TransactionType.SALES.type }
             val totalSalesAmount = transactions.sumOf { it.calculateSalesAmount() }
@@ -108,6 +106,12 @@ class TransactionFragment : Fragment() {
                 textTotalSales.text = replaceNumberFormat(totalSalesAmount)
                 textTotalReceivables.text = replaceNumberFormat(totalSalesAmount - totalReceivables)
             }
+        }
+
+        transactionViewModel.transactionPosition.observe(viewLifecycleOwner) {
+            val layoutManager =
+                fragmentTransactionBinding.transactionRecyclerView.layoutManager as LinearLayoutManager
+            layoutManager.scrollToPosition(it)
         }
 
         clientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->

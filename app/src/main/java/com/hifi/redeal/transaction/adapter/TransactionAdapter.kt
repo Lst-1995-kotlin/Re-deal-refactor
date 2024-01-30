@@ -28,12 +28,12 @@ class TransactionAdapter(
         when (holder.itemViewType) {
             TransactionType.DEPOSIT.type -> {
                 val item = holder as DepositHolder
-                item.bind(transaction)
+                item.bind(transaction, position)
             }
 
             TransactionType.SALES.type -> {
                 val item = holder as SalesHolder
-                item.bind(transaction)
+                item.bind(transaction, position)
             }
         }
     }
@@ -46,10 +46,8 @@ class TransactionAdapter(
         return differ.currentList.size
     }
 
-    fun setTransactions(newTransactions: List<Transaction>, recyclerView: RecyclerView) {
-        differ.submitList(newTransactions.sortedByDescending { it.getTransactionDate() }) {
-            recyclerView.smoothScrollToPosition(0)
-        }
+    fun setTransactions(newTransactions: List<Transaction>) {
+        differ.submitList(newTransactions.sortedByDescending { it.getTransactionDate() })
     }
 
     private fun createDefaultViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {

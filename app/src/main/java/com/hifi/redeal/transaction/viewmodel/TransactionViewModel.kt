@@ -1,5 +1,6 @@
 package com.hifi.redeal.transaction.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,15 +21,26 @@ class TransactionViewModel @Inject constructor(
     private val totalTransactionData = mutableListOf<Transaction>()
     private val _transactionList = MutableLiveData<List<Transaction>>()
     private val _modifyTransaction = MutableLiveData<Transaction>()
+    private val _transactionPosition = MutableLiveData<Int>()
 
     private var newTransactionIdx = 0L
     private var selectClientIndex: Long? = null
+    private var curdPosition = 0
     val transactionList: LiveData<List<Transaction>> get() = _transactionList
     val modifyTransaction: LiveData<Transaction> get() = _modifyTransaction
+    val transactionPosition: LiveData<Int> get() = _transactionPosition
 
     init {
         getNextTransactionIdx()
         getAllTransactionData()
+    }
+
+    fun setMoveToPosition(position: Int) {
+        curdPosition = position
+    }
+
+    fun postValueScrollPosition() {
+        _transactionPosition.postValue(curdPosition)
     }
 
     fun setModifyTransaction(transaction: Transaction) {
@@ -164,6 +176,8 @@ class TransactionViewModel @Inject constructor(
     }
 
     fun getAllTransactionData() {
+        setMoveToPosition(0)
+        Log.d("ttt", "갱신됨")
         transactionRepository.getAllTransactionData {
             totalTransactionData.clear()
             it.result.forEach { c1 ->

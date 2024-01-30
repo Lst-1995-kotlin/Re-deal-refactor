@@ -40,7 +40,7 @@ class TransactionSalesFragment : Fragment() {
 
     private fun setBind() {
         fragmentTransactionSalesBinding.run {
-            addSalesFragmentToolbar.setNavigationOnClickListener {
+            addSalesMaterialToolbar.setNavigationOnClickListener {
                 mainActivity.removeFragment(MainActivity.TRANSACTION_SALES_FRAGMENT)
             }
 
@@ -49,13 +49,16 @@ class TransactionSalesFragment : Fragment() {
                 val itemCount = removeNumberFormat("${transactionItemCountEditText.text}")
                 val amountReceived = removeNumberFormat("${transactionAmountReceivedEditText.text}")
 
-                transactionViewModel.addSalesTransaction(
-                    clientViewModel.selectedClient.value!!,
-                    transactionItemNameEditText.text.toString(),
-                    itemCount,
-                    itemPrice,
-                    amountReceived
-                )
+                clientViewModel.selectedClient.value?.let { client ->
+                    transactionViewModel.addSalesTransaction(
+                        client,
+                        "${transactionItemNameEditText.text}",
+                        itemCount,
+                        itemPrice,
+                        amountReceived
+                    )
+                    transactionViewModel.setMoveToPosition(0)
+                }
                 mainActivity.removeFragment(MainActivity.TRANSACTION_SALES_FRAGMENT)
             }
 
