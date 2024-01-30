@@ -1,6 +1,5 @@
 package com.hifi.redeal.transaction.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,12 +36,10 @@ class TransactionViewModel @Inject constructor(
 
     fun setMoveToPosition(position: Int) {
         curdPosition = position
-        Log.d("ttt", "curdPosition : $curdPosition")
     }
 
     fun postValueScrollPosition() {
         _transactionPosition.postValue(curdPosition)
-        Log.d("ttt", "_transactionPosition : ${_transactionPosition.value}")
     }
 
     fun setModifyTransaction(transaction: Transaction) {
