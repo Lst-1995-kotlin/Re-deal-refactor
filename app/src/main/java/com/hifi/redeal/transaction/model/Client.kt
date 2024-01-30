@@ -17,13 +17,14 @@ class Client(
         val otherClient = other as Client
         return otherClient.clientData == this.clientData
     }
-    fun bind(transactionSelectClientItemBinding: TransactionSelectClientItemBinding) {
-        transactionSelectClientItemBinding.run {
-            setClientStateResource(clientData.clientState, selectTransactionClinetState)
-            setClientBookmarkResource(clientData.isBookmark, selectTransactionClientBookmarkView)
-            selectTransactionClientName.text = clientData.clientName
-            selectTransactionClientManagerName.text = clientData.clientManagerName
-        }
+
+    fun getClientValuesMap(): HashMap<String, Any> {
+        val map = HashMap<String, Any>()
+        map["clientState"] = clientData.clientState
+        map["isBookmark"] = clientData.isBookmark
+        map["clientName"] = clientData.clientName
+        map["clientManagerName"] = clientData.clientManagerName
+        return map
     }
 
     fun filter(value: String) = clientData.clientName.contains(value) ||
