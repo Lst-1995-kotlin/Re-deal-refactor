@@ -1,30 +1,25 @@
-package com.hifi.redeal.transaction.viewHolder
+package com.hifi.redeal.transaction.viewHolder.transaction
 
 import android.view.MenuInflater
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
-import com.hifi.redeal.databinding.RowTransactionSalesBinding
+import com.hifi.redeal.databinding.RowTransactionDepositBinding
 import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 
-class SalesHolder(
-    private val rowTransactionReleaseBinding: RowTransactionSalesBinding,
+class DepositHolder(
+    private val rowTransactionDepositBinding: RowTransactionDepositBinding,
     private val mainActivity: MainActivity,
     private val transactionViewModel: TransactionViewModel
-) : RecyclerView.ViewHolder(rowTransactionReleaseBinding.root) {
+) : RecyclerView.ViewHolder(rowTransactionDepositBinding.root) {
     fun bind(transaction: Transaction, position: Int) {
         val valuesMap = transaction.getTransactionValueMap()
-        rowTransactionReleaseBinding.run {
+        rowTransactionDepositBinding.run {
             textTransactionDate.text = valuesMap["date"]
             transctionClientNameTextView.text = valuesMap["clientName"]
-            itemNameTextView.text = valuesMap["itemName"]
-            itemSalesCountTextView.text = valuesMap["itemCount"]
-            itemPriceTextView.text = valuesMap["itemPrice"]
-            totalSalesAmountTextView.text = valuesMap["totalAmount"]
-            recievedAmountTextView.text = valuesMap["amountReceived"]
-            recievablesTextView.text = valuesMap["receivables"]
+            depositPriceTextView.text = valuesMap["amountReceived"]
             setContextMenu(root, transaction, position)
         }
     }
@@ -40,7 +35,7 @@ class SalesHolder(
                 transactionViewModel.setModifyTransaction(transaction)
                 transactionViewModel.setMoveToPosition(position)
                 mainActivity.replaceFragment(
-                    MainActivity.TRANSACTION_SALES_MODIFY_FRAGMENT,
+                    MainActivity.TRANSACTION_DEPOSIT_MODIFY_FRAGMENT,
                     true,
                     null
                 )

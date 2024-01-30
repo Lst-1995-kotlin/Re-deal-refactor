@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.model.Transaction
-import com.hifi.redeal.transaction.viewHolder.DepositHolder
-import com.hifi.redeal.transaction.viewHolder.SalesHolder
+import com.hifi.redeal.transaction.viewHolder.transaction.DepositHolder
+import com.hifi.redeal.transaction.viewHolder.transaction.SalesHolder
 import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
 
 class TransactionAdapter(

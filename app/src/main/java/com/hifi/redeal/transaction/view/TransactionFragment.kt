@@ -16,8 +16,8 @@ import com.hifi.redeal.transaction.adapter.TransactionAdapter
 import com.hifi.redeal.transaction.adapter.TransactionAdapterDiffCallback
 import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
-import com.hifi.redeal.transaction.viewHolder.DepositHolderFactory
-import com.hifi.redeal.transaction.viewHolder.SalesHolderFactory
+import com.hifi.redeal.transaction.viewHolder.transaction.DepositHolderFactory
+import com.hifi.redeal.transaction.viewHolder.transaction.SalesHolderFactory
 import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
@@ -43,6 +43,14 @@ class TransactionFragment : Fragment() {
         fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater)
         mainActivity = activity as MainActivity
 
+        setAdapter()
+        setBind()
+        setViewModel()
+
+        return fragmentTransactionBinding.root
+    }
+
+    private fun setAdapter() {
         val viewHolderFactories = HashMap<Int, ViewHolderFactory>()
         viewHolderFactories[TransactionType.DEPOSIT.type] =
             DepositHolderFactory(mainActivity, transactionViewModel)
@@ -51,11 +59,6 @@ class TransactionFragment : Fragment() {
 
         transactionAdapter =
             TransactionAdapter(viewHolderFactories, transactionAdapterDiffCallback)
-
-        setBind()
-        setViewModel()
-
-        return fragmentTransactionBinding.root
     }
 
     private fun setBind() {
