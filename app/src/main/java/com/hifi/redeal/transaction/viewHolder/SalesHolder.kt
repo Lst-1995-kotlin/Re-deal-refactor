@@ -48,10 +48,6 @@ class SalesHolder(
                     true,
                     null
                 )
-                if (position > 0) {
-                    transactionViewModel.setMoveToPosition(position - 1)
-                    return@setOnMenuItemClickListener true
-                }
                 transactionViewModel.setMoveToPosition(position)
                 true
             }
