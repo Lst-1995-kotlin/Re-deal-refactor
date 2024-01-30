@@ -74,7 +74,6 @@ class TransactionFragment : Fragment() {
                             val firstVisibleItemPosition =
                                 layoutManager.findFirstVisibleItemPosition()
                             if (firstVisibleItemPosition == 0) {
-                                Log.d("ttt", "새로고침 진행됨.")
                                 transactionViewModel.getAllTransactionData()
                             }
                         }

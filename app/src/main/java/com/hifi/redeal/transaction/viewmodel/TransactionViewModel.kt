@@ -177,7 +177,6 @@ class TransactionViewModel @Inject constructor(
 
     fun getAllTransactionData() {
         setMoveToPosition(0)
-        Log.d("ttt", "갱신됨")
         transactionRepository.getAllTransactionData {
             totalTransactionData.clear()
             it.result.forEach { c1 ->
