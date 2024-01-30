@@ -13,7 +13,7 @@ import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
 
 class TransactionAdapter(
     private val viewHolderFactories: HashMap<Int, ViewHolderFactory>,
-    private val diffCallback: TransactionAdapterDiffCallback
+    diffCallback: TransactionAdapterDiffCallback
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val differ = AsyncListDiffer(this, diffCallback)
