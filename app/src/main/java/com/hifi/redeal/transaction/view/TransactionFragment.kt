@@ -92,8 +92,8 @@ class TransactionFragment : Fragment() {
 
     private fun setViewModel() {
         transactionViewModel.transactionList.observe(viewLifecycleOwner) { transactions ->
-            transactionAdapter.setTransactions(transactions)
-            transactionViewModel.postValueScrollPosition()
+            transactionAdapter.setTransactions(transactions) { transactionViewModel.postValueScrollPosition() }
+
             val totalSalesCount =
                 transactions.count { it.getTransactionType() == TransactionType.SALES.type }
             val totalSalesAmount = transactions.sumOf { it.calculateSalesAmount() }

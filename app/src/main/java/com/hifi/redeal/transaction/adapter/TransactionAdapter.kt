@@ -46,8 +46,11 @@ class TransactionAdapter(
         return differ.currentList.size
     }
 
-    fun setTransactions(newTransactions: List<Transaction>) {
-        differ.submitList(newTransactions.sortedByDescending { it.getTransactionDate() })
+    fun setTransactions(newTransactions: List<Transaction>, commitCallback: () -> Unit) {
+        differ.submitList(
+            newTransactions.sortedByDescending { it.getTransactionDate() },
+            commitCallback
+        )
     }
 
     private fun createDefaultViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {

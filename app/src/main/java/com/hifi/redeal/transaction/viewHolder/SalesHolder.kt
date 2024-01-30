@@ -34,11 +34,6 @@ class SalesHolder(
             MenuInflater(view.context).inflate(R.menu.transaction_menu, contextMenu)
             contextMenu.findItem(R.id.transactionDeleteMenu).setOnMenuItemClickListener {
                 transactionViewModel.deleteTransactionData(transaction.getTransactionIdx())
-                if (position > 0) {
-                    transactionViewModel.setMoveToPosition(position - 1)
-                    return@setOnMenuItemClickListener true
-                }
-                transactionViewModel.setMoveToPosition(position)
                 true
             }
             contextMenu.findItem(R.id.transactionEditMenu).setOnMenuItemClickListener {

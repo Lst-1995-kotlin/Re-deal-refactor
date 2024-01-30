@@ -34,12 +34,12 @@ class TransactionViewModel @Inject constructor(
         getAllTransactionData()
     }
 
-    fun setMoveToPosition(position: Int) {
-        curdPosition = position
-    }
-
     fun postValueScrollPosition() {
         _transactionPosition.postValue(curdPosition)
+    }
+
+    fun setMoveToPosition(position: Int) {
+        curdPosition = position
     }
 
     fun setModifyTransaction(transaction: Transaction) {
@@ -175,10 +175,10 @@ class TransactionViewModel @Inject constructor(
     }
 
     fun getAllTransactionData() {
-        setMoveToPosition(0)
         transactionRepository.getAllTransactionData {
             totalTransactionData.clear()
             it.result.forEach { c1 ->
+                setMoveToPosition(0)
                 getClientName(
                     TransactionData(
                         c1["clientIdx"] as Long,
@@ -195,9 +195,7 @@ class TransactionViewModel @Inject constructor(
         }
     }
 
-    private fun getClientName(
-        transactionData: TransactionData
-    ) {
+    private fun getClientName(transactionData: TransactionData) {
         transactionRepository.getClientInfo(transactionData.clientIdx) {
             for (c1 in it.result) {
                 val newTransactionData = Transaction(
