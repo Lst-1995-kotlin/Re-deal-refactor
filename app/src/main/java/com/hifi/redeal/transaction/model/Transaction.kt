@@ -1,67 +1,91 @@
 package com.hifi.redeal.transaction.model
 
 import android.widget.TextView
-import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.DEPOSIT_TRANSACTION
-import com.hifi.redeal.transaction.adapter.TransactionAdapter.Companion.WITHDRAWAL_TRANSACTION
-import java.text.NumberFormat
+import com.hifi.redeal.transaction.configuration.TransactionType
+import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class Transaction(
-    private val transactionData: TransactionData,
+    private val loadTransactionData: LoadTransactionData
 ) {
-
-    private val numberFormat = NumberFormat.getNumberInstance(Locale.getDefault())
     private val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
-    private var transactionClientName = ""
-
-    fun isTransactionClientSetName() = transactionClientName == ""
-    fun setTransactionClientName(name: String) {
-        transactionClientName = name
+    override fun hashCode(): Int {
+        return loadTransactionData.hashCode()
     }
+
+    override fun equals(other: Any?): Boolean {
+        val otherTransaction = other as Transaction
+        return otherTransaction.loadTransactionData == this.loadTransactionData
+    }
+
+
+    fun calculateSalesAmount(): Long {
+        if (loadTransactionData.isDeposit) return 0L
+        return loadTransactionData.transactionItemCount * loadTransactionData.transactionItemPrice
+    }
+
+    fun getReceivables() = loadTransactionData.transactionAmountReceived
+
 
     fun getTransactionType(): Int {
-        if (transactionData.isDeposit) return DEPOSIT_TRANSACTION
-        return WITHDRAWAL_TRANSACTION
+        return when (loadTransactionData.isDeposit) {
+            true -> TransactionType.DEPOSIT.type
+            false -> TransactionType.SALES.type
+            else -> TransactionType.ERROR.type
+        }
     }
 
-    fun getTransactionDate() = transactionData.date
+    fun getTransactionDate() = loadTransactionData.date
 
-    fun getTransactionClientIdx() = transactionData.clientIdx
+    fun getTransactionClientIdx() = loadTransactionData.clientIdx
 
-    fun setTextViewValue(date: TextView, clientName: TextView, price: TextView) {
-        date.text = dateFormat.format(transactionData.date.toDate())
-        clientName.text = transactionClientName
-        price.text = numberFormat.format(transactionData.transactionAmountReceived.toLong())
+    fun getTransactionIdx() = loadTransactionData.transactionIdx
+
+    fun getTransactionValueMap(): HashMap<String, String> {
+        val currentTransactionData = HashMap<String, String>()
+        if (loadTransactionData.isDeposit) { // 입금 내역일 경우
+            currentTransactionData["date"] = dateFormat.format(loadTransactionData.date.toDate())
+            currentTransactionData["clientName"] = loadTransactionData.clientName
+            currentTransactionData["amountReceived"] =
+                replaceNumberFormat(loadTransactionData.transactionAmountReceived)
+            return currentTransactionData
+        }
+        currentTransactionData["date"] = dateFormat.format(loadTransactionData.date.toDate())
+        currentTransactionData["clientName"] = loadTransactionData.clientName
+        currentTransactionData["itemName"] = loadTransactionData.transactionItemName
+        currentTransactionData["itemCount"] =
+            replaceNumberFormat(loadTransactionData.transactionItemCount)
+        currentTransactionData["itemPrice"] =
+            replaceNumberFormat(loadTransactionData.transactionItemPrice)
+        currentTransactionData["totalAmount"] =
+            replaceNumberFormat(
+                loadTransactionData.transactionItemPrice *
+                        loadTransactionData.transactionItemCount
+            )
+        currentTransactionData["amountReceived"] =
+            replaceNumberFormat(loadTransactionData.transactionAmountReceived)
+        currentTransactionData["receivables"] = replaceNumberFormat(
+            loadTransactionData.transactionItemPrice *
+                    loadTransactionData.transactionItemCount -
+                    loadTransactionData.transactionAmountReceived,
+        )
+        return currentTransactionData
     }
 
-    fun setTextViewValue(
-        date: TextView,
-        clientName: TextView,
-        productName: TextView,
-        productCount: TextView,
-        unitPrice: TextView,
-        totalAmount: TextView,
+    fun setModifyViewValue(
+        itemName: TextView,
+        itemCount: TextView,
+        itemAmount: TextView,
         receivedAmount: TextView,
-        receivables: TextView,
     ) {
-        date.text = dateFormat.format(transactionData.date.toDate())
-        clientName.text = transactionClientName
-        productName.text = transactionData.transactionName
-        productCount.text = numberFormat.format(transactionData.transactionItemCount)
-        unitPrice.text = numberFormat.format(transactionData.transactionItemPrice.toLong())
-        totalAmount.text = numberFormat.format(
-            transactionData.transactionItemPrice.toLong() *
-                transactionData.transactionItemCount,
-        )
-        receivedAmount.text =
-            numberFormat.format(transactionData.transactionAmountReceived.toLong())
-        receivables.text = numberFormat.format(
-            (
-                transactionData.transactionItemPrice.toLong() *
-                    transactionData.transactionItemCount
-                ) -
-                transactionData.transactionAmountReceived.toLong(),
-        )
+        itemName.text = loadTransactionData.transactionItemName
+        itemCount.text = replaceNumberFormat(loadTransactionData.transactionItemCount)
+        itemAmount.text = replaceNumberFormat(loadTransactionData.transactionItemPrice)
+        receivedAmount.text = replaceNumberFormat(loadTransactionData.transactionAmountReceived)
+    }
+
+    fun setModifyViewValue(receivedAmount: TextView) {
+        receivedAmount.text = replaceNumberFormat(loadTransactionData.transactionAmountReceived)
     }
 }

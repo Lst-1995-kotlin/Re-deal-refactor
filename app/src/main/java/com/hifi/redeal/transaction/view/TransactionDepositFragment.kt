@@ -5,50 +5,68 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentTransactionDepositBinding
-import com.hifi.redeal.transaction.repository.ClientRepository
-import com.hifi.redeal.transaction.util.ClientConfiguration.Companion.getClientBookmarkResource
-import com.hifi.redeal.transaction.util.ClientConfiguration.Companion.getClientStateResource
+import com.hifi.redeal.transaction.util.AmountTextWatcher
+import com.hifi.redeal.transaction.util.TransactionInputEditTextFocusListener
+import com.hifi.redeal.transaction.util.TransactionSelectEditTextFocusListener
+import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.removeNumberFormat
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
+import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class TransactionDepositFragment : Fragment() {
 
     private lateinit var mainActivity: MainActivity
     private lateinit var fragmentTransactionDepositBinding: FragmentTransactionDepositBinding
-    private lateinit var selectTransactionClientDialog: SelectTransactionClientDialog
-    private val clientViewModel: ClientViewModel by viewModels()
-
-    @Inject
-    lateinit var clientRepository: ClientRepository
+    private val clientViewModel: ClientViewModel by activityViewModels()
+    private val transactionViewModel: TransactionViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         fragmentTransactionDepositBinding = FragmentTransactionDepositBinding.inflate(inflater)
         mainActivity = activity as MainActivity
-
         setBind()
         setViewModel()
-
         return fragmentTransactionDepositBinding.root
     }
 
     private fun setBind() {
         fragmentTransactionDepositBinding.run {
             addDepositBtn.setOnClickListener {
+                clientViewModel.selectedClient.value?.let { client ->
+                    transactionViewModel.addDepositTransaction(
+                        client, removeNumberFormat("${addDepositPriceEditTextNumber.text}")
+                    )
+                    transactionViewModel.setMoveToPosition(0)
+                }
+                mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_FRAGMENT)
             }
 
-            makeDepositBtnSelectClient.setOnClickListener {
-                selectTransactionClientDialog =
-                    SelectTransactionClientDialog(clientViewModel, clientRepository)
-                selectTransactionClientDialog.show(childFragmentManager, null)
+            addDepositPriceEditTextNumber.onFocusChangeListener =
+                TransactionInputEditTextFocusListener()
+
+            addDepositPriceEditTextNumber.addTextChangedListener(
+                AmountTextWatcher(
+                    clientViewModel,
+                    addDepositPriceEditTextNumber,
+                    addDepositBtn
+                )
+            )
+
+            selectDepositClientTextInputEditText.onFocusChangeListener =
+                TransactionSelectEditTextFocusListener(
+                    SelectTransactionClientDialog(clientViewModel),
+                    childFragmentManager
+                )
+
+            addDepositMaterialToolbar.setNavigationOnClickListener {
+                mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_FRAGMENT)
             }
 
             mainActivity.hideKeyboardAndClearFocus(addDepositPriceEditTextNumber)
@@ -56,17 +74,13 @@ class TransactionDepositFragment : Fragment() {
     }
 
     private fun setViewModel() {
-        clientViewModel.selectedClient.observe(viewLifecycleOwner) {
-            selectTransactionClientDialog.dismiss()
-            fragmentTransactionDepositBinding.depositClientInfo.text = it.getClientName()
-            getClientStateResource(it.getClientState())?.let { state ->
-                fragmentTransactionDepositBinding.depositClientState.setBackgroundResource(state)
+        clientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
+            client?.setClientInfoView(fragmentTransactionDepositBinding.selectDepositClientTextInputEditText)
+            if (fragmentTransactionDepositBinding.addDepositPriceEditTextNumber.text.isNullOrEmpty()) {
+                fragmentTransactionDepositBinding.addDepositBtn.visibility = View.GONE
+                return@observe
             }
-            getClientBookmarkResource(it.getClientBookmark())?.let { bookmark ->
-                fragmentTransactionDepositBinding.depositClientBookmark.setBackgroundResource(
-                    bookmark,
-                )
-            }
+            fragmentTransactionDepositBinding.addDepositBtn.visibility = View.VISIBLE
         }
     }
 }

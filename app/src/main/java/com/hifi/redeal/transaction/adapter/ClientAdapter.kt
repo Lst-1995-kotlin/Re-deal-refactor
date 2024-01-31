@@ -1,78 +1,48 @@
 package com.hifi.redeal.transaction.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
 import com.hifi.redeal.transaction.model.Client
-import com.hifi.redeal.transaction.model.ClientSimpleData
-import com.hifi.redeal.transaction.repository.ClientRepository
-import com.hifi.redeal.transaction.util.ClientConfiguration
+import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
+import com.hifi.redeal.transaction.viewHolder.client.TransactionClientHolder
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 
 class ClientAdapter(
-    private val clientViewModel: ClientViewModel,
-) :
-    RecyclerView.Adapter<ClientAdapter.TransactionClientHolder>() {
+    private val viewHolderFactories: HashMap<String, ViewHolderFactory>,
+    diffCallback: ClientAdapterDiffCallback
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val clients = mutableListOf<Client>()
-    private var filterClients = listOf<Client>()
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionClientHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val transactionSelectClientItemBinding =
-            TransactionSelectClientItemBinding.inflate(inflater)
-        transactionSelectClientItemBinding.root.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-        )
-        return TransactionClientHolder(transactionSelectClientItemBinding)
+    private val differ = AsyncListDiffer(this, diffCallback)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val factory = viewHolderFactories["client"]
+        return factory?.create(parent) ?: createDefaultViewHolder(parent)
     }
 
     override fun getItemCount(): Int {
-        return filterClients.size
+        return differ.currentList.size
     }
 
-    override fun onBindViewHolder(holder: TransactionClientHolder, position: Int) {
-        holder.bind(filterClients[position])
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val transactionClientHolder = holder as TransactionClientHolder
+        transactionClientHolder.bind(differ.currentList[position])
     }
 
-    fun clientFilterResult(value: String) {
-        filterClients = clients.filter { it.filter(value) }
-        notifyDataSetChanged()
+    fun setClients(clients: List<Client>) {
+        differ.submitList(clients)
     }
 
-    fun getClient(clientRepository: ClientRepository) {
-        clientRepository.getUserAllClient {
-            for (c1 in it.result) {
-                val clientData = ClientSimpleData(
-                    c1["clientIdx"] as Long,
-                    c1["clientName"] as String,
-                    c1["clientManagerName"] as String,
-                    c1["clientState"] as Long,
-                    c1["isBookmark"] as Boolean,
-                )
-
-                if (clientData.clientState != ClientConfiguration.STATE_STOP.state) {
-                    addClient(Client(clientData))
-                }
-            }
-        }
-    }
-
-    private fun addClient(client: Client) {
-        clients.add(client)
-        filterClients = clients
-        notifyDataSetChanged()
-    }
-
-    inner class TransactionClientHolder(
-        private val transactionSelectClientItemBinding: TransactionSelectClientItemBinding,
-    ) : RecyclerView.ViewHolder(transactionSelectClientItemBinding.root) {
-        fun bind(client: Client) {
-            client.bind(transactionSelectClientItemBinding)
-            transactionSelectClientItemBinding.root.setOnClickListener {
-                clientViewModel.clickedClient(client)
-            }
-        }
+    private fun createDefaultViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        Log.e("ClientAdapter", "올바르지 못한 클라이언트 타입 입니다")
+        val view = View(parent.context)
+        return object : RecyclerView.ViewHolder(view) {}
     }
 }

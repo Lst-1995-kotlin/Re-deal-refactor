@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background"
+    android:padding="4dp"
+    android:transitionGroup="true">
+
+    <TextView
+        android:id="@+id/textTransactionDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/nanumsquareneo_regular"
+        android:text="2000.01.01"
+        android:textColor="@color/text10"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/transctionClientNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:fontFamily="@font/nanumsquareneo_regular"
+        android:text="거래처 명"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/textTransactionDate"
+        app:layout_constraintTop_toTopOf="@+id/textTransactionDate" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="4dp"
+        android:elevation="4dp"
+        android:transitionGroup="true"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="4dp"
+        app:cardMaxElevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textTransactionDate">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background">
+
+            <TextView
+                android:id="@+id/textTransaction24"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center|left"
+                android:text="원"
+                android:textColor="@color/primary20"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/recievablesTextView" />
+
+            <TextView
+                android:id="@+id/recievablesTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginEnd="4dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center|right"
+                android:hint="미수금"
+                android:textColor="@color/primary20"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@+id/textTransaction24"
+                app:layout_constraintTop_toTopOf="@+id/textTransaction23" />
+
+            <TextView
+                android:id="@+id/textTransaction23"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="12dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center|left"
+                android:text="발생 미수금"
+                android:textColor="@color/text10"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/textTransaction21"
+                app:layout_constraintTop_toBottomOf="@+id/textTransaction21"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/recievedAmountTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginEnd="4dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center|right"
+                android:hint="받은 금액"
+                android:textColor="@color/text10"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@+id/textTransaction22"
+                app:layout_constraintTop_toTopOf="@+id/textTransaction21" />
+
+            <TextView
+                android:id="@+id/textTransaction21"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center"
+                android:text="받은 금액"
+                android:textColor="@color/text10"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@+id/textTransaction16"
+                app:layout_constraintTop_toBottomOf="@+id/divider9" />
+
+            <View
+                android:id="@+id/divider9"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/text70"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/totalSalesAmountTextView" />
+
+            <TextView
+                android:id="@+id/totalSalesAmountTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginEnd="4dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center|right"
+                android:hint="총 금액"
+                android:textColor="@color/text10"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@+id/textTransaction20"
+                app:layout_constraintTop_toTopOf="@+id/textTransaction18" />
+
+            <TextView
+                android:id="@+id/textTransaction18"
+                android:layout_width="40dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="4dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center|right"
+                android:text="금액"
+                android:textColor="@color/text10"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@+id/totalSalesAmountTextView"
+                app:layout_constraintTop_toTopOf="@+id/textTransaction17" />
+
+            <TextView
+                android:id="@+id/textTransaction17"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_gravity="left"
+                android:layout_marginStart="4dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center|left"
+                android:text="원"
+                android:textColor="@color/text10"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@+id/itemPriceTextView"
+                app:layout_constraintTop_toTopOf="@+id/itemPriceTextView" />
+
+            <TextView
+                android:id="@+id/textTransaction20"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center|left"
+                android:text="원"
+                android:textColor="@color/text10"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/textTransaction22"
+                app:layout_constraintTop_toTopOf="@+id/totalSalesAmountTextView" />
+
+            <TextView
+                android:id="@+id/textTransaction22"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center|left"
+                android:text="원"
+                android:textColor="@color/text10"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/recievedAmountTextView" />
+
+            <TextView
+                android:id="@+id/itemPriceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginStart="4dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center|right"
+                android:hint="단가"
+                android:textColor="@color/text10"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@+id/textTransaction16"
+                app:layout_constraintTop_toTopOf="@+id/textTransaction16" />
+
+            <TextView
+                android:id="@+id/textTransaction16"
+                android:layout_width="28dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center|left"
+                android:text="단가"
+                android:textColor="@color/text10"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@+id/textTransaction13"
+                app:layout_constraintTop_toBottomOf="@+id/textTransaction13" />
+
+            <TextView
+                android:id="@+id/textTransaction14"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginStart="4dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center|left"
+                android:text="개"
+                android:textColor="@color/text10"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@+id/itemSalesCountTextView"
+                app:layout_constraintTop_toTopOf="@+id/itemSalesCountTextView" />
+
+            <TextView
+                android:id="@+id/itemSalesCountTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginStart="4dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center|right"
+                android:hint="수량"
+                android:textColor="@color/text10"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@+id/textTransaction13"
+                app:layout_constraintTop_toTopOf="@+id/textTransaction13" />
+
+            <TextView
+                android:id="@+id/textTransaction13"
+                android:layout_width="28dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center|left"
+                android:text="수량"
+                android:textColor="@color/text10"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@+id/textTransaction"
+                app:layout_constraintTop_toBottomOf="@+id/itemNameTextView" />
+
+            <TextView
+                android:id="@+id/itemNameTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center|left"
+                android:hint="제품명"
+                android:minHeight="20dp"
+                android:textColor="@color/text10"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/textTransaction"
+                app:layout_constraintTop_toTopOf="@+id/textTransaction" />
+
+            <TextView
+                android:id="@+id/textTransaction"
+                android:layout_width="28dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center|left"
+                android:text="품명"
+                android:textColor="@color/text10"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

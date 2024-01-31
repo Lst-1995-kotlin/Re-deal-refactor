@@ -28,11 +28,11 @@
             app:menu="@menu/menu_transaction"
             app:navigationIcon="@drawable/arrow_back_ios_24px"
             app:title="거래 내역"
-            app:titleTextColor="@color/primary20"
-            app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"/>
+            app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"
+            app:titleTextColor="@color/primary20" />
 
         <View
-            android:id="@+id/divider"
+            android:id="@+id/transactionDivider"
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/primary20" />
@@ -57,7 +57,7 @@
             android:fontFamily="@font/nanumsquareneo_regular"
             android:text="매출"
             android:textColor="@color/text10"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -65,80 +65,71 @@
             android:id="@+id/textTotalSalesCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="71dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginStart="4dp"
             android:fontFamily="@font/nanumsquareneo_regular"
-            android:text="0"
             android:textColor="@color/text10"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/textViewTran2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/textViewTran1"
+            app:layout_constraintTop_toTopOf="@+id/textViewTran1" />
 
         <TextView
             android:id="@+id/textTotalSales"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:layout_marginEnd="2dp"
+            android:layout_marginEnd="4dp"
             android:fontFamily="@font/nanumsquareneo_regular"
-            android:text="0"
             android:textColor="@color/text10"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/textViewTran3"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/textViewTran2" />
 
         <TextView
             android:id="@+id/textTotalReceivables"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="2dp"
+            android:layout_marginEnd="4dp"
             android:fontFamily="@font/nanumsquareneo_regular"
-            android:text="0"
             android:textColor="@color/primary20"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/textViewTran4"
-            app:layout_constraintTop_toBottomOf="@+id/textTotalSales" />
+            app:layout_constraintTop_toTopOf="@+id/textViewTran5" />
 
         <TextView
             android:id="@+id/textViewTran2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginStart="4dp"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:text="건"
             android:textColor="@color/text10"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/textTotalSalesCount"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/textTotalSalesCount" />
 
         <TextView
             android:id="@+id/textViewTran3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
             android:layout_marginEnd="20dp"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:text="원"
             android:textColor="@color/text10"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/textTotalSales" />
 
         <TextView
             android:id="@+id/textViewTran4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:text="원"
             android:textColor="@color/primary20"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewTran3" />
+            app:layout_constraintTop_toTopOf="@+id/textTotalReceivables" />
 
         <TextView
             android:id="@+id/textViewTran5"
@@ -149,7 +140,7 @@
             android:fontFamily="@font/nanumsquareneo_regular"
             android:text="미수금"
             android:textColor="@color/text10"
-            android:textSize="16dp"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewTran1" />
 

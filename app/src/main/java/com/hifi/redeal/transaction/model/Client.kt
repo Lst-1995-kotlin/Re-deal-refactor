@@ -1,32 +1,40 @@
 package com.hifi.redeal.transaction.model
 
+import android.widget.TextView
 import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
-import com.hifi.redeal.transaction.util.ClientConfiguration.Companion.getClientBookmarkResource
-import com.hifi.redeal.transaction.util.ClientConfiguration.Companion.getClientStateResource
+import com.hifi.redeal.transaction.configuration.ClientConfiguration.Companion.setClientBookmarkResource
+import com.hifi.redeal.transaction.configuration.ClientConfiguration.Companion.setClientStateResource
+
 
 class Client(
-    private val clientSimpleData: ClientSimpleData,
+    private val clientData: ClientData
 ) {
 
-    fun bind(transactionSelectClientItemBinding: TransactionSelectClientItemBinding) {
-        transactionSelectClientItemBinding.run {
-            getClientStateResource(clientSimpleData.clientState)?.let {
-                selectTransactionClinetState.setBackgroundResource(it)
-            }
-            getClientBookmarkResource(clientSimpleData.isBookmark)?.let {
-                selectTransactionClientBookmarkView.setBackgroundResource(it)
-            }
-            selectTransactionClientName.text = clientSimpleData.clientName
-            selectTransactionClientManagerName.text = clientSimpleData.clientManagerName
-        }
+    override fun hashCode(): Int {
+        return clientData.hashCode()
+    }
+    override fun equals(other: Any?): Boolean {
+        val otherClient = other as Client
+        return otherClient.clientData == this.clientData
     }
 
-    fun filter(value: String) = clientSimpleData.clientName.contains(value) ||
-        clientSimpleData.clientManagerName.contains(value)
+    fun getClientValuesMap(): HashMap<String, Any> {
+        val map = HashMap<String, Any>()
+        map["clientState"] = clientData.clientState
+        map["isBookmark"] = clientData.isBookmark
+        map["clientName"] = clientData.clientName
+        map["clientManagerName"] = clientData.clientManagerName
+        return map
+    }
 
-    fun getClientName() = "${clientSimpleData.clientName} ${clientSimpleData.clientManagerName}"
+    fun filter(value: String) = clientData.clientName.contains(value) ||
+            clientData.clientManagerName.contains(value)
 
-    fun getClientState() = clientSimpleData.clientState
+    fun setClientInfoView(textView: TextView) {
+        textView.text = "${clientData.clientName} ${clientData.clientManagerName}"
+    }
 
-    fun getClientBookmark() = clientSimpleData.isBookmark
+    fun getClientIdx() = clientData.clientIdx
+
+    fun getClientName() =clientData.clientName
 }

@@ -11,26 +11,35 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.hifi.redeal.databinding.DialogSelectTransactionClientBinding
 import com.hifi.redeal.transaction.adapter.ClientAdapter
-import com.hifi.redeal.transaction.repository.ClientRepository
-import com.hifi.redeal.transaction.util.DialogConfiguration.Companion.dialogResize
+import com.hifi.redeal.transaction.adapter.ClientAdapterDiffCallback
+import com.hifi.redeal.transaction.configuration.DialogConfiguration.Companion.dialogResize
+import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
+import com.hifi.redeal.transaction.viewHolder.client.TransactionClientHolderFactory
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SelectTransactionClientDialog(
     private val clientViewModel: ClientViewModel,
-    private val clientRepository: ClientRepository,
 ) : DialogFragment() {
+    private lateinit var dialogSelectTransactionClientDialog: DialogSelectTransactionClientBinding
+    private lateinit var clientAdapter: ClientAdapter
 
-    lateinit var dialogSelectTransactionClientDialog: DialogSelectTransactionClientBinding
-    lateinit var clientAdapter: ClientAdapter
+    @Inject
+    lateinit var clientAdapterDiffCallback: ClientAdapterDiffCallback
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         dialogSelectTransactionClientDialog = DialogSelectTransactionClientBinding.inflate(inflater)
-        clientAdapter = ClientAdapter(clientViewModel)
-        clientAdapter.getClient(clientRepository)
-        setDialog()
+
+        setAdapter()
+        setBind()
+        setViewModel()
+
         return dialogSelectTransactionClientDialog.root
     }
 
@@ -39,12 +48,23 @@ class SelectTransactionClientDialog(
         context?.dialogResize(this)
     }
 
-    private fun setDialog() {
+    private fun setAdapter() {
+        val viewHolderFactories = HashMap<String, ViewHolderFactory>()
+        viewHolderFactories["client"] = TransactionClientHolderFactory(clientViewModel, this)
+        clientAdapter = ClientAdapter(viewHolderFactories, clientAdapterDiffCallback)
+    }
+
+    private fun setBind() {
         dialogSelectTransactionClientDialog.run {
             searchTransactionClientRecyclerView.run {
                 adapter = clientAdapter
                 layoutManager = LinearLayoutManager(context)
-                addItemDecoration(MaterialDividerItemDecoration(context, MaterialDividerItemDecoration.VERTICAL))
+                addItemDecoration(
+                    MaterialDividerItemDecoration(
+                        context,
+                        MaterialDividerItemDecoration.VERTICAL,
+                    )
+                )
             }
 
             searchTransactionClientEditText.run {
@@ -53,13 +73,21 @@ class SelectTransactionClientDialog(
                     }
 
                     override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        clientAdapter.clientFilterResult("$p0")
+                        clientViewModel.clients.value?.let { clients ->
+                            clientAdapter.setClients(clients.filter { it.filter("$p0") })
+                        }
                     }
 
                     override fun afterTextChanged(p0: Editable?) {
                     }
                 })
             }
+        }
+    }
+
+    private fun setViewModel() {
+        clientViewModel.clients.observe(viewLifecycleOwner) {
+            clientAdapter.setClients(it)
         }
     }
 }
