@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.hifi.redeal.MainActivity
@@ -31,10 +30,6 @@ class AddPhotoMemoFragment : Fragment() {
             val mainActivity = activity as MainActivity
             val clientIdx = arguments?.getLong("clientIdx")?:1L
             photoMemoViewModel.getPhotoMemoList(clientIdx)
-
-            requireActivity().window.apply {
-                WindowCompat.setDecorFitsSystemWindows(this, false)
-            }
 
             setViewCompositionStrategy(
                 ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed

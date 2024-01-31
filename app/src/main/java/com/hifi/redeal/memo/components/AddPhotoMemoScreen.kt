@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -51,7 +50,6 @@ import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.memo.model.BottomButtonState
 import com.hifi.redeal.memo.repository.PhotoMemoRepository
-import com.hifi.redeal.theme.RedealTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -285,7 +283,6 @@ fun AddPhotoMemoScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 24.dp, horizontal = 28.dp)
-                    .imePadding()
             )
         }
     }

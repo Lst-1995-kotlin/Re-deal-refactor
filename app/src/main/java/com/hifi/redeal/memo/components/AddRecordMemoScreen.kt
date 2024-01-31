@@ -332,7 +332,7 @@ private fun VoiceMemoPlayer(
     modifier: Modifier = Modifier
 ) {
     // var recordingFilePath by remember { mutableStateOf(path)}
-    var recordState by remember { mutableStateOf(RecordState.AFTER_RECORDING) }
+    var recordState by remember { mutableStateOf(RecordState.ON_RECORDING) }
 //    val recorder by remember { mutableStateOf(MediaRecorder().apply{
 //            setAudioSource(MediaRecorder.AudioSource.MIC)
 //            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
@@ -356,7 +356,7 @@ private fun VoiceMemoPlayer(
                 RecordState.ON_RECORDING -> {
                     VoiceRecorder(
                         time = time,
-                        isRecording = true,
+                        isRecording = false,
                         onClickRecord = {},
                         modifier = Modifier
                             .fillMaxWidth()
