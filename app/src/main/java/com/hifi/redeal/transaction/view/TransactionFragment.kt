@@ -67,20 +67,6 @@ class TransactionFragment : Fragment() {
             transactionRecyclerView.run {
                 adapter = transactionAdapter
                 layoutManager = LinearLayoutManager(context)
-                addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                        super.onScrollStateChanged(recyclerView, newState)
-
-                        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                            val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                            val firstVisibleItemPosition =
-                                layoutManager.findFirstVisibleItemPosition()
-                            if (firstVisibleItemPosition == 0) {
-                                transactionViewModel.getAllTransactionData()
-                            }
-                        }
-                    }
-                })
             }
 
             ImgBtnAddDeposit.setOnClickListener {
