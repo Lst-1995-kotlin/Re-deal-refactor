@@ -2,6 +2,7 @@ package com.hifi.redeal.memo.vm
 
 import android.content.Context
 import android.net.Uri
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
@@ -15,29 +16,32 @@ import javax.inject.Inject
 class RecordMemoViewModel @Inject constructor(
     private val recordMemoRepository: RecordMemoRepository
 ) : ViewModel() {
-    val recordMemoList = MutableLiveData<List<RecordMemoData>>()
-
-    init{
-        recordMemoList.value = listOf<RecordMemoData>()
-    }
-    fun getRecordMemoList(clientIdx:Long, mainContext:Context){
-        recordMemoRepository.getRecordMemoAll(clientIdx){ documentSnapshot ->
+    val recordMemoList: LiveData<List<RecordMemoData>> get() = _recordMemoList
+    private val _recordMemoList = MutableLiveData<List<RecordMemoData>>()
+    fun getRecordMemoList(clientIdx: Long, mainContext: Context) {
+        recordMemoRepository.getRecordMemoAll(clientIdx) { documentSnapshot ->
             val recordMemoData = mutableListOf<RecordMemoData>()
-            for(item in documentSnapshot){
+            for (item in documentSnapshot) {
                 val context = item.get("recordMemoContext") as String
                 val date = item.get("recordMemoDate") as Timestamp
                 val audioFilename = item.get("recordMemoFilename") as String
+                val duration = item.get("recordMemoDuration") as Long
                 val fileLocation = File(mainContext.getExternalFilesDir(null), "recordings")
-                val recordFileLocation = File(fileLocation, "$audioFilename")
-                var audioFileUri:Uri? = null
-                if(recordFileLocation.exists()){
+                val recordFileLocation = File(fileLocation, audioFilename)
+                var audioFileUri: Uri?
+                if (recordFileLocation.exists()) {
                     audioFileUri = Uri.fromFile(recordFileLocation)
-                    val newPhotoMemo = RecordMemoData(context, date, audioFileUri, audioFilename)
-                    recordMemoData.add(newPhotoMemo)
+                    val newRecordMemo = RecordMemoData(
+                        context,
+                        date.toDate(),
+                        audioFileUri,
+                        audioFilename,
+                        duration
+                    )
+                    recordMemoData.add(newRecordMemo)
                 }
             }
-            recordMemoData.reverse()
-            recordMemoList.postValue(recordMemoData)
+            _recordMemoList.value = recordMemoData.sortedByDescending { it.date }
         }
     }
 }

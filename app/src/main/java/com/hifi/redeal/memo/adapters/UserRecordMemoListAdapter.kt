@@ -90,7 +90,7 @@ class UserRecordMemoListAdapter @Inject constructor(
             }
         }
         fun bindItem(item: UserRecordMemoData){
-            userRecordDateTextView.text = intervalBetweenDateText(dateFormat.format(item.date.toDate()))
+            userRecordDateTextView.text = intervalBetweenDateText(item.date.toDate())
             userRecordMemoTextView.text = item.context.ifEmpty { "메모를 등록하지 않았어요" }
 
             userRecordMemoClientName.text = "로딩 중"

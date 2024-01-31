@@ -1,6 +1,5 @@
 package com.hifi.redeal.memo.vm
 
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,11 +23,10 @@ class PhotoMemoViewModel @Inject constructor(
                 val context = item.get("photoMemoContext") as String
                 val date = item.get("photoMemoDate") as Timestamp
                 val srcArr = item.get("photoMemoSrcArr") as List<String>
-                val newPhotoMemo = PhotoMemoData(context, date, srcArr, clientIdx)
+                val newPhotoMemo = PhotoMemoData(context, date.toDate(), srcArr, clientIdx)
                 updatedList.add(newPhotoMemo)
             }
-            updatedList.reverse()
-            _photoMemoList.value = updatedList
+            _photoMemoList.value = updatedList.sortedByDescending { it.date }
         }
     }
 }
