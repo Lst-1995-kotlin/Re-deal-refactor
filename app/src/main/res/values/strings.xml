@@ -5,9 +5,17 @@
     <string name="memo_toolbar_title">메모 전체 보기</string>
     <string name="memo_tab_item_name_photo">포토 메모</string>
     <string name="memo_tab_item_name_voice">음성 메모</string>
+
+    <string name="record_memo_toolbar">음성 메모</string>
+    <string name="photo_memo_toolbar">포토 메모</string>
+    <string name="photo_memo_detail_toolbar">메모 전체 보기</string>
     <string name="testImage">testImage</string>
+    <string name="add_photo_memo_toolbar">포토 메모 등록</string>
     <string name="add_photo_memo_body_empty_photo">사진을 추가해주세요</string>
     <string name="add_photo_memo_body_text_field_placeholder">메모</string>
     <string name="add_photo_memo_bottom_button">포토 메모 등록</string>
     <string name="add_photo_memo_bottom_button_disable">사진을 등록해주세요</string>
+    <string name="add_photo_memo_bottom_button_clicked">등록 중..</string>
+
+    <string name="add_record_memo_body_text_field_placeholder">메모</string>
 </resources>

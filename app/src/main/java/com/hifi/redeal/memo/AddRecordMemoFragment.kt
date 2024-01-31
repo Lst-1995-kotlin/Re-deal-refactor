@@ -127,6 +127,7 @@ class AddRecordMemoFragment : Fragment() {
             }
             addRecordMemoAddBtn.setOnClickListener {
                 val recordMemoContext = addRecordMemoTextInputEditText.text.toString()
+                val recordMemoDurationTime = mediaPlayer?.duration?.toLong()
                 addRecordMemoAddBtn.isEnabled = false
                 addRecordMemoAddBtn.setBackgroundResource(R.drawable.add_button_loading_container)
                 addRecordMemoAddBtn.text = "등록 중 ..."
@@ -148,6 +149,7 @@ class AddRecordMemoFragment : Fragment() {
                     recordMemoContext,
                     audioFileUri!!,
                     audioFileName!!,
+                    recordMemoDurationTime?: 0L
                 ) {
                     mainActivity.removeFragment(MainActivity.ADD_RECORD_MEMO_FRAGMENT)
                 }

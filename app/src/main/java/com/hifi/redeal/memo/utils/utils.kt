@@ -1,15 +1,17 @@
 package com.hifi.redeal.memo.utils
 
 import android.content.Context
-import android.content.Intent
 import android.media.MediaPlayer
-import android.net.Uri
-import android.provider.MediaStore
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
-import java.text.SimpleDateFormat
-import java.util.Calendar
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Date
 
 fun dpToPx(context: Context, dp: Int): Int {
@@ -33,56 +35,83 @@ fun getCurrentDuration(currentPosition: Int): String {
     return String.format("%02d:%02d", minutes, seconds)
 }
 
-fun intervalBetweenDateText(beforeDate: String): String {
-    val nowFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(getTime())
-    val beforeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(beforeDate)
+fun intervalBetweenDateText(date: Date): String {
+    val beforeFormat = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
+    val nowFormat = LocalDateTime.now()
 
-    val diffMilliseconds = nowFormat.time - beforeFormat.time
-    val diffSeconds = diffMilliseconds / 1000
-    val diffMinutes = diffMilliseconds / (60 * 1000)
-    val diffHours = diffMilliseconds / (60 * 60 * 1000)
-    val diffDays = diffMilliseconds / (24 * 60 * 60 * 1000)
-
-    val nowCalendar = Calendar.getInstance().apply { time = nowFormat }
-    val beforeCalendar = Calendar.getInstance().apply { time = beforeFormat }
-
-    val diffYears = nowCalendar.get(Calendar.YEAR) - beforeCalendar.get(Calendar.YEAR)
-    var diffMonths = diffYears * 12 + nowCalendar.get(Calendar.MONTH) - beforeCalendar.get(
-        Calendar.MONTH,
+    val units = arrayOf("시간", "분")
+    val amounts = arrayOf(
+        ChronoUnit.DAYS.between(beforeFormat, nowFormat),
+        ChronoUnit.HOURS.between(beforeFormat, nowFormat),
+        ChronoUnit.MINUTES.between(beforeFormat, nowFormat)
     )
-    if (nowCalendar.get(Calendar.DAY_OF_MONTH) < beforeCalendar.get(Calendar.DAY_OF_MONTH)) {
-        diffMonths--
+
+    for (i in amounts.indices) {
+        if (amounts[i] > 0) {
+            return if(i == 0){
+                beforeFormat.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+            }else
+                "${amounts[i]}${units[i-1]} 전"
+        }
     }
 
-    if (diffYears > 0) {
-        return "${diffYears}년 전"
-    }
-    if (diffMonths > 0) {
-        return "${diffMonths}개월 전"
-    }
-    if (diffDays > 0) {
-        return "${diffDays}일 전"
-    }
-    if (diffHours > 0) {
-        return "${diffHours}시간 전"
-    }
-    if (diffMinutes > 0) {
-        return "${diffMinutes}분 전"
-    }
-    if (diffSeconds > 0) {
-        return "${diffSeconds}초 전"
-    }
-    if (diffSeconds > -1) {
-        return "방금"
-    }
-    return ""
+    return "방금"
 }
 
-fun getTime(): String {
-    val now = System.currentTimeMillis()
-    val date = Date(now)
+fun formatRecordTime(time:Long):String{
+    val ms = time / 10
+    val sec = ms / 100
+    val min = sec / 60
+    val hours = min / 60
+    val milliSeconds = ms % 100
+    val seconds = sec % 60
+    val minutes = min % 60
 
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    val hoursString = if (hours > 0) {
+        "$hours:"
+    } else {
+        ""
+    }
+    val minutesString = if (minutes < 10) {
+        "0$minutes"
+    } else {
+        minutes.toString()
+    }
+    val secondsString = if (seconds < 10) {
+        "0$seconds"
+    } else {
+        seconds.toString()
+    }
 
-    return dateFormat.format(date)
+    val milliSecondsString = if (milliSeconds < 10) {
+        "0$milliSeconds"
+    } else {
+        milliSeconds.toString()
+    }
+
+    return "$hoursString$minutesString:$secondsString.$milliSecondsString"
+}
+fun Long.convertToDurationTime(): String {
+    val sec = this / 1000
+    val min = sec / 60
+    val hours = min / 60
+    val seconds = sec % 60
+    val minutes = min % 60
+
+    val hoursString = if (hours < 10) {
+        "0$hours"
+    } else {
+        hours.toString()
+    }
+    val minutesString = if (minutes < 10) {
+        "0$minutes"
+    } else {
+        minutes.toString()
+    }
+    val secondsString = if (seconds < 10) {
+        "0$seconds"
+    } else {
+        seconds.toString()
+    }
+    return "$hoursString:$minutesString:$secondsString"
 }

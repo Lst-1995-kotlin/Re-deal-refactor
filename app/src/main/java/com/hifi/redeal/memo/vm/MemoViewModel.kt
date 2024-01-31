@@ -31,7 +31,7 @@ class MemoViewModel @Inject constructor(
                 val context = document.get("photoMemoContext") as String
                 val date = document.get("photoMemoDate") as Timestamp
                 val srcArr = document.get("photoMemoSrcArr") as List<String>
-                val newPhotoMemo = PhotoMemoData(context, date, srcArr, clientIdx)
+                val newPhotoMemo = PhotoMemoData(context, date.toDate(), srcArr, clientIdx)
                 photoMemoData.add(newPhotoMemo)
             }
             photoMemoData.reverse()
