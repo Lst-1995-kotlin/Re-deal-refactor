@@ -1,25 +1,32 @@
 package com.hifi.redeal.memo.components
 
+import android.media.MediaRecorder
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.UploadFile
 import androidx.compose.material.icons.rounded.Pause
+import androidx.compose.material.icons.rounded.Stop
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
@@ -34,7 +41,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -46,20 +56,33 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.focusTarget
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.memo.model.BottomButtonState
+import com.hifi.redeal.memo.record.VoiceMemoRecorder
 import com.hifi.redeal.memo.utils.convertToDurationTime
 import com.hifi.redeal.memo.utils.formatRecordTime
 import com.hifi.redeal.theme.RedealTheme
 import kotlinx.coroutines.delay
+import java.io.File
+import java.io.FileOutputStream
 
 private enum class RecordState {
     BEFORE_RECORDING,
@@ -164,20 +187,31 @@ private fun AddFileButton(
 
 @Composable
 private fun VoiceRecorder(
-    time: Long,
-    isRecording: Boolean,
-    onClickRecord: (recordState: RecordState) -> Unit,
+    onStart: () -> Unit,
+    onToggle: () -> Unit,
+    onStop: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var time by remember { mutableLongStateOf(0) }
+    var isRecording by remember { mutableStateOf(false) }
+    var isNewRecord by remember { mutableStateOf(true) }
+
+    LaunchedEffect(isRecording, time) {
+        if (isRecording) {
+            delay(10)
+            time += 10
+        }
+    }
+
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
         Text(
             text = formatRecordTime(time),
             style = MaterialTheme.typography.bodyLarge.copy(
-                fontSize = 40.sp
-            )
+                fontSize = 40.sp,
+            ),
+            modifier = Modifier.padding(start = 64.dp)
         )
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
@@ -186,11 +220,14 @@ private fun VoiceRecorder(
                 .fillMaxWidth()
                 .padding(top = 40.dp)
         ) {
+            Spacer(modifier = Modifier.size(48.dp))
             OutlinedIconButton(
                 onClick = {
-                    val nextState =
-                        if (isRecording) RecordState.AFTER_RECORDING else RecordState.ON_RECORDING
-                    onClickRecord(nextState)
+                    if (isNewRecord) {
+                        onStart()
+                    } else {
+                        onToggle()
+                    }
                 },
                 colors = IconButtonDefaults.outlinedIconButtonColors(
                     contentColor = if (!isRecording) {
@@ -215,6 +252,20 @@ private fun VoiceRecorder(
                         modifier = Modifier.size(32.dp)
                     )
                 }
+            }
+
+            IconButton(
+                onClick = {
+                    onStop()
+                },
+                enabled = !isRecording,
+                modifier = Modifier.size(48.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Stop,
+                    contentDescription = null,
+                    modifier = Modifier.size(40.dp)
+                )
             }
         }
     }
@@ -332,21 +383,13 @@ private fun VoiceMemoPlayer(
     modifier: Modifier = Modifier
 ) {
     // var recordingFilePath by remember { mutableStateOf(path)}
+    val filename = File(
+        mainActivity.cacheDir,
+        "음성_${System.currentTimeMillis()}.m4a"
+    )
     var recordState by remember { mutableStateOf(RecordState.ON_RECORDING) }
-//    val recorder by remember { mutableStateOf(MediaRecorder().apply{
-//            setAudioSource(MediaRecorder.AudioSource.MIC)
-//            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
-//            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-//            setOutputFile(recordingFilePath)
-//    }) }
-    var time by remember { mutableLongStateOf(0) }
+    val voiceRecorder by remember { mutableStateOf(VoiceMemoRecorder(mainActivity)) }
 
-    LaunchedEffect(recordState, time) {
-        if (recordState == RecordState.ON_RECORDING) {
-            delay(10)
-            time += 10
-        }
-    }
     Column(
         modifier = modifier
     ) {
@@ -355,9 +398,18 @@ private fun VoiceMemoPlayer(
                 RecordState.BEFORE_RECORDING,
                 RecordState.ON_RECORDING -> {
                     VoiceRecorder(
-                        time = time,
-                        isRecording = false,
-                        onClickRecord = {},
+                        onStart = {
+                            voiceRecorder.start(filename)
+                        },
+                        onToggle = { voiceRecorder.togglePause() },
+                        onStop = {
+                            filename.renameTo(
+                                File(
+                                    mainActivity.cacheDir,
+                                    "음성_${System.currentTimeMillis()}.m4a"
+                                )
+                            )
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 28.dp)
@@ -366,7 +418,7 @@ private fun VoiceMemoPlayer(
 
                 RecordState.AFTER_RECORDING -> {
                     AudioPlayer(
-                        audioFilename = "테스트 파일",
+                        audioFilename = filename.name,
                         duration = 30000000L,
                         isPlaying = false,
                         currentPosition = 0,
@@ -374,7 +426,9 @@ private fun VoiceMemoPlayer(
                         onClickPlayer = {},
                         onValueChange = {},
                         onValueChangeFinished = {},
-                        modifier = Modifier.fillMaxWidth().padding(top = 28.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 28.dp)
                     )
                 }
             }
@@ -424,61 +478,140 @@ private fun BottomButton(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.S)
-@Preview(name = "RecordPlayer", showBackground = true)
 @Composable
-private fun RecordPlayerPreview() {
-    RedealTheme() {
-        VoiceMemoPlayer(
-            MainActivity(), "",
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.S)
-@Preview(name = "AddRecordMemoScreen", showBackground = true)
-@Composable
-private fun AddRecordMemoScreenPreview() {
-    RedealTheme() {
-        Scaffold(
-            topBar = {
-                AddRecordMemoToolbar(
-                    title = "음성메모 등록", onClickNavigation = {})
-            },
-            bottomBar = {
-                BottomButton(
-                    state = BottomButtonState.IDLE,
-                    onClick = {},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 24.dp, horizontal = 28.dp)
-                        .imePadding()
-                )
-            },
-            containerColor = Color.White
-        ) { padding ->
+private fun SaveDialog(
+    filename: String,
+    setShowDialog: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var value by remember { mutableStateOf(filename)}
+    Dialog(onDismissRequest = { setShowDialog(false) }) {
+        Surface(
+            shape = RoundedCornerShape(16.dp),
+            color = Color.White,
+            modifier = modifier
+        ) {
             Column(
-                modifier = Modifier
-                    .padding(padding)
-                    .padding(horizontal = 28.dp)
-                    .padding(top = 40.dp)
+                modifier = Modifier.padding(20.dp)
             ) {
-                MemoTextField(
-                    value = "",
-                    onChangeValue = {},
-                    modifier = Modifier.fillMaxWidth()
+                Text(
+                    text = "녹음 파일 저장",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontWeight = FontWeight.Bold
+                    )
                 )
-                AddFileButton(
+                // todo : Dialog가 처음 띄워질 때 포커싱 & 글자 선택된 상태
+                BasicTextField(
+                    value = value,
+                    onValueChange = { value = it },
+                    singleLine = true,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp)
-                        .height(52.dp)
+                        .padding(top = 24.dp)
                 )
-                VoiceMemoPlayer(MainActivity(), "")
+                Divider(
+                    thickness = 1.dp,
+                    color = Color.Black,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp)
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 20.dp)
+                ){
+                    TextButton(
+                        onClick = {},
+                        modifier = Modifier.weight(1f)
+                    ){
+                        Text(
+                            text = "취소",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                    Text(text = "|", color = Color.LightGray, style = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = 12.sp
+                    ))
+                    TextButton(
+                        onClick = {},
+                        modifier = Modifier.weight(1f)
+                    ){
+                        Text(
+                            text = "저장",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
             }
         }
     }
 }
+
+@Preview(name = "RecordPlayer", showBackground = true)
+@Composable
+private fun SaveDialogPreview(){
+    RedealTheme {
+        SaveDialog(filename = "테스트 음성", setShowDialog = {
+        })
+    }
+}
+//@RequiresApi(Build.VERSION_CODES.S)
+//@Preview(name = "RecordPlayer", showBackground = true)
+//@Composable
+//private fun RecordPlayerPreview() {
+//    RedealTheme() {
+//        VoiceMemoPlayer(
+//            MainActivity(), "",
+//            modifier = Modifier
+//                .fillMaxWidth()
+//        )
+//    }
+//}
+
+//@RequiresApi(Build.VERSION_CODES.S)
+//@Preview(name = "AddRecordMemoScreen", showBackground = true)
+//@Composable
+//private fun AddRecordMemoScreenPreview() {
+//    RedealTheme() {
+//        Scaffold(
+//            topBar = {
+//                AddRecordMemoToolbar(
+//                    title = "음성메모 등록", onClickNavigation = {})
+//            },
+//            bottomBar = {
+//                BottomButton(
+//                    state = BottomButtonState.IDLE,
+//                    onClick = {},
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(vertical = 24.dp, horizontal = 28.dp)
+//                        .imePadding()
+//                )
+//            },
+//            containerColor = Color.White
+//        ) { padding ->
+//            Column(
+//                modifier = Modifier
+//                    .padding(padding)
+//                    .padding(horizontal = 28.dp)
+//                    .padding(top = 40.dp)
+//            ) {
+//                MemoTextField(
+//                    value = "",
+//                    onChangeValue = {},
+//                    modifier = Modifier.fillMaxWidth()
+//                )
+//                AddFileButton(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(top = 8.dp)
+//                        .height(52.dp)
+//                )
+//                VoiceMemoPlayer(MainActivity(), "")
+//            }
+//        }
+//    }
+//}
 
