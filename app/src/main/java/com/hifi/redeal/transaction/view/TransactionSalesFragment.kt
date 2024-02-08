@@ -123,7 +123,7 @@ class TransactionSalesFragment : Fragment() {
 
     private fun setViewModel() {
         transactionClientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
-            client?.setClientInfoView(fragmentTransactionSalesBinding.transactionClientSelectEditText)
+            client.setClientInfoView(fragmentTransactionSalesBinding.transactionClientSelectEditText)
             if (fragmentTransactionSalesBinding.transactionItemNameEditText.text.isNullOrEmpty() ||
                 fragmentTransactionSalesBinding.transactionItemCountEditText.text.isNullOrEmpty() ||
                 fragmentTransactionSalesBinding.transactionItemPriceEditText.text.isNullOrEmpty() ||

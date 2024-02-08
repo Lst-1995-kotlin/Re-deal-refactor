@@ -29,13 +29,12 @@ class Transaction(
         return when (transactionData.isDeposit) {
             true -> TransactionType.DEPOSIT.type
             false -> TransactionType.SALES.type
-            else -> TransactionType.ERROR.type
         }
     }
 
     fun getTransactionDate() = transactionData.date
 
-    fun getTransactionClientIdx() = transactionData.clientIdx
+    fun equalsTransactionClientIndex(index: Long) = transactionData.transactionIdx == index
 
     fun getTransactionIdx() = transactionData.transactionIdx
 

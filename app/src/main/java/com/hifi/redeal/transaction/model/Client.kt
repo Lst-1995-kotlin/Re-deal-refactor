@@ -16,7 +16,7 @@ class Client(
         return otherClient.clientData == this.clientData
     }
 
-    fun copy(): ClientData {
+    fun getClientData(): ClientData {
         return clientData.copy()
     }
 

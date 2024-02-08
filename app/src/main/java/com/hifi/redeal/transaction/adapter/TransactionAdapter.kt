@@ -19,7 +19,8 @@ class TransactionAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val factory = viewHolderFactories[viewType]
-        return factory?.create(parent) ?: createDefaultViewHolder(parent)
+            ?: throw IllegalArgumentException("올바르지 못한 클라이언트 타입 입니다.")
+        return factory.create(parent)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -39,12 +40,6 @@ class TransactionAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return currentList[position].getTransactionType()
-    }
-
-    private fun createDefaultViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        Log.e("TransactionAdapter", "올바르지 못한 거래 타입 입니다")
-        val view = View(parent.context)
-        return object : RecyclerView.ViewHolder(view) {}
     }
 }
 

@@ -27,6 +27,26 @@ class TransactionClientViewModel @Inject constructor(
         selectedClient.postValue(client)
     }
 
+    fun setSelectClientIndex(clientIndex: Long?) {
+        clientIndex?.let {
+            clientRepository.getIndexOfClient(it) {
+                for (c1 in it.result) {
+                    val client = Client(
+                        ClientData(
+                            c1["clientIdx"] as Long,
+                            c1["clientName"] as String,
+                            c1["clientManagerName"] as String,
+                            c1["clientState"] as Long,
+                            c1["isBookmark"] as Boolean
+                        )
+                    )
+                    setSelectClient(client)
+                }
+            }
+        }
+
+    }
+
     private fun getUserAllClient() {
         clientRepository.getUserAllClient {
             val temp = mutableListOf<Client>()

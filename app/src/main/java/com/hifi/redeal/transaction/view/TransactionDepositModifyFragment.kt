@@ -80,7 +80,7 @@ class TransactionDepositModifyFragment : Fragment() {
             } ?: mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_MODIFY_FRAGMENT)
         }
         transactionClientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
-            client?.setClientInfoView(fragmentTransactionDepositModifyBinding.modifyDepositClientTextInputEditText)
+            client.setClientInfoView(fragmentTransactionDepositModifyBinding.modifyDepositClientTextInputEditText)
             if (fragmentTransactionDepositModifyBinding.modifyDepositPriceEditTextNumber.text.isNullOrEmpty()) {
                 fragmentTransactionDepositModifyBinding.modifyDepositBtn.visibility = View.GONE
                 return@observe

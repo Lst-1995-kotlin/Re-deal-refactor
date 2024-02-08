@@ -70,8 +70,6 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var activityMainBinding: ActivityMainBinding
     lateinit var scheduleVM: ScheduleVM
-    private val transactionViewModel: TransactionViewModel by viewModels()
-    private val transactionClientViewModel: TransactionClientViewModel by viewModels()
 
     lateinit var tMapTapi: TMapTapi
 

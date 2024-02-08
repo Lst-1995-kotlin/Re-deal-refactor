@@ -99,10 +99,9 @@ class TransactionViewModel @Inject constructor(
     }
 
     fun addDepositTransaction(client: Client, amount: Long) {
-        val createTime = Timestamp.now()
         val newDepositTransactionData = TransactionData(
             client.getClientIdx(),
-            createTime,
+            Timestamp.now(),
             true,
             amount,
             newTransactionIdx,
@@ -113,7 +112,7 @@ class TransactionViewModel @Inject constructor(
         transactionRepository.setTransactionData(newDepositTransactionData) {
             val newTransaction = Transaction(
                 newDepositTransactionData,
-                client.copy()
+                client.getClientData()
             )
             totalTransactionData.add(newTransaction)
             updateTransaction()
@@ -128,10 +127,9 @@ class TransactionViewModel @Inject constructor(
         itemPrice: Long,
         amount: Long,
     ) {
-        val createTime = Timestamp.now()
         val newSalesTransactionData = TransactionData(
             client.getClientIdx(),
-            createTime,
+            Timestamp.now(),
             false,
             amount,
             newTransactionIdx,
@@ -142,7 +140,7 @@ class TransactionViewModel @Inject constructor(
         transactionRepository.setTransactionData(newSalesTransactionData) {
             val newTransaction = Transaction(
                 newSalesTransactionData,
-                client.copy()
+                client.getClientData()
             )
             totalTransactionData.add(newTransaction)
             updateTransaction()
@@ -198,7 +196,7 @@ class TransactionViewModel @Inject constructor(
     private fun updateTransaction() {
         selectClientIndex?.let { index ->
             _transactionList.postValue(totalTransactionData.filter {
-                it.getTransactionClientIdx() == index
+                it.equalsTransactionClientIndex(index)
             })
         } ?: _transactionList.postValue(totalTransactionData)
     }
@@ -230,7 +228,7 @@ class TransactionViewModel @Inject constructor(
                 itemPrice,
                 itemName
             ),
-            client.copy()
+            client.getClientData()
         )
     }
 
@@ -250,7 +248,7 @@ class TransactionViewModel @Inject constructor(
                 0,
                 ""
             ),
-            client.copy()
+            client.getClientData()
         )
     }
 
