@@ -19,14 +19,14 @@ class TransactionViewModel @Inject constructor(
 
     private val totalTransactionData = mutableListOf<Transaction>()
     private val _transactionList = MutableLiveData<List<Transaction>>()
-    private val _modifyTransaction = MutableLiveData<Transaction>()
+    private val _modifyTransaction = MutableLiveData<Transaction?>()
     private val _transactionPosition = MutableLiveData<Int>()
 
     private var newTransactionIdx = 0L
     private var selectClientIndex: Long? = null
     private var curdPosition = 0
     val transactionList: LiveData<List<Transaction>> get() = _transactionList
-    val modifyTransaction: LiveData<Transaction> get() = _modifyTransaction
+    val modifyTransaction: LiveData<Transaction?> get() = _modifyTransaction
     val transactionPosition: LiveData<Int> get() = _transactionPosition
 
     init {
@@ -42,7 +42,7 @@ class TransactionViewModel @Inject constructor(
         curdPosition = position
     }
 
-    fun setModifyTransaction(transaction: Transaction) {
+    fun setModifyTransaction(transaction: Transaction?) {
         _modifyTransaction.postValue(transaction)
     }
 
@@ -92,7 +92,7 @@ class TransactionViewModel @Inject constructor(
         }
     }
 
-    fun deleteTransactionData(transactionIdx: Long) {
+    fun deleteTransactionIndex(transactionIdx: Long) {
         transactionRepository.deleteTransactionData(transactionIdx) {
             totalTransactionData.removeAll { it.getTransactionIdx() == transactionIdx }
             updateTransaction()
@@ -174,7 +174,7 @@ class TransactionViewModel @Inject constructor(
         updateTransaction()
     }
 
-    fun getAllTransactionData() {
+    private fun getAllTransactionData() {
         transactionRepository.getAllTransactionData {
             totalTransactionData.clear()
             it.result.forEach { c1 ->

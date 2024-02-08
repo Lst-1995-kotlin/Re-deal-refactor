@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.forEach
@@ -54,6 +55,7 @@ import com.hifi.redeal.transaction.view.TransactionDepositModifyFragment
 import com.hifi.redeal.transaction.view.TransactionFragment
 import com.hifi.redeal.transaction.view.TransactionSalesFragment
 import com.hifi.redeal.transaction.view.TransactionSalesModifyFragment
+import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import com.skt.tmap.TMapTapi
 import com.skt.tmap.TMapTapi.OnAuthenticationListenerCallback
 import dagger.hilt.android.AndroidEntryPoint
@@ -67,6 +69,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var activityMainBinding: ActivityMainBinding
     lateinit var scheduleVM: ScheduleVM
+    private val transactionViewModel: TransactionViewModel by viewModels()
 
     lateinit var tMapTapi: TMapTapi
 
@@ -222,13 +225,14 @@ class MainActivity : AppCompatActivity() {
                 if (fragment.isVisible) {
                     activityMainBinding.bottomNavigationViewMain.isVisible =
                         (
-                            fragment is AccountListFragment ||
-                                fragment is ScheduleManageFragment ||
-                                fragment is UnvisitedScheduleFragment ||
-                                fragment is VisitedScheduleFragment ||
-                                fragment is MapFragment ||
-                                fragment is MemoFragment
-                            )
+                                fragment is AccountListFragment ||
+                                        fragment is ScheduleManageFragment ||
+                                        fragment is UnvisitedScheduleFragment ||
+                                        fragment is VisitedScheduleFragment ||
+                                        fragment is MapFragment ||
+                                        fragment is MemoFragment ||
+                                        fragment is TransactionFragment
+                                )
 
                     when (fragment) {
                         is AccountListFragment -> {

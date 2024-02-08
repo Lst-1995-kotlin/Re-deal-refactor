@@ -1,16 +1,16 @@
 package com.hifi.redeal.transaction.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentTransactionDepositModifyBinding
 import com.hifi.redeal.transaction.util.AmountTextWatcher
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.removeNumberFormat
-import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
 import com.hifi.redeal.transaction.util.TransactionSelectEditTextFocusListener
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
@@ -32,6 +32,7 @@ class TransactionDepositModifyFragment : Fragment() {
             FragmentTransactionDepositModifyBinding.inflate(inflater)
         setBind()
         setViewModel()
+
         return fragmentTransactionDepositModifyBinding.root
     }
 
@@ -57,16 +58,22 @@ class TransactionDepositModifyFragment : Fragment() {
                         it,
                         removeNumberFormat("${modifyDepositPriceEditTextNumber.text}")
                     )
-                    mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_MODIFY_FRAGMENT)
+                    transactionViewModel.setModifyTransaction(null)
                 }
+            }
+
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+                transactionViewModel.setModifyTransaction(null)
             }
         }
     }
 
     private fun setViewModel() {
         transactionViewModel.modifyTransaction.observe(viewLifecycleOwner) { transaction ->
-            transaction.setModifyViewValue(fragmentTransactionDepositModifyBinding.modifyDepositPriceEditTextNumber)
-            clientViewModel.setSelectClient(transaction.getTransactionClientIdx())
+            transaction?.let {
+                transaction.setModifyViewValue(fragmentTransactionDepositModifyBinding.modifyDepositPriceEditTextNumber)
+                clientViewModel.setSelectClient(transaction.getTransactionClientIdx())
+            } ?: mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_MODIFY_FRAGMENT)
         }
         clientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
             client?.setClientInfoView(fragmentTransactionDepositModifyBinding.modifyDepositClientTextInputEditText)

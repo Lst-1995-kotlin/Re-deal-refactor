@@ -1,23 +1,20 @@
 package com.hifi.redeal.transaction.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.hifi.redeal.MainActivity
-import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTransactionSalesModifyBinding
-import com.hifi.redeal.transaction.configuration.TransactionAmountConfiguration
 import com.hifi.redeal.transaction.configuration.TransactionAmountConfiguration.Companion.setTransactionAmountMessage
 import com.hifi.redeal.transaction.util.AmountTextWatcher
 import com.hifi.redeal.transaction.util.ItemNameTextWatcher
 import com.hifi.redeal.transaction.util.ItemTextWatcher
 import com.hifi.redeal.transaction.util.TransactionInputEditTextFocusListener
-import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.removeNumberFormat
-import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
 import com.hifi.redeal.transaction.util.TransactionSelectEditTextFocusListener
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
@@ -116,6 +113,10 @@ class TransactionSalesModifyFragment : Fragment() {
 
             setTransactionAmountMessage(amountModifyMessageTextView)
 
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+                transactionViewModel.setModifyTransaction(null)
+            }
+
             mainActivity.hideKeyboardAndClearFocus(transactionModifyItemNameEditText)
             mainActivity.hideKeyboardAndClearFocus(transactionModifyItemCountEditText)
             mainActivity.hideKeyboardAndClearFocus(transactionModifyItemPriceEditText)
@@ -125,13 +126,15 @@ class TransactionSalesModifyFragment : Fragment() {
 
     private fun setViewModel() {
         transactionViewModel.modifyTransaction.observe(viewLifecycleOwner) { transaction ->
-            transaction.setModifyViewValue(
-                fragmentTransactionSalesModifyBinding.transactionModifyItemNameEditText,
-                fragmentTransactionSalesModifyBinding.transactionModifyItemCountEditText,
-                fragmentTransactionSalesModifyBinding.transactionModifyItemPriceEditText,
-                fragmentTransactionSalesModifyBinding.transactionModifyAmountReceivedEditText
-            )
-            clientViewModel.setSelectClient(transaction.getTransactionClientIdx())
+            transaction?.let {
+                transaction.setModifyViewValue(
+                    fragmentTransactionSalesModifyBinding.transactionModifyItemNameEditText,
+                    fragmentTransactionSalesModifyBinding.transactionModifyItemCountEditText,
+                    fragmentTransactionSalesModifyBinding.transactionModifyItemPriceEditText,
+                    fragmentTransactionSalesModifyBinding.transactionModifyAmountReceivedEditText
+                )
+                clientViewModel.setSelectClient(transaction.getTransactionClientIdx())
+            } ?: mainActivity.removeFragment(MainActivity.TRANSACTION_SALES_MODIFY_FRAGMENT)
         }
         clientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
             client?.setClientInfoView(fragmentTransactionSalesModifyBinding.transactionModifyClientSelectEditText)

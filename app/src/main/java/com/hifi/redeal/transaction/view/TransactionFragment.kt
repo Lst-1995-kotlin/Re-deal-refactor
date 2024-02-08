@@ -15,9 +15,9 @@ import com.hifi.redeal.transaction.adapter.TransactionAdapter
 import com.hifi.redeal.transaction.adapter.TransactionAdapterDiffCallback
 import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
+import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
 import com.hifi.redeal.transaction.viewHolder.transaction.DepositHolderFactory
 import com.hifi.redeal.transaction.viewHolder.transaction.SalesHolderFactory
-import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,9 +52,9 @@ class TransactionFragment : Fragment() {
     private fun setAdapter() {
         val viewHolderFactories = HashMap<Int, ViewHolderFactory>()
         viewHolderFactories[TransactionType.DEPOSIT.type] =
-            DepositHolderFactory(mainActivity, transactionViewModel)
+            DepositHolderFactory(transactionViewModel)
         viewHolderFactories[TransactionType.SALES.type] =
-            SalesHolderFactory(mainActivity, transactionViewModel)
+            SalesHolderFactory(transactionViewModel)
 
         transactionAdapter =
             TransactionAdapter(viewHolderFactories, transactionAdapterDiffCallback)
@@ -79,9 +79,9 @@ class TransactionFragment : Fragment() {
     }
 
     private fun setViewModel() {
-        transactionViewModel.transactionList.observe(viewLifecycleOwner) { transactions ->
+        transactionViewModel.transactionList.observe(viewLifecycleOwner) { transactions -> // 어댑터에 표시하는 거래내역들
             transactionAdapter.setTransactions(transactions) { transactionViewModel.postValueScrollPosition() }
-
+            // 어댑터에 표시하는 거래내역들의 합계
             val totalSalesCount =
                 transactions.count { it.getTransactionType() == TransactionType.SALES.type }
             val totalSalesAmount = transactions.sumOf { it.calculateSalesAmount() }
@@ -94,16 +94,33 @@ class TransactionFragment : Fragment() {
             }
         }
 
-        transactionViewModel.transactionPosition.observe(viewLifecycleOwner) {
+        transactionViewModel.transactionPosition.observe(viewLifecycleOwner) {// 수정 프래그먼트를 띄웠을 경우 해당 포지션으로 이동 시킴.
             val layoutManager =
                 fragmentTransactionBinding.transactionRecyclerView.layoutManager as LinearLayoutManager
             layoutManager.scrollToPosition(it)
         }
 
-        clientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
-            client?.let { transactionViewModel.setSelectClientIndex(it.getClientIdx()) }
-                ?: transactionViewModel.setSelectClientIndex(null)
+        transactionViewModel.modifyTransaction.observe(viewLifecycleOwner) {// 수정하려는 거래내역이 선택되었을 때
+            it?.let {
+                when (it.getTransactionType()) {
+                    TransactionType.SALES.type -> {
+                        mainActivity.replaceFragment(
+                            MainActivity.TRANSACTION_SALES_MODIFY_FRAGMENT,
+                            true,
+                            null
+                        )
+                    }
+
+                    TransactionType.DEPOSIT.type -> {
+                        mainActivity.replaceFragment(
+                            MainActivity.TRANSACTION_DEPOSIT_MODIFY_FRAGMENT,
+                            true,
+                            null
+                        )
+                    }
+                }
+            }
         }
-        clientViewModel.setSelectClient(arguments?.getLong("clientIdx"))
+        transactionViewModel.setSelectClientIndex(arguments?.getLong("clientIdx")) // 기존 선택한 클라이언트 정보를 초기화 시킨다.
     }
 }

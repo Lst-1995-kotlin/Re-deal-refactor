@@ -11,10 +11,10 @@ import com.hifi.redeal.databinding.FragmentTransactionSalesBinding
 import com.hifi.redeal.transaction.configuration.TransactionAmountConfiguration.Companion.setTransactionAmountMessage
 import com.hifi.redeal.transaction.util.AmountTextWatcher
 import com.hifi.redeal.transaction.util.ItemNameTextWatcher
-import com.hifi.redeal.transaction.util.TransactionInputEditTextFocusListener
-import com.hifi.redeal.transaction.util.TransactionSelectEditTextFocusListener
 import com.hifi.redeal.transaction.util.ItemTextWatcher
+import com.hifi.redeal.transaction.util.TransactionInputEditTextFocusListener
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.removeNumberFormat
+import com.hifi.redeal.transaction.util.TransactionSelectEditTextFocusListener
 import com.hifi.redeal.transaction.viewmodel.ClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
