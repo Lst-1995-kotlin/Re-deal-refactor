@@ -12,7 +12,7 @@ import com.hifi.redeal.databinding.FragmentTransactionDepositModifyBinding
 import com.hifi.redeal.transaction.util.AmountTextWatcher
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.removeNumberFormat
 import com.hifi.redeal.transaction.util.TransactionSelectEditTextFocusListener
-import com.hifi.redeal.transaction.viewmodel.ClientViewModel
+import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class TransactionDepositModifyFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
     private lateinit var fragmentTransactionDepositModifyBinding: FragmentTransactionDepositModifyBinding
-    private val clientViewModel: ClientViewModel by activityViewModels()
+    private val transactionClientViewModel: TransactionClientViewModel by activityViewModels()
     private val transactionViewModel: TransactionViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -40,26 +40,30 @@ class TransactionDepositModifyFragment : Fragment() {
         fragmentTransactionDepositModifyBinding.run {
             modifyDepositClientTextInputEditText.onFocusChangeListener =
                 TransactionSelectEditTextFocusListener(
-                    SelectTransactionClientDialog(clientViewModel),
+                    SelectTransactionClientDialog(transactionClientViewModel),
                     childFragmentManager
                 )
 
             modifyDepositPriceEditTextNumber.addTextChangedListener(
                 AmountTextWatcher(
-                    clientViewModel,
+                    transactionClientViewModel,
                     modifyDepositPriceEditTextNumber,
                     modifyDepositBtn
                 )
             )
 
             modifyDepositBtn.setOnClickListener {
-                clientViewModel.selectedClient.value?.let {
+                transactionClientViewModel.selectedClient.value?.let {
                     transactionViewModel.updateModifyDepositTransaction(
                         it,
                         removeNumberFormat("${modifyDepositPriceEditTextNumber.text}")
                     )
                     transactionViewModel.setModifyTransaction(null)
                 }
+            }
+
+            modifyDepositMaterialToolbar.setNavigationOnClickListener {
+                mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_MODIFY_FRAGMENT)
             }
 
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
@@ -72,10 +76,10 @@ class TransactionDepositModifyFragment : Fragment() {
         transactionViewModel.modifyTransaction.observe(viewLifecycleOwner) { transaction ->
             transaction?.let {
                 transaction.setModifyViewValue(fragmentTransactionDepositModifyBinding.modifyDepositPriceEditTextNumber)
-                clientViewModel.setSelectClient(transaction.getTransactionClientIdx())
+                transactionClientViewModel.setSelectClient(transaction.getClientInformation())
             } ?: mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_MODIFY_FRAGMENT)
         }
-        clientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
+        transactionClientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
             client?.setClientInfoView(fragmentTransactionDepositModifyBinding.modifyDepositClientTextInputEditText)
             if (fragmentTransactionDepositModifyBinding.modifyDepositPriceEditTextNumber.text.isNullOrEmpty()) {
                 fragmentTransactionDepositModifyBinding.modifyDepositBtn.visibility = View.GONE

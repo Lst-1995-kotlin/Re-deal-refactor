@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.model.Transaction
@@ -12,11 +13,9 @@ import com.hifi.redeal.transaction.viewHolder.transaction.SalesHolder
 import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
 
 class TransactionAdapter(
-    private val viewHolderFactories: HashMap<Int, ViewHolderFactory>,
+    private val viewHolderFactories: Map<Int, ViewHolderFactory>,
     diffCallback: TransactionAdapterDiffCallback
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private val differ = AsyncListDiffer(this, diffCallback)
+) : ListAdapter<Transaction, RecyclerView.ViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val factory = viewHolderFactories[viewType]
@@ -24,7 +23,7 @@ class TransactionAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val transaction = differ.currentList[position]
+        val transaction = currentList[position]
         when (holder.itemViewType) {
             TransactionType.DEPOSIT.type -> {
                 val item = holder as DepositHolder
@@ -39,18 +38,7 @@ class TransactionAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return differ.currentList[position].getTransactionType()
-    }
-
-    override fun getItemCount(): Int {
-        return differ.currentList.size
-    }
-
-    fun setTransactions(newTransactions: List<Transaction>, commitCallback: () -> Unit) {
-        differ.submitList(
-            newTransactions.sortedByDescending { it.getTransactionDate() },
-            commitCallback
-        )
+        return currentList[position].getTransactionType()
     }
 
     private fun createDefaultViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {

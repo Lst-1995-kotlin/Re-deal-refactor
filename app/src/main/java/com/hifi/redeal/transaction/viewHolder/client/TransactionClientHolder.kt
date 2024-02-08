@@ -6,11 +6,11 @@ import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
 import com.hifi.redeal.transaction.configuration.ClientConfiguration.Companion.setClientBookmarkResource
 import com.hifi.redeal.transaction.configuration.ClientConfiguration.Companion.setClientStateResource
 import com.hifi.redeal.transaction.model.Client
-import com.hifi.redeal.transaction.viewmodel.ClientViewModel
+import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
 
 class TransactionClientHolder(
     private val transactionSelectClientItemBinding: TransactionSelectClientItemBinding,
-    private val clientViewModel: ClientViewModel,
+    private val transactionClientViewModel: TransactionClientViewModel,
     private val dialogFragment: DialogFragment
 ) : RecyclerView.ViewHolder(transactionSelectClientItemBinding.root) {
     fun bind(client: Client) {
@@ -28,7 +28,7 @@ class TransactionClientHolder(
             selectTransactionClientManagerName.text = clientValuesMap["clientManagerName"] as String
         }
         transactionSelectClientItemBinding.root.setOnClickListener {
-            clientViewModel.setSelectClient(client)
+            transactionClientViewModel.setSelectClient(client)
             dialogFragment.dismiss()
         }
     }

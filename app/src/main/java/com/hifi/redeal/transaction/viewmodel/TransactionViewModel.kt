@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.hifi.redeal.transaction.model.Client
-import com.hifi.redeal.transaction.model.LoadTransactionData
+import com.hifi.redeal.transaction.model.ClientData
 import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.model.TransactionData
 import com.hifi.redeal.transaction.repository.TransactionRepository
@@ -56,15 +56,14 @@ class TransactionViewModel @Inject constructor(
         val currentTransaction = modifyTransaction.value
 
         currentTransaction?.let {
-            val updatedTransaction =
-                createUpdatedTransaction(
-                    client,
-                    it,
-                    itemName,
-                    itemCount,
-                    itemPrice,
-                    amount
-                )
+            val updatedTransaction = createUpdatedTransaction(
+                client,
+                it,
+                itemName,
+                itemCount,
+                itemPrice,
+                amount
+            )
 
             replaceTransactionInList(it, updatedTransaction)
 
@@ -113,17 +112,8 @@ class TransactionViewModel @Inject constructor(
         )
         transactionRepository.setTransactionData(newDepositTransactionData) {
             val newTransaction = Transaction(
-                LoadTransactionData(
-                    client.getClientIdx(),
-                    client.getClientName(),
-                    createTime,
-                    true,
-                    amount,
-                    newTransactionIdx,
-                    0,
-                    0,
-                    ""
-                )
+                newDepositTransactionData,
+                client.copy()
             )
             totalTransactionData.add(newTransaction)
             updateTransaction()
@@ -151,17 +141,8 @@ class TransactionViewModel @Inject constructor(
         )
         transactionRepository.setTransactionData(newSalesTransactionData) {
             val newTransaction = Transaction(
-                LoadTransactionData(
-                    client.getClientIdx(),
-                    client.getClientName(),
-                    createTime,
-                    false,
-                    amount,
-                    newTransactionIdx,
-                    itemCount,
-                    itemPrice,
-                    itemName
-                )
+                newSalesTransactionData,
+                client.copy()
             )
             totalTransactionData.add(newTransaction)
             updateTransaction()
@@ -179,7 +160,7 @@ class TransactionViewModel @Inject constructor(
             totalTransactionData.clear()
             it.result.forEach { c1 ->
                 setMoveToPosition(0)
-                getClientName(
+                getClientInformation(
                     TransactionData(
                         c1["clientIdx"] as Long,
                         c1["date"] as Timestamp,
@@ -195,20 +176,17 @@ class TransactionViewModel @Inject constructor(
         }
     }
 
-    private fun getClientName(transactionData: TransactionData) {
+    private fun getClientInformation(transactionData: TransactionData) {
         transactionRepository.getClientInfo(transactionData.clientIdx) {
             for (c1 in it.result) {
                 val newTransactionData = Transaction(
-                    LoadTransactionData(
-                        transactionData.clientIdx,
+                    transactionData,
+                    ClientData(
+                        c1["clientIdx"] as Long,
                         c1["clientName"] as String,
-                        transactionData.date,
-                        transactionData.isDeposit,
-                        transactionData.transactionAmountReceived,
-                        transactionData.transactionIdx,
-                        transactionData.transactionItemCount,
-                        transactionData.transactionItemPrice,
-                        transactionData.transactionItemName
+                        c1["clientManagerName"] as String,
+                        c1["clientState"] as Long,
+                        c1["isBookmark"] as Boolean
                     )
                 )
                 totalTransactionData.add(newTransactionData)
@@ -242,9 +220,8 @@ class TransactionViewModel @Inject constructor(
         amount: Long
     ): Transaction {
         return Transaction(
-            LoadTransactionData(
+            TransactionData(
                 client.getClientIdx(),
-                client.getClientName(),
                 currentTransaction.getTransactionDate(),
                 false,
                 amount,
@@ -252,7 +229,8 @@ class TransactionViewModel @Inject constructor(
                 itemCount,
                 itemPrice,
                 itemName
-            )
+            ),
+            client.copy()
         )
     }
 
@@ -262,9 +240,8 @@ class TransactionViewModel @Inject constructor(
         amount: Long
     ): Transaction {
         return Transaction(
-            LoadTransactionData(
+            TransactionData(
                 client.getClientIdx(),
-                client.getClientName(),
                 currentTransaction.getTransactionDate(),
                 true,
                 amount,
@@ -272,7 +249,8 @@ class TransactionViewModel @Inject constructor(
                 0,
                 0,
                 ""
-            )
+            ),
+            client.copy()
         )
     }
 

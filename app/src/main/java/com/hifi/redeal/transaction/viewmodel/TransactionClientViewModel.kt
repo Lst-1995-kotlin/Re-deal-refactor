@@ -11,11 +11,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ClientViewModel @Inject constructor(
+class TransactionClientViewModel @Inject constructor(
     private val clientRepository: ClientRepository,
 ) : ViewModel() {
 
-    val selectedClient = MutableLiveData<Client?>()
+    val selectedClient = MutableLiveData<Client>()
     private val _clients = MutableLiveData<List<Client>>()
     val clients: LiveData<List<Client>> get() = _clients
 
@@ -25,18 +25,6 @@ class ClientViewModel @Inject constructor(
 
     fun setSelectClient(client: Client) {
         selectedClient.postValue(client)
-    }
-
-    fun setSelectClient(clientIdx: Long?) {
-        clientIdx?.let {
-            val selectClient = _clients.value?.firstOrNull { it.getClientIdx() == clientIdx }
-            selectClient?.let { selectedClient.postValue(it) }
-        } ?: selectedClient.postValue(null)
-    }
-
-    private fun updateClients(newData: List<Client>?) {
-        newData?.let { _clients.postValue(it.sortedByDescending { it.getClientIdx() }) }
-            ?: _clients.postValue(emptyList())
     }
 
     private fun getUserAllClient() {
@@ -53,7 +41,7 @@ class ClientViewModel @Inject constructor(
 
                 if (isClientStateNotStop(clientData.clientState)) {
                     temp.add(Client(clientData))
-                    updateClients(temp)
+                    _clients.postValue(temp)
                 }
             }
         }

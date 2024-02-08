@@ -55,6 +55,7 @@ import com.hifi.redeal.transaction.view.TransactionDepositModifyFragment
 import com.hifi.redeal.transaction.view.TransactionFragment
 import com.hifi.redeal.transaction.view.TransactionSalesFragment
 import com.hifi.redeal.transaction.view.TransactionSalesModifyFragment
+import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import com.skt.tmap.TMapTapi
 import com.skt.tmap.TMapTapi.OnAuthenticationListenerCallback
@@ -70,6 +71,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var activityMainBinding: ActivityMainBinding
     lateinit var scheduleVM: ScheduleVM
     private val transactionViewModel: TransactionViewModel by viewModels()
+    private val transactionClientViewModel: TransactionClientViewModel by viewModels()
 
     lateinit var tMapTapi: TMapTapi
 

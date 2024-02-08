@@ -16,14 +16,14 @@ import com.hifi.redeal.transaction.util.ItemTextWatcher
 import com.hifi.redeal.transaction.util.TransactionInputEditTextFocusListener
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.removeNumberFormat
 import com.hifi.redeal.transaction.util.TransactionSelectEditTextFocusListener
-import com.hifi.redeal.transaction.viewmodel.ClientViewModel
+import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 
 class TransactionSalesModifyFragment : Fragment() {
 
     private lateinit var fragmentTransactionSalesModifyBinding: FragmentTransactionSalesModifyBinding
     private lateinit var mainActivity: MainActivity
-    private val clientViewModel: ClientViewModel by activityViewModels()
+    private val transactionClientViewModel: TransactionClientViewModel by activityViewModels()
     private val transactionViewModel: TransactionViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -45,7 +45,7 @@ class TransactionSalesModifyFragment : Fragment() {
             }
 
             modifySalesBtn.setOnClickListener {
-                clientViewModel.selectedClient.value?.let {
+                transactionClientViewModel.selectedClient.value?.let {
                     val itemPrice = removeNumberFormat("${transactionModifyItemPriceEditText.text}")
                     val itemCount = removeNumberFormat("${transactionModifyItemCountEditText.text}")
                     val amountReceived =
@@ -58,7 +58,7 @@ class TransactionSalesModifyFragment : Fragment() {
                         itemPrice,
                         amountReceived
                     )
-                    mainActivity.removeFragment(MainActivity.TRANSACTION_SALES_MODIFY_FRAGMENT)
+                    transactionViewModel.setModifyTransaction(null)
                 }
             }
             transactionModifyItemNameEditText.onFocusChangeListener =
@@ -72,20 +72,20 @@ class TransactionSalesModifyFragment : Fragment() {
 
             transactionModifyClientSelectEditText.onFocusChangeListener =
                 TransactionSelectEditTextFocusListener(
-                    SelectTransactionClientDialog(clientViewModel),
+                    SelectTransactionClientDialog(transactionClientViewModel),
                     childFragmentManager
                 )
 
             transactionModifyItemNameEditText.addTextChangedListener(
                 ItemNameTextWatcher(
-                    clientViewModel,
+                    transactionClientViewModel,
                     modifySalesBtn
                 )
             )
 
             transactionModifyItemCountEditText.addTextChangedListener(
                 ItemTextWatcher(
-                    clientViewModel,
+                    transactionClientViewModel,
                     transactionModifyItemCountEditText,
                     transactionModifyItemPriceEditText,
                     transactionModifyAmountReceivedEditText,
@@ -95,7 +95,7 @@ class TransactionSalesModifyFragment : Fragment() {
 
             transactionModifyItemPriceEditText.addTextChangedListener(
                 ItemTextWatcher(
-                    clientViewModel,
+                    transactionClientViewModel,
                     transactionModifyItemPriceEditText,
                     transactionModifyItemCountEditText,
                     transactionModifyAmountReceivedEditText,
@@ -105,11 +105,15 @@ class TransactionSalesModifyFragment : Fragment() {
 
             transactionModifyAmountReceivedEditText.addTextChangedListener(
                 AmountTextWatcher(
-                    clientViewModel,
+                    transactionClientViewModel,
                     transactionModifyAmountReceivedEditText,
                     modifySalesBtn
                 )
             )
+
+            modifySalesFragmentToolbar.setNavigationOnClickListener {
+                mainActivity.removeFragment(MainActivity.TRANSACTION_SALES_MODIFY_FRAGMENT)
+            }
 
             setTransactionAmountMessage(amountModifyMessageTextView)
 
@@ -133,10 +137,10 @@ class TransactionSalesModifyFragment : Fragment() {
                     fragmentTransactionSalesModifyBinding.transactionModifyItemPriceEditText,
                     fragmentTransactionSalesModifyBinding.transactionModifyAmountReceivedEditText
                 )
-                clientViewModel.setSelectClient(transaction.getTransactionClientIdx())
+                transactionClientViewModel.setSelectClient(transaction.getClientInformation())
             } ?: mainActivity.removeFragment(MainActivity.TRANSACTION_SALES_MODIFY_FRAGMENT)
         }
-        clientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
+        transactionClientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
             client?.setClientInfoView(fragmentTransactionSalesModifyBinding.transactionModifyClientSelectEditText)
             if (fragmentTransactionSalesModifyBinding.transactionModifyItemNameEditText.text.isNullOrEmpty() ||
                 fragmentTransactionSalesModifyBinding.transactionModifyItemCountEditText.text.isNullOrEmpty() ||

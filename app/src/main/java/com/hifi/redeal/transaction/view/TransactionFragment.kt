@@ -18,7 +18,7 @@ import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumbe
 import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
 import com.hifi.redeal.transaction.viewHolder.transaction.DepositHolderFactory
 import com.hifi.redeal.transaction.viewHolder.transaction.SalesHolderFactory
-import com.hifi.redeal.transaction.viewmodel.ClientViewModel
+import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -27,7 +27,7 @@ import javax.inject.Inject
 class TransactionFragment : Fragment() {
     private lateinit var fragmentTransactionBinding: FragmentTransactionBinding
     private val transactionViewModel: TransactionViewModel by activityViewModels()
-    private val clientViewModel: ClientViewModel by activityViewModels()
+    private val transactionClientViewModel: TransactionClientViewModel by activityViewModels()
     private lateinit var mainActivity: MainActivity
     private lateinit var transactionAdapter: TransactionAdapter
 
@@ -80,7 +80,9 @@ class TransactionFragment : Fragment() {
 
     private fun setViewModel() {
         transactionViewModel.transactionList.observe(viewLifecycleOwner) { transactions -> // 어댑터에 표시하는 거래내역들
-            transactionAdapter.setTransactions(transactions) { transactionViewModel.postValueScrollPosition() }
+            transactionAdapter.submitList(transactions.sortedByDescending { it.getTransactionDate() }) {
+                transactionViewModel.postValueScrollPosition()
+            }
             // 어댑터에 표시하는 거래내역들의 합계
             val totalSalesCount =
                 transactions.count { it.getTransactionType() == TransactionType.SALES.type }
@@ -102,6 +104,7 @@ class TransactionFragment : Fragment() {
 
         transactionViewModel.modifyTransaction.observe(viewLifecycleOwner) {// 수정하려는 거래내역이 선택되었을 때
             it?.let {
+                transactionClientViewModel.setSelectClient(it.getClientInformation())
                 when (it.getTransactionType()) {
                     TransactionType.SALES.type -> {
                         mainActivity.replaceFragment(

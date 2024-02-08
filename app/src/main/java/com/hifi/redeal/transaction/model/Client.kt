@@ -16,6 +16,10 @@ class Client(
         return otherClient.clientData == this.clientData
     }
 
+    fun copy(): ClientData {
+        return clientData.copy()
+    }
+
     fun getClientValuesMap(): HashMap<String, Any> {
         val map = HashMap<String, Any>()
         map["clientState"] = clientData.clientState
@@ -34,5 +38,4 @@ class Client(
 
     fun getClientIdx() = clientData.clientIdx
 
-    fun getClientName() = clientData.clientName
 }
