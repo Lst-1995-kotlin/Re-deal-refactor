@@ -7,9 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.MainActivity.Companion.TRANSACTION_DEPOSIT_FRAGMENT
 import com.hifi.redeal.MainActivity.Companion.TRANSACTION_SALES_FRAGMENT
+import com.hifi.redeal.databinding.DialogTransactionAddSelectBinding
 import com.hifi.redeal.databinding.FragmentTransactionBinding
 import com.hifi.redeal.transaction.adapter.TransactionAdapter
 import com.hifi.redeal.transaction.adapter.TransactionAdapterDiffCallback
@@ -61,20 +63,29 @@ class TransactionFragment : Fragment() {
     }
 
     private fun setBind() {
-        fragmentTransactionBinding.run {
+        fragmentTransactionBinding.transactionRecyclerView.run {
+            adapter = transactionAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
 
-            transactionRecyclerView.run {
-                adapter = transactionAdapter
-                layoutManager = LinearLayoutManager(context)
-            }
+        fragmentTransactionBinding.transactionAddButton.setOnClickListener {
 
-            ImgBtnAddDeposit.setOnClickListener {
-                mainActivity.replaceFragment(TRANSACTION_DEPOSIT_FRAGMENT, true, null)
+            val builder = MaterialAlertDialogBuilder(requireContext())
+            val view = DialogTransactionAddSelectBinding.inflate(layoutInflater)
+            builder.setView(view.root)
+            val dialog = builder.create()
+            dialog.show()
+            view.run {
+                ImgBtnAddDeposit.setOnClickListener {
+                    dialog.dismiss()
+                    mainActivity.replaceFragment(TRANSACTION_DEPOSIT_FRAGMENT, true, null)
+                }
+                ImgBtnAddTransaction.setOnClickListener {
+                    dialog.dismiss()
+                    mainActivity.replaceFragment(TRANSACTION_SALES_FRAGMENT, true, null)
+                }
             }
-
-            ImgBtnAddTransaction.setOnClickListener {
-                mainActivity.replaceFragment(TRANSACTION_SALES_FRAGMENT, true, null)
-            }
+            true
         }
     }
 
