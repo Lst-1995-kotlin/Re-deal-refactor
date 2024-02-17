@@ -23,6 +23,11 @@ class SalesHolder(
             totalSalesAmountTextView.text = valuesMap["totalAmount"]
             recievedAmountTextView.text = valuesMap["amountReceived"]
             recievablesTextView.text = valuesMap["receivables"]
+            if (valuesMap["receivables"] == "0") {
+                recievablesTextView.visibility = View.GONE
+                textTransaction23.visibility = View.GONE
+                textTransaction24.visibility = View.GONE
+            }
             setContextMenu(root, transaction, position)
         }
     }

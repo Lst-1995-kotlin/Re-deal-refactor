@@ -124,6 +124,6 @@ class TransactionFragment : Fragment() {
                 }
             }
         }
-        transactionViewModel.setSelectClientIndex(arguments?.getLong("clientIdx")) // 기존 선택한 클라이언트 정보를 초기화 시킨다.
+        transactionViewModel.setSelectClientIndex(null) // 기존 선택한 클라이언트 정보를 초기화 시킨다.
     }
 }
