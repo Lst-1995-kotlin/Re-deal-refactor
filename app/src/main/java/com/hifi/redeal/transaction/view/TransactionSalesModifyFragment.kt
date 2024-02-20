@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentTransactionSalesModifyBinding
 import com.hifi.redeal.transaction.configuration.TransactionAmountConfiguration.Companion.setTransactionAmountMessage
+import com.hifi.redeal.transaction.util.AmountSalesTextWatcher
 import com.hifi.redeal.transaction.util.AmountTextWatcher
 import com.hifi.redeal.transaction.util.ItemNameTextWatcher
 import com.hifi.redeal.transaction.util.ItemTextWatcher
@@ -112,9 +113,11 @@ class TransactionSalesModifyFragment : Fragment() {
             )
 
             transactionModifyAmountReceivedEditText.addTextChangedListener(
-                AmountTextWatcher(
+                AmountSalesTextWatcher(
                     transactionClientViewModel,
                     transactionModifyAmountReceivedEditText,
+                    transactionModifyItemPriceEditText,
+                    transactionModifyItemCountEditText,
                     modifySalesBtn
                 )
             )

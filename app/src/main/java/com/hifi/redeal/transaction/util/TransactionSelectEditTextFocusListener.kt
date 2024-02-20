@@ -5,12 +5,12 @@ import androidx.fragment.app.FragmentManager
 import com.hifi.redeal.transaction.view.dialog.SelectTransactionClientDialog
 
 class TransactionSelectEditTextFocusListener(
-    private val selectTransactionClientDialog: SelectTransactionClientDialog?,
+    private val selectTransactionClientDialog: SelectTransactionClientDialog,
     private val childFragmentManager: FragmentManager
     ):  View.OnFocusChangeListener {
     override fun onFocusChange(v: View, hasFocus: Boolean) {
         if (v.hasFocus()) {
-            selectTransactionClientDialog?.show(childFragmentManager, null)
+            selectTransactionClientDialog.show(childFragmentManager, null)
         }
         v.clearFocus()
     }
