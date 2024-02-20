@@ -1,5 +1,6 @@
 package com.hifi.redeal.transaction.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -199,6 +200,7 @@ class TransactionViewModel @Inject constructor(
                 it.equalsTransactionClientIndex(index)
             })
         } ?: _transactionList.postValue(totalTransactionData)
+        Log.d("tttt", "${_transactionList.value?.size}")
     }
 
     private fun getNextTransactionIdx() {

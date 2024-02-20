@@ -34,7 +34,7 @@ class Transaction(
 
     fun getTransactionDate() = transactionData.date
 
-    fun equalsTransactionClientIndex(index: Long) = transactionData.transactionIdx == index
+    fun equalsTransactionClientIndex(index: Long) = clientData.clientIdx == index
 
     fun getTransactionIdx() = transactionData.transactionIdx
 

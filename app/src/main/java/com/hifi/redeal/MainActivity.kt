@@ -50,6 +50,7 @@ import com.hifi.redeal.schedule.view.ScheduleSelectByClientFragment
 import com.hifi.redeal.schedule.view.UnvisitedScheduleFragment
 import com.hifi.redeal.schedule.view.VisitedScheduleFragment
 import com.hifi.redeal.schedule.vm.ScheduleVM
+import com.hifi.redeal.transaction.view.TransactionByClientFragment
 import com.hifi.redeal.transaction.view.TransactionDepositFragment
 import com.hifi.redeal.transaction.view.TransactionDepositModifyFragment
 import com.hifi.redeal.transaction.view.TransactionFragment
@@ -127,6 +128,7 @@ class MainActivity : AppCompatActivity() {
         val TRANSACTION_SALES_FRAGMENT = "TransactionSalesFragment"
         val TRANSACTION_DEPOSIT_MODIFY_FRAGMENT = "TransactionDepositModifyFragment"
         val TRANSACTION_SALES_MODIFY_FRAGMENT = "TransactionSalesModifyFragment"
+        val TRANSACTION_BY_CLIENT_FRAGMENT = "TransactionByClientFragment"
 
         const val BASE_URL = "https://dapi.kakao.com/"
         const val REGION_BASE_URL = "http://api.vworld.kr/"
@@ -389,6 +391,7 @@ class MainActivity : AppCompatActivity() {
             TRANSACTION_SALES_FRAGMENT -> TransactionSalesFragment()
             TRANSACTION_DEPOSIT_MODIFY_FRAGMENT -> TransactionDepositModifyFragment()
             TRANSACTION_SALES_MODIFY_FRAGMENT -> TransactionSalesModifyFragment()
+            TRANSACTION_BY_CLIENT_FRAGMENT -> TransactionByClientFragment()
             else -> Fragment()
         }
 

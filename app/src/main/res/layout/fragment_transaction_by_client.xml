@@ -7,7 +7,7 @@
     android:transitionGroup="true">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayoutTransactionMain"
+        android:id="@+id/appBarLayoutTransactionByClientMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbarTransactionMain"
+            android:id="@+id/toolbarTransactionByClientMain"
             style="@style/Theme.ReDeal.ToolbarTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,14 +25,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/transaction_toolbar_menu"
             app:navigationIcon="@drawable/arrow_back_ios_24px"
             app:title="거래 내역"
             app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"
             app:titleTextColor="@color/primary20" />
 
         <View
-            android:id="@+id/transactionDivider"
+            android:id="@+id/TransactionByClientDivider"
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/primary20" />
@@ -46,10 +45,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayoutTransactionMain">
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayoutTransactionByClientMain">
 
         <TextView
-            android:id="@+id/textViewTran1"
+            android:id="@+id/textViewByClientTran1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -62,41 +61,41 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textTotalSalesCount"
+            android:id="@+id/textTotalSalesCountByClient"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:textColor="@color/text10"
             android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/textViewTran2"
-            app:layout_constraintStart_toEndOf="@+id/textViewTran1"
-            app:layout_constraintTop_toTopOf="@+id/textViewTran1" />
+            app:layout_constraintEnd_toStartOf="@+id/textViewByClientTran2"
+            app:layout_constraintStart_toEndOf="@+id/textViewByClientTran1"
+            app:layout_constraintTop_toTopOf="@+id/textViewByClientTran1" />
 
         <TextView
-            android:id="@+id/textTotalSales"
+            android:id="@+id/textTotalSalesByClient"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:textColor="@color/text10"
             android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/textViewTran3"
-            app:layout_constraintTop_toTopOf="@+id/textViewTran2" />
+            app:layout_constraintEnd_toStartOf="@+id/textViewByClientTran3"
+            app:layout_constraintTop_toTopOf="@+id/textViewByClientTran2" />
 
         <TextView
-            android:id="@+id/textTotalReceivables"
+            android:id="@+id/textTotalReceivablesByClient"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
             android:fontFamily="@font/nanumsquareneo_regular"
             android:textColor="@color/primary20"
             android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/textViewTran4"
-            app:layout_constraintTop_toTopOf="@+id/textViewTran5" />
+            app:layout_constraintEnd_toStartOf="@+id/textViewByClientTran4"
+            app:layout_constraintTop_toTopOf="@+id/textViewByClientTran5" />
 
         <TextView
-            android:id="@+id/textViewTran2"
+            android:id="@+id/textViewByClientTran2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -104,11 +103,11 @@
             android:text="건"
             android:textColor="@color/text10"
             android:textSize="16sp"
-            app:layout_constraintStart_toEndOf="@+id/textTotalSalesCount"
-            app:layout_constraintTop_toTopOf="@+id/textTotalSalesCount" />
+            app:layout_constraintStart_toEndOf="@+id/textTotalSalesCountByClient"
+            app:layout_constraintTop_toTopOf="@+id/textTotalSalesCountByClient" />
 
         <TextView
-            android:id="@+id/textViewTran3"
+            android:id="@+id/textViewByClientTran3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
@@ -117,10 +116,10 @@
             android:textColor="@color/text10"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textTotalSales" />
+            app:layout_constraintTop_toTopOf="@+id/textTotalSalesByClient" />
 
         <TextView
-            android:id="@+id/textViewTran4"
+            android:id="@+id/textViewByClientTran4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
@@ -129,10 +128,10 @@
             android:textColor="@color/primary20"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textTotalReceivables" />
+            app:layout_constraintTop_toTopOf="@+id/textTotalReceivablesByClient" />
 
         <TextView
-            android:id="@+id/textViewTran5"
+            android:id="@+id/textViewByClientTran5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -142,7 +141,7 @@
             android:textColor="@color/text10"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewTran1" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewByClientTran1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -166,7 +165,7 @@
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/transactionRecyclerView"
+            android:id="@+id/transactionByClientRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -195,7 +194,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/ImgBtnAddDeposit"
+                android:id="@+id/ImgBtnAddDepositByClient"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -209,7 +208,7 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/ImgBtnAddTransaction"
+                android:id="@+id/ImgBtnAddTransactionByClient"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

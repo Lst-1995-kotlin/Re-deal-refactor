@@ -1,14 +1,13 @@
 package com.hifi.redeal.transaction.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.MainActivity
-import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTransactionByClientBinding
 import com.hifi.redeal.transaction.adapter.TransactionAdapter
 import com.hifi.redeal.transaction.adapter.TransactionAdapterDiffCallback
@@ -64,16 +63,16 @@ class TransactionByClientFragment : Fragment() {
     private fun setBind() {
         fragmentTransactionByClientBinding.run {
 
-            transactionRecyclerView.run {
+            transactionByClientRecyclerView.run {
                 adapter = transactionAdapter
                 layoutManager = LinearLayoutManager(context)
             }
 
-            ImgBtnAddDeposit.setOnClickListener {
+            ImgBtnAddDepositByClient.setOnClickListener {
                 mainActivity.replaceFragment(MainActivity.TRANSACTION_DEPOSIT_FRAGMENT, true, null)
             }
 
-            ImgBtnAddTransaction.setOnClickListener {
+            ImgBtnAddTransactionByClient.setOnClickListener {
                 mainActivity.replaceFragment(MainActivity.TRANSACTION_SALES_FRAGMENT, true, null)
             }
         }
@@ -91,18 +90,18 @@ class TransactionByClientFragment : Fragment() {
             val totalReceivables = transactions.sumOf { it.getReceivables() }
 
             fragmentTransactionByClientBinding.run {
-                textTotalSalesCount.text =
+                textTotalSalesCountByClient.text =
                     TransactionNumberFormatUtil.replaceNumberFormat(totalSalesCount)
-                textTotalSales.text =
+                textTotalSalesByClient.text =
                     TransactionNumberFormatUtil.replaceNumberFormat(totalSalesAmount)
-                textTotalReceivables.text =
+                textTotalReceivablesByClient.text =
                     TransactionNumberFormatUtil.replaceNumberFormat(totalSalesAmount - totalReceivables)
             }
         }
 
         transactionViewModel.transactionPosition.observe(viewLifecycleOwner) {// 수정 프래그먼트를 띄웠을 경우 해당 포지션으로 이동 시킴.
             val layoutManager =
-                fragmentTransactionByClientBinding.transactionRecyclerView.layoutManager as LinearLayoutManager
+                fragmentTransactionByClientBinding.transactionByClientRecyclerView.layoutManager as LinearLayoutManager
             layoutManager.scrollToPosition(it)
         }
 

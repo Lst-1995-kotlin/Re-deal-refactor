@@ -86,7 +86,7 @@ class AccountDetailFragment : Fragment() {
                         val bundle = Bundle()
                         bundle.putLong("clientIdx", clientIdx)
                         mainActivity.replaceFragment(
-                            MainActivity.TRANSACTION_FRAGMENT,
+                            MainActivity.TRANSACTION_BY_CLIENT_FRAGMENT,
                             true,
                             bundle
                         )
