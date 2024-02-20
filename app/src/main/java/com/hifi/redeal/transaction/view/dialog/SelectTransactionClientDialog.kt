@@ -3,6 +3,7 @@ package com.hifi.redeal.transaction.view.dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,7 +36,6 @@ class SelectTransactionClientDialog(
         savedInstanceState: Bundle?,
     ): View {
         dialogSelectTransactionClientDialog = DialogSelectTransactionClientBinding.inflate(inflater)
-
         setAdapter()
         setBind()
         setViewModel()
@@ -46,6 +46,11 @@ class SelectTransactionClientDialog(
     override fun onResume() {
         super.onResume()
         context?.dialogResize(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        dialogSelectTransactionClientDialog.searchTransactionClientEditText.text.clear()
     }
 
     private fun setAdapter() {

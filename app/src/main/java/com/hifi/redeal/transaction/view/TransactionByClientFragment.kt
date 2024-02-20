@@ -26,9 +26,10 @@ class TransactionByClientFragment : Fragment() {
 
     private lateinit var fragmentTransactionByClientBinding: FragmentTransactionByClientBinding
     private lateinit var mainActivity: MainActivity
+    private lateinit var transactionAdapter: TransactionAdapter
+    private var clientIdx: Long? = null
     private val transactionViewModel: TransactionViewModel by activityViewModels()
     private val transactionClientViewModel: TransactionClientViewModel by activityViewModels()
-    private lateinit var transactionAdapter: TransactionAdapter
 
     @Inject
     lateinit var transactionAdapterDiffCallback: TransactionAdapterDiffCallback
@@ -39,8 +40,8 @@ class TransactionByClientFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         fragmentTransactionByClientBinding = FragmentTransactionByClientBinding.inflate(inflater)
-
         mainActivity = activity as MainActivity
+        clientIdx = arguments?.getLong("clientIdx")
 
         setAdapter()
         setBind()
@@ -69,10 +70,12 @@ class TransactionByClientFragment : Fragment() {
             }
 
             ImgBtnAddDepositByClient.setOnClickListener {
+                transactionClientViewModel.setSelectClientIndex(clientIdx)
                 mainActivity.replaceFragment(MainActivity.TRANSACTION_DEPOSIT_FRAGMENT, true, null)
             }
 
             ImgBtnAddTransactionByClient.setOnClickListener {
+                transactionClientViewModel.setSelectClientIndex(clientIdx)
                 mainActivity.replaceFragment(MainActivity.TRANSACTION_SALES_FRAGMENT, true, null)
             }
         }
@@ -127,6 +130,6 @@ class TransactionByClientFragment : Fragment() {
                 }
             }
         }
-        transactionViewModel.setSelectClientIndex(arguments?.getLong("clientIdx")) // 기존 선택한 클라이언트 정보를 초기화 시킨다.
+        transactionViewModel.setSelectClientIndex(clientIdx) // 기존 선택한 클라이언트 정보를 초기화 시킨다.
     }
 }

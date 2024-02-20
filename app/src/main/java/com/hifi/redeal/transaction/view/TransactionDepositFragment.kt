@@ -36,6 +36,10 @@ class TransactionDepositFragment : Fragment() {
         setViewModel()
         return fragmentTransactionDepositBinding.root
     }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        transactionClientViewModel.setSelectClientIndex(null)
+    }
 
     private fun setBind() {
         fragmentTransactionDepositBinding.run {
@@ -67,6 +71,7 @@ class TransactionDepositFragment : Fragment() {
                 )
 
             addDepositMaterialToolbar.setNavigationOnClickListener {
+                transactionClientViewModel.setSelectClientIndex(null)
                 mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_FRAGMENT)
             }
 

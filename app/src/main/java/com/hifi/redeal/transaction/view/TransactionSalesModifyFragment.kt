@@ -39,6 +39,13 @@ class TransactionSalesModifyFragment : Fragment() {
         return fragmentTransactionSalesModifyBinding.root
     }
 
+    override fun onPause() {
+        super.onPause()
+        transactionViewModel.modifyTransaction.value?.let {
+            transactionViewModel.setModifyTransaction(null)
+        }
+    }
+
     private fun setBind() {
         fragmentTransactionSalesModifyBinding.run {
             modifySalesFragmentToolbar.setNavigationOnClickListener {
@@ -117,10 +124,6 @@ class TransactionSalesModifyFragment : Fragment() {
             }
 
             setTransactionAmountMessage(amountModifyMessageTextView)
-
-            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-                transactionViewModel.setModifyTransaction(null)
-            }
 
             mainActivity.hideKeyboardAndClearFocus(transactionModifyItemNameEditText)
             mainActivity.hideKeyboardAndClearFocus(transactionModifyItemCountEditText)

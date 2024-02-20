@@ -15,16 +15,17 @@ class TransactionClientViewModel @Inject constructor(
     private val clientRepository: ClientRepository,
 ) : ViewModel() {
 
-    val selectedClient = MutableLiveData<Client>()
+
+    private val _selectedClient = MutableLiveData<Client?>()
     private val _clients = MutableLiveData<List<Client>>()
     val clients: LiveData<List<Client>> get() = _clients
-
+    val selectedClient: LiveData<Client?> get() = _selectedClient
     init {
         getUserAllClient()
     }
 
     fun setSelectClient(client: Client) {
-        selectedClient.postValue(client)
+        _selectedClient.postValue(client)
     }
 
     fun setSelectClientIndex(clientIndex: Long?) {
@@ -43,8 +44,7 @@ class TransactionClientViewModel @Inject constructor(
                     setSelectClient(client)
                 }
             }
-        }
-
+        }?: _selectedClient.postValue(null)
     }
 
     private fun getUserAllClient() {

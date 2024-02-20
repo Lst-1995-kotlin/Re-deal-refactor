@@ -37,6 +37,13 @@ class TransactionDepositModifyFragment : Fragment() {
         return fragmentTransactionDepositModifyBinding.root
     }
 
+    override fun onPause() {
+        super.onPause()
+        transactionViewModel.modifyTransaction.value?.let {
+            transactionViewModel.setModifyTransaction(null)
+        }
+    }
+
     private fun setBind() {
         fragmentTransactionDepositModifyBinding.run {
             modifyDepositClientTextInputEditText.onFocusChangeListener =
@@ -66,10 +73,6 @@ class TransactionDepositModifyFragment : Fragment() {
             modifyDepositMaterialToolbar.setNavigationOnClickListener {
                 mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_MODIFY_FRAGMENT)
             }
-
-            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-                transactionViewModel.setModifyTransaction(null)
-            }
         }
     }
 
@@ -81,7 +84,7 @@ class TransactionDepositModifyFragment : Fragment() {
             } ?: mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_MODIFY_FRAGMENT)
         }
         transactionClientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
-            client.setClientInfoView(fragmentTransactionDepositModifyBinding.modifyDepositClientTextInputEditText)
+            client?.setClientInfoView(fragmentTransactionDepositModifyBinding.modifyDepositClientTextInputEditText)
             if (fragmentTransactionDepositModifyBinding.modifyDepositPriceEditTextNumber.text.isNullOrEmpty()) {
                 fragmentTransactionDepositModifyBinding.modifyDepositBtn.visibility = View.GONE
                 return@observe
