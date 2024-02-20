@@ -1,9 +1,13 @@
 package com.hifi.redeal.transaction.viewHolder.transaction
 
+import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.hifi.redeal.R
+import com.hifi.redeal.databinding.DialogTransactionAddSelectBinding
+import com.hifi.redeal.databinding.DialogTransactionEditBinding
 import com.hifi.redeal.databinding.RowTransactionSalesBinding
 import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
@@ -28,23 +32,32 @@ class SalesHolder(
                 textTransaction23.visibility = View.GONE
                 textTransaction24.visibility = View.GONE
             }
-            setContextMenu(root, transaction, position)
+            setLongClickEvent(root, transaction, position)
         }
     }
 
-    private fun setContextMenu(view: View, transaction: Transaction, position: Int) {
-        view.setOnCreateContextMenuListener { contextMenu, _, _ ->
-            MenuInflater(view.context).inflate(R.menu.transaction_menu, contextMenu)
-            contextMenu.findItem(R.id.transactionDeleteMenu).setOnMenuItemClickListener {
-                transactionViewModel.deleteTransactionIndex(transaction.getTransactionIdx())
-                if (position > 0) transactionViewModel.setMoveToPosition(position - 1)
-                true
+    private fun setLongClickEvent(view: View, transaction: Transaction, position: Int) {
+        view.setOnLongClickListener {
+            val builder = MaterialAlertDialogBuilder(view.context)
+            val layoutInflater = LayoutInflater.from(view.context)
+            val dialogTransactionEditBinding =
+                DialogTransactionEditBinding.inflate(layoutInflater)
+            builder.setView(dialogTransactionEditBinding.root)
+            val dialog = builder.create()
+            dialogTransactionEditBinding.run {
+                transactionDeleteImageButton.setOnClickListener {
+                    dialog.dismiss()
+                    transactionViewModel.deleteTransactionIndex(transaction.getTransactionIdx())
+                    if (position > 0) transactionViewModel.setMoveToPosition(position - 1)
+                }
+                transactionEditImageButton.setOnClickListener {
+                    dialog.dismiss()
+                    transactionViewModel.setModifyTransaction(transaction)
+                    transactionViewModel.setMoveToPosition(position)
+                }
             }
-            contextMenu.findItem(R.id.transactionEditMenu).setOnMenuItemClickListener {
-                transactionViewModel.setModifyTransaction(transaction)
-                transactionViewModel.setMoveToPosition(position)
-                true
-            }
+            dialog.show()
+            true
         }
     }
 }
