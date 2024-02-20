@@ -16,6 +16,7 @@ import com.hifi.redeal.transaction.util.ItemTextWatcher
 import com.hifi.redeal.transaction.util.TransactionInputEditTextFocusListener
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.removeNumberFormat
 import com.hifi.redeal.transaction.util.TransactionSelectEditTextFocusListener
+import com.hifi.redeal.transaction.view.dialog.SelectTransactionClientDialog
 import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 

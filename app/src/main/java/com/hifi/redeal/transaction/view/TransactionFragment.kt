@@ -17,6 +17,7 @@ import com.hifi.redeal.transaction.adapter.TransactionAdapter
 import com.hifi.redeal.transaction.adapter.TransactionAdapterDiffCallback
 import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
+import com.hifi.redeal.transaction.view.dialog.TransactionAddSelectDialog
 import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
 import com.hifi.redeal.transaction.viewHolder.transaction.DepositHolderFactory
 import com.hifi.redeal.transaction.viewHolder.transaction.SalesHolderFactory
@@ -32,6 +33,7 @@ class TransactionFragment : Fragment() {
     private val transactionClientViewModel: TransactionClientViewModel by activityViewModels()
     private lateinit var mainActivity: MainActivity
     private lateinit var transactionAdapter: TransactionAdapter
+    private lateinit var transactionAddSelectDialog: TransactionAddSelectDialog
 
     @Inject
     lateinit var transactionAdapterDiffCallback: TransactionAdapterDiffCallback
@@ -43,6 +45,8 @@ class TransactionFragment : Fragment() {
     ): View {
         fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater)
         mainActivity = activity as MainActivity
+        transactionAddSelectDialog =
+            TransactionAddSelectDialog(mainActivity, requireContext(), inflater)
 
         setAdapter()
         setBind()
@@ -68,24 +72,8 @@ class TransactionFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
         }
 
-        fragmentTransactionBinding.transactionAddButton.setOnClickListener {
-
-            val builder = MaterialAlertDialogBuilder(requireContext())
-            val view = DialogTransactionAddSelectBinding.inflate(layoutInflater)
-            builder.setView(view.root)
-            val dialog = builder.create()
-            dialog.show()
-            view.run {
-                ImgBtnAddDeposit.setOnClickListener {
-                    dialog.dismiss()
-                    mainActivity.replaceFragment(TRANSACTION_DEPOSIT_FRAGMENT, true, null)
-                }
-                ImgBtnAddTransaction.setOnClickListener {
-                    dialog.dismiss()
-                    mainActivity.replaceFragment(TRANSACTION_SALES_FRAGMENT, true, null)
-                }
-            }
-            true
+        fragmentTransactionBinding.transactionAddButton.setOnClickListener{
+            transactionAddSelectDialog.dialogShow()
         }
     }
 

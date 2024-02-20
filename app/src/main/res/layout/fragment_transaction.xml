@@ -27,7 +27,6 @@
         android:background="@drawable/btn_round_primary80"
         android:elevation="6dp"
         android:src="@drawable/add_primary100_24px"
-        android:text="Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
