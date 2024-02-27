@@ -7,68 +7,68 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class Transaction(
-    private val loadTransactionData: LoadTransactionData
+    private val transactionData: TransactionData,
+    private val clientData: ClientData
 ) {
     private val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
     override fun hashCode(): Int {
-        return loadTransactionData.hashCode()
+        return transactionData.hashCode()
     }
 
     override fun equals(other: Any?): Boolean {
         val otherTransaction = other as Transaction
-        return otherTransaction.loadTransactionData == this.loadTransactionData
+        return otherTransaction.transactionData == this.transactionData
     }
-
 
     fun calculateSalesAmount(): Long {
-        if (loadTransactionData.isDeposit) return 0L
-        return loadTransactionData.transactionItemCount * loadTransactionData.transactionItemPrice
+        if (transactionData.isDeposit) return 0L
+        return transactionData.transactionItemCount * transactionData.transactionItemPrice
     }
-
-    fun getReceivables() = loadTransactionData.transactionAmountReceived
-
 
     fun getTransactionType(): Int {
-        return when (loadTransactionData.isDeposit) {
+        return when (transactionData.isDeposit) {
             true -> TransactionType.DEPOSIT.type
             false -> TransactionType.SALES.type
-            else -> TransactionType.ERROR.type
         }
     }
 
-    fun getTransactionDate() = loadTransactionData.date
+    fun getTransactionDate() = transactionData.date
 
-    fun getTransactionClientIdx() = loadTransactionData.clientIdx
+    fun equalsTransactionClientIndex(index: Long) = clientData.clientIdx == index
 
-    fun getTransactionIdx() = loadTransactionData.transactionIdx
+    fun getTransactionIdx() = transactionData.transactionIdx
 
-    fun getTransactionValueMap(): HashMap<String, String> {
+    fun getReceivables() = transactionData.transactionAmountReceived
+
+    fun getClientInformation() = Client(clientData)
+
+    fun getTransactionValueMap(): Map<String, String> {
         val currentTransactionData = HashMap<String, String>()
-        if (loadTransactionData.isDeposit) { // 입금 내역일 경우
-            currentTransactionData["date"] = dateFormat.format(loadTransactionData.date.toDate())
-            currentTransactionData["clientName"] = loadTransactionData.clientName
+        if (transactionData.isDeposit) { // 입금 내역일 경우
+            currentTransactionData["date"] = dateFormat.format(transactionData.date.toDate())
+            currentTransactionData["clientName"] = clientData.clientName
             currentTransactionData["amountReceived"] =
-                replaceNumberFormat(loadTransactionData.transactionAmountReceived)
+                replaceNumberFormat(transactionData.transactionAmountReceived)
             return currentTransactionData
         }
-        currentTransactionData["date"] = dateFormat.format(loadTransactionData.date.toDate())
-        currentTransactionData["clientName"] = loadTransactionData.clientName
-        currentTransactionData["itemName"] = loadTransactionData.transactionItemName
+        currentTransactionData["date"] = dateFormat.format(transactionData.date.toDate())
+        currentTransactionData["clientName"] = clientData.clientName
+        currentTransactionData["itemName"] = transactionData.transactionItemName
         currentTransactionData["itemCount"] =
-            replaceNumberFormat(loadTransactionData.transactionItemCount)
+            replaceNumberFormat(transactionData.transactionItemCount)
         currentTransactionData["itemPrice"] =
-            replaceNumberFormat(loadTransactionData.transactionItemPrice)
+            replaceNumberFormat(transactionData.transactionItemPrice)
         currentTransactionData["totalAmount"] =
             replaceNumberFormat(
-                loadTransactionData.transactionItemPrice *
-                        loadTransactionData.transactionItemCount
+                transactionData.transactionItemPrice *
+                        transactionData.transactionItemCount
             )
         currentTransactionData["amountReceived"] =
-            replaceNumberFormat(loadTransactionData.transactionAmountReceived)
+            replaceNumberFormat(transactionData.transactionAmountReceived)
         currentTransactionData["receivables"] = replaceNumberFormat(
-            loadTransactionData.transactionItemPrice *
-                    loadTransactionData.transactionItemCount -
-                    loadTransactionData.transactionAmountReceived,
+            transactionData.transactionItemPrice *
+                    transactionData.transactionItemCount -
+                    transactionData.transactionAmountReceived,
         )
         return currentTransactionData
     }
@@ -79,13 +79,13 @@ class Transaction(
         itemAmount: TextView,
         receivedAmount: TextView,
     ) {
-        itemName.text = loadTransactionData.transactionItemName
-        itemCount.text = replaceNumberFormat(loadTransactionData.transactionItemCount)
-        itemAmount.text = replaceNumberFormat(loadTransactionData.transactionItemPrice)
-        receivedAmount.text = replaceNumberFormat(loadTransactionData.transactionAmountReceived)
+        itemName.text = transactionData.transactionItemName
+        itemCount.text = replaceNumberFormat(transactionData.transactionItemCount)
+        itemAmount.text = replaceNumberFormat(transactionData.transactionItemPrice)
+        receivedAmount.text = replaceNumberFormat(transactionData.transactionAmountReceived)
     }
 
     fun setModifyViewValue(receivedAmount: TextView) {
-        receivedAmount.text = replaceNumberFormat(loadTransactionData.transactionAmountReceived)
+        receivedAmount.text = replaceNumberFormat(transactionData.transactionAmountReceived)
     }
 }

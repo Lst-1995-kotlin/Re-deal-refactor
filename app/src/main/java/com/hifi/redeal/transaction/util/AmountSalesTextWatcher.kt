@@ -10,11 +10,11 @@ import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.removeNumber
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
 import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
 
-class ItemTextWatcher(
+class AmountSalesTextWatcher(
     private val transactionClientViewModel: TransactionClientViewModel,
-    private val nowEditText: TextInputEditText,
-    private val notEditText: TextInputEditText,
-    private val amountEditText: TextInputEditText,
+    private val textInputEditText: TextInputEditText,
+    private val itemAmountView: TextInputEditText,
+    private val itemCountView: TextInputEditText,
     private val button: Button
 ) : TextWatcher {
 
@@ -22,36 +22,31 @@ class ItemTextWatcher(
 
     override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
         button.visibility =
-            if (p0.isNullOrEmpty() || transactionClientViewModel.selectedClient.value == null) View.GONE
-            else View.VISIBLE
+            if (p0.isNullOrEmpty() || transactionClientViewModel.selectedClient.value == null) View.GONE else View.VISIBLE
     }
 
     override fun afterTextChanged(p0: Editable?) {
         if (p0.isNullOrEmpty()) {
-            nowEditText.removeTextChangedListener(this)
-            nowEditText.text = null
-            amountEditText.text = null
-            nowEditText.addTextChangedListener(this)
+            textInputEditText.removeTextChangedListener(this)
+            textInputEditText.text = null
+            textInputEditText.addTextChangedListener(this)
         } else if ("$p0".all { it.isDigit() || it == ',' }) {
             var inputNumber = removeNumberFormat("$p0")
             while (!transactionAmountCheck(inputNumber)) {
                 inputNumber /= 10L
             }
-
-            if (notEditText.text.isNullOrEmpty()) {
-                amountEditText.text = null
-            } else {
-                while (!transactionAmountCheck(inputNumber * removeNumberFormat("${notEditText.text}"))) {
-                    inputNumber /= 10L
-                }
-                amountEditText.setText("${inputNumber * removeNumberFormat("${notEditText.text}")}")
+            val itemAmount = itemAmountView.text?.let { removeNumberFormat(it.toString()) } ?: 0L
+            val itemCount = itemCountView.text?.let{ removeNumberFormat(it.toString()) } ?: 0L
+            while (inputNumber > itemAmount * itemCount) {
+                inputNumber /= 10L
             }
-
             val replaceNumber = replaceNumberFormat(inputNumber)
-            nowEditText.removeTextChangedListener(this)
-            nowEditText.setText(replaceNumber)
-            nowEditText.setSelection(replaceNumber.length)
-            nowEditText.addTextChangedListener(this)
+
+            textInputEditText.removeTextChangedListener(this)
+            textInputEditText.setText(replaceNumber)
+            textInputEditText.setSelection(replaceNumber.length)
+            textInputEditText.addTextChangedListener(this)
+
         }
     }
 }

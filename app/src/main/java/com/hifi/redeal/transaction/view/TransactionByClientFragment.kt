@@ -8,12 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.MainActivity
-import com.hifi.redeal.databinding.FragmentTransactionBinding
+import com.hifi.redeal.databinding.FragmentTransactionByClientBinding
 import com.hifi.redeal.transaction.adapter.TransactionAdapter
 import com.hifi.redeal.transaction.adapter.TransactionAdapterDiffCallback
 import com.hifi.redeal.transaction.configuration.TransactionType
-import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
-import com.hifi.redeal.transaction.view.dialog.TransactionAddSelectDialog
+import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil
 import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
 import com.hifi.redeal.transaction.viewHolder.transaction.CountHolderFactory
 import com.hifi.redeal.transaction.viewHolder.transaction.DepositHolderFactory
@@ -24,32 +23,32 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class TransactionFragment : Fragment() {
-    private lateinit var fragmentTransactionBinding: FragmentTransactionBinding
-    private val transactionViewModel: TransactionViewModel by activityViewModels()
-    private val transactionClientViewModel: TransactionClientViewModel by activityViewModels()
+class TransactionByClientFragment : Fragment() {
+
+    private lateinit var fragmentTransactionByClientBinding: FragmentTransactionByClientBinding
     private lateinit var mainActivity: MainActivity
     private lateinit var transactionAdapter: TransactionAdapter
-    private lateinit var transactionAddSelectDialog: TransactionAddSelectDialog
+    private var clientIdx: Long? = null
+    private val transactionViewModel: TransactionViewModel by activityViewModels()
+    private val transactionClientViewModel: TransactionClientViewModel by activityViewModels()
 
     @Inject
     lateinit var transactionAdapterDiffCallback: TransactionAdapterDiffCallback
 
+
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
-        fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater)
+        fragmentTransactionByClientBinding = FragmentTransactionByClientBinding.inflate(inflater)
         mainActivity = activity as MainActivity
-        transactionAddSelectDialog =
-            TransactionAddSelectDialog(mainActivity, requireContext(), inflater)
+        clientIdx = arguments?.getLong("clientIdx")
 
         setAdapter()
         setBind()
         setViewModel()
 
-        return fragmentTransactionBinding.root
+        return fragmentTransactionByClientBinding.root
     }
 
     private fun setAdapter() {
@@ -66,13 +65,22 @@ class TransactionFragment : Fragment() {
     }
 
     private fun setBind() {
-        fragmentTransactionBinding.transactionRecyclerView.run {
-            adapter = transactionAdapter
-            layoutManager = LinearLayoutManager(context)
-        }
+        fragmentTransactionByClientBinding.run {
 
-        fragmentTransactionBinding.transactionAddButton.setOnClickListener {
-            transactionAddSelectDialog.dialogShow()
+            transactionByClientRecyclerView.run {
+                adapter = transactionAdapter
+                layoutManager = LinearLayoutManager(context)
+            }
+
+            ImgBtnAddDepositByClient.setOnClickListener {
+                transactionClientViewModel.setSelectClientIndex(clientIdx)
+                mainActivity.replaceFragment(MainActivity.TRANSACTION_DEPOSIT_FRAGMENT, true, null)
+            }
+
+            ImgBtnAddTransactionByClient.setOnClickListener {
+                transactionClientViewModel.setSelectClientIndex(clientIdx)
+                mainActivity.replaceFragment(MainActivity.TRANSACTION_SALES_FRAGMENT, true, null)
+            }
         }
     }
 
@@ -87,16 +95,19 @@ class TransactionFragment : Fragment() {
             val totalSalesAmount = transactions.sumOf { it.calculateSalesAmount() }
             val totalReceivables = transactions.sumOf { it.getReceivables() }
 
-            fragmentTransactionBinding.run {
-                textTotalSalesCount.text = replaceNumberFormat(totalSalesCount)
-                textTotalSales.text = replaceNumberFormat(totalSalesAmount)
-                textTotalReceivables.text = replaceNumberFormat(totalSalesAmount - totalReceivables)
+            fragmentTransactionByClientBinding.run {
+                textTotalSalesCountByClient.text =
+                    TransactionNumberFormatUtil.replaceNumberFormat(totalSalesCount)
+                textTotalSalesByClient.text =
+                    TransactionNumberFormatUtil.replaceNumberFormat(totalSalesAmount)
+                textTotalReceivablesByClient.text =
+                    TransactionNumberFormatUtil.replaceNumberFormat(totalSalesAmount - totalReceivables)
             }
         }
 
         transactionViewModel.transactionPosition.observe(viewLifecycleOwner) {// 수정 프래그먼트를 띄웠을 경우 해당 포지션으로 이동 시킴.
             val layoutManager =
-                fragmentTransactionBinding.transactionRecyclerView.layoutManager as LinearLayoutManager
+                fragmentTransactionByClientBinding.transactionByClientRecyclerView.layoutManager as LinearLayoutManager
             layoutManager.scrollToPosition(it)
         }
 
@@ -120,8 +131,8 @@ class TransactionFragment : Fragment() {
                         )
                     }
                 }
-            } ?: transactionClientViewModel.setSelectClientIndex(null)
+            }
         }
-        transactionViewModel.setSelectClientIndex(null) // 기존 선택한 클라이언트 정보를 초기화 시킨다.
+        transactionViewModel.setSelectClientIndex(clientIdx) // 기존 선택한 클라이언트 정보를 초기화 시킨다.
     }
 }

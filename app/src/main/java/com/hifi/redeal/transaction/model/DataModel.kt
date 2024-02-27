@@ -13,19 +13,6 @@ data class TransactionData(
     val transactionItemName: String,
 )
 
-data class LoadTransactionData(
-    val clientIdx: Long,
-    val clientName: String,
-    val date: Timestamp,
-    @JvmField
-    val isDeposit: Boolean,
-    val transactionAmountReceived: Long,
-    val transactionIdx: Long,
-    val transactionItemCount: Long,
-    val transactionItemPrice: Long,
-    val transactionItemName: String,
-)
-
 data class ClientData(
     val clientIdx: Long,
     val clientName: String,

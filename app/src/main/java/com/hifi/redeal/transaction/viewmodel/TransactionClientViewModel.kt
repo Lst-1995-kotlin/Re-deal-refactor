@@ -11,32 +11,40 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ClientViewModel @Inject constructor(
+class TransactionClientViewModel @Inject constructor(
     private val clientRepository: ClientRepository,
 ) : ViewModel() {
 
-    val selectedClient = MutableLiveData<Client?>()
+
+    private val _selectedClient = MutableLiveData<Client?>()
     private val _clients = MutableLiveData<List<Client>>()
     val clients: LiveData<List<Client>> get() = _clients
-
+    val selectedClient: LiveData<Client?> get() = _selectedClient
     init {
         getUserAllClient()
     }
 
     fun setSelectClient(client: Client) {
-        selectedClient.postValue(client)
+        _selectedClient.postValue(client)
     }
 
-    fun setSelectClient(clientIdx: Long?) {
-        clientIdx?.let {
-            val selectClient = _clients.value?.firstOrNull { it.getClientIdx() == clientIdx }
-            selectClient?.let { selectedClient.postValue(it) }
-        } ?: selectedClient.postValue(null)
-    }
-
-    private fun updateClients(newData: List<Client>?) {
-        newData?.let { _clients.postValue(it.sortedByDescending { it.getClientIdx() }) }
-            ?: _clients.postValue(emptyList())
+    fun setSelectClientIndex(clientIndex: Long?) {
+        clientIndex?.let {
+            clientRepository.getIndexOfClient(it) {
+                for (c1 in it.result) {
+                    val client = Client(
+                        ClientData(
+                            c1["clientIdx"] as Long,
+                            c1["clientName"] as String,
+                            c1["clientManagerName"] as String,
+                            c1["clientState"] as Long,
+                            c1["isBookmark"] as Boolean
+                        )
+                    )
+                    setSelectClient(client)
+                }
+            }
+        }?: _selectedClient.postValue(null)
     }
 
     private fun getUserAllClient() {
@@ -53,7 +61,7 @@ class ClientViewModel @Inject constructor(
 
                 if (isClientStateNotStop(clientData.clientState)) {
                     temp.add(Client(clientData))
-                    updateClients(temp)
+                    _clients.postValue(temp)
                 }
             }
         }

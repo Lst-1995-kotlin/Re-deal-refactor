@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/background"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:transitionGroup="true">
+
+    <TextView
+        android:id="@+id/transactionEditImageButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:drawableLeft="@drawable/edit_24px"
+        android:fontFamily="@font/nanumsquareneo_bold"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="거래 내역 수정"
+        android:textColor="@color/primary10"
+        android:textSize="16sp" />
+
+    <View
+        android:id="@+id/dialogTransactionAddSelectDivider"
+        android:layout_width="wrap_content"
+        android:layout_height="2dp"
+        android:background="@color/primary40" />
+
+    <TextView
+        android:id="@+id/transactionDeleteImageButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:drawableLeft="@drawable/delete_24px_primary20"
+        android:fontFamily="@font/nanumsquareneo_bold"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="거래 내역 삭제"
+        android:textColor="@color/primary10"
+        android:textSize="16sp" />
+</LinearLayout>

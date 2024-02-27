@@ -9,13 +9,15 @@ import androidx.fragment.app.activityViewModels
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentTransactionSalesBinding
 import com.hifi.redeal.transaction.configuration.TransactionAmountConfiguration.Companion.setTransactionAmountMessage
+import com.hifi.redeal.transaction.util.AmountSalesTextWatcher
 import com.hifi.redeal.transaction.util.AmountTextWatcher
 import com.hifi.redeal.transaction.util.ItemNameTextWatcher
-import com.hifi.redeal.transaction.util.TransactionInputEditTextFocusListener
-import com.hifi.redeal.transaction.util.TransactionSelectEditTextFocusListener
 import com.hifi.redeal.transaction.util.ItemTextWatcher
+import com.hifi.redeal.transaction.util.TransactionInputEditTextFocusListener
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.removeNumberFormat
-import com.hifi.redeal.transaction.viewmodel.ClientViewModel
+import com.hifi.redeal.transaction.util.TransactionSelectEditTextFocusListener
+import com.hifi.redeal.transaction.view.dialog.SelectTransactionClientDialog
+import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,7 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class TransactionSalesFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
     private lateinit var fragmentTransactionSalesBinding: FragmentTransactionSalesBinding
-    private val clientViewModel: ClientViewModel by activityViewModels()
+    private val transactionClientViewModel: TransactionClientViewModel by activityViewModels()
     private val transactionViewModel: TransactionViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,6 +40,11 @@ class TransactionSalesFragment : Fragment() {
         return fragmentTransactionSalesBinding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        transactionClientViewModel.setSelectClientIndex(null)
+    }
+
     private fun setBind() {
         fragmentTransactionSalesBinding.run {
             addSalesMaterialToolbar.setNavigationOnClickListener {
@@ -49,7 +56,7 @@ class TransactionSalesFragment : Fragment() {
                 val itemCount = removeNumberFormat("${transactionItemCountEditText.text}")
                 val amountReceived = removeNumberFormat("${transactionAmountReceivedEditText.text}")
 
-                clientViewModel.selectedClient.value?.let { client ->
+                transactionClientViewModel.selectedClient.value?.let { client ->
                     transactionViewModel.addSalesTransaction(
                         client,
                         "${transactionItemNameEditText.text}",
@@ -73,20 +80,20 @@ class TransactionSalesFragment : Fragment() {
 
             transactionClientSelectEditText.onFocusChangeListener =
                 TransactionSelectEditTextFocusListener(
-                    SelectTransactionClientDialog(clientViewModel),
+                    SelectTransactionClientDialog(transactionClientViewModel),
                     childFragmentManager
                 )
 
             transactionItemNameEditText.addTextChangedListener(
                 ItemNameTextWatcher(
-                    clientViewModel,
+                    transactionClientViewModel,
                     addSalesBtn
                 )
             )
 
             transactionItemCountEditText.addTextChangedListener(
                 ItemTextWatcher(
-                    clientViewModel,
+                    transactionClientViewModel,
                     transactionItemCountEditText,
                     transactionItemPriceEditText,
                     transactionAmountReceivedEditText,
@@ -96,7 +103,7 @@ class TransactionSalesFragment : Fragment() {
 
             transactionItemPriceEditText.addTextChangedListener(
                 ItemTextWatcher(
-                    clientViewModel,
+                    transactionClientViewModel,
                     transactionItemPriceEditText,
                     transactionItemCountEditText,
                     transactionAmountReceivedEditText,
@@ -105,9 +112,11 @@ class TransactionSalesFragment : Fragment() {
             )
 
             transactionAmountReceivedEditText.addTextChangedListener(
-                AmountTextWatcher(
-                    clientViewModel,
+                AmountSalesTextWatcher(
+                    transactionClientViewModel,
                     transactionAmountReceivedEditText,
+                    transactionItemPriceEditText,
+                    transactionItemCountEditText,
                     addSalesBtn
                 )
             )
@@ -122,7 +131,7 @@ class TransactionSalesFragment : Fragment() {
     }
 
     private fun setViewModel() {
-        clientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
+        transactionClientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
             client?.setClientInfoView(fragmentTransactionSalesBinding.transactionClientSelectEditText)
             if (fragmentTransactionSalesBinding.transactionItemNameEditText.text.isNullOrEmpty() ||
                 fragmentTransactionSalesBinding.transactionItemCountEditText.text.isNullOrEmpty() ||

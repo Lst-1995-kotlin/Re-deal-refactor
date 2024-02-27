@@ -1,8 +1,9 @@
-package com.hifi.redeal.transaction.view
+package com.hifi.redeal.transaction.view.dialog
 
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,13 +16,13 @@ import com.hifi.redeal.transaction.adapter.ClientAdapterDiffCallback
 import com.hifi.redeal.transaction.configuration.DialogConfiguration.Companion.dialogResize
 import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
 import com.hifi.redeal.transaction.viewHolder.client.TransactionClientHolderFactory
-import com.hifi.redeal.transaction.viewmodel.ClientViewModel
+import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class SelectTransactionClientDialog(
-    private val clientViewModel: ClientViewModel,
+    private val transactionClientViewModel: TransactionClientViewModel,
 ) : DialogFragment() {
     private lateinit var dialogSelectTransactionClientDialog: DialogSelectTransactionClientBinding
     private lateinit var clientAdapter: ClientAdapter
@@ -35,7 +36,6 @@ class SelectTransactionClientDialog(
         savedInstanceState: Bundle?,
     ): View {
         dialogSelectTransactionClientDialog = DialogSelectTransactionClientBinding.inflate(inflater)
-
         setAdapter()
         setBind()
         setViewModel()
@@ -48,9 +48,14 @@ class SelectTransactionClientDialog(
         context?.dialogResize(this)
     }
 
+    override fun onPause() {
+        super.onPause()
+        dialogSelectTransactionClientDialog.searchTransactionClientEditText.text.clear()
+    }
+
     private fun setAdapter() {
         val viewHolderFactories = HashMap<String, ViewHolderFactory>()
-        viewHolderFactories["client"] = TransactionClientHolderFactory(clientViewModel, this)
+        viewHolderFactories["client"] = TransactionClientHolderFactory(transactionClientViewModel, this)
         clientAdapter = ClientAdapter(viewHolderFactories, clientAdapterDiffCallback)
     }
 
@@ -73,7 +78,7 @@ class SelectTransactionClientDialog(
                     }
 
                     override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        clientViewModel.clients.value?.let { clients ->
+                        transactionClientViewModel.clients.value?.let { clients ->
                             clientAdapter.setClients(clients.filter { it.filter("$p0") })
                         }
                     }
@@ -86,7 +91,7 @@ class SelectTransactionClientDialog(
     }
 
     private fun setViewModel() {
-        clientViewModel.clients.observe(viewLifecycleOwner) {
+        transactionClientViewModel.clients.observe(viewLifecycleOwner) {
             clientAdapter.setClients(it)
         }
     }

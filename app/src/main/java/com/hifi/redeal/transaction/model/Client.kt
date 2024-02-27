@@ -1,9 +1,6 @@
 package com.hifi.redeal.transaction.model
 
 import android.widget.TextView
-import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
-import com.hifi.redeal.transaction.configuration.ClientConfiguration.Companion.setClientBookmarkResource
-import com.hifi.redeal.transaction.configuration.ClientConfiguration.Companion.setClientStateResource
 
 
 class Client(
@@ -13,9 +10,14 @@ class Client(
     override fun hashCode(): Int {
         return clientData.hashCode()
     }
+
     override fun equals(other: Any?): Boolean {
         val otherClient = other as Client
         return otherClient.clientData == this.clientData
+    }
+
+    fun getClientData(): ClientData {
+        return clientData.copy()
     }
 
     fun getClientValuesMap(): HashMap<String, Any> {
@@ -36,5 +38,4 @@ class Client(
 
     fun getClientIdx() = clientData.clientIdx
 
-    fun getClientName() =clientData.clientName
 }

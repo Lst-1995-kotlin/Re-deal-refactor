@@ -22,4 +22,11 @@ class ClientRepository @Inject constructor(
             .get()
             .addOnCompleteListener(callback1)
     }
+
+    fun getIndexOfClient(clientIndex: Long, callback1: (Task<QuerySnapshot>) -> Unit) {
+        dbClientRef
+            .whereEqualTo("clientIdx", clientIndex)
+            .get()
+            .addOnCompleteListener(callback1)
+    }
 }

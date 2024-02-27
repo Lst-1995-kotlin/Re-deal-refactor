@@ -4,59 +4,49 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.viewHolder.transaction.DepositHolder
 import com.hifi.redeal.transaction.viewHolder.transaction.SalesHolder
 import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
+import com.hifi.redeal.transaction.viewHolder.transaction.CountHolder
 
 class TransactionAdapter(
-    private val viewHolderFactories: HashMap<Int, ViewHolderFactory>,
+    private val viewHolderFactories: Map<Int, ViewHolderFactory>,
     diffCallback: TransactionAdapterDiffCallback
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private val differ = AsyncListDiffer(this, diffCallback)
+) : ListAdapter<Transaction, RecyclerView.ViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val factory = viewHolderFactories[viewType]
-        return factory?.create(parent) ?: createDefaultViewHolder(parent)
+            ?: throw IllegalArgumentException("올바르지 못한 클라이언트 타입 입니다.")
+        return factory.create(parent)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val transaction = differ.currentList[position]
-        when (holder.itemViewType) {
-            TransactionType.DEPOSIT.type -> {
-                val item = holder as DepositHolder
-                item.bind(transaction, position)
+        when (holder) {
+            is DepositHolder -> {
+                holder.bind(currentList[position], position)
             }
 
-            TransactionType.SALES.type -> {
-                val item = holder as SalesHolder
-                item.bind(transaction, position)
+            is SalesHolder -> {
+                holder.bind(currentList[position], position)
+            }
+
+            is CountHolder -> {
+                holder.bind()
             }
         }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return differ.currentList[position].getTransactionType()
-    }
-
     override fun getItemCount(): Int {
-        return differ.currentList.size
+        return currentList.size + 1
     }
 
-    fun setTransactions(newTransactions: List<Transaction>, commitCallback: () -> Unit) {
-        differ.submitList(
-            newTransactions.sortedByDescending { it.getTransactionDate() },
-            commitCallback
-        )
-    }
-
-    private fun createDefaultViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        Log.e("TransactionAdapter", "올바르지 못한 거래 타입 입니다")
-        val view = View(parent.context)
-        return object : RecyclerView.ViewHolder(view) {}
+    override fun getItemViewType(position: Int): Int {
+        if (position == itemCount - 1) return TransactionType.COUNT.type
+        return currentList[position].getTransactionType()
     }
 }
 
