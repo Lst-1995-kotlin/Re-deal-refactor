@@ -28,6 +28,7 @@
         android:layout_marginStart="4dp"
         android:fontFamily="@font/nanumsquareneo_regular"
         android:text="거래처 명"
+        android:textColor="@color/text10"
         android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/textTransactionDate"
         app:layout_constraintTop_toTopOf="@+id/textTransactionDate" />
