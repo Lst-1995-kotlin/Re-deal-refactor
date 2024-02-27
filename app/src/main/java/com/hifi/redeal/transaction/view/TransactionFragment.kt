@@ -15,6 +15,7 @@ import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
 import com.hifi.redeal.transaction.view.dialog.TransactionAddSelectDialog
 import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
+import com.hifi.redeal.transaction.viewHolder.transaction.CountHolderFactory
 import com.hifi.redeal.transaction.viewHolder.transaction.DepositHolderFactory
 import com.hifi.redeal.transaction.viewHolder.transaction.SalesHolderFactory
 import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
@@ -57,6 +58,8 @@ class TransactionFragment : Fragment() {
             DepositHolderFactory(transactionViewModel)
         viewHolderFactories[TransactionType.SALES.type] =
             SalesHolderFactory(transactionViewModel)
+        viewHolderFactories[TransactionType.COUNT.type] =
+            CountHolderFactory(transactionViewModel, viewLifecycleOwner)
 
         transactionAdapter =
             TransactionAdapter(viewHolderFactories, transactionAdapterDiffCallback)
@@ -68,7 +71,7 @@ class TransactionFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
         }
 
-        fragmentTransactionBinding.transactionAddButton.setOnClickListener{
+        fragmentTransactionBinding.transactionAddButton.setOnClickListener {
             transactionAddSelectDialog.dialogShow()
         }
     }

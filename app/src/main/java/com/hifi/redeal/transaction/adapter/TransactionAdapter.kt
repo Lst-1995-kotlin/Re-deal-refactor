@@ -11,6 +11,7 @@ import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.viewHolder.transaction.DepositHolder
 import com.hifi.redeal.transaction.viewHolder.transaction.SalesHolder
 import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
+import com.hifi.redeal.transaction.viewHolder.transaction.CountHolder
 
 class TransactionAdapter(
     private val viewHolderFactories: Map<Int, ViewHolderFactory>,
@@ -24,21 +25,27 @@ class TransactionAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val transaction = currentList[position]
-        when (holder.itemViewType) {
-            TransactionType.DEPOSIT.type -> {
-                val item = holder as DepositHolder
-                item.bind(transaction, position)
+        when (holder) {
+            is DepositHolder -> {
+                holder.bind(currentList[position], position)
             }
 
-            TransactionType.SALES.type -> {
-                val item = holder as SalesHolder
-                item.bind(transaction, position)
+            is SalesHolder -> {
+                holder.bind(currentList[position], position)
+            }
+
+            is CountHolder -> {
+                holder.bind()
             }
         }
     }
 
+    override fun getItemCount(): Int {
+        return currentList.size + 1
+    }
+
     override fun getItemViewType(position: Int): Int {
+        if (position == itemCount - 1) return TransactionType.COUNT.type
         return currentList[position].getTransactionType()
     }
 }

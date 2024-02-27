@@ -27,7 +27,6 @@
         android:background="@drawable/btn_round_primary80"
         android:elevation="6dp"
         android:src="@drawable/add_primary100_24px"
-        android:contentDescription="no"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -50,7 +49,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/arrow_back_ios_24px"
+            app:menu="@menu/transaction_toolbar_menu"
             app:title="거래 내역"
             app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"
             app:titleTextColor="@color/primary20" />

@@ -14,6 +14,7 @@ import com.hifi.redeal.transaction.adapter.TransactionAdapterDiffCallback
 import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil
 import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
+import com.hifi.redeal.transaction.viewHolder.transaction.CountHolderFactory
 import com.hifi.redeal.transaction.viewHolder.transaction.DepositHolderFactory
 import com.hifi.redeal.transaction.viewHolder.transaction.SalesHolderFactory
 import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
@@ -56,6 +57,8 @@ class TransactionByClientFragment : Fragment() {
             DepositHolderFactory(transactionViewModel)
         viewHolderFactories[TransactionType.SALES.type] =
             SalesHolderFactory(transactionViewModel)
+        viewHolderFactories[TransactionType.COUNT.type] =
+            CountHolderFactory(transactionViewModel, viewLifecycleOwner)
 
         transactionAdapter =
             TransactionAdapter(viewHolderFactories, transactionAdapterDiffCallback)

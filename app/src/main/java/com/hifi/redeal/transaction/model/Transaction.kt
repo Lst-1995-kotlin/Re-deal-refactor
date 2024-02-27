@@ -42,7 +42,7 @@ class Transaction(
 
     fun getClientInformation() = Client(clientData)
 
-    fun getTransactionValueMap(): HashMap<String, String> {
+    fun getTransactionValueMap(): Map<String, String> {
         val currentTransactionData = HashMap<String, String>()
         if (transactionData.isDeposit) { // 입금 내역일 경우
             currentTransactionData["date"] = dateFormat.format(transactionData.date.toDate())
