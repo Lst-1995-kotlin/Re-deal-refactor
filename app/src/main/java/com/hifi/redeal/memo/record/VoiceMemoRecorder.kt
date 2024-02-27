@@ -6,32 +6,52 @@ import android.os.Build
 import java.io.File
 import java.io.FileOutputStream
 
-class AndroidAudioRecorder(
+class VoiceMemoRecorder(
     private val context: Context
 ) {
 
-    private var recorder: MediaRecorder? = null
-
-    private fun createRecorder(): MediaRecorder {
-        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+    private var mediaRecorder: MediaRecorder? = null
+    var isPaused: Boolean = false
+    private fun initialRecorder(): MediaRecorder {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             MediaRecorder(context)
         } else MediaRecorder()
     }
+
     fun start(outputFile: File) {
-        createRecorder().apply {
+        initialRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             setOutputFile(FileOutputStream(outputFile).fd)
             prepare()
             start()
-
-            recorder = this
+            mediaRecorder = this
         }
     }
+
+    fun pause() {
+        mediaRecorder?.pause()
+    }
+
+    fun resume() {
+        mediaRecorder?.resume()
+    }
+
+    fun togglePause() {
+        if (!isPaused) {
+            mediaRecorder?.pause()
+        } else {
+            mediaRecorder?.resume()
+        }
+        isPaused = !isPaused
+    }
+
     fun stop() {
-        recorder?.stop()
-        recorder?.reset()
-        recorder = null
+        mediaRecorder?.apply {
+            stop()
+            release()
+        }
+        mediaRecorder = null
     }
 }
