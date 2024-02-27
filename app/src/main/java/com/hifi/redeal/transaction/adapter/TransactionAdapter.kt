@@ -1,17 +1,14 @@
 package com.hifi.redeal.transaction.adapter
 
-import android.util.Log
-import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.model.Transaction
-import com.hifi.redeal.transaction.viewHolder.transaction.DepositHolder
-import com.hifi.redeal.transaction.viewHolder.transaction.SalesHolder
 import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
 import com.hifi.redeal.transaction.viewHolder.transaction.CountHolder
+import com.hifi.redeal.transaction.viewHolder.transaction.DepositHolder
+import com.hifi.redeal.transaction.viewHolder.transaction.SalesHolder
 
 class TransactionAdapter(
     private val viewHolderFactories: Map<Int, ViewHolderFactory>,

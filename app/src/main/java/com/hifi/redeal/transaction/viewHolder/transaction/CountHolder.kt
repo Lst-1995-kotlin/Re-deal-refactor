@@ -14,6 +14,5 @@ class CountHolder(
         transactionViewModel.transactionList.observe(viewLifecycleOwner) {
             rowTransactionCountBinding.transactionCountTextView.text = "${it.size}개의 거래내역"
         }
-        rowTransactionCountBinding
     }
 }

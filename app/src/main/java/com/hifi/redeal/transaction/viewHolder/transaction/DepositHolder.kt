@@ -2,8 +2,10 @@ package com.hifi.redeal.transaction.viewHolder.transaction
 
 import android.view.LayoutInflater
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.hifi.redeal.R
 import com.hifi.redeal.databinding.DialogTransactionEditBinding
 import com.hifi.redeal.databinding.RowTransactionDepositBinding
 import com.hifi.redeal.transaction.model.Transaction
@@ -25,12 +27,13 @@ class DepositHolder(
 
     private fun setLongClickEvent(view: View, transaction: Transaction, position: Int) {
         view.setOnLongClickListener {
-            val builder = MaterialAlertDialogBuilder(view.context)
+            val builder = AlertDialog.Builder(view.context, R.style.RoundedAlertDialog)
             val layoutInflater = LayoutInflater.from(view.context)
             val dialogTransactionEditBinding =
                 DialogTransactionEditBinding.inflate(layoutInflater)
             builder.setView(dialogTransactionEditBinding.root)
-            val dialog = builder.create()
+
+            val dialog = builder.show()
             dialogTransactionEditBinding.run {
                 transactionDeleteImageButton.setOnClickListener {
                     dialog.dismiss()
@@ -43,7 +46,6 @@ class DepositHolder(
                     transactionViewModel.setMoveToPosition(position)
                 }
             }
-            dialog.show()
             true
         }
     }

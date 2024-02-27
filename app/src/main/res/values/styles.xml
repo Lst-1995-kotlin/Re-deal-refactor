@@ -33,6 +33,12 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="RoundedAlertDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@drawable/dialog_transaction_background</item>
+    </style>
+
+
+
     <!-- AccountEditFragment AutoCompleteTextView style within TextInputLayout -->
 
     <style name="Widget.App.ExposedDropdownMenu" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
