@@ -183,8 +183,8 @@ private fun VoiceRecorder(
     var isRecording by remember { mutableStateOf(false) }
     var isNewRecord by remember { mutableStateOf(true) }
 
-    LaunchedEffect(isRecording, time) {
-        if (isRecording) {
+    LaunchedEffect(isRecording) {
+        while(isRecording) {
             delay(10)
             time += 10
         }
@@ -595,26 +595,6 @@ private fun SaveDialog(
     }
 }
 
-//@Preview(name = "RecordPlayer", showBackground = true)
-//@Composable
-//private fun SaveDialogPreview(){
-//    RedealTheme {
-//        SaveDialog(filename = "테스트 음성", setShowDialog = {
-//        })
-//    }
-//}
-//@RequiresApi(Build.VERSION_CODES.S)
-//@Preview(name = "RecordPlayer", showBackground = true)
-//@Composable
-//private fun RecordPlayerPreview() {
-//    RedealTheme() {
-//        VoiceMemoPlayer(
-//            MainActivity(), "",
-//            modifier = Modifier
-//                .fillMaxWidth()
-//        )
-//    }
-//}
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun AddRecordMemoScreen(
@@ -658,47 +638,4 @@ fun AddRecordMemoScreen(
         }
     }
 }
-//@RequiresApi(Build.VERSION_CODES.S)
-//@Preview(name = "AddRecordMemoScreen", showBackground = true)
-//@Composable
-//private fun AddRecordMemoScreenPreview() {
-//    RedealTheme() {
-//        Scaffold(
-//            topBar = {
-//                AddRecordMemoToolbar(
-//                    title = "음성메모 등록", onClickNavigation = {})
-//            },
-//            bottomBar = {
-//                BottomButton(
-//                    state = BottomButtonState.IDLE,
-//                    onClick = {},
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(vertical = 24.dp, horizontal = 28.dp)
-//                )
-//            },
-//            containerColor = Color.White
-//        ) { padding ->
-//            Column(
-//                modifier = Modifier
-//                    .padding(padding)
-//                    .padding(horizontal = 28.dp)
-//                    .padding(top = 40.dp)
-//            ) {
-//                MemoTextField(
-//                    value = "",
-//                    onChangeValue = {},
-//                    modifier = Modifier.fillMaxWidth()
-//                )
-//                AddFileButton(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(top = 8.dp)
-//                        .height(52.dp)
-//                )
-//                VoiceMemoPlayer(MainActivity(), "")
-//            }
-//        }
-//    }
-//}
 
