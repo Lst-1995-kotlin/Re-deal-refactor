@@ -74,6 +74,11 @@ class TransactionFragment : Fragment() {
         fragmentTransactionBinding.transactionAddButton.setOnClickListener {
             transactionAddSelectDialog.dialogShow()
         }
+
+        fragmentTransactionBinding.toolbarTransactionMain.setOnMenuItemClickListener {
+            mainActivity.replaceFragment(MainActivity.TRANSACTIONS_EDIT_FRAGMENT, true, null)
+            true
+        }
     }
 
     private fun setViewModel() {

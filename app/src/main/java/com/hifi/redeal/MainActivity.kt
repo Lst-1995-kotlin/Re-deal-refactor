@@ -56,6 +56,7 @@ import com.hifi.redeal.transaction.view.TransactionDepositModifyFragment
 import com.hifi.redeal.transaction.view.TransactionFragment
 import com.hifi.redeal.transaction.view.TransactionSalesFragment
 import com.hifi.redeal.transaction.view.TransactionSalesModifyFragment
+import com.hifi.redeal.transaction.view.TransactionsEditFragment
 import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import com.skt.tmap.TMapTapi
@@ -129,6 +130,7 @@ class MainActivity : AppCompatActivity() {
         val TRANSACTION_DEPOSIT_MODIFY_FRAGMENT = "TransactionDepositModifyFragment"
         val TRANSACTION_SALES_MODIFY_FRAGMENT = "TransactionSalesModifyFragment"
         val TRANSACTION_BY_CLIENT_FRAGMENT = "TransactionByClientFragment"
+        val TRANSACTIONS_EDIT_FRAGMENT = "TransactionsEditFragment"
 
         const val BASE_URL = "https://dapi.kakao.com/"
         const val REGION_BASE_URL = "http://api.vworld.kr/"
@@ -392,6 +394,7 @@ class MainActivity : AppCompatActivity() {
             TRANSACTION_DEPOSIT_MODIFY_FRAGMENT -> TransactionDepositModifyFragment()
             TRANSACTION_SALES_MODIFY_FRAGMENT -> TransactionSalesModifyFragment()
             TRANSACTION_BY_CLIENT_FRAGMENT -> TransactionByClientFragment()
+            TRANSACTIONS_EDIT_FRAGMENT -> TransactionsEditFragment()
             else -> Fragment()
         }
 

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp"
+    android:transitionGroup="true">
+
+    <ImageView
+        android:id="@+id/transactionSelectDepositCheckBox"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/transactionSelectCardView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/transactionSelectCardView"
+        app:srcCompat="@drawable/rounded_rectangle_stroke_primary20" />
+
+    <TextView
+        android:id="@+id/transactionSelectDateTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/nanumsquareneo_regular"
+        android:hint="거래 날짜"
+        android:textColor="@color/text10"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/transactionSelectCardView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/transactionSelectClientNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:fontFamily="@font/nanumsquareneo_regular"
+        android:hint="거래처명"
+        android:textColor="@color/text10"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/transactionSelectDateTextView"
+        app:layout_constraintTop_toTopOf="@+id/transactionSelectDateTextView" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/transactionSelectCardView"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+        app:cardBackgroundColor="@color/background"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/transactionSelectDateTextView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/depositTextView"
+                android:layout_width="46dp"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center"
+                android:text="입금"
+                android:textColor="@color/text10" />
+
+            <TextView
+                android:id="@+id/depositPriceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="2dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:gravity="center_vertical|end"
+                android:textColor="@color/text10" />
+
+            <TextView
+                android:id="@+id/priceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="12dp"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:text="원"
+                android:textColor="@color/text10" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

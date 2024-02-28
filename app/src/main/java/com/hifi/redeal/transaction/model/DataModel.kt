@@ -20,3 +20,7 @@ data class ClientData(
     var clientState: Long,
     @JvmField val isBookmark: Boolean,
 )
+
+data class SelectTransactionData(
+    val isSelected: Boolean
+)

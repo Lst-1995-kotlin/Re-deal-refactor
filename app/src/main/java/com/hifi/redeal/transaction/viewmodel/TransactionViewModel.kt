@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.hifi.redeal.transaction.model.Client
 import com.hifi.redeal.transaction.model.ClientData
+import com.hifi.redeal.transaction.model.SelectTransactionData
 import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.model.TransactionData
 import com.hifi.redeal.transaction.repository.TransactionRepository
@@ -33,6 +34,33 @@ class TransactionViewModel @Inject constructor(
     init {
         getNextTransactionIdx()
         getAllTransactionData()
+    }
+
+    fun clearDeleteSelectTransactions() {
+        totalTransactionData.replaceAll { transaction ->
+            if (transaction.isSelected()) {
+                Transaction(
+                    transaction.transactionDataCopy(),
+                    transaction.clientDataCopy(),
+                    SelectTransactionData(false)
+                )
+            } else transaction
+        }
+    }
+
+    fun transactionSelectedChanged(index: Long) {
+        totalTransactionData.replaceAll { transaction ->
+            if (transaction.getTransactionIdx() == index) {
+                Transaction(
+                    transaction.transactionDataCopy(),
+                    transaction.clientDataCopy(),
+                    if (transaction.isSelected()) SelectTransactionData(false)
+                    else SelectTransactionData(true)
+                )
+            } else {
+                transaction
+            }
+        }.let { updateTransaction() }
     }
 
     fun postValueScrollPosition() {
@@ -113,7 +141,8 @@ class TransactionViewModel @Inject constructor(
         transactionRepository.setTransactionData(newDepositTransactionData) {
             val newTransaction = Transaction(
                 newDepositTransactionData,
-                client.getClientData()
+                client.getClientData(),
+                SelectTransactionData(false)
             )
             totalTransactionData.add(newTransaction)
             updateTransaction()
@@ -141,7 +170,8 @@ class TransactionViewModel @Inject constructor(
         transactionRepository.setTransactionData(newSalesTransactionData) {
             val newTransaction = Transaction(
                 newSalesTransactionData,
-                client.getClientData()
+                client.getClientData(),
+                SelectTransactionData(false)
             )
             totalTransactionData.add(newTransaction)
             updateTransaction()
@@ -186,7 +216,8 @@ class TransactionViewModel @Inject constructor(
                         c1["clientManagerName"] as String,
                         c1["clientState"] as Long,
                         c1["isBookmark"] as Boolean
-                    )
+                    ),
+                    SelectTransactionData(false)
                 )
                 totalTransactionData.add(newTransactionData)
                 updateTransaction()
@@ -200,7 +231,6 @@ class TransactionViewModel @Inject constructor(
                 it.equalsTransactionClientIndex(index)
             })
         } ?: _transactionList.postValue(totalTransactionData)
-        Log.d("tttt", "${_transactionList.value?.size}")
     }
 
     private fun getNextTransactionIdx() {
@@ -230,7 +260,8 @@ class TransactionViewModel @Inject constructor(
                 itemPrice,
                 itemName
             ),
-            client.getClientData()
+            client.getClientData(),
+            SelectTransactionData(false)
         )
     }
 
@@ -250,7 +281,8 @@ class TransactionViewModel @Inject constructor(
                 0,
                 ""
             ),
-            client.getClientData()
+            client.getClientData(),
+            SelectTransactionData(false)
         )
     }
 
