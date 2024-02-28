@@ -54,7 +54,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bottom_border_not_focus"
             android:fontFamily="@font/nanumsquareneo_regular"
-            android:inputType="text"
+            android:inputType="text|textMultiLine"
+            android:singleLine="false"
             android:textColor="@color/text10"
             android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>
