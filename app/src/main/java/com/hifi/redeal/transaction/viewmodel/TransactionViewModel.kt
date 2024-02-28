@@ -39,11 +39,7 @@ class TransactionViewModel @Inject constructor(
     fun clearDeleteSelectTransactions() {
         totalTransactionData.replaceAll { transaction ->
             if (transaction.isSelected()) {
-                Transaction(
-                    transaction.transactionDataCopy(),
-                    transaction.clientDataCopy(),
-                    SelectTransactionData(false)
-                )
+                transaction.replaceSelectedTransaction()
             } else transaction
         }
     }
@@ -51,12 +47,7 @@ class TransactionViewModel @Inject constructor(
     fun transactionSelectedChanged(index: Long) {
         totalTransactionData.replaceAll { transaction ->
             if (transaction.getTransactionIdx() == index) {
-                Transaction(
-                    transaction.transactionDataCopy(),
-                    transaction.clientDataCopy(),
-                    if (transaction.isSelected()) SelectTransactionData(false)
-                    else SelectTransactionData(true)
-                )
+                transaction.replaceSelectedTransaction()
             } else {
                 transaction
             }

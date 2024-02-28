@@ -28,8 +28,18 @@ class Transaction(
                 otherTransaction.selectTransactionData == this.selectTransactionData
     }
 
-    fun transactionDataCopy() = transactionData.copy()
-    fun clientDataCopy() = clientData.copy()
+    fun replaceSelectedTransaction(): Transaction {
+        if (isSelected()) return Transaction(
+            transactionData,
+            clientData,
+            SelectTransactionData(false)
+        )
+        return Transaction(
+            transactionData,
+            clientData,
+            SelectTransactionData(true)
+        )
+    }
 
     fun isSelected(): Boolean {
         return selectTransactionData.isSelected
