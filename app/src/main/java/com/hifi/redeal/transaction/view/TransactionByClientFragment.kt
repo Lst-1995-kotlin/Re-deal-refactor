@@ -81,6 +81,11 @@ class TransactionByClientFragment : Fragment() {
                 transactionClientViewModel.setSelectClientIndex(clientIdx)
                 mainActivity.replaceFragment(MainActivity.TRANSACTION_SALES_FRAGMENT, true, null)
             }
+
+            toolbarTransactionByClientMain.setOnMenuItemClickListener {
+                mainActivity.replaceFragment(MainActivity.TRANSACTIONS_EDIT_FRAGMENT, true, null)
+                true
+            }
         }
     }
 
