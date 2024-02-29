@@ -1,4 +1,4 @@
-package com.hifi.redeal.transaction.viewHolder.transaction
+package com.hifi.redeal.transaction.adapter.viewHolder.transaction
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,20 +7,30 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.DialogTransactionEditBinding
-import com.hifi.redeal.databinding.RowTransactionDepositBinding
+import com.hifi.redeal.databinding.RowTransactionSalesBinding
 import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 
-class DepositHolder(
-    private val rowTransactionDepositBinding: RowTransactionDepositBinding,
+class SalesHolder(
+    private val rowTransactionReleaseBinding: RowTransactionSalesBinding,
     private val transactionViewModel: TransactionViewModel
-) : RecyclerView.ViewHolder(rowTransactionDepositBinding.root) {
+) : RecyclerView.ViewHolder(rowTransactionReleaseBinding.root) {
     fun bind(transaction: Transaction, position: Int) {
         val valuesMap = transaction.getTransactionValueMap()
-        rowTransactionDepositBinding.run {
+        rowTransactionReleaseBinding.run {
             textTransactionDate.text = valuesMap["date"]
             transctionClientNameTextView.text = valuesMap["clientName"]
-            depositPriceTextView.text = valuesMap["amountReceived"]
+            itemNameTextView.text = valuesMap["itemName"]
+            itemSalesCountTextView.text = valuesMap["itemCount"]
+            itemPriceTextView.text = valuesMap["itemPrice"]
+            totalSalesAmountTextView.text = valuesMap["totalAmount"]
+            recievedAmountTextView.text = valuesMap["amountReceived"]
+            recievablesTextView.text = valuesMap["receivables"]
+            if (valuesMap["receivables"] == "0") {
+                recievablesTextView.visibility = View.GONE
+                textTransaction23.visibility = View.GONE
+                textTransaction24.visibility = View.GONE
+            }
             setLongClickEvent(root, transaction, position)
         }
     }

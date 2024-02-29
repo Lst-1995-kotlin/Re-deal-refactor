@@ -15,7 +15,6 @@ class TransactionClientViewModel @Inject constructor(
     private val clientRepository: ClientRepository,
 ) : ViewModel() {
 
-
     private val _selectedClient = MutableLiveData<Client?>()
     private val _clients = MutableLiveData<List<Client>>()
     val clients: LiveData<List<Client>> get() = _clients

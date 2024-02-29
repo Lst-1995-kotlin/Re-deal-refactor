@@ -1,4 +1,4 @@
-package com.hifi.redeal.transaction.viewHolder.client
+package com.hifi.redeal.transaction.adapter.viewHolder.client
 
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView

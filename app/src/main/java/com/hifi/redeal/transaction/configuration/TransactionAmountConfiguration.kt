@@ -10,8 +10,7 @@ enum class TransactionAmountConfiguration(private val value: Long) {
 
     companion object {
         fun transactionAmountCheck(value: Long):Boolean {
-            if (MAX_TRANSACTION_AMOUNT.value < value) return false
-            return true
+            return MAX_TRANSACTION_AMOUNT.value >= value
         }
 
         fun setTransactionAmountMessage(view: TextView) {

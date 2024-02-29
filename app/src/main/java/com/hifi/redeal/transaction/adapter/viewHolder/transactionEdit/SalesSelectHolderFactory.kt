@@ -1,11 +1,11 @@
-package com.hifi.redeal.transaction.viewHolder.transactionEdit
+package com.hifi.redeal.transaction.adapter.viewHolder.transactionEdit
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.databinding.RowTransactionSalesBinding
 import com.hifi.redeal.databinding.RowTransactionSelectSalesBinding
-import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
+import com.hifi.redeal.transaction.adapter.viewHolder.ViewHolderFactory
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 
 class SalesSelectHolderFactory(

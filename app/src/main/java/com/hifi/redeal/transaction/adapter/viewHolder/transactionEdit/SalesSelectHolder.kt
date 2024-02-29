@@ -1,4 +1,4 @@
-package com.hifi.redeal.transaction.viewHolder.transactionEdit
+package com.hifi.redeal.transaction.adapter.viewHolder.transactionEdit
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -36,8 +36,8 @@ class SalesSelectHolder(
         }
     }
 
-    fun setCheckImage(checked: Boolean) {
-        if (checked) {
+    fun setSelectedImage(isSelected: Boolean) {
+        if (isSelected) {
             rowTransactionSelectSalesBinding.transactionSelectSalesCheckBox.setImageResource(
                 R.drawable.done_paint_24px
             )

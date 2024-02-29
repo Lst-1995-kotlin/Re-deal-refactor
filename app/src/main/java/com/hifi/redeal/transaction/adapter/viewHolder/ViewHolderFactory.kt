@@ -1,4 +1,4 @@
-package com.hifi.redeal.transaction.viewHolder
+package com.hifi.redeal.transaction.adapter.viewHolder
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

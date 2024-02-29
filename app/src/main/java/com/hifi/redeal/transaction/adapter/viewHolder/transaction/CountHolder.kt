@@ -1,4 +1,4 @@
-package com.hifi.redeal.transaction.viewHolder.transaction
+package com.hifi.redeal.transaction.adapter.viewHolder.transaction
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
