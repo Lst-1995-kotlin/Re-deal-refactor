@@ -79,8 +79,7 @@ class TransactionsEditFragment : Fragment() {
     private fun setViewModel() {
         transactionViewModel.transactionList.observe(viewLifecycleOwner) { transactions ->
             transactionSelectAdapter.submitList(transactions.sortedByDescending { it.getTransactionDate() })
-            fragmentTransactionEditBinding.toolbarTransactionEditTextView.text =
-                "${transactions.count { it.isSelected() }}개 선택됨."
+            fragmentTransactionEditBinding.toolbarTransactionEditTextView.text = "${transactions.count { it.isSelected() }}개 선택됨."
         }
 
         transactionViewModel.clearDeleteSelectTransactions()

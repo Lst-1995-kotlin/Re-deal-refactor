@@ -3,7 +3,6 @@ package com.hifi.redeal.transaction.adapter.viewHolder.transactionEdit
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.hifi.redeal.databinding.RowTransactionDepositBinding
 import com.hifi.redeal.databinding.RowTransactionSelectDepositBinding
 import com.hifi.redeal.transaction.adapter.viewHolder.ViewHolderFactory
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel

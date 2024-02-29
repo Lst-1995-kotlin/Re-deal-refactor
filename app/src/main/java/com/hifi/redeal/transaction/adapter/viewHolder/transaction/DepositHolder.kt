@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.DialogTransactionEditBinding
 import com.hifi.redeal.databinding.RowTransactionDepositBinding

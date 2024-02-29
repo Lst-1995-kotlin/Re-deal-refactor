@@ -4,7 +4,7 @@
 
       <style name="AuthMainToolbarTitleTextAppearance" parent="@style/TextAppearance.AppCompat.Large">
           <item name="android:fontFamily">@font/nanumsquareneo_extrabold</item>
-          <item name="android:textSize">20dp</item>
+          <item name="android:textSize">20sp</item>
       </style>
 
     <style name="bottom_navigation_view_item_text_appearance" parent="TextAppearance.Material3.TitleSmall">
@@ -25,7 +25,7 @@
     </style>
 
     <style name="account_detail_toolbar_title_text_appearance" parent="account_list_toolbar_title_text_appearance">
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="tab_item_text_appearance_account_list_sort" parent="TextAppearance.AppCompat.Medium">

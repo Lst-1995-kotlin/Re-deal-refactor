@@ -1,13 +1,8 @@
 package com.hifi.redeal.transaction.adapter.viewHolder.transactionEdit
 
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.R
-import com.hifi.redeal.databinding.DialogTransactionEditBinding
-import com.hifi.redeal.databinding.RowTransactionSalesBinding
 import com.hifi.redeal.databinding.RowTransactionSelectSalesBinding
 import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel

@@ -1,11 +1,9 @@
 package com.hifi.redeal.transaction.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
-import com.google.firebase.inject.Deferred
 import com.hifi.redeal.transaction.model.Client
 import com.hifi.redeal.transaction.model.ClientData
 import com.hifi.redeal.transaction.model.SelectTransactionData
@@ -13,7 +11,6 @@ import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.model.TransactionData
 import com.hifi.redeal.transaction.repository.TransactionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import okhttp3.internal.wait
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,6 +38,7 @@ class TransactionViewModel @Inject constructor(
         getNextTransactionIdx()
         getAllTransactionData()
     }
+
     fun deleteSelectTransactions() {
         totalTransactionData.filter { it.isSelected() }.forEach {
             deleteTransactionIndex(it.getTransactionIdx())
