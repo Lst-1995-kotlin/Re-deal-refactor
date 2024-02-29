@@ -16,7 +16,7 @@ class Transaction(
     override fun hashCode(): Int {
         val transactionHash = abs(transactionData.hashCode())
         val clientHash = abs(clientData.hashCode())
-        val selectTransactionHash = if (selectTransactionData.isSelected) 1 else 2
+        val selectTransactionHash = abs(selectTransactionData.hashCode())
 
         return (transactionHash + clientHash + selectTransactionHash) % Int.MAX_VALUE
     }

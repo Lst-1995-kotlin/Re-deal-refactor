@@ -6,12 +6,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.R
 import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.model.Transaction
-import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
-import com.hifi.redeal.transaction.viewHolder.transaction.CountHolder
-import com.hifi.redeal.transaction.viewHolder.transaction.DepositHolder
-import com.hifi.redeal.transaction.viewHolder.transaction.SalesHolder
-import com.hifi.redeal.transaction.viewHolder.transactionEdit.DepositSelectHolder
-import com.hifi.redeal.transaction.viewHolder.transactionEdit.SalesSelectHolder
+import com.hifi.redeal.transaction.adapter.viewHolder.ViewHolderFactory
+import com.hifi.redeal.transaction.adapter.viewHolder.transaction.CountHolder
+import com.hifi.redeal.transaction.adapter.viewHolder.transaction.DepositHolder
+import com.hifi.redeal.transaction.adapter.viewHolder.transaction.SalesHolder
+import com.hifi.redeal.transaction.adapter.viewHolder.transactionEdit.DepositSelectHolder
+import com.hifi.redeal.transaction.adapter.viewHolder.transactionEdit.SalesSelectHolder
+import dagger.hilt.android.scopes.FragmentScoped
 
 class TransactionSelectAdapter(
     private val viewHolderFactories: Map<Int, ViewHolderFactory>,
@@ -28,12 +29,12 @@ class TransactionSelectAdapter(
         when (holder) {
             is DepositSelectHolder -> {
                 holder.bind(currentList[position])
-                holder.setCheckImage(currentList[position].isSelected())
+                holder.setSelectedImage(currentList[position].isSelected())
             }
 
             is SalesSelectHolder -> {
                 holder.bind(currentList[position])
-                holder.setCheckImage(currentList[position].isSelected())
+                holder.setSelectedImage(currentList[position].isSelected())
             }
         }
     }

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
+import com.google.firebase.inject.Deferred
 import com.hifi.redeal.transaction.model.Client
 import com.hifi.redeal.transaction.model.ClientData
 import com.hifi.redeal.transaction.model.SelectTransactionData
@@ -12,28 +13,38 @@ import com.hifi.redeal.transaction.model.Transaction
 import com.hifi.redeal.transaction.model.TransactionData
 import com.hifi.redeal.transaction.repository.TransactionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import okhttp3.internal.wait
 import javax.inject.Inject
 
 @HiltViewModel
 class TransactionViewModel @Inject constructor(
     private val transactionRepository: TransactionRepository,
 ) : ViewModel() {
-
     private val totalTransactionData = mutableListOf<Transaction>()
+    private var selectIndex: MutableList<Long>? = null
     private val _transactionList = MutableLiveData<List<Transaction>>()
     private val _modifyTransaction = MutableLiveData<Transaction?>()
     private val _transactionPosition = MutableLiveData<Int>()
+    private val _selectTransactionIndex = MutableLiveData<List<Long>?>()
 
     private var newTransactionIdx = 0L
     private var selectClientIndex: Long? = null
     private var curdPosition = 0
+
+
     val transactionList: LiveData<List<Transaction>> get() = _transactionList
     val modifyTransaction: LiveData<Transaction?> get() = _modifyTransaction
     val transactionPosition: LiveData<Int> get() = _transactionPosition
+    val selectTransactionIndex: LiveData<List<Long>?> get() = _selectTransactionIndex
 
     init {
         getNextTransactionIdx()
         getAllTransactionData()
+    }
+    fun deleteSelectTransactions() {
+        totalTransactionData.filter { it.isSelected() }.forEach {
+            deleteTransactionIndex(it.getTransactionIdx())
+        }
     }
 
     fun clearDeleteSelectTransactions() {
@@ -51,7 +62,9 @@ class TransactionViewModel @Inject constructor(
             } else {
                 transaction
             }
-        }.let { updateTransaction() }
+        }.let {
+            updateTransaction()
+        }
     }
 
     fun postValueScrollPosition() {
