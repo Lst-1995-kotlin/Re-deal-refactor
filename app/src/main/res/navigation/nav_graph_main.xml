@@ -4,115 +4,267 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_main"
     app:startDestination="@id/authLoginFragment">
-
     <fragment
-        android:id="@+id/accountListFragment"
-        android:name="com.hifi.redeal.account.AccountListFragment"
-        android:label="fragment_account_list"
-        tools:layout="@layout/fragment_account_list" />
+        android:id="@+id/memoFragment2"
+        android:name="com.hifi.redeal.memo.MemoFragment"
+        android:label="fragment_memo"
+        tools:layout="@layout/fragment_memo" />
+    <fragment
+        android:id="@+id/addRecordMemoFragment2"
+        android:name="com.hifi.redeal.memo.AddRecordMemoFragment"
+        android:label="AddRecordMemoFragment" />
+    <fragment
+        android:id="@+id/photoMemoFragment2"
+        android:name="com.hifi.redeal.memo.PhotoMemoFragment"
+        android:label="PhotoMemoFragment" >
+        <action
+            android:id="@+id/action_photoMemoFragment2_to_photoDetailFragment"
+            app:destination="@id/photoDetailFragment" />
+        <action
+            android:id="@+id/action_photoMemoFragment2_to_addPhotoMemoFragment"
+            app:destination="@id/addPhotoMemoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/transactionByClientFragment"
+        android:name="com.hifi.redeal.transaction.view.TransactionByClientFragment"
+        android:label="TransactionByClientFragment" >
+        <action
+            android:id="@+id/action_transactionByClientFragment_to_transactionDepositFragment"
+            app:destination="@id/transactionDepositFragment" />
+        <action
+            android:id="@+id/action_transactionByClientFragment_to_transactionDepositModifyFragment"
+            app:destination="@id/transactionDepositModifyFragment" />
+        <action
+            android:id="@+id/action_transactionByClientFragment_to_transactionSalesFragment"
+            app:destination="@id/transactionSalesFragment" />
+        <action
+            android:id="@+id/action_transactionByClientFragment_to_transactionSalesModifyFragment"
+            app:destination="@id/transactionSalesModifyFragment" />
+        <action
+            android:id="@+id/action_transactionByClientFragment_to_transactionsEditFragment"
+            app:destination="@id/transactionsEditFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/transactionDepositFragment"
+        android:name="com.hifi.redeal.transaction.view.TransactionDepositFragment"
+        android:label="TransactionDepositFragment" />
+    <fragment
+        android:id="@+id/transactionDepositModifyFragment"
+        android:name="com.hifi.redeal.transaction.view.TransactionDepositModifyFragment"
+        android:label="TransactionDepositModifyFragment" />
+    <fragment
+        android:id="@+id/transactionFragment2"
+        android:name="com.hifi.redeal.transaction.view.TransactionFragment"
+        android:label="TransactionFragment" >
+        <action
+            android:id="@+id/action_transactionFragment2_to_transactionSalesFragment"
+            app:destination="@id/transactionSalesFragment" />
+        <action
+            android:id="@+id/action_transactionFragment2_to_transactionSalesModifyFragment"
+            app:destination="@id/transactionSalesModifyFragment" />
+        <action
+            android:id="@+id/action_transactionFragment2_to_transactionDepositFragment"
+            app:destination="@id/transactionDepositFragment" />
+        <action
+            android:id="@+id/action_transactionFragment2_to_transactionDepositModifyFragment"
+            app:destination="@id/transactionDepositModifyFragment" />
+        <action
+            android:id="@+id/action_transactionFragment2_to_transactionsEditFragment"
+            app:destination="@id/transactionsEditFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/transactionSalesFragment"
+        android:name="com.hifi.redeal.transaction.view.TransactionSalesFragment"
+        android:label="TransactionSalesFragment" />
+    <fragment
+        android:id="@+id/transactionSalesModifyFragment"
+        android:name="com.hifi.redeal.transaction.view.TransactionSalesModifyFragment"
+        android:label="TransactionSalesModifyFragment" />
     <fragment
         android:id="@+id/accountDetailFragment"
         android:name="com.hifi.redeal.account.AccountDetailFragment"
         android:label="fragment_account_detail"
-        tools:layout="@layout/fragment_account_detail" />
+        tools:layout="@layout/fragment_account_detail" >
+        <action
+            android:id="@+id/action_accountDetailFragment_to_transactionByClientFragment"
+            app:destination="@id/transactionByClientFragment" />
+        <action
+            android:id="@+id/action_accountDetailFragment_to_accountEditFragment"
+            app:destination="@id/accountEditFragment" />
+        <action
+            android:id="@+id/action_accountDetailFragment_to_photoMemoFragment2"
+            app:destination="@id/photoMemoFragment2" />
+        <action
+            android:id="@+id/action_accountDetailFragment_to_recordMemoFragment2"
+            app:destination="@id/recordMemoFragment2" />
+    </fragment>
     <fragment
         android:id="@+id/accountEditFragment"
         android:name="com.hifi.redeal.account.AccountEditFragment"
         android:label="fragment_account_edit"
-        tools:layout="@layout/fragment_account_edit" />
+        tools:layout="@layout/fragment_account_edit" >
+        <action
+            android:id="@+id/action_accountEditFragment_to_addressSearchFragment"
+            app:destination="@id/addressSearchFragment" />
+    </fragment>
     <fragment
-        android:id="@+id/addressSearchFragment"
-        android:name="com.hifi.redeal.account.AddressSearchFragment"
-        android:label="fragment_address_search"
-        tools:layout="@layout/fragment_address_search" />
-    <fragment
-        android:id="@+id/memoFragment"
-        android:name="com.hifi.redeal.account.AccountDetailFragment"
-        android:label="fragment_select"
-        tools:layout="@layout/fragment_account_detail" />
-    <fragment
-        android:id="@+id/photoMemoFragment"
-        android:name="com.hifi.redeal.memo.PhotoMemoFragment"
-        android:label="fragment_photo_memo"
-        tools:layout="@layout/fragment_photo_memo" />
+        android:id="@+id/accountListFragment2"
+        android:name="com.hifi.redeal.account.AccountListFragment"
+        android:label="fragment_account_list"
+        tools:layout="@layout/fragment_account_list" >
+        <action
+            android:id="@+id/action_accountListFragment2_to_accountDetailFragment"
+            app:destination="@id/accountDetailFragment" />
+        <action
+            android:id="@+id/action_accountListFragment2_to_transactionFragment2"
+            app:destination="@id/transactionFragment2" />
+        <action
+            android:id="@+id/action_accountListFragment2_to_mapFragment2"
+            app:destination="@id/mapFragment2" />
+        <action
+            android:id="@+id/action_accountListFragment2_to_scheduleManageFragment2"
+            app:destination="@id/scheduleManageFragment2" />
+        <action
+            android:id="@+id/action_accountListFragment2_to_memoFragment2"
+            app:destination="@id/memoFragment2" />
+        <action
+            android:id="@+id/action_accountListFragment2_to_notificationFragment"
+            app:destination="@id/notificationFragment" />
+        <action
+            android:id="@+id/action_accountListFragment2_to_myPageFragment"
+            app:destination="@id/myPageFragment" />
+    </fragment>
     <fragment
         android:id="@+id/addPhotoMemoFragment"
         android:name="com.hifi.redeal.memo.AddPhotoMemoFragment"
         android:label="fragment_add_photo_memo"
         tools:layout="@layout/fragment_add_photo_memo" />
     <fragment
-        android:id="@+id/photoDetailFragment"
-        android:name="com.hifi.redeal.memo.PhotoDetailFragment"
-        android:label="fragment_photo_detail"
-        tools:layout="@layout/fragment_photo_detail" />
-    <fragment
-        android:id="@+id/recordMemoFragment"
-        android:name="com.hifi.redeal.memo.RecordMemoFragment"
-        android:label="fragment_record_memo"
-        tools:layout="@layout/fragment_record_memo" />
-    <fragment
-        android:id="@+id/addRecordMemoFragment"
-        android:name="com.hifi.redeal.memo.AddRecordMemoFragment"
-        android:label="AddRecordMemoFragment"
-        tools:layout="@layout/fragment_add_record_memo"/>
-    <fragment
-        android:id="@+id/scheduleManageFragment"
-        android:name="com.hifi.redeal.schedule.view.ScheduleManageFragment"
-        android:label="fragment_schedule_manage"
-        tools:layout="@layout/fragment_schedule_manage" />
-    <fragment
-        android:id="@+id/unvisitedScheduleFragment"
-        android:name="com.hifi.redeal.schedule.view.UnvisitedScheduleFragment"
-        android:label="fragment_unvisited_schedule"
-        tools:layout="@layout/fragment_unvisited_schedule" />
-    <fragment
-        android:id="@+id/visitedScheduleFragment"
-        android:name="com.hifi.redeal.schedule.view.VisitedScheduleFragment"
-        android:label="fragment_visited_schedule"
-        tools:layout="@layout/fragment_visited_schedule" />
-    <fragment
-        android:id="@+id/makeScheduleFragment"
-        android:name="com.hifi.redeal.schedule.view.MakeScheduleFragment"
-        android:label="fragment_make_schedule"
-        tools:layout="@layout/fragment_make_schedule" />
-    <fragment
-        android:id="@+id/scheduleSelectByClientFragment"
-        android:name="com.hifi.redeal.schedule.view.ScheduleSelectByClientFragment"
-        android:label="fragment_schedule_select_by_client"
-        tools:layout="@layout/fragment_schedule_select_by_client" />
-    <fragment
-        android:id="@+id/editScheduleFragment"
-        android:name="com.hifi.redeal.schedule.view.EditScheduleFragment"
-        android:label="fragment_edit_schedule"
-        tools:layout="@layout/fragment_edit_schedule" />
-    <fragment
-        android:id="@+id/authLoginFragment"
-        android:name="com.hifi.redeal.auth.AuthLoginFragment"
-        android:label="fragment_auth_login"
-        tools:layout="@layout/fragment_auth_login" />
-    <fragment
-        android:id="@+id/authJoinFragment"
-        android:name="com.hifi.redeal.auth.AuthJoinFragment"
-        android:label="fragment_auth_join"
-        tools:layout="@layout/fragment_auth_join" />
+        android:id="@+id/addressSearchFragment"
+        android:name="com.hifi.redeal.account.AddressSearchFragment"
+        android:label="fragment_address_search"
+        tools:layout="@layout/fragment_address_search" />
     <fragment
         android:id="@+id/authFindPwFragment"
         android:name="com.hifi.redeal.auth.AuthFindPwFragment"
         android:label="fragment_auth_find_pw"
         tools:layout="@layout/fragment_auth_find_pw" />
     <fragment
-        android:id="@+id/mapFragment"
+        android:id="@+id/authJoinFragment"
+        android:name="com.hifi.redeal.auth.AuthJoinFragment"
+        android:label="fragment_auth_join"
+        tools:layout="@layout/fragment_auth_join" />
+    <fragment
+        android:id="@+id/authLoginFragment"
+        android:name="com.hifi.redeal.auth.AuthLoginFragment"
+        android:label="fragment_auth_login"
+        tools:layout="@layout/fragment_auth_login" >
+        <action
+            android:id="@+id/action_authLoginFragment_to_authJoinFragment"
+            app:destination="@id/authJoinFragment" />
+        <action
+            android:id="@+id/action_authLoginFragment_to_authFindPwFragment"
+            app:destination="@id/authFindPwFragment" />
+        <action
+            android:id="@+id/action_authLoginFragment_to_accountListFragment2"
+            app:destination="@id/accountListFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/editScheduleFragment"
+        android:name="com.hifi.redeal.schedule.view.EditScheduleFragment"
+        android:label="fragment_edit_schedule"
+        tools:layout="@layout/fragment_edit_schedule" />
+    <fragment
+        android:id="@+id/makeScheduleFragment"
+        android:name="com.hifi.redeal.schedule.view.MakeScheduleFragment"
+        android:label="fragment_make_schedule"
+        tools:layout="@layout/fragment_make_schedule" />
+    <fragment
+        android:id="@+id/mapFragment2"
         android:name="com.hifi.redeal.map.view.MapFragment"
         android:label="fragment_map"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map" >
+        <action
+            android:id="@+id/action_mapFragment2_to_mapSearchRegionFragment"
+            app:destination="@id/mapSearchRegionFragment" />
+    </fragment>
     <fragment
         android:id="@+id/mapSearchRegionFragment"
         android:name="com.hifi.redeal.map.view.MapSearchRegionFragment"
         android:label="fragment_map_search_region"
         tools:layout="@layout/fragment_map_search_region" />
     <fragment
-        android:id="@+id/transactionFragment"
-        android:name="com.hifi.redeal.transaction.view.TransactionFragment"
-        android:label="TransactionFragment"
-        tools:layout="@layout/fragment_transaction"/>
+        android:id="@+id/myPageFragment"
+        android:name="com.hifi.redeal.myPage.MyPageFragment"
+        android:label="fragment_my_page"
+        tools:layout="@layout/fragment_my_page" >
+        <action
+            android:id="@+id/action_myPageFragment_to_myPageRequestFragment"
+            app:destination="@id/myPageRequestFragment" />
+        <action
+            android:id="@+id/action_myPageFragment_to_myPageEditNameFragment"
+            app:destination="@id/myPageEditNameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myPageEditNameFragment"
+        android:name="com.hifi.redeal.myPage.MyPageEditNameFragment"
+        android:label="fragment_my_page_edit_name"
+        tools:layout="@layout/fragment_my_page_edit_name" />
+    <fragment
+        android:id="@+id/myPageRequestFragment"
+        android:name="com.hifi.redeal.myPage.MyPageRequestFragment"
+        android:label="fragment_my_page_request"
+        tools:layout="@layout/fragment_my_page_request" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.hifi.redeal.account.NotificationFragment"
+        android:label="fragment_notification"
+        tools:layout="@layout/fragment_notification" />
+    <fragment
+        android:id="@+id/photoDetailFragment"
+        android:name="com.hifi.redeal.memo.PhotoDetailFragment"
+        android:label="fragment_photo_detail"
+        tools:layout="@layout/fragment_photo_detail" />
+    <fragment
+        android:id="@+id/recordMemoFragment2"
+        android:name="com.hifi.redeal.memo.RecordMemoFragment"
+        android:label="fragment_record_memo"
+        tools:layout="@layout/fragment_record_memo" >
+        <action
+            android:id="@+id/action_recordMemoFragment2_to_addRecordMemoFragment2"
+            app:destination="@id/addRecordMemoFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/scheduleManageFragment2"
+        android:name="com.hifi.redeal.schedule.view.ScheduleManageFragment"
+        android:label="fragment_schedule_manage"
+        tools:layout="@layout/fragment_schedule_manage" >
+        <action
+            android:id="@+id/action_scheduleManageFragment2_to_editScheduleFragment"
+            app:destination="@id/editScheduleFragment" />
+        <action
+            android:id="@+id/action_scheduleManageFragment2_to_makeScheduleFragment"
+            app:destination="@id/makeScheduleFragment" />
+        <action
+            android:id="@+id/action_scheduleManageFragment2_to_unvisitedScheduleFragment"
+            app:destination="@id/unvisitedScheduleFragment" />
+        <action
+            android:id="@+id/action_scheduleManageFragment2_to_visitedScheduleFragment2"
+            app:destination="@id/visitedScheduleFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/transactionsEditFragment"
+        android:name="com.hifi.redeal.transaction.view.TransactionsEditFragment"
+        android:label="fragment_transactions_edit"
+        tools:layout="@layout/fragment_transactions_edit" />
+    <fragment
+        android:id="@+id/unvisitedScheduleFragment"
+        android:name="com.hifi.redeal.schedule.view.UnvisitedScheduleFragment"
+        android:label="fragment_unvisited_schedule"
+        tools:layout="@layout/fragment_unvisited_schedule" />
+    <fragment
+        android:id="@+id/visitedScheduleFragment2"
+        android:name="com.hifi.redeal.schedule.view.VisitedScheduleFragment"
+        android:label="fragment_visited_schedule"
+        tools:layout="@layout/fragment_visited_schedule" />
 </navigation>
