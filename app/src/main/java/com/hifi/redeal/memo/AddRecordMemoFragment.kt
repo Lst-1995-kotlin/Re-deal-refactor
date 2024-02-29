@@ -40,6 +40,7 @@ class AddRecordMemoFragment : Fragment() {
                 RedealTheme {
                     AddRecordMemoScreen(
                         clientIdx = clientIdx,
+                        repository = recordMemoRepository,
                         mainActivity = mainActivity
                     )
                 }

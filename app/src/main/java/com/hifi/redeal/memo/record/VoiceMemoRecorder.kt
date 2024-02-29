@@ -2,9 +2,14 @@ package com.hifi.redeal.memo.record
 
 import android.content.Context
 import android.media.MediaRecorder
+import android.net.Uri
 import android.os.Build
+import android.os.ParcelFileDescriptor
+import com.hifi.redeal.MainActivity
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
+
 
 class VoiceMemoRecorder(
     private val context: Context
@@ -18,12 +23,14 @@ class VoiceMemoRecorder(
         } else MediaRecorder()
     }
 
-    fun start(outputFile: File) {
+    fun start(context:MainActivity, fileUri:Uri) {
         initialRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-            setOutputFile(FileOutputStream(outputFile).fd)
+            val pfd: ParcelFileDescriptor = context.contentResolver.openFileDescriptor(fileUri, "w")
+                ?: throw IOException("Cannot open file descriptor for URI: $fileUri")
+            setOutputFile(pfd.fileDescriptor)
             prepare()
             start()
             mediaRecorder = this

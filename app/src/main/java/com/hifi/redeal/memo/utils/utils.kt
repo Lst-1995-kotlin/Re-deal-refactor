@@ -1,13 +1,12 @@
 package com.hifi.redeal.memo.utils
 
+import android.content.ContentValues
 import android.content.Context
 import android.media.MediaPlayer
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
+import android.net.Uri
+import android.os.Environment
+import android.provider.MediaStore
+import com.hifi.redeal.MainActivity
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -114,4 +113,56 @@ fun Long.convertToDurationTime(): String {
         seconds.toString()
     }
     return "$hoursString:$minutesString:$secondsString"
+}
+
+fun createAudioUri(context: MainActivity): Uri? {
+    val values = ContentValues()
+    values.put(
+        MediaStore.MediaColumns.DISPLAY_NAME,
+        "음성_${System.currentTimeMillis()}"
+    )
+    values.put(
+        MediaStore.MediaColumns.MIME_TYPE,
+        "audio/3gpp"
+    )
+    values.put(
+        MediaStore.MediaColumns.RELATIVE_PATH,
+        Environment.DIRECTORY_MUSIC + "/RecordRedeal"
+    )
+
+    return context.contentResolver.insert(
+        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+        values
+    )
+}
+
+fun getUriForFile(context: Context, fileName: String): Uri? {
+    val contentResolver = context.contentResolver
+    val collection = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+
+    val projection = arrayOf(
+        MediaStore.Audio.Media._ID,
+        MediaStore.Audio.Media.DISPLAY_NAME
+    )
+
+    val selection = "${MediaStore.Audio.Media.DISPLAY_NAME} = ?"
+    val selectionArgs = arrayOf(fileName)
+
+    val cursor = contentResolver.query(
+        collection,
+        projection,
+        selection,
+        selectionArgs,
+        null
+    )
+
+    var uri: Uri? = null
+    if (cursor != null && cursor.moveToFirst()) {
+        val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID))
+        uri = Uri.withAppendedPath(collection, id.toString())
+    }
+
+    cursor?.close()
+
+    return uri
 }
