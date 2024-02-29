@@ -71,8 +71,6 @@ import kotlin.concurrent.thread
 class MainActivity : AppCompatActivity() {
 
     lateinit var activityMainBinding: ActivityMainBinding
-    lateinit var scheduleVM: ScheduleVM
-
     lateinit var tMapTapi: TMapTapi
 
     var newFragment: Fragment? = null
@@ -194,7 +192,6 @@ class MainActivity : AppCompatActivity() {
 
         requestPermissions(permissionList, 10)
         addNotificationChannel(NOTIFICATION_CHANNEL1_ID, NOTIFICATION_CHANNEL1_NAME)
-        scheduleVM = ViewModelProvider(this)[ScheduleVM::class.java]
 
         activityMainBinding.run {
             bottomNavigationViewMain.setOnItemSelectedListener {
