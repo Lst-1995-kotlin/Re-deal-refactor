@@ -5,23 +5,23 @@
     android:id="@+id/nav_graph_main"
     app:startDestination="@id/authLoginFragment">
     <fragment
-        android:id="@+id/memoFragment2"
+        android:id="@+id/memoFragment"
         android:name="com.hifi.redeal.memo.MemoFragment"
         android:label="fragment_memo"
         tools:layout="@layout/fragment_memo" />
     <fragment
-        android:id="@+id/addRecordMemoFragment2"
+        android:id="@+id/addRecordMemoFragment"
         android:name="com.hifi.redeal.memo.AddRecordMemoFragment"
         android:label="AddRecordMemoFragment" />
     <fragment
-        android:id="@+id/photoMemoFragment2"
+        android:id="@+id/photoMemoFragment"
         android:name="com.hifi.redeal.memo.PhotoMemoFragment"
         android:label="PhotoMemoFragment" >
         <action
-            android:id="@+id/action_photoMemoFragment2_to_photoDetailFragment"
+            android:id="@+id/action_photoMemoFragment_to_photoDetailFragment"
             app:destination="@id/photoDetailFragment" />
         <action
-            android:id="@+id/action_photoMemoFragment2_to_addPhotoMemoFragment"
+            android:id="@+id/action_photoMemoFragment_to_addPhotoMemoFragment"
             app:destination="@id/addPhotoMemoFragment" />
     </fragment>
     <fragment
@@ -53,23 +53,23 @@
         android:name="com.hifi.redeal.transaction.view.TransactionDepositModifyFragment"
         android:label="TransactionDepositModifyFragment" />
     <fragment
-        android:id="@+id/transactionFragment2"
+        android:id="@+id/transactionFragment"
         android:name="com.hifi.redeal.transaction.view.TransactionFragment"
         android:label="TransactionFragment" >
         <action
-            android:id="@+id/action_transactionFragment2_to_transactionSalesFragment"
+            android:id="@+id/action_transactionFragment_to_transactionSalesFragment"
             app:destination="@id/transactionSalesFragment" />
         <action
-            android:id="@+id/action_transactionFragment2_to_transactionSalesModifyFragment"
+            android:id="@+id/action_transactionFragment_to_transactionSalesModifyFragment"
             app:destination="@id/transactionSalesModifyFragment" />
         <action
-            android:id="@+id/action_transactionFragment2_to_transactionDepositFragment"
+            android:id="@+id/action_transactionFragment_to_transactionDepositFragment"
             app:destination="@id/transactionDepositFragment" />
         <action
-            android:id="@+id/action_transactionFragment2_to_transactionDepositModifyFragment"
+            android:id="@+id/action_transactionFragment_to_transactionDepositModifyFragment"
             app:destination="@id/transactionDepositModifyFragment" />
         <action
-            android:id="@+id/action_transactionFragment2_to_transactionsEditFragment"
+            android:id="@+id/action_transactionFragment_to_transactionsEditFragment"
             app:destination="@id/transactionsEditFragment" />
     </fragment>
     <fragment
@@ -92,11 +92,11 @@
             android:id="@+id/action_accountDetailFragment_to_accountEditFragment"
             app:destination="@id/accountEditFragment" />
         <action
-            android:id="@+id/action_accountDetailFragment_to_photoMemoFragment2"
-            app:destination="@id/photoMemoFragment2" />
+            android:id="@+id/action_accountDetailFragment_to_photoMemoFragment"
+            app:destination="@id/photoMemoFragment" />
         <action
-            android:id="@+id/action_accountDetailFragment_to_recordMemoFragment2"
-            app:destination="@id/recordMemoFragment2" />
+            android:id="@+id/action_accountDetailFragment_to_recordMemoFragment"
+            app:destination="@id/recordMemoFragment" />
     </fragment>
     <fragment
         android:id="@+id/accountEditFragment"
@@ -108,30 +108,30 @@
             app:destination="@id/addressSearchFragment" />
     </fragment>
     <fragment
-        android:id="@+id/accountListFragment2"
+        android:id="@+id/accountListFragment"
         android:name="com.hifi.redeal.account.AccountListFragment"
         android:label="fragment_account_list"
         tools:layout="@layout/fragment_account_list" >
         <action
-            android:id="@+id/action_accountListFragment2_to_accountDetailFragment"
+            android:id="@+id/action_accountListFragment_to_accountDetailFragment"
             app:destination="@id/accountDetailFragment" />
         <action
-            android:id="@+id/action_accountListFragment2_to_transactionFragment2"
-            app:destination="@id/transactionFragment2" />
+            android:id="@+id/action_accountListFragment_to_transactionFragment"
+            app:destination="@id/transactionFragment" />
         <action
-            android:id="@+id/action_accountListFragment2_to_mapFragment2"
-            app:destination="@id/mapFragment2" />
+            android:id="@+id/action_accountListFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
         <action
-            android:id="@+id/action_accountListFragment2_to_scheduleManageFragment2"
-            app:destination="@id/scheduleManageFragment2" />
+            android:id="@+id/action_accountListFragment_to_scheduleManageFragment"
+            app:destination="@id/scheduleManageFragment" />
         <action
-            android:id="@+id/action_accountListFragment2_to_memoFragment2"
-            app:destination="@id/memoFragment2" />
+            android:id="@+id/action_accountListFragment_to_memoFragment"
+            app:destination="@id/memoFragment" />
         <action
-            android:id="@+id/action_accountListFragment2_to_notificationFragment"
+            android:id="@+id/action_accountListFragment_to_notificationFragment"
             app:destination="@id/notificationFragment" />
         <action
-            android:id="@+id/action_accountListFragment2_to_myPageFragment"
+            android:id="@+id/action_accountListFragment_to_myPageFragment"
             app:destination="@id/myPageFragment" />
     </fragment>
     <fragment
@@ -166,8 +166,8 @@
             android:id="@+id/action_authLoginFragment_to_authFindPwFragment"
             app:destination="@id/authFindPwFragment" />
         <action
-            android:id="@+id/action_authLoginFragment_to_accountListFragment2"
-            app:destination="@id/accountListFragment2" />
+            android:id="@+id/action_authLoginFragment_to_accountListFragment"
+            app:destination="@id/accountListFragment" />
     </fragment>
     <fragment
         android:id="@+id/editScheduleFragment"
@@ -180,12 +180,12 @@
         android:label="fragment_make_schedule"
         tools:layout="@layout/fragment_make_schedule" />
     <fragment
-        android:id="@+id/mapFragment2"
+        android:id="@+id/mapFragment"
         android:name="com.hifi.redeal.map.view.MapFragment"
         android:label="fragment_map"
         tools:layout="@layout/fragment_map" >
         <action
-            android:id="@+id/action_mapFragment2_to_mapSearchRegionFragment"
+            android:id="@+id/action_mapFragment_to_mapSearchRegionFragment"
             app:destination="@id/mapSearchRegionFragment" />
     </fragment>
     <fragment
@@ -226,31 +226,31 @@
         android:label="fragment_photo_detail"
         tools:layout="@layout/fragment_photo_detail" />
     <fragment
-        android:id="@+id/recordMemoFragment2"
+        android:id="@+id/recordMemoFragment"
         android:name="com.hifi.redeal.memo.RecordMemoFragment"
         android:label="fragment_record_memo"
         tools:layout="@layout/fragment_record_memo" >
         <action
-            android:id="@+id/action_recordMemoFragment2_to_addRecordMemoFragment2"
-            app:destination="@id/addRecordMemoFragment2" />
+            android:id="@+id/action_recordMemoFragment_to_addRecordMemoFragment"
+            app:destination="@id/addRecordMemoFragment" />
     </fragment>
     <fragment
-        android:id="@+id/scheduleManageFragment2"
+        android:id="@+id/scheduleManageFragment"
         android:name="com.hifi.redeal.schedule.view.ScheduleManageFragment"
         android:label="fragment_schedule_manage"
         tools:layout="@layout/fragment_schedule_manage" >
         <action
-            android:id="@+id/action_scheduleManageFragment2_to_editScheduleFragment"
+            android:id="@+id/action_scheduleManageFragment_to_editScheduleFragment"
             app:destination="@id/editScheduleFragment" />
         <action
-            android:id="@+id/action_scheduleManageFragment2_to_makeScheduleFragment"
+            android:id="@+id/action_scheduleManageFragment_to_makeScheduleFragment"
             app:destination="@id/makeScheduleFragment" />
         <action
-            android:id="@+id/action_scheduleManageFragment2_to_unvisitedScheduleFragment"
+            android:id="@+id/action_scheduleManageFragment_to_unvisitedScheduleFragment"
             app:destination="@id/unvisitedScheduleFragment" />
         <action
-            android:id="@+id/action_scheduleManageFragment2_to_visitedScheduleFragment2"
-            app:destination="@id/visitedScheduleFragment2" />
+            android:id="@+id/action_scheduleManageFragment_to_visitedScheduleFragment"
+            app:destination="@id/visitedScheduleFragment" />
     </fragment>
     <fragment
         android:id="@+id/transactionsEditFragment"
@@ -263,7 +263,7 @@
         android:label="fragment_unvisited_schedule"
         tools:layout="@layout/fragment_unvisited_schedule" />
     <fragment
-        android:id="@+id/visitedScheduleFragment2"
+        android:id="@+id/visitedScheduleFragment"
         android:name="com.hifi.redeal.schedule.view.VisitedScheduleFragment"
         android:label="fragment_visited_schedule"
         tools:layout="@layout/fragment_visited_schedule" />
