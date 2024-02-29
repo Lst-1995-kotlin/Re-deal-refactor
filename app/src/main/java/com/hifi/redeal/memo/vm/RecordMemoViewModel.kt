@@ -2,12 +2,15 @@ package com.hifi.redeal.memo.vm
 
 import android.content.Context
 import android.net.Uri
+import android.os.Environment
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.hifi.redeal.memo.model.RecordMemoData
 import com.hifi.redeal.memo.repository.RecordMemoRepository
+import com.hifi.redeal.memo.utils.getUriForFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.io.File
 import javax.inject.Inject
@@ -26,20 +29,15 @@ class RecordMemoViewModel @Inject constructor(
                 val date = item.get("recordMemoDate") as Timestamp
                 val audioFilename = item.get("recordMemoFilename") as String
                 val duration = item.get("recordMemoDuration") as Long
-                val fileLocation = File(mainContext.getExternalFilesDir(null), "recordings")
-                val recordFileLocation = File(fileLocation, audioFilename)
-                var audioFileUri: Uri?
-                if (recordFileLocation.exists()) {
-                    audioFileUri = Uri.fromFile(recordFileLocation)
-                    val newRecordMemo = RecordMemoData(
-                        context,
-                        date.toDate(),
-                        audioFileUri,
-                        audioFilename,
-                        duration
-                    )
-                    recordMemoData.add(newRecordMemo)
-                }
+                val audioFileUri = Uri.parse(item.get("recordMemoSrc") as String)
+                val newRecordMemo = RecordMemoData(
+                    context,
+                    date.toDate(),
+                    audioFileUri,
+                    audioFilename,
+                    duration
+                )
+                recordMemoData.add(newRecordMemo)
             }
             _recordMemoList.value = recordMemoData.sortedByDescending { it.date }
         }

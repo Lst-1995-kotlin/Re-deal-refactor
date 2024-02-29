@@ -15,7 +15,13 @@
     <string name="add_photo_memo_bottom_button">포토 메모 등록</string>
     <string name="add_photo_memo_bottom_button_disable">사진을 등록해주세요</string>
     <string name="add_photo_memo_bottom_button_clicked">등록 중..</string>
+    <string name="add_record_memo_toolbar">포토 메모 등록</string>
     <string name="add_record_memo_body_text_field_placeholder">메모</string>
+    <string name="add_record_memo_bottom_button">음성 메모 등록</string>
+    <string name="add_record_memo_bottom_button_disable">녹음 또는 파일을 등록해주세요</string>
+    <string name="add_record_memo_bottom_button_clicked">등록 중..</string>
+    <string name="add_record_add_file_button">새로 파일을 등록하거나 녹음 하실 수 있어요</string>
+    <string name="add_record_save_dialog_title">녹음 파일 저장</string>
 
     <!--    Transaction-->
     <string name="edit_menu">수정하기</string>

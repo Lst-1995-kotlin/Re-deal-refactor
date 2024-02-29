@@ -1,7 +1,13 @@
 package com.hifi.redeal.memo.components
 
-import android.media.MediaMetadataRetriever
+import android.content.ContentResolver
+import android.content.ContentValues
+import android.net.Uri
 import android.os.Build
+import android.provider.MediaStore
+import android.provider.OpenableColumns
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.BorderStroke
@@ -59,17 +65,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.core.net.toUri
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.memo.model.BottomButtonState
 import com.hifi.redeal.memo.record.VoiceMemoRecorder
+import com.hifi.redeal.memo.repository.RecordMemoRepository
 import com.hifi.redeal.memo.utils.convertToDurationTime
+import com.hifi.redeal.memo.utils.createAudioUri
 import com.hifi.redeal.memo.utils.formatRecordTime
 import kotlinx.coroutines.delay
-import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 private enum class RecordState {
     BEFORE_RECORDING,
@@ -145,10 +155,19 @@ private fun MemoTextField(
 
 @Composable
 private fun AddFileButton(
+    setRecordUri: (uri: Uri?) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val albumLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri ->
+            setRecordUri(uri)
+        }
+    )
     FilledIconButton(
-        onClick = {},
+        onClick = {
+            albumLauncher.launch("audio/*")
+        },
         shape = RoundedCornerShape(4.dp),
         colors = IconButtonDefaults.filledIconButtonColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -162,7 +181,7 @@ private fun AddFileButton(
         ) {
             Icon(imageVector = Icons.Default.UploadFile, contentDescription = null)
             Text(
-                "새로 파일을 등록하거나 녹음 하실 수 있어요",
+                text = stringResource(R.string.add_record_add_file_button),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
                     .weight(1f)
@@ -184,7 +203,7 @@ private fun VoiceRecorder(
     var isNewRecord by remember { mutableStateOf(true) }
 
     LaunchedEffect(isRecording) {
-        while(isRecording) {
+        while (isRecording) {
             delay(10)
             time += 10
         }
@@ -195,10 +214,10 @@ private fun VoiceRecorder(
     ) {
         Text(
             text = formatRecordTime(time),
-            style = MaterialTheme.typography.bodyLarge.copy(
-                fontSize = 40.sp,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontSize = 24.sp
             ),
-            modifier = Modifier.padding(start = 64.dp)
+            modifier = Modifier.padding(start = 100.dp)
         )
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
@@ -246,9 +265,10 @@ private fun VoiceRecorder(
 
             IconButton(
                 onClick = {
+                    isRecording = false
                     onStop()
                 },
-                enabled = !isRecording,
+                enabled = !isNewRecord,
                 modifier = Modifier.size(48.dp)
             ) {
                 Icon(
@@ -324,26 +344,31 @@ private fun AudioPlayerDurationTimeText(
 
 @Composable
 private fun AudioPlayer(
-    file: File,
+    uri: Uri,
+    filename: String,
+    setDuration: (duration: Long) -> Unit,
     mainActivity: MainActivity,
     modifier: Modifier = Modifier
 ) {
     var currentPosition by remember { mutableLongStateOf(0) }
     var isPlaying by remember { mutableStateOf(false) }
     var sliderPosition by remember { mutableLongStateOf(0) }
-    val fileDuration by remember {
-        val retriever = MediaMetadataRetriever()
-        retriever.setDataSource(file.path)
-        val time =
-            retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
-        mutableLongStateOf(time)
-    }
+    var duration by remember { mutableLongStateOf(0) }
     val player = remember {
         ExoPlayer.Builder(mainActivity).build().apply {
-            setMediaItem(MediaItem.fromUri(file.toUri()))
+            setMediaItem(MediaItem.fromUri(uri))
             prepare()
         }
     }
+
+    player.addListener(object : Player.Listener {
+        override fun onPlaybackStateChanged(state: Int) {
+            if (state == Player.STATE_READY) {
+                duration = player.duration
+                setDuration(player.duration)
+            }
+        }
+    })
 
     val onClickPlayer = {
         if (isPlaying) {
@@ -386,9 +411,9 @@ private fun AudioPlayer(
                 .weight(1f)
                 .padding(start = 16.dp)
         ) {
-            AudioPlayerFileName(text = file.name)
+            AudioPlayerFileName(text = filename)
             AudioPlayerDurationTimeText(
-                duration = fileDuration,
+                duration = duration,
                 currentPosition = currentPosition,
                 modifier = Modifier.padding(top = 4.dp)
             )
@@ -401,7 +426,7 @@ private fun AudioPlayer(
                     currentPosition = sliderPosition
                     player.seekTo(sliderPosition)
                 },
-                valueRange = 0f..fileDuration.toFloat(),
+                valueRange = 0f..duration.toFloat(),
             )
         }
     }
@@ -409,40 +434,63 @@ private fun AudioPlayer(
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
-private fun VoiceMemoPlayer(
+private fun AudioMemoPlayer(
+    uri: Uri?,
+    setUri: (uri: Uri?) -> Unit,
+    setDuration: (duration: Long) -> Unit,
+    setRecordedFilename: (name: String) -> Unit,
+    state: RecordState,
+    changeState: (state: RecordState) -> Unit,
     mainActivity: MainActivity,
-    path: String,
     modifier: Modifier = Modifier
 ) {
-    var recordFile by remember { mutableStateOf(File("")) }
-    var recordState by remember { mutableStateOf(RecordState.ON_RECORDING) }
+    var fileUri by remember { mutableStateOf<Uri?>(null) }
     val voiceRecorder by remember { mutableStateOf(VoiceMemoRecorder(mainActivity)) }
     var showDialog by remember { mutableStateOf(false) }
 
-    val onCloseDialog = { isSave: Boolean ->
-        if (isSave) {
-            voiceRecorder.stop()
-            recordState = RecordState.AFTER_RECORDING
+    val onSaveDialog = { title: String ->
+        voiceRecorder.stop()
+        changeState(RecordState.AFTER_RECORDING)
+        val values = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, title)
         }
-        showDialog = false
+
+        mainActivity.contentResolver.update(
+            fileUri!!,
+            values,
+            null,
+            null
+        )
+
+        setUri(fileUri)
+    }
+
+    var filename by remember { mutableStateOf("") }
+
+    LaunchedEffect(key1 = uri) {
+        if (uri != null) {
+            val contentResolver: ContentResolver = mainActivity.contentResolver
+            val cursor = contentResolver.query(uri, null, null, null, null)
+            cursor?.use {
+                if (it.moveToFirst()) {
+                    filename = it.getString(it.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
+                    setRecordedFilename(filename)
+                }
+            }
+        }
     }
 
     Column(
         modifier = modifier
     ) {
-        Crossfade(targetState = recordState, label = "test") { state ->
+        Crossfade(targetState = state, label = "Record and Playback Cross fade") { state ->
             when (state) {
                 RecordState.BEFORE_RECORDING,
                 RecordState.ON_RECORDING -> {
                     VoiceRecorder(
                         onStart = {
-                            File(
-                                mainActivity.cacheDir,
-                                "음성_${System.currentTimeMillis()}.m4a"
-                            ).also {
-                                voiceRecorder.start(it)
-                                recordFile = it
-                            }
+                            fileUri = createAudioUri(mainActivity)
+                            voiceRecorder.start(mainActivity, fileUri!!)
                         },
                         onToggle = { voiceRecorder.togglePause() },
                         onStop = {
@@ -456,7 +504,9 @@ private fun VoiceMemoPlayer(
 
                 RecordState.AFTER_RECORDING -> {
                     AudioPlayer(
-                        file = recordFile,
+                        uri = uri!!,
+                        filename = filename,
+                        setDuration = setDuration,
                         mainActivity = mainActivity,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -467,8 +517,8 @@ private fun VoiceMemoPlayer(
         }
         if (showDialog) {
             SaveDialog(
-                filename = recordFile.name,
-                onDismiss = onCloseDialog
+                onSave = { onSaveDialog(it) },
+                onDismiss = { showDialog = false }
             )
         }
     }
@@ -483,15 +533,15 @@ private fun BottomButton(
 ) {
     val buttonText = when (state) {
         BottomButtonState.IDLE -> {
-            stringResource(id = R.string.add_photo_memo_bottom_button)
+            stringResource(id = R.string.add_record_memo_bottom_button)
         }
 
         BottomButtonState.PRESSED -> {
-            stringResource(id = R.string.add_photo_memo_bottom_button_clicked)
+            stringResource(id = R.string.add_record_memo_bottom_button_clicked)
         }
 
         BottomButtonState.DISABLED -> {
-            stringResource(id = R.string.add_photo_memo_bottom_button_disable)
+            stringResource(id = R.string.add_record_memo_bottom_button_disable)
         }
     }
     Button(
@@ -518,11 +568,18 @@ private fun BottomButton(
 
 @Composable
 private fun SaveDialog(
-    filename: String,
+    onSave: (title: String) -> Unit,
     onDismiss: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var value by remember { mutableStateOf(filename) }
+    var value by remember {
+        mutableStateOf(
+            SimpleDateFormat(
+                "yyyyMMdd_HHmm ss",
+                Locale.getDefault()
+            ).format(Date())
+        )
+    }
     Dialog(onDismissRequest = { onDismiss(false) }) {
         Surface(
             shape = RoundedCornerShape(16.dp),
@@ -533,12 +590,12 @@ private fun SaveDialog(
                 modifier = Modifier.padding(20.dp)
             ) {
                 Text(
-                    text = "녹음 파일 저장",
+                    text = stringResource(R.string.add_record_save_dialog_title),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontWeight = FontWeight.Bold
                     )
                 )
-                // todo : Dialog가 처음 띄워질 때 포커싱 & 글자 선택된 상태
+                // todo : Dialog 가 처음 띄워질 때 포커싱 & 글자 선택된 상태
                 BasicTextField(
                     value = value,
                     onValueChange = { value = it },
@@ -580,7 +637,8 @@ private fun SaveDialog(
                     )
                     TextButton(
                         onClick = {
-                            onDismiss(true)
+                            onSave(value)
+                            onDismiss(false)
                         },
                         modifier = Modifier.weight(1f)
                     ) {
@@ -599,17 +657,47 @@ private fun SaveDialog(
 @Composable
 fun AddRecordMemoScreen(
     clientIdx: Long,
+    repository: RecordMemoRepository,
     mainActivity: MainActivity
 ) {
+    var recordedUri by remember { mutableStateOf<Uri?>(null) }
+    var recordState by remember { mutableStateOf(RecordState.ON_RECORDING) }
+    var recordedDuration by remember { mutableLongStateOf(0) }
+    var bottomButtonState by remember { mutableStateOf(BottomButtonState.DISABLED) }
+    var recordedFilename by remember {
+        mutableStateOf(
+            SimpleDateFormat(
+                "yyyyMMdd_HHmm ss",
+                Locale.getDefault()
+            ).format(Date())
+        )
+    }
+    var memoTextValue by remember { mutableStateOf("") }
+
+    val onClickBottomButton = {
+        bottomButtonState = BottomButtonState.PRESSED
+        repository.addRecordMemo(
+            clientIdx,
+            memoTextValue,
+            recordedUri!!,
+            recordedFilename,
+            recordedDuration
+        ) {
+            mainActivity.removeFragment(MainActivity.ADD_RECORD_MEMO_FRAGMENT)
+        }
+    }
+
     Scaffold(
         topBar = {
             AddRecordMemoToolbar(
-                title = "음성메모 등록", onClickNavigation = {})
+                title = stringResource(id = R.string.add_record_memo_toolbar), onClickNavigation = {
+                    mainActivity.removeFragment(MainActivity.ADD_RECORD_MEMO_FRAGMENT)
+                })
         },
         bottomBar = {
             BottomButton(
-                state = BottomButtonState.IDLE,
-                onClick = {},
+                state = bottomButtonState,
+                onClick = onClickBottomButton,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 24.dp, horizontal = 28.dp)
@@ -624,18 +712,43 @@ fun AddRecordMemoScreen(
                 .padding(top = 40.dp)
         ) {
             MemoTextField(
-                value = "",
-                onChangeValue = {},
+                value = memoTextValue,
+                onChangeValue = {
+                    memoTextValue = it
+                },
                 modifier = Modifier.fillMaxWidth()
             )
-            AddFileButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
-                    .height(52.dp)
+            if (recordedUri == null) {
+                AddFileButton(
+                    setRecordUri = {
+                        recordedUri = it
+                        recordState = RecordState.AFTER_RECORDING
+                        bottomButtonState = BottomButtonState.IDLE
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                        .height(52.dp)
+                )
+            }
+            AudioMemoPlayer(
+                uri = recordedUri,
+                setUri = {
+                    recordedUri = it
+                    bottomButtonState = BottomButtonState.IDLE
+                },
+                setDuration = {
+                    recordedDuration = it
+                },
+                setRecordedFilename = {
+                    recordedFilename = it
+                },
+                state = recordState,
+                changeState = {
+                    recordState = it
+                },
+                mainActivity = mainActivity
             )
-            VoiceMemoPlayer(mainActivity, "")
         }
     }
 }
-
