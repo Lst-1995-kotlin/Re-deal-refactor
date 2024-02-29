@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.MainActivity
+import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTransactionBinding
 import com.hifi.redeal.transaction.adapter.TransactionAdapter
 import com.hifi.redeal.transaction.adapter.TransactionAdapterDiffCallback
@@ -28,7 +30,6 @@ class TransactionFragment : Fragment() {
     private lateinit var fragmentTransactionBinding: FragmentTransactionBinding
     private val transactionViewModel: TransactionViewModel by activityViewModels()
     private val transactionClientViewModel: TransactionClientViewModel by activityViewModels()
-    private lateinit var mainActivity: MainActivity
     private lateinit var transactionAdapter: TransactionAdapter
     private lateinit var transactionAddSelectDialog: TransactionAddSelectDialog
 
@@ -41,9 +42,8 @@ class TransactionFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater)
-        mainActivity = activity as MainActivity
         transactionAddSelectDialog =
-            TransactionAddSelectDialog(mainActivity, requireContext(), inflater)
+            TransactionAddSelectDialog(findNavController(), requireContext(), inflater)
 
         setAdapter()
         setBind()
@@ -76,7 +76,7 @@ class TransactionFragment : Fragment() {
         }
 
         fragmentTransactionBinding.toolbarTransactionMain.setOnMenuItemClickListener {
-            mainActivity.replaceFragment(MainActivity.TRANSACTIONS_EDIT_FRAGMENT, true, null)
+            findNavController().navigate(R.id.action_transactionFragment_to_transactionsEditFragment)
             true
         }
     }
@@ -110,19 +110,11 @@ class TransactionFragment : Fragment() {
                 transactionClientViewModel.setSelectClient(it.getClientInformation())
                 when (it.getTransactionType()) {
                     TransactionType.SALES.type -> {
-                        mainActivity.replaceFragment(
-                            MainActivity.TRANSACTION_SALES_MODIFY_FRAGMENT,
-                            true,
-                            null
-                        )
+                        findNavController().navigate(R.id.action_transactionFragment_to_transactionSalesModifyFragment)
                     }
 
                     TransactionType.DEPOSIT.type -> {
-                        mainActivity.replaceFragment(
-                            MainActivity.TRANSACTION_DEPOSIT_MODIFY_FRAGMENT,
-                            true,
-                            null
-                        )
+                        findNavController().navigate(R.id.action_transactionFragment_to_transactionDepositModifyFragment)
                     }
                 }
             } ?: transactionClientViewModel.setSelectClientIndex(null)

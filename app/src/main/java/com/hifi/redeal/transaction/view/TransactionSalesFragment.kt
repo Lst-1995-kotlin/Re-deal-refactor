@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentTransactionSalesBinding
 import com.hifi.redeal.transaction.configuration.TransactionAmountConfiguration.Companion.setTransactionAmountMessage
@@ -48,7 +49,7 @@ class TransactionSalesFragment : Fragment() {
     private fun setBind() {
         fragmentTransactionSalesBinding.run {
             addSalesMaterialToolbar.setNavigationOnClickListener {
-                mainActivity.removeFragment(MainActivity.TRANSACTION_SALES_FRAGMENT)
+                findNavController().popBackStack()
             }
 
             addSalesBtn.setOnClickListener {
@@ -65,8 +66,8 @@ class TransactionSalesFragment : Fragment() {
                         amountReceived
                     )
                     transactionViewModel.setMoveToPosition(0)
+                    findNavController().popBackStack()
                 }
-                mainActivity.removeFragment(MainActivity.TRANSACTION_SALES_FRAGMENT)
             }
 
             transactionItemNameEditText.onFocusChangeListener =

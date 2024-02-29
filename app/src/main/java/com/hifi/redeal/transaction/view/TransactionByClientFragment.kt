@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.MainActivity
+import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTransactionByClientBinding
 import com.hifi.redeal.transaction.adapter.TransactionAdapter
 import com.hifi.redeal.transaction.adapter.TransactionAdapterDiffCallback
@@ -26,7 +28,6 @@ import javax.inject.Inject
 class TransactionByClientFragment : Fragment() {
 
     private lateinit var fragmentTransactionByClientBinding: FragmentTransactionByClientBinding
-    private lateinit var mainActivity: MainActivity
     private lateinit var transactionAdapter: TransactionAdapter
     private var clientIdx: Long? = null
     private val transactionViewModel: TransactionViewModel by activityViewModels()
@@ -41,8 +42,6 @@ class TransactionByClientFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         fragmentTransactionByClientBinding = FragmentTransactionByClientBinding.inflate(inflater)
-        mainActivity = activity as MainActivity
-        clientIdx = arguments?.getLong("clientIdx")
 
         setAdapter()
         setBind()
@@ -74,16 +73,16 @@ class TransactionByClientFragment : Fragment() {
 
             ImgBtnAddDepositByClient.setOnClickListener {
                 transactionClientViewModel.setSelectClientIndex(clientIdx)
-                mainActivity.replaceFragment(MainActivity.TRANSACTION_DEPOSIT_FRAGMENT, true, null)
+                findNavController().navigate(R.id.action_transactionByClientFragment_to_transactionDepositFragment)
             }
 
             ImgBtnAddTransactionByClient.setOnClickListener {
                 transactionClientViewModel.setSelectClientIndex(clientIdx)
-                mainActivity.replaceFragment(MainActivity.TRANSACTION_SALES_FRAGMENT, true, null)
+                findNavController().navigate(R.id.action_transactionByClientFragment_to_transactionSalesFragment)
             }
 
             toolbarTransactionByClientMain.setOnMenuItemClickListener {
-                mainActivity.replaceFragment(MainActivity.TRANSACTIONS_EDIT_FRAGMENT, true, null)
+                findNavController().navigate(R.id.action_transactionByClientFragment_to_transactionsEditFragment)
                 true
             }
         }
@@ -121,23 +120,15 @@ class TransactionByClientFragment : Fragment() {
                 transactionClientViewModel.setSelectClient(it.getClientInformation())
                 when (it.getTransactionType()) {
                     TransactionType.SALES.type -> {
-                        mainActivity.replaceFragment(
-                            MainActivity.TRANSACTION_SALES_MODIFY_FRAGMENT,
-                            true,
-                            null
-                        )
+                        findNavController().navigate(R.id.action_transactionByClientFragment_to_transactionSalesModifyFragment)
                     }
 
                     TransactionType.DEPOSIT.type -> {
-                        mainActivity.replaceFragment(
-                            MainActivity.TRANSACTION_DEPOSIT_MODIFY_FRAGMENT,
-                            true,
-                            null
-                        )
+                        findNavController().navigate(R.id.action_transactionByClientFragment_to_transactionDepositModifyFragment)
                     }
                 }
             }
         }
-        transactionViewModel.setSelectClientIndex(clientIdx) // 기존 선택한 클라이언트 정보를 초기화 시킨다.
+        transactionViewModel.setSelectClientIndex(arguments?.getLong("clientIdx")) // 기존 선택한 클라이언트 정보를 초기화 시킨다.
     }
 }
