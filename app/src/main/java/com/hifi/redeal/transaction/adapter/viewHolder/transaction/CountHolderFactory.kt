@@ -1,11 +1,11 @@
-package com.hifi.redeal.transaction.viewHolder.transaction
+package com.hifi.redeal.transaction.adapter.viewHolder.transaction
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.databinding.RowTransactionCountBinding
-import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
+import com.hifi.redeal.transaction.adapter.viewHolder.ViewHolderFactory
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 
 class CountHolderFactory(

@@ -1,11 +1,11 @@
-package com.hifi.redeal.transaction.viewHolder.client
+package com.hifi.redeal.transaction.adapter.viewHolder.client
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
-import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
+import com.hifi.redeal.transaction.adapter.viewHolder.ViewHolderFactory
 import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
 
 class TransactionClientHolderFactory(

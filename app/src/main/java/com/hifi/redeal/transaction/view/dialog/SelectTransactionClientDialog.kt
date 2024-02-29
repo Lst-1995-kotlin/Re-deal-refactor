@@ -3,7 +3,6 @@ package com.hifi.redeal.transaction.view.dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,9 +12,9 @@ import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.hifi.redeal.databinding.DialogSelectTransactionClientBinding
 import com.hifi.redeal.transaction.adapter.ClientAdapter
 import com.hifi.redeal.transaction.adapter.ClientAdapterDiffCallback
+import com.hifi.redeal.transaction.adapter.viewHolder.ViewHolderFactory
+import com.hifi.redeal.transaction.adapter.viewHolder.client.TransactionClientHolderFactory
 import com.hifi.redeal.transaction.configuration.DialogConfiguration.Companion.dialogResize
-import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
-import com.hifi.redeal.transaction.viewHolder.client.TransactionClientHolderFactory
 import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -55,7 +54,8 @@ class SelectTransactionClientDialog(
 
     private fun setAdapter() {
         val viewHolderFactories = HashMap<String, ViewHolderFactory>()
-        viewHolderFactories["client"] = TransactionClientHolderFactory(transactionClientViewModel, this)
+        viewHolderFactories["client"] =
+            TransactionClientHolderFactory(transactionClientViewModel, this)
         clientAdapter = ClientAdapter(viewHolderFactories, clientAdapterDiffCallback)
     }
 
@@ -92,7 +92,7 @@ class SelectTransactionClientDialog(
 
     private fun setViewModel() {
         transactionClientViewModel.clients.observe(viewLifecycleOwner) {
-            clientAdapter.setClients(it)
+            clientAdapter.submitList(it)
         }
     }
 }

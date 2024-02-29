@@ -5,19 +5,44 @@ import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlin.math.abs
 
 class Transaction(
     private val transactionData: TransactionData,
-    private val clientData: ClientData
+    private val clientData: ClientData,
+    private val selectTransactionData: SelectTransactionData
 ) {
     private val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
     override fun hashCode(): Int {
-        return transactionData.hashCode()
+        val transactionHash = abs(transactionData.hashCode())
+        val clientHash = abs(clientData.hashCode())
+        val selectTransactionHash = abs(selectTransactionData.hashCode())
+
+        return (transactionHash + clientHash + selectTransactionHash) % Int.MAX_VALUE
     }
 
     override fun equals(other: Any?): Boolean {
         val otherTransaction = other as Transaction
-        return otherTransaction.transactionData == this.transactionData
+        return otherTransaction.transactionData == this.transactionData &&
+                otherTransaction.clientData == this.clientData &&
+                otherTransaction.selectTransactionData == this.selectTransactionData
+    }
+
+    fun replaceSelectedTransaction(): Transaction {
+        if (isSelected()) return Transaction(
+            transactionData,
+            clientData,
+            SelectTransactionData(false)
+        )
+        return Transaction(
+            transactionData,
+            clientData,
+            SelectTransactionData(true)
+        )
+    }
+
+    fun isSelected(): Boolean {
+        return selectTransactionData.isSelected
     }
 
     fun calculateSalesAmount(): Long {

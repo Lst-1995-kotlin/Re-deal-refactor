@@ -1,4 +1,4 @@
-package com.hifi.redeal.transaction.viewHolder.transaction
+package com.hifi.redeal.transaction.adapter.viewHolder.transaction
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +14,5 @@ class CountHolder(
         transactionViewModel.transactionList.observe(viewLifecycleOwner) {
             rowTransactionCountBinding.transactionCountTextView.text = "${it.size}개의 거래내역"
         }
-        rowTransactionCountBinding
     }
 }

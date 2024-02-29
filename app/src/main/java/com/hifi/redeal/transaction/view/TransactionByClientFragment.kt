@@ -13,10 +13,10 @@ import com.hifi.redeal.transaction.adapter.TransactionAdapter
 import com.hifi.redeal.transaction.adapter.TransactionAdapterDiffCallback
 import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil
-import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
-import com.hifi.redeal.transaction.viewHolder.transaction.CountHolderFactory
-import com.hifi.redeal.transaction.viewHolder.transaction.DepositHolderFactory
-import com.hifi.redeal.transaction.viewHolder.transaction.SalesHolderFactory
+import com.hifi.redeal.transaction.adapter.viewHolder.ViewHolderFactory
+import com.hifi.redeal.transaction.adapter.viewHolder.transaction.CountHolderFactory
+import com.hifi.redeal.transaction.adapter.viewHolder.transaction.DepositHolderFactory
+import com.hifi.redeal.transaction.adapter.viewHolder.transaction.SalesHolderFactory
 import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint

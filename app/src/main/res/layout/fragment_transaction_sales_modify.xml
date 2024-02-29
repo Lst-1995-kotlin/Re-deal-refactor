@@ -47,14 +47,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/transactionModifySalesDivider">
 
-        -*/*/-<com.google.android.material.textfield.TextInputEditText
+        -*/*/-
+
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/transactionModifyItemNameEditText"
             style="@style/transaction_text_input_edit_text_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bottom_border_not_focus"
             android:fontFamily="@font/nanumsquareneo_regular"
-            android:inputType="text"
+            android:inputType="text|textMultiLine"
             android:textColor="@color/text10"
             android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>

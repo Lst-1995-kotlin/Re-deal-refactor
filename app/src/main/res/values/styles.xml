@@ -4,7 +4,7 @@
 
       <style name="AuthMainToolbarTitleTextAppearance" parent="@style/TextAppearance.AppCompat.Large">
           <item name="android:fontFamily">@font/nanumsquareneo_extrabold</item>
-          <item name="android:textSize">20dp</item>
+          <item name="android:textSize">20sp</item>
       </style>
 
     <style name="bottom_navigation_view_item_text_appearance" parent="TextAppearance.Material3.TitleSmall">
@@ -25,13 +25,19 @@
     </style>
 
     <style name="account_detail_toolbar_title_text_appearance" parent="account_list_toolbar_title_text_appearance">
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="tab_item_text_appearance_account_list_sort" parent="TextAppearance.AppCompat.Medium">
         <item name="android:fontFamily">@font/nanumsquareneo_bold</item>
         <item name="android:textSize">14sp</item>
     </style>
+
+    <style name="RoundedAlertDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@drawable/dialog_transaction_background</item>
+    </style>
+
+
 
     <!-- AccountEditFragment AutoCompleteTextView style within TextInputLayout -->
 
@@ -111,6 +117,21 @@
     <style name="transaction_text_input_edit_text_style" parent="Widget.Material3.TextInputEditText.OutlinedBox">
         <item name="colorControlActivated">@color/primary20</item>
         <item name="android:paddingStart">0dp</item>
+    </style>
+
+    <style name="transaction_edit_delete_button_style">
+        <item name="backgroundTint">@color/primary20</item>
+        <item name="android:fontFamily">@font/nanumsquareneo_bold</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_margin">4dp</item>
+    </style>
+
+    <style name="transaction_edit_cancel_button_style">
+        <item name="backgroundTint">@color/primary80</item>
+        <item name="android:fontFamily">@font/nanumsquareneo_bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_margin">4dp</item>
     </style>
     
 </resources>

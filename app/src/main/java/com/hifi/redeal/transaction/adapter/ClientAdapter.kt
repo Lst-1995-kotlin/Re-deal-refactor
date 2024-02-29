@@ -3,12 +3,11 @@ package com.hifi.redeal.transaction.adapter
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.hifi.redeal.transaction.adapter.viewHolder.ViewHolderFactory
+import com.hifi.redeal.transaction.adapter.viewHolder.client.TransactionClientHolder
 import com.hifi.redeal.transaction.model.Client
-import com.hifi.redeal.transaction.viewHolder.ViewHolderFactory
-import com.hifi.redeal.transaction.viewHolder.client.TransactionClientHolder
 
 class ClientAdapter(
     private val viewHolderFactories: HashMap<String, ViewHolderFactory>,

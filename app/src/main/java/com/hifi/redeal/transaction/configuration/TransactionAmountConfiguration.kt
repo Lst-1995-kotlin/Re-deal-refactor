@@ -1,7 +1,6 @@
 package com.hifi.redeal.transaction.configuration
 
 import android.widget.TextView
-import com.google.android.material.textfield.TextInputEditText
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
 
 enum class TransactionAmountConfiguration(private val value: Long) {
@@ -9,9 +8,8 @@ enum class TransactionAmountConfiguration(private val value: Long) {
     ;
 
     companion object {
-        fun transactionAmountCheck(value: Long):Boolean {
-            if (MAX_TRANSACTION_AMOUNT.value < value) return false
-            return true
+        fun transactionAmountCheck(value: Long): Boolean {
+            return MAX_TRANSACTION_AMOUNT.value >= value
         }
 
         fun setTransactionAmountMessage(view: TextView) {

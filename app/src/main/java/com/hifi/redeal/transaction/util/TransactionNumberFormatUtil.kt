@@ -14,6 +14,9 @@ object TransactionNumberFormatUtil {
     }
 
     fun removeNumberFormat(value: String): Long{
-        return value.replace(",","").toLong()
+        return when (value.replace(",","").trim()) {
+            "" -> 0L
+            else -> value.trim().replace(",","").toLong()
+        }
     }
 }
