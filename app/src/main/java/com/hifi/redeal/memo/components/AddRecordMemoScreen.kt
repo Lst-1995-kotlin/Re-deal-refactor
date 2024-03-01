@@ -161,7 +161,9 @@ private fun AddFileButton(
     val albumLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
-            setRecordUri(uri)
+            if(uri != null) {
+                setRecordUri(uri)
+            }
         }
     )
     FilledIconButton(
