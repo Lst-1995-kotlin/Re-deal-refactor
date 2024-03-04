@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
+import com.hifi.redeal.data.entrie.TestEntry
 import com.hifi.redeal.transaction.model.Client
 import com.hifi.redeal.transaction.model.ClientData
 import com.hifi.redeal.transaction.model.SelectTransactionData
@@ -28,16 +29,19 @@ class TransactionViewModel @Inject constructor(
     private var selectClientIndex: Long? = null
     private var curdPosition = 0
 
-
     val transactionList: LiveData<List<Transaction>> get() = _transactionList
     val modifyTransaction: LiveData<Transaction?> get() = _modifyTransaction
     val transactionPosition: LiveData<Int> get() = _transactionPosition
     val selectTransactionIndex: LiveData<List<Long>?> get() = _selectTransactionIndex
 
+    private val _tempList = MutableLiveData<List<TestEntry>>()
+    val tempList: LiveData<List<TestEntry>> get() = _tempList
+
     init {
         getNextTransactionIdx()
         getAllTransactionData()
     }
+
 
     fun deleteSelectTransactions() {
         totalTransactionData.filter { it.isSelected() }.forEach {

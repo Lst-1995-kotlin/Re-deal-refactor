@@ -28,7 +28,7 @@ import com.hifi.redeal.account.vm.AccountListViewModel
 import com.hifi.redeal.databinding.FragmentAccountListBinding
 import com.hifi.redeal.databinding.TabItemLayoutAccountListStateBinding
 
-@ExperimentalBadgeUtils class AccountListFragment : Fragment() {
+class AccountListFragment : Fragment() {
 
     lateinit var fragmentAccountListBinding: FragmentAccountListBinding
     lateinit var mainActivity: MainActivity

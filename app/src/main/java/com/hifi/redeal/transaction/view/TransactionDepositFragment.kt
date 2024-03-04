@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentTransactionDepositBinding
 import com.hifi.redeal.transaction.util.AmountTextWatcher
@@ -50,7 +51,7 @@ class TransactionDepositFragment : Fragment() {
                     )
                     transactionViewModel.setMoveToPosition(0)
                 }
-                mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_FRAGMENT)
+                findNavController().popBackStack()
             }
 
             addDepositPriceEditTextNumber.onFocusChangeListener =
@@ -72,7 +73,7 @@ class TransactionDepositFragment : Fragment() {
 
             addDepositMaterialToolbar.setNavigationOnClickListener {
                 transactionClientViewModel.setSelectClientIndex(null)
-                mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_FRAGMENT)
+                findNavController().popBackStack()
             }
 
             mainActivity.hideKeyboardAndClearFocus(addDepositPriceEditTextNumber)

@@ -14,14 +14,13 @@ import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.forEach
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.transition.MaterialSharedAxis
 import com.hifi.redeal.account.AccountDetailFragment
 import com.hifi.redeal.account.AccountEditFragment
@@ -49,7 +48,6 @@ import com.hifi.redeal.schedule.view.ScheduleManageFragment
 import com.hifi.redeal.schedule.view.ScheduleSelectByClientFragment
 import com.hifi.redeal.schedule.view.UnvisitedScheduleFragment
 import com.hifi.redeal.schedule.view.VisitedScheduleFragment
-import com.hifi.redeal.schedule.vm.ScheduleVM
 import com.hifi.redeal.transaction.view.TransactionByClientFragment
 import com.hifi.redeal.transaction.view.TransactionDepositFragment
 import com.hifi.redeal.transaction.view.TransactionDepositModifyFragment
@@ -57,8 +55,6 @@ import com.hifi.redeal.transaction.view.TransactionFragment
 import com.hifi.redeal.transaction.view.TransactionSalesFragment
 import com.hifi.redeal.transaction.view.TransactionSalesModifyFragment
 import com.hifi.redeal.transaction.view.TransactionsEditFragment
-import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
-import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import com.skt.tmap.TMapTapi
 import com.skt.tmap.TMapTapi.OnAuthenticationListenerCallback
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,7 +67,6 @@ import kotlin.concurrent.thread
 class MainActivity : AppCompatActivity() {
 
     lateinit var activityMainBinding: ActivityMainBinding
-    lateinit var scheduleVM: ScheduleVM
 
     lateinit var tMapTapi: TMapTapi
 
@@ -141,7 +136,7 @@ class MainActivity : AppCompatActivity() {
         MediaStore.Audio.Media.RECORD_SOUND_ACTION,
     )
 
-//    lateinit var navController: NavController
+    private lateinit var navController: NavController
 //
 //    val navOptions = NavOptions.Builder()
 //        .setEnterAnim(R.anim.slide_in_right)
@@ -194,29 +189,37 @@ class MainActivity : AppCompatActivity() {
 
         requestPermissions(permissionList, 10)
         addNotificationChannel(NOTIFICATION_CHANNEL1_ID, NOTIFICATION_CHANNEL1_NAME)
-        scheduleVM = ViewModelProvider(this)[ScheduleVM::class.java]
+
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.navHostFragmentMain) as NavHostFragment
+        navController = navHostFragment.navController
 
         activityMainBinding.run {
             bottomNavigationViewMain.setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.accountListFragment -> {
-                        replaceFragment(ACCOUNT_LIST_FRAGMENT, true)
+                        navController.popBackStack(R.id.accountListFragment, true)
+                        navController.navigate(R.id.accountListFragment)
                     }
 
                     R.id.scheduleManageFragment -> {
-                        replaceFragment(SCHEDULE_MANAGE_FRAGMENT, true)
+                        navController.popBackStack(R.id.scheduleManageFragment, true)
+                        navController.navigate(R.id.scheduleManageFragment)
                     }
 
                     R.id.mapFragment -> {
-                        replaceFragment(MAP_FRAGMENT, true)
+                        navController.popBackStack(R.id.mapFragment, true)
+                        navController.navigate(R.id.mapFragment)
                     }
 
                     R.id.transactionFragment -> {
-                        replaceFragment(TRANSACTION_FRAGMENT, true)
+                        navController.popBackStack(R.id.transactionFragment, true)
+                        navController.navigate(R.id.transactionFragment)
                     }
 
                     R.id.memoFragment -> {
-                        replaceFragment(MEMO_FRAGMENT, true)
+                        navController.popBackStack(R.id.memoFragment, true)
+                        navController.navigate(R.id.memoFragment)
                     }
                 }
                 true
@@ -224,19 +227,17 @@ class MainActivity : AppCompatActivity() {
         }
         // replaceFragment(MAP_FRAGMENT,false,null)
 
-        supportFragmentManager.addOnBackStackChangedListener {
-            for (fragment in supportFragmentManager.fragments) {
+        navHostFragment.childFragmentManager.addOnBackStackChangedListener {
+
+            for (fragment in navHostFragment.childFragmentManager.fragments) {
                 if (fragment.isVisible) {
-                    activityMainBinding.bottomNavigationViewMain.isVisible =
-                        (
-                                fragment is AccountListFragment ||
-                                        fragment is ScheduleManageFragment ||
-                                        fragment is UnvisitedScheduleFragment ||
-                                        fragment is VisitedScheduleFragment ||
-                                        fragment is MapFragment ||
-                                        fragment is MemoFragment ||
-                                        fragment is TransactionFragment
-                                )
+                    activityMainBinding.bottomNavigationViewMain.visibility = if (
+                        fragment is AccountListFragment ||
+                        fragment is ScheduleManageFragment ||
+                        fragment is MapFragment ||
+                        fragment is MemoFragment ||
+                        fragment is TransactionFragment
+                    ) View.VISIBLE else View.GONE
 
                     when (fragment) {
                         is AccountListFragment -> {
@@ -289,12 +290,82 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    return@addOnBackStackChangedListener
                 }
             }
+
         }
 
-        replaceFragment(AUTH_LOGIN_FRAGMENT, false)
+//        supportFragmentManager.addOnBackStackChangedListener {
+//            for (fragment in supportFragmentManager.fragments) {
+//                if (fragment.isVisible) {
+//                    activityMainBinding.bottomNavigationViewMain.isVisible =
+//                        (
+//                                fragment is AccountListFragment ||
+//                                        fragment is ScheduleManageFragment ||
+//                                        fragment is UnvisitedScheduleFragment ||
+//                                        fragment is VisitedScheduleFragment ||
+//                                        fragment is MapFragment ||
+//                                        fragment is MemoFragment ||
+//                                        fragment is TransactionFragment
+//                                )
+//
+//                    when (fragment) {
+//                        is AccountListFragment -> {
+//                            activityMainBinding.bottomNavigationViewMain.run {
+//                                menu.forEach {
+//                                    if (it.itemId == R.id.accountListFragment) {
+//                                        it.isChecked = true
+//                                    }
+//                                }
+//                            }
+//                        }
+//
+//                        is ScheduleManageFragment -> {
+//                            activityMainBinding.bottomNavigationViewMain.run {
+//                                menu.forEach {
+//                                    if (it.itemId == R.id.scheduleManageFragment) {
+//                                        it.isChecked = true
+//                                    }
+//                                }
+//                            }
+//                        }
+//
+//                        is MapFragment -> {
+//                            activityMainBinding.bottomNavigationViewMain.run {
+//                                menu.forEach {
+//                                    if (it.itemId == R.id.mapFragment) {
+//                                        it.isChecked = true
+//                                    }
+//                                }
+//                            }
+//                        }
+//
+//                        is TransactionFragment -> {
+//                            activityMainBinding.bottomNavigationViewMain.run {
+//                                menu.forEach {
+//                                    if (it.itemId == R.id.transactionFragment) {
+//                                        it.isChecked = true
+//                                    }
+//                                }
+//                            }
+//                        }
+//
+//                        is MemoFragment -> {
+//                            activityMainBinding.bottomNavigationViewMain.run {
+//                                menu.forEach {
+//                                    if (it.itemId == R.id.memoFragment) {
+//                                        it.isChecked = true
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                    return@addOnBackStackChangedListener
+//                }
+//            }
+//        }
+
+        //replaceFragment(AUTH_LOGIN_FRAGMENT, false)
 
 //        val navHostFragment =
 //            supportFragmentManager.findFragmentById(R.id.navHostFragmentMain) as NavHostFragment

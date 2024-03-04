@@ -116,23 +116,14 @@
             android:id="@+id/action_accountListFragment_to_accountDetailFragment"
             app:destination="@id/accountDetailFragment" />
         <action
-            android:id="@+id/action_accountListFragment_to_transactionFragment"
-            app:destination="@id/transactionFragment" />
-        <action
-            android:id="@+id/action_accountListFragment_to_mapFragment"
-            app:destination="@id/mapFragment" />
-        <action
-            android:id="@+id/action_accountListFragment_to_scheduleManageFragment"
-            app:destination="@id/scheduleManageFragment" />
-        <action
-            android:id="@+id/action_accountListFragment_to_memoFragment"
-            app:destination="@id/memoFragment" />
-        <action
             android:id="@+id/action_accountListFragment_to_notificationFragment"
             app:destination="@id/notificationFragment" />
         <action
             android:id="@+id/action_accountListFragment_to_myPageFragment"
             app:destination="@id/myPageFragment" />
+        <action
+            android:id="@+id/action_accountListFragment_to_transactionFragment"
+            app:destination="@id/transactionFragment" />
     </fragment>
     <fragment
         android:id="@+id/addPhotoMemoFragment"

@@ -3,13 +3,14 @@ package com.hifi.redeal.transaction.view.dialog
 import android.content.Context
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
+import androidx.navigation.NavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.DialogTransactionAddSelectBinding
 
 class TransactionAddSelectDialog(
-    private val mainActivity: MainActivity,
+    private val naviController: NavController,
     private val context: Context,
     private val layoutInflater: LayoutInflater
 ) {
@@ -21,11 +22,12 @@ class TransactionAddSelectDialog(
         view.run {
             ImgBtnAddDeposit.setOnClickListener {
                 dialog.dismiss()
-                mainActivity.replaceFragment(MainActivity.TRANSACTION_DEPOSIT_FRAGMENT, true, null)
+                naviController.navigate(R.id.action_transactionFragment_to_transactionDepositFragment)
+
             }
             ImgBtnAddTransaction.setOnClickListener {
                 dialog.dismiss()
-                mainActivity.replaceFragment(MainActivity.TRANSACTION_SALES_FRAGMENT, true, null)
+                naviController.navigate(R.id.action_transactionFragment_to_transactionSalesFragment)
             }
         }
 

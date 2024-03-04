@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
@@ -27,16 +28,18 @@ import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
+import dagger.hilt.EntryPoint
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-
+@AndroidEntryPoint
 class MakeScheduleFragment : Fragment() {
     private lateinit var fragmentMakeScheduleBinding: FragmentMakeScheduleBinding
     private lateinit var mainActivity: MainActivity
-    lateinit var scheduleVM: ScheduleVM
+    private val scheduleVM: ScheduleVM by activityViewModels()
     private var clientIdx = 0L
     private val uid = Firebase.auth.uid!!
 
@@ -60,7 +63,6 @@ class MakeScheduleFragment : Fragment() {
     }
 
     private fun setViewModel() {
-        scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
 
         scheduleVM.run {
             userSelectClientSimpleData.observe(viewLifecycleOwner) {

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,13 +21,14 @@ import com.hifi.redeal.databinding.FragmentScheduleSelectByClientBinding
 import com.hifi.redeal.databinding.SelectScheduleClientItemBinding
 import com.hifi.redeal.schedule.model.ClientSimpleData
 import com.hifi.redeal.schedule.vm.ScheduleVM
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class ScheduleSelectByClientFragment : Fragment() {
 
     lateinit var fragmentScheduleSelectByClientBinding: FragmentScheduleSelectByClientBinding
     lateinit var mainActivity: MainActivity
-    lateinit var scheduleVM: ScheduleVM
+    private val scheduleVM: ScheduleVM by activityViewModels()
     private val uid = Firebase.auth.uid!!
     private lateinit var onBackPressedCallback: OnBackPressedCallback
     var userClientSimpleDataList = mutableListOf<ClientSimpleData>()
@@ -48,7 +50,6 @@ class ScheduleSelectByClientFragment : Fragment() {
     }
 
     private fun setViewModel(){
-        scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
 
         scheduleVM.run{
             userClientSimpleDataListVM.observe(viewLifecycleOwner){
