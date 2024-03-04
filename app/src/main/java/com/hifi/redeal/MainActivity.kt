@@ -205,22 +205,27 @@ class MainActivity : AppCompatActivity() {
             bottomNavigationViewMain.setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.accountListFragment -> {
+                        navController.popBackStack(R.id.accountListFragment, true)
                         navController.navigate(R.id.accountListFragment)
                     }
 
                     R.id.scheduleManageFragment -> {
+                        navController.popBackStack(R.id.scheduleManageFragment, true)
                         navController.navigate(R.id.scheduleManageFragment)
                     }
 
                     R.id.mapFragment -> {
+                        navController.popBackStack(R.id.mapFragment, true)
                         navController.navigate(R.id.mapFragment)
                     }
 
                     R.id.transactionFragment -> {
+                        navController.popBackStack(R.id.transactionFragment, true)
                         navController.navigate(R.id.transactionFragment)
                     }
 
                     R.id.memoFragment -> {
+                        navController.popBackStack(R.id.memoFragment, true)
                         navController.navigate(R.id.memoFragment)
                     }
                 }

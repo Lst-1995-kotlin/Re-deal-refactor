@@ -1,6 +1,8 @@
 package com.hifi.redeal.transaction.model
 
 import com.google.firebase.Timestamp
+
+
 data class TransactionData(
     val clientIdx: Long,
     val date: Timestamp,

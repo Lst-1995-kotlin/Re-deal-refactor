@@ -1,11 +1,13 @@
 package com.hifi.redeal.transaction.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.MainActivity
@@ -23,6 +25,7 @@ import com.hifi.redeal.transaction.adapter.viewHolder.transaction.SalesHolderFac
 import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -118,6 +121,10 @@ class TransactionFragment : Fragment() {
                     }
                 }
             } ?: transactionClientViewModel.setSelectClientIndex(null)
+        }
+
+        transactionViewModel.tempList.observe(viewLifecycleOwner) {
+            fragmentTransactionBinding.textTotalSales.text = "테스트 ${it.size}"
         }
         transactionViewModel.setSelectClientIndex(null) // 기존 선택한 클라이언트 정보를 초기화 시킨다.
     }

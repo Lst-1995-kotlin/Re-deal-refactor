@@ -12,7 +12,7 @@ class TransactionSelectAdapterDiffCallback @Inject constructor() : DiffUtil.Item
     }
 
     override fun areContentsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
-        return oldItem.isSelected() == newItem.isSelected()
+        return oldItem == newItem
     }
 
 }
