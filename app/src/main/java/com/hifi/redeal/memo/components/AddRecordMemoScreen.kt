@@ -678,6 +678,15 @@ fun AddRecordMemoScreen(
 
     val onClickBottomButton = {
         bottomButtonState = BottomButtonState.PRESSED
+//        val newRecordMemo = RecordMemoDataTest(
+//            Date().time,
+//            clientIdx,
+//            memoTextValue,
+//            Date(),
+//            recordedUri!!,
+//            recordedFilename,
+//            recordedDuration)
+//        db.recordMemoDao().insert(newRecordMemo)
         repository.addRecordMemo(
             clientIdx,
             memoTextValue,
