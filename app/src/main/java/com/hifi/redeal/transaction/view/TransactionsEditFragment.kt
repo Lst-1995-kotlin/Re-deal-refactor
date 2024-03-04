@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentTransactionsEditBinding
@@ -23,7 +24,6 @@ import javax.inject.Inject
 class TransactionsEditFragment : Fragment() {
 
     private lateinit var fragmentTransactionEditBinding: FragmentTransactionsEditBinding
-    private lateinit var mainActivity: MainActivity
     private lateinit var transactionSelectAdapter: TransactionSelectAdapter
     private val transactionViewModel: TransactionViewModel by activityViewModels()
 
@@ -35,7 +35,6 @@ class TransactionsEditFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         fragmentTransactionEditBinding = FragmentTransactionsEditBinding.inflate(inflater)
-        mainActivity = activity as MainActivity
 
         setAdapter()
         setBind()
@@ -57,7 +56,7 @@ class TransactionsEditFragment : Fragment() {
     private fun setBind() {
         fragmentTransactionEditBinding.run {
             toolbarTransactionEdit.setNavigationOnClickListener {
-                mainActivity.removeFragment(MainActivity.TRANSACTIONS_EDIT_FRAGMENT)
+                findNavController().popBackStack()
             }
 
             transactionEditSelectRecyclerView.run {
@@ -66,12 +65,12 @@ class TransactionsEditFragment : Fragment() {
             }
 
             transactionEditCancelButton.setOnClickListener {
-                mainActivity.removeFragment(MainActivity.TRANSACTIONS_EDIT_FRAGMENT)
+                findNavController().popBackStack()
             }
 
             selectTransactionDeleteButton.setOnClickListener {
                 transactionViewModel.deleteSelectTransactions()
-                mainActivity.removeFragment(MainActivity.TRANSACTIONS_EDIT_FRAGMENT)
+                findNavController().popBackStack()
             }
         }
     }

@@ -6,18 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hifi.redeal.MainActivity
+import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTransactionBinding
 import com.hifi.redeal.transaction.adapter.TransactionAdapter
 import com.hifi.redeal.transaction.adapter.TransactionAdapterDiffCallback
-import com.hifi.redeal.transaction.configuration.TransactionType
-import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
-import com.hifi.redeal.transaction.view.dialog.TransactionAddSelectDialog
 import com.hifi.redeal.transaction.adapter.viewHolder.ViewHolderFactory
 import com.hifi.redeal.transaction.adapter.viewHolder.transaction.CountHolderFactory
 import com.hifi.redeal.transaction.adapter.viewHolder.transaction.DepositHolderFactory
 import com.hifi.redeal.transaction.adapter.viewHolder.transaction.SalesHolderFactory
+import com.hifi.redeal.transaction.configuration.TransactionType
+import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
+import com.hifi.redeal.transaction.view.dialog.TransactionAddSelectDialog
 import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,7 +29,6 @@ class TransactionFragment : Fragment() {
     private lateinit var fragmentTransactionBinding: FragmentTransactionBinding
     private val transactionViewModel: TransactionViewModel by activityViewModels()
     private val transactionClientViewModel: TransactionClientViewModel by activityViewModels()
-    private lateinit var mainActivity: MainActivity
     private lateinit var transactionAdapter: TransactionAdapter
     private lateinit var transactionAddSelectDialog: TransactionAddSelectDialog
 
@@ -41,9 +41,8 @@ class TransactionFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater)
-        mainActivity = activity as MainActivity
         transactionAddSelectDialog =
-            TransactionAddSelectDialog(mainActivity, requireContext(), inflater)
+            TransactionAddSelectDialog(findNavController(), requireContext(), inflater)
 
         setAdapter()
         setBind()
@@ -76,7 +75,7 @@ class TransactionFragment : Fragment() {
         }
 
         fragmentTransactionBinding.toolbarTransactionMain.setOnMenuItemClickListener {
-            mainActivity.replaceFragment(MainActivity.TRANSACTIONS_EDIT_FRAGMENT, true, null)
+            findNavController().navigate(R.id.action_transactionFragment_to_transactionsEditFragment)
             true
         }
     }
@@ -110,22 +109,18 @@ class TransactionFragment : Fragment() {
                 transactionClientViewModel.setSelectClient(it.getClientInformation())
                 when (it.getTransactionType()) {
                     TransactionType.SALES.type -> {
-                        mainActivity.replaceFragment(
-                            MainActivity.TRANSACTION_SALES_MODIFY_FRAGMENT,
-                            true,
-                            null
-                        )
+                        findNavController().navigate(R.id.action_transactionFragment_to_transactionSalesModifyFragment)
                     }
 
                     TransactionType.DEPOSIT.type -> {
-                        mainActivity.replaceFragment(
-                            MainActivity.TRANSACTION_DEPOSIT_MODIFY_FRAGMENT,
-                            true,
-                            null
-                        )
+                        findNavController().navigate(R.id.action_transactionFragment_to_transactionDepositModifyFragment)
                     }
                 }
             } ?: transactionClientViewModel.setSelectClientIndex(null)
+        }
+
+        transactionViewModel.tempList.observe(viewLifecycleOwner) {
+            fragmentTransactionBinding.textTotalSales.text = "테스트 ${it.size}"
         }
         transactionViewModel.setSelectClientIndex(null) // 기존 선택한 클라이언트 정보를 초기화 시킨다.
     }

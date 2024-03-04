@@ -3,11 +3,14 @@ package com.hifi.redeal.auth
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
@@ -15,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
+import com.hifi.redeal.R
 import com.hifi.redeal.auth.vm.AuthViewModel
 import com.hifi.redeal.databinding.FragmentAuthLoginBinding
 
@@ -38,7 +42,7 @@ class AuthLoginFragment : Fragment() {
         authViewModel.initContext(requireContext())
         auth = Firebase.auth
 
-        mainActivity.activityMainBinding.bottomNavigationViewMain.visibility = View.GONE
+        //mainActivity.activityMainBinding.bottomNavigationViewMain.visibility = View.GONE
         setupUiListeners()
 
         // 로그인 시 저장된 체크 상태 확인 및 자동 로그인 시도
@@ -112,7 +116,9 @@ class AuthLoginFragment : Fragment() {
             if (currentUser != null) {
                 // 사용자가 이미 로그인한 경우
                 mainActivity.uid = Firebase.auth.uid!!
-                mainActivity.replaceFragment(MainActivity.ACCOUNT_LIST_FRAGMENT, false, null)
+                //mainActivity.replaceFragment(MainActivity.ACCOUNT_LIST_FRAGMENT, false, null)
+                Log.d("ttttt", "자동 로그인 실행됨.")
+                findNavController().navigate(R.id.action_authLoginFragment_to_accountListFragment)
             } else {
                 // 저장된 UID가 없는 경우
                 mainActivity.replaceFragment(MainActivity.AUTH_LOGIN_FRAGMENT, false, null)

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentTransactionDepositModifyBinding
 import com.hifi.redeal.transaction.util.AmountTextWatcher
@@ -71,7 +72,7 @@ class TransactionDepositModifyFragment : Fragment() {
             }
 
             modifyDepositMaterialToolbar.setNavigationOnClickListener {
-                mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_MODIFY_FRAGMENT)
+                findNavController().popBackStack()
             }
         }
     }
@@ -81,7 +82,7 @@ class TransactionDepositModifyFragment : Fragment() {
             transaction?.let {
                 transaction.setModifyViewValue(fragmentTransactionDepositModifyBinding.modifyDepositPriceEditTextNumber)
                 transactionClientViewModel.setSelectClient(transaction.getClientInformation())
-            } ?: mainActivity.removeFragment(MainActivity.TRANSACTION_DEPOSIT_MODIFY_FRAGMENT)
+            } ?: findNavController().popBackStack()
         }
         transactionClientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
             client?.setClientInfoView(fragmentTransactionDepositModifyBinding.modifyDepositClientTextInputEditText)

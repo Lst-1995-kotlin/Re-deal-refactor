@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentTransactionSalesModifyBinding
 import com.hifi.redeal.transaction.configuration.TransactionAmountConfiguration.Companion.setTransactionAmountMessage
@@ -50,7 +51,7 @@ class TransactionSalesModifyFragment : Fragment() {
     private fun setBind() {
         fragmentTransactionSalesModifyBinding.run {
             modifySalesFragmentToolbar.setNavigationOnClickListener {
-                mainActivity.removeFragment(MainActivity.TRANSACTION_SALES_MODIFY_FRAGMENT)
+                findNavController().popBackStack()
             }
 
             modifySalesBtn.setOnClickListener {
@@ -123,7 +124,7 @@ class TransactionSalesModifyFragment : Fragment() {
             )
 
             modifySalesFragmentToolbar.setNavigationOnClickListener {
-                mainActivity.removeFragment(MainActivity.TRANSACTION_SALES_MODIFY_FRAGMENT)
+                findNavController().popBackStack()
             }
 
             setTransactionAmountMessage(amountModifyMessageTextView)
@@ -145,7 +146,7 @@ class TransactionSalesModifyFragment : Fragment() {
                     fragmentTransactionSalesModifyBinding.transactionModifyAmountReceivedEditText
                 )
                 transactionClientViewModel.setSelectClient(transaction.getClientInformation())
-            } ?: mainActivity.removeFragment(MainActivity.TRANSACTION_SALES_MODIFY_FRAGMENT)
+            } ?: findNavController().popBackStack()
         }
         transactionClientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
             client?.setClientInfoView(fragmentTransactionSalesModifyBinding.transactionModifyClientSelectEditText)

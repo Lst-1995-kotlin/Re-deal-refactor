@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -28,17 +29,19 @@ import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
+import dagger.hilt.EntryPoint
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.util.Locale
-
+@AndroidEntryPoint
 class ScheduleManageFragment : Fragment(){
 
     lateinit var mainActivity: MainActivity
     lateinit var fragmentScheduleManageBinding: FragmentScheduleManageBinding
-    lateinit var scheduleVM: ScheduleVM
+    private val scheduleVM: ScheduleVM by activityViewModels()
     private lateinit var onBackPressedCallback: OnBackPressedCallback
     private var uid = Firebase.auth.uid!!
     var scheduleList = mutableListOf<ScheduleTotalData>()
@@ -71,7 +74,6 @@ class ScheduleManageFragment : Fragment(){
     }
 
     private fun setViewModel(){
-        scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
 
         scheduleVM.run{
             scheduleListVM.observe(viewLifecycleOwner){

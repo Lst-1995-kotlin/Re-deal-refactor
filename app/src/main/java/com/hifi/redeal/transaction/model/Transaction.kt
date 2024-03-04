@@ -114,3 +114,4 @@ class Transaction(
         receivedAmount.text = replaceNumberFormat(transactionData.transactionAmountReceived)
     }
 }
+
