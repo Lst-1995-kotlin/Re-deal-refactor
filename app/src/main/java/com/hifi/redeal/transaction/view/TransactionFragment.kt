@@ -1,31 +1,27 @@
 package com.hifi.redeal.transaction.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTransactionBinding
 import com.hifi.redeal.transaction.adapter.TransactionAdapter
 import com.hifi.redeal.transaction.adapter.TransactionAdapterDiffCallback
-import com.hifi.redeal.transaction.configuration.TransactionType
-import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
-import com.hifi.redeal.transaction.view.dialog.TransactionAddSelectDialog
 import com.hifi.redeal.transaction.adapter.viewHolder.ViewHolderFactory
 import com.hifi.redeal.transaction.adapter.viewHolder.transaction.CountHolderFactory
 import com.hifi.redeal.transaction.adapter.viewHolder.transaction.DepositHolderFactory
 import com.hifi.redeal.transaction.adapter.viewHolder.transaction.SalesHolderFactory
+import com.hifi.redeal.transaction.configuration.TransactionType
+import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
+import com.hifi.redeal.transaction.view.dialog.TransactionAddSelectDialog
 import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
