@@ -8,12 +8,12 @@ import com.hifi.redeal.transaction.adapter.viewHolder.transaction.CountHolder
 import com.hifi.redeal.transaction.adapter.viewHolder.transaction.DepositHolder
 import com.hifi.redeal.transaction.adapter.viewHolder.transaction.SalesHolder
 import com.hifi.redeal.transaction.configuration.TransactionType
-import com.hifi.redeal.transaction.model.TransactionBasic
+import com.hifi.redeal.transaction.model.TradeData
 
 class TradeAdapter(
     private val viewHolderFactories: Map<Int, ViewHolderFactory>,
-    diffCallback: TransactionAdapterDiffCallback
-) : ListAdapter<TransactionBasic, RecyclerView.ViewHolder>(diffCallback) {
+    diffCallback: TradeAdapterDiffCallback
+) : ListAdapter<TradeData, RecyclerView.ViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val factory = viewHolderFactories[viewType]
@@ -24,11 +24,11 @@ class TradeAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is DepositHolder -> {
-                holder.bind(currentList[position], position)
+                holder.bind(currentList[position])
             }
 
             is SalesHolder -> {
-                holder.bind(currentList[position], position)
+                holder.bind(currentList[position])
             }
 
             is CountHolder -> {
@@ -43,7 +43,11 @@ class TradeAdapter(
 
     override fun getItemViewType(position: Int): Int {
         if (position == itemCount - 1) return TransactionType.COUNT.type
-        return currentList[position].getTransactionType()
+        return when {
+            currentList[position].type -> TransactionType.DEPOSIT.type
+            !currentList[position].type -> TransactionType.SALES.type
+            else -> TransactionType.ERROR.type
+        }
     }
 }
 

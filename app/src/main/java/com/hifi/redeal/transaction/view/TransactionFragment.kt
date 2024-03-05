@@ -11,8 +11,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTransactionBinding
-import com.hifi.redeal.transaction.adapter.TransactionAdapter
-import com.hifi.redeal.transaction.adapter.TransactionAdapterDiffCallback
+import com.hifi.redeal.transaction.adapter.TradeAdapter
+import com.hifi.redeal.transaction.adapter.TradeAdapterDiffCallback
 import com.hifi.redeal.transaction.adapter.viewHolder.ViewHolderFactory
 import com.hifi.redeal.transaction.adapter.viewHolder.transaction.CountHolderFactory
 import com.hifi.redeal.transaction.adapter.viewHolder.transaction.DepositHolderFactory
@@ -32,11 +32,11 @@ class TransactionFragment : Fragment() {
     private val transactionViewModel: TransactionViewModel by activityViewModels()
     private val tradeViewModel: TradeViewModel by viewModels()
     private val transactionClientViewModel: TransactionClientViewModel by activityViewModels()
-    private lateinit var transactionAdapter: TransactionAdapter
+    private lateinit var tradeAdapter: TradeAdapter
     private lateinit var transactionAddSelectDialog: TransactionAddSelectDialog
 
     @Inject
-    lateinit var transactionAdapterDiffCallback: TransactionAdapterDiffCallback
+    lateinit var tradeAdapterDiffCallback: TradeAdapterDiffCallback
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,19 +57,19 @@ class TransactionFragment : Fragment() {
     private fun setAdapter() {
         val viewHolderFactories = HashMap<Int, ViewHolderFactory>()
         viewHolderFactories[TransactionType.DEPOSIT.type] =
-            DepositHolderFactory(transactionViewModel)
+            DepositHolderFactory(tradeViewModel)
         viewHolderFactories[TransactionType.SALES.type] =
-            SalesHolderFactory(transactionViewModel)
+            SalesHolderFactory(tradeViewModel)
         viewHolderFactories[TransactionType.COUNT.type] =
             CountHolderFactory(transactionViewModel, viewLifecycleOwner)
 
-        transactionAdapter =
-            TransactionAdapter(viewHolderFactories, transactionAdapterDiffCallback)
+        tradeAdapter =
+            TradeAdapter(viewHolderFactories, tradeAdapterDiffCallback)
     }
 
     private fun setBind() {
         fragmentTransactionBinding.transactionRecyclerView.run {
-            adapter = transactionAdapter
+            adapter = tradeAdapter
             layoutManager = LinearLayoutManager(context)
         }
 
@@ -89,15 +89,14 @@ class TransactionFragment : Fragment() {
             fragmentTransactionBinding.textTotalSales.text = "${it.size}"
         }
 
-        transactionViewModel.transactionBasicList.observe(viewLifecycleOwner) { transactions -> // 어댑터에 표시하는 거래내역들
-            transactionAdapter.submitList(transactions.sortedByDescending { it.getTransactionDate() }) {
+        tradeViewModel.trades.observe(viewLifecycleOwner) { trades -> // 어댑터에 표시하는 거래내역들
+            tradeAdapter.submitList(trades.sortedByDescending { it.date }) {
                 transactionViewModel.postValueScrollPosition()
             }
             // 어댑터에 표시하는 거래내역들의 합계
-            val totalSalesCount =
-                transactions.count { it.getTransactionType() == TransactionType.SALES.type }
-            val totalSalesAmount = transactions.sumOf { it.calculateSalesAmount() }
-            val totalReceivables = transactions.sumOf { it.getReceivables() }
+            val totalSalesCount = trades.count { !it.type }
+            val totalSalesAmount = trades.sumOf { it.itemCount * it.itemPrice }
+            val totalReceivables = trades.sumOf { it.itemCount * it.itemPrice - it.receivedAmount }
 
             fragmentTransactionBinding.run {
                 textTotalSalesCount.text = replaceNumberFormat(totalSalesCount)
@@ -127,9 +126,6 @@ class TransactionFragment : Fragment() {
             } ?: transactionClientViewModel.setSelectClientIndex(null)
         }
 
-        transactionViewModel.tempList.observe(viewLifecycleOwner) {
-            fragmentTransactionBinding.textTotalSales.text = "테스트 ${it.size}"
-        }
         transactionViewModel.setSelectClientIndex(null) // 기존 선택한 클라이언트 정보를 초기화 시킨다.
     }
 }

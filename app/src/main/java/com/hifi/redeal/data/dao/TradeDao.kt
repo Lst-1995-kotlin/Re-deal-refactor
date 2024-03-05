@@ -20,7 +20,6 @@ interface TradeDao {
            trade.received_amount as receivedAmount,
            trade.type as type,
            trade.total_item_amount as totalItemAmount,
-           trade.receivables as receivables,
            trade.date as date,
            trade.client_id as clientId,
            client.name as clientName,

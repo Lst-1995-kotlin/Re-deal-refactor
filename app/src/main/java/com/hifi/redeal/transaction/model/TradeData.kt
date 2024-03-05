@@ -7,12 +7,11 @@ import java.util.Date
 data class TradeData (
     val id: Int,
     val itemName: String,
-    val itemCount: String,
-    val itemPrice: String,
-    val receivedAmount: String,
+    val itemCount: Long,
+    val itemPrice: Long,
+    val receivedAmount: Long,
     val type: Boolean,
     val totalItemAmount: Long,
-    val receivables: Long,
     val date: Date,
     val clientId: Int,
     val clientName: String,
@@ -28,7 +27,6 @@ fun TradeData.toTradeEntry(): TradeEntry {
         this.receivedAmount,
         this.type,
         this.totalItemAmount,
-        this.receivables,
         this.date,
         this.clientId
     )
