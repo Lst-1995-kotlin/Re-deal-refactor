@@ -10,10 +10,10 @@ import com.hifi.redeal.data.entrie.TestEntry
 @Dao
 interface TestDao {
     @Query("SELECT * FROM test")
-    suspend fun getAllTest(): List<TestEntry>
+    fun getAllTest(): List<TestEntry>
 
     @Insert
-    suspend fun insertUser(user: TestEntry)
+    fun insertUser(user: TestEntry)
 
     @Update
     suspend fun updateUser(user: TestEntry)

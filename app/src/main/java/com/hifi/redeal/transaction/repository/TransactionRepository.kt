@@ -6,17 +6,20 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.CurrentUserClass
-import com.hifi.redeal.data.dao.TestDao2
+import com.hifi.redeal.data.dao.TradeDao
+import com.hifi.redeal.transaction.model.TradeData
 import com.hifi.redeal.transaction.model.TransactionData
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class TransactionRepository @Inject constructor(
     private val currentUser: CurrentUserClass,
-    private val dao: TestDao2
+    private val tradeDao: TradeDao
 ) {
-    suspend fun test() = dao.getAllTest()
+    val trades: Flow<List<TradeData>> = tradeDao.getAllTrade()
+
 
     private val uid = currentUser.userIdx
     private val db = Firebase.firestore

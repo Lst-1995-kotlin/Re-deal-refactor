@@ -11,7 +11,7 @@ class CountHolder(
     private val viewLifecycleOwner: LifecycleOwner
 ) : RecyclerView.ViewHolder(rowTransactionCountBinding.root){
     fun bind() {
-        transactionViewModel.transactionList.observe(viewLifecycleOwner) {
+        transactionViewModel.transactionBasicList.observe(viewLifecycleOwner) {
             rowTransactionCountBinding.transactionCountTextView.text = "${it.size}개의 거래내역"
         }
     }

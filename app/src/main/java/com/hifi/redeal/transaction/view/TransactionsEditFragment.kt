@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentTransactionsEditBinding
 import com.hifi.redeal.transaction.adapter.TransactionSelectAdapter
 import com.hifi.redeal.transaction.adapter.TransactionSelectAdapterDiffCallback
@@ -76,7 +75,7 @@ class TransactionsEditFragment : Fragment() {
     }
 
     private fun setViewModel() {
-        transactionViewModel.transactionList.observe(viewLifecycleOwner) { transactions ->
+        transactionViewModel.transactionBasicList.observe(viewLifecycleOwner) { transactions ->
             transactionSelectAdapter.submitList(transactions.sortedByDescending { it.getTransactionDate() })
             fragmentTransactionEditBinding.toolbarTransactionEditTextView.text = "${transactions.count { it.isSelected() }}개 선택됨."
         }

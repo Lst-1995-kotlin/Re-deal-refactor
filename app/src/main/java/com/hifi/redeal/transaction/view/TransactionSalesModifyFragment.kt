@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -12,7 +11,6 @@ import com.hifi.redeal.MainActivity
 import com.hifi.redeal.databinding.FragmentTransactionSalesModifyBinding
 import com.hifi.redeal.transaction.configuration.TransactionAmountConfiguration.Companion.setTransactionAmountMessage
 import com.hifi.redeal.transaction.util.AmountSalesTextWatcher
-import com.hifi.redeal.transaction.util.AmountTextWatcher
 import com.hifi.redeal.transaction.util.ItemNameTextWatcher
 import com.hifi.redeal.transaction.util.ItemTextWatcher
 import com.hifi.redeal.transaction.util.TransactionInputEditTextFocusListener
@@ -43,7 +41,7 @@ class TransactionSalesModifyFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        transactionViewModel.modifyTransaction.value?.let {
+        transactionViewModel.modifyTransactionBasic.value?.let {
             transactionViewModel.setModifyTransaction(null)
         }
     }
@@ -137,7 +135,7 @@ class TransactionSalesModifyFragment : Fragment() {
     }
 
     private fun setViewModel() {
-        transactionViewModel.modifyTransaction.observe(viewLifecycleOwner) { transaction ->
+        transactionViewModel.modifyTransactionBasic.observe(viewLifecycleOwner) { transaction ->
             transaction?.let {
                 transaction.setModifyViewValue(
                     fragmentTransactionSalesModifyBinding.transactionModifyItemNameEditText,

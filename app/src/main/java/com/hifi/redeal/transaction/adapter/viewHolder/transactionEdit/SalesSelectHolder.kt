@@ -4,15 +4,15 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.RowTransactionSelectSalesBinding
-import com.hifi.redeal.transaction.model.Transaction
+import com.hifi.redeal.transaction.model.TransactionBasic
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 
 class SalesSelectHolder(
     private val rowTransactionSelectSalesBinding: RowTransactionSelectSalesBinding,
     private val transactionViewModel: TransactionViewModel
 ) : RecyclerView.ViewHolder(rowTransactionSelectSalesBinding.root) {
-    fun bind(transaction: Transaction) {
-        val valuesMap = transaction.getTransactionValueMap()
+    fun bind(transactionBasic: TransactionBasic) {
+        val valuesMap = transactionBasic.getTransactionValueMap()
         rowTransactionSelectSalesBinding.run {
             transactionSelectDateTextView.text = valuesMap["date"]
             transactionSelectClientNameTextView.text = valuesMap["clientName"]
@@ -27,7 +27,7 @@ class SalesSelectHolder(
                 textTransaction23.visibility = View.GONE
                 textTransaction24.visibility = View.GONE
             }
-            setClickEvent(rowTransactionSelectSalesBinding, transaction)
+            setClickEvent(rowTransactionSelectSalesBinding, transactionBasic)
         }
     }
 
@@ -45,10 +45,10 @@ class SalesSelectHolder(
 
     private fun setClickEvent(
         rowTransactionSelectSalesBinding: RowTransactionSelectSalesBinding,
-        transaction: Transaction
+        transactionBasic: TransactionBasic
     ) {
         rowTransactionSelectSalesBinding.root.setOnClickListener {
-            transactionViewModel.transactionSelectedChanged(transaction.getTransactionIdx())
+            transactionViewModel.transactionSelectedChanged(transactionBasic.getTransactionIdx())
         }
     }
 }

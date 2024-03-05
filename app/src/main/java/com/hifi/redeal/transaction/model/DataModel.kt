@@ -23,6 +23,7 @@ data class ClientData(
     @JvmField val isBookmark: Boolean,
 )
 
+
 data class SelectTransactionData(
     val isSelected: Boolean
 )

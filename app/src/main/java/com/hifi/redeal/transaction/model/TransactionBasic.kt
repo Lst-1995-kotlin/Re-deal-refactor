@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import kotlin.math.abs
 
-class Transaction(
+class TransactionBasic(
     private val transactionData: TransactionData,
     private val clientData: ClientData,
     private val selectTransactionData: SelectTransactionData
@@ -22,19 +22,19 @@ class Transaction(
     }
 
     override fun equals(other: Any?): Boolean {
-        val otherTransaction = other as Transaction
-        return otherTransaction.transactionData == this.transactionData &&
-                otherTransaction.clientData == this.clientData &&
-                otherTransaction.selectTransactionData == this.selectTransactionData
+        val otherTransactionBasic = other as TransactionBasic
+        return otherTransactionBasic.transactionData == this.transactionData &&
+                otherTransactionBasic.clientData == this.clientData &&
+                otherTransactionBasic.selectTransactionData == this.selectTransactionData
     }
 
-    fun replaceSelectedTransaction(): Transaction {
-        if (isSelected()) return Transaction(
+    fun replaceSelectedTransaction(): TransactionBasic {
+        if (isSelected()) return TransactionBasic(
             transactionData,
             clientData,
             SelectTransactionData(false)
         )
-        return Transaction(
+        return TransactionBasic(
             transactionData,
             clientData,
             SelectTransactionData(true)

@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTransactionByClientBinding
 import com.hifi.redeal.transaction.adapter.TransactionAdapter
@@ -16,9 +15,9 @@ import com.hifi.redeal.transaction.adapter.TransactionAdapterDiffCallback
 import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil
 import com.hifi.redeal.transaction.adapter.viewHolder.ViewHolderFactory
-import com.hifi.redeal.transaction.adapter.viewHolder.transaction.CountHolderFactory
-import com.hifi.redeal.transaction.adapter.viewHolder.transaction.DepositHolderFactory
-import com.hifi.redeal.transaction.adapter.viewHolder.transaction.SalesHolderFactory
+import com.hifi.redeal.transaction.adapter.viewHolder.transaction.CountHolderFactory1
+import com.hifi.redeal.transaction.adapter.viewHolder.transaction.DepositHolderFactory1
+import com.hifi.redeal.transaction.adapter.viewHolder.transaction.SalesHolderFactory1
 import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,11 +52,11 @@ class TransactionByClientFragment : Fragment() {
     private fun setAdapter() {
         val viewHolderFactories = HashMap<Int, ViewHolderFactory>()
         viewHolderFactories[TransactionType.DEPOSIT.type] =
-            DepositHolderFactory(transactionViewModel)
+            DepositHolderFactory1(transactionViewModel)
         viewHolderFactories[TransactionType.SALES.type] =
-            SalesHolderFactory(transactionViewModel)
+            SalesHolderFactory1(transactionViewModel)
         viewHolderFactories[TransactionType.COUNT.type] =
-            CountHolderFactory(transactionViewModel, viewLifecycleOwner)
+            CountHolderFactory1(transactionViewModel, viewLifecycleOwner)
 
         transactionAdapter =
             TransactionAdapter(viewHolderFactories, transactionAdapterDiffCallback)
@@ -89,7 +88,7 @@ class TransactionByClientFragment : Fragment() {
     }
 
     private fun setViewModel() {
-        transactionViewModel.transactionList.observe(viewLifecycleOwner) { transactions -> // 어댑터에 표시하는 거래내역들
+        transactionViewModel.transactionBasicList.observe(viewLifecycleOwner) { transactions -> // 어댑터에 표시하는 거래내역들
             transactionAdapter.submitList(transactions.sortedByDescending { it.getTransactionDate() }) {
                 transactionViewModel.postValueScrollPosition()
             }
@@ -115,7 +114,7 @@ class TransactionByClientFragment : Fragment() {
             layoutManager.scrollToPosition(it)
         }
 
-        transactionViewModel.modifyTransaction.observe(viewLifecycleOwner) {// 수정하려는 거래내역이 선택되었을 때
+        transactionViewModel.modifyTransactionBasic.observe(viewLifecycleOwner) {// 수정하려는 거래내역이 선택되었을 때
             it?.let {
                 transactionClientViewModel.setSelectClient(it.getClientInformation())
                 when (it.getTransactionType()) {

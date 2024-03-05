@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -40,7 +39,7 @@ class TransactionDepositModifyFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        transactionViewModel.modifyTransaction.value?.let {
+        transactionViewModel.modifyTransactionBasic.value?.let {
             transactionViewModel.setModifyTransaction(null)
         }
     }
@@ -78,7 +77,7 @@ class TransactionDepositModifyFragment : Fragment() {
     }
 
     private fun setViewModel() {
-        transactionViewModel.modifyTransaction.observe(viewLifecycleOwner) { transaction ->
+        transactionViewModel.modifyTransactionBasic.observe(viewLifecycleOwner) { transaction ->
             transaction?.let {
                 transaction.setModifyViewValue(fragmentTransactionDepositModifyBinding.modifyDepositPriceEditTextNumber)
                 transactionClientViewModel.setSelectClient(transaction.getClientInformation())

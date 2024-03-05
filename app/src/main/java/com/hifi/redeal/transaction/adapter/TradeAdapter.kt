@@ -10,7 +10,7 @@ import com.hifi.redeal.transaction.adapter.viewHolder.transaction.SalesHolder
 import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.model.TransactionBasic
 
-class TransactionAdapter(
+class TradeAdapter(
     private val viewHolderFactories: Map<Int, ViewHolderFactory>,
     diffCallback: TransactionAdapterDiffCallback
 ) : ListAdapter<TransactionBasic, RecyclerView.ViewHolder>(diffCallback) {

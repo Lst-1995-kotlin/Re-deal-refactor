@@ -6,12 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.transaction.adapter.viewHolder.ViewHolderFactory
 import com.hifi.redeal.transaction.adapter.viewHolder.transactionEdit.DepositSelectHolder
 import com.hifi.redeal.transaction.adapter.viewHolder.transactionEdit.SalesSelectHolder
-import com.hifi.redeal.transaction.model.Transaction
+import com.hifi.redeal.transaction.model.TransactionBasic
 
 class TransactionSelectAdapter(
     private val viewHolderFactories: Map<Int, ViewHolderFactory>,
     diffCallback: TransactionSelectAdapterDiffCallback
-) : ListAdapter<Transaction, RecyclerView.ViewHolder>(diffCallback) {
+) : ListAdapter<TransactionBasic, RecyclerView.ViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val factory = viewHolderFactories[viewType]

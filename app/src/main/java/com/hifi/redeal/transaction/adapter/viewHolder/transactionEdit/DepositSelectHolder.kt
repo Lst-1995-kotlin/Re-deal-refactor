@@ -3,20 +3,20 @@ package com.hifi.redeal.transaction.adapter.viewHolder.transactionEdit
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.RowTransactionSelectDepositBinding
-import com.hifi.redeal.transaction.model.Transaction
+import com.hifi.redeal.transaction.model.TransactionBasic
 import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
 
 class DepositSelectHolder(
     private val rowTransactionSelectDepositBinding: RowTransactionSelectDepositBinding,
     private val transactionViewModel: TransactionViewModel
 ) : RecyclerView.ViewHolder(rowTransactionSelectDepositBinding.root) {
-    fun bind(transaction: Transaction) {
-        val valuesMap = transaction.getTransactionValueMap()
+    fun bind(transactionBasic: TransactionBasic) {
+        val valuesMap = transactionBasic.getTransactionValueMap()
         rowTransactionSelectDepositBinding.run {
             transactionSelectDateTextView.text = valuesMap["date"]
             transactionSelectClientNameTextView.text = valuesMap["clientName"]
             depositPriceTextView.text = valuesMap["amountReceived"]
-            setClickEvent(rowTransactionSelectDepositBinding, transaction)
+            setClickEvent(rowTransactionSelectDepositBinding, transactionBasic)
         }
     }
 
@@ -34,10 +34,10 @@ class DepositSelectHolder(
 
     private fun setClickEvent(
         rowTransactionSelectDepositBinding: RowTransactionSelectDepositBinding,
-        transaction: Transaction
+        transactionBasic: TransactionBasic
     ) {
         rowTransactionSelectDepositBinding.root.setOnClickListener {
-            transactionViewModel.transactionSelectedChanged(transaction.getTransactionIdx())
+            transactionViewModel.transactionSelectedChanged(transactionBasic.getTransactionIdx())
         }
     }
 }
