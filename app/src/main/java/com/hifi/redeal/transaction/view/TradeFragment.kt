@@ -1,7 +1,6 @@
 package com.hifi.redeal.transaction.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +14,9 @@ import com.hifi.redeal.databinding.FragmentTradeBinding
 import com.hifi.redeal.transaction.adapter.TradeAdapter
 import com.hifi.redeal.transaction.adapter.TradeAdapterDiffCallback
 import com.hifi.redeal.transaction.adapter.viewHolder.ViewHolderFactory
-import com.hifi.redeal.transaction.adapter.viewHolder.transaction.CountHolderFactory
-import com.hifi.redeal.transaction.adapter.viewHolder.transaction.DepositHolderFactory
-import com.hifi.redeal.transaction.adapter.viewHolder.transaction.SalesHolderFactory
+import com.hifi.redeal.transaction.adapter.viewHolder.trade.CountHolderFactory
+import com.hifi.redeal.transaction.adapter.viewHolder.trade.DepositHolderFactory
+import com.hifi.redeal.transaction.adapter.viewHolder.trade.SalesHolderFactory
 import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
 import com.hifi.redeal.transaction.view.dialog.TransactionAddSelectDialog
@@ -39,14 +38,22 @@ class TradeFragment : Fragment() {
     @Inject
     lateinit var tradeAdapterDiffCallback: TradeAdapterDiffCallback
 
+    @Inject
+    lateinit var countHolderFactory: CountHolderFactory
+
+    @Inject
+    lateinit var depositHolderFactory: DepositHolderFactory
+    @Inject
+    lateinit var salesHolderFactory: SalesHolderFactory
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         fragmentTradeBinding = FragmentTradeBinding.inflate(inflater)
-        transactionAddSelectDialog =
-            TransactionAddSelectDialog(findNavController(), inflater)
+        transactionAddSelectDialog = TransactionAddSelectDialog(findNavController(), inflater)
 
         setAdapter()
         setBind()
@@ -57,12 +64,34 @@ class TradeFragment : Fragment() {
 
     private fun setAdapter() {
         val viewHolderFactories = HashMap<Int, ViewHolderFactory>()
-        viewHolderFactories[TransactionType.DEPOSIT.type] = DepositHolderFactory(tradeViewModel)
-        viewHolderFactories[TransactionType.SALES.type] = SalesHolderFactory(tradeViewModel)
-        viewHolderFactories[TransactionType.COUNT.type] = CountHolderFactory(tradeViewModel, viewLifecycleOwner)
 
-        tradeAdapter =
-            TradeAdapter(viewHolderFactories, tradeAdapterDiffCallback)
+        depositHolderFactory.setOnDeleteClickListener { tradeViewModel.deleteTrade(it) }
+        depositHolderFactory.setOnEditClickListener {
+            val bundle = Bundle().apply {
+                putInt("tradeId", it.id)
+            }
+            findNavController().navigate(
+                R.id.action_tradeFragment_to_transactionDepositModifyFragment,
+                bundle
+            )
+        }
+
+        salesHolderFactory.setOnDeleteClickListener { tradeViewModel.deleteTrade(it) }
+        salesHolderFactory.setOnEditClickListener {
+            val bundle = Bundle().apply {
+                putInt("tradeId", it.id)
+            }
+            findNavController().navigate(
+                R.id.action_tradeFragment_to_transactionSalesModifyFragment,
+                bundle
+            )
+        }
+
+        viewHolderFactories[TransactionType.DEPOSIT.type] = depositHolderFactory
+        viewHolderFactories[TransactionType.SALES.type] = salesHolderFactory
+        viewHolderFactories[TransactionType.COUNT.type] = countHolderFactory
+
+        tradeAdapter = TradeAdapter(viewHolderFactories, tradeAdapterDiffCallback)
     }
 
     private fun setBind() {

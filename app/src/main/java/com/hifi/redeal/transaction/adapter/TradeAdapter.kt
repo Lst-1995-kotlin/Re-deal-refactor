@@ -4,9 +4,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.transaction.adapter.viewHolder.ViewHolderFactory
-import com.hifi.redeal.transaction.adapter.viewHolder.transaction.CountHolder
-import com.hifi.redeal.transaction.adapter.viewHolder.transaction.DepositHolder
-import com.hifi.redeal.transaction.adapter.viewHolder.transaction.SalesHolder
+import com.hifi.redeal.transaction.adapter.viewHolder.trade.CountHolder
+import com.hifi.redeal.transaction.adapter.viewHolder.trade.DepositHolder
+import com.hifi.redeal.transaction.adapter.viewHolder.trade.SalesHolder
 import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.model.TradeData
 
@@ -32,7 +32,7 @@ class TradeAdapter(
             }
 
             is CountHolder -> {
-                holder.bind()
+                holder.bind(currentList.size)
             }
         }
     }
