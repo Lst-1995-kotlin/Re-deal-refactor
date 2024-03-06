@@ -37,9 +37,8 @@ class TradeAdapter(
         }
     }
 
-    override fun getItemCount(): Int {
-        return currentList.size + 1
-    }
+    override fun getItemCount() = currentList.size + 1
+
 
     override fun getItemViewType(position: Int): Int {
         if (position == itemCount - 1) return TransactionType.COUNT.type

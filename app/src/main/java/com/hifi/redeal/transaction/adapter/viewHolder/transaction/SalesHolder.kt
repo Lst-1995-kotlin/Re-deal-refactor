@@ -29,7 +29,7 @@ class SalesHolder(
             itemNameTextView.text = tradeData.itemName
             itemSalesCountTextView.text = replaceNumberFormat(tradeData.itemCount)
             itemPriceTextView.text = replaceNumberFormat(tradeData.itemPrice)
-            totalSalesAmountTextView.text = replaceNumberFormat(tradeData.totalItemAmount)
+            totalSalesAmountTextView.text = replaceNumberFormat(tradeData.itemCount * tradeData.itemPrice)
             recievedAmountTextView.text = replaceNumberFormat(tradeData.receivedAmount)
             recievablesTextView.text =
                 replaceNumberFormat(tradeData.itemCount * tradeData.itemPrice - tradeData.receivedAmount)
@@ -38,11 +38,11 @@ class SalesHolder(
                 textTransaction23.visibility = View.GONE
                 textTransaction24.visibility = View.GONE
             }
-            setLongClickEvent(root, tradeData, position)
+            setLongClickEvent(root, tradeData)
         }
     }
 
-    private fun setLongClickEvent(view: View, tradeData: TradeData, position: Int) {
+    private fun setLongClickEvent(view: View, tradeData: TradeData) {
         view.setOnLongClickListener {
             val builder = AlertDialog.Builder(view.context, R.style.RoundedAlertDialog)
             val layoutInflater = LayoutInflater.from(view.context)
@@ -52,7 +52,10 @@ class SalesHolder(
 
             val dialog = builder.show()
             dialogTransactionEditBinding.run {
-
+                transactionDeleteImageButton.setOnClickListener {
+                    tradeViewModel.deleteTrade(tradeData)
+                    dialog.dismiss()
+                }
             }
             true
         }

@@ -20,7 +20,6 @@ import com.hifi.redeal.account.repository.model.Coordinate
 import com.hifi.redeal.databinding.DialogAccountShareBinding
 import com.hifi.redeal.databinding.FragmentAccountDetailBinding
 import com.kakao.vectormap.KakaoMap
-import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.mapwidget.InfoWindowOptions
@@ -82,7 +81,7 @@ class AccountDetailFragment : Fragment() {
         fragmentAccountDetailBinding.run {
             bottomNavigationViewAccountDetail.setOnItemSelectedListener {
                 when (it.itemId) {
-                    R.id.transactionFragment -> {
+                    R.id.tradeFragment -> {
                         val bundle = Bundle()
                         bundle.putLong("clientIdx", clientIdx)
                         mainActivity.replaceFragment(

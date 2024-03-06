@@ -1,6 +1,7 @@
 package com.hifi.redeal.transaction.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.R
-import com.hifi.redeal.databinding.FragmentTransactionBinding
+import com.hifi.redeal.databinding.FragmentTradeBinding
 import com.hifi.redeal.transaction.adapter.TradeAdapter
 import com.hifi.redeal.transaction.adapter.TradeAdapterDiffCallback
 import com.hifi.redeal.transaction.adapter.viewHolder.ViewHolderFactory
@@ -27,8 +28,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class TransactionFragment : Fragment() {
-    private lateinit var fragmentTransactionBinding: FragmentTransactionBinding
+class TradeFragment : Fragment() {
+    private lateinit var fragmentTradeBinding: FragmentTradeBinding
     private val transactionViewModel: TransactionViewModel by activityViewModels()
     private val tradeViewModel: TradeViewModel by viewModels()
     private val transactionClientViewModel: TransactionClientViewModel by activityViewModels()
@@ -43,7 +44,7 @@ class TransactionFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        fragmentTransactionBinding = FragmentTransactionBinding.inflate(inflater)
+        fragmentTradeBinding = FragmentTradeBinding.inflate(inflater)
         transactionAddSelectDialog =
             TransactionAddSelectDialog(findNavController(), inflater)
 
@@ -51,34 +52,31 @@ class TransactionFragment : Fragment() {
         setBind()
         setViewModel()
 
-        return fragmentTransactionBinding.root
+        return fragmentTradeBinding.root
     }
 
     private fun setAdapter() {
         val viewHolderFactories = HashMap<Int, ViewHolderFactory>()
-        viewHolderFactories[TransactionType.DEPOSIT.type] =
-            DepositHolderFactory(tradeViewModel)
-        viewHolderFactories[TransactionType.SALES.type] =
-            SalesHolderFactory(tradeViewModel)
-        viewHolderFactories[TransactionType.COUNT.type] =
-            CountHolderFactory(transactionViewModel, viewLifecycleOwner)
+        viewHolderFactories[TransactionType.DEPOSIT.type] = DepositHolderFactory(tradeViewModel)
+        viewHolderFactories[TransactionType.SALES.type] = SalesHolderFactory(tradeViewModel)
+        viewHolderFactories[TransactionType.COUNT.type] = CountHolderFactory(tradeViewModel, viewLifecycleOwner)
 
         tradeAdapter =
             TradeAdapter(viewHolderFactories, tradeAdapterDiffCallback)
     }
 
     private fun setBind() {
-        fragmentTransactionBinding.transactionRecyclerView.run {
+        fragmentTradeBinding.transactionRecyclerView.run {
             adapter = tradeAdapter
             layoutManager = LinearLayoutManager(context)
         }
 
-        fragmentTransactionBinding.transactionAddButton.setOnClickListener {
+        fragmentTradeBinding.transactionAddButton.setOnClickListener {
             transactionAddSelectDialog.dialogShow()
         }
 
-        fragmentTransactionBinding.toolbarTransactionMain.setOnMenuItemClickListener {
-            findNavController().navigate(R.id.action_transactionFragment_to_transactionsEditFragment)
+        fragmentTradeBinding.toolbarTransactionMain.setOnMenuItemClickListener {
+            findNavController().navigate(R.id.action_tradeFragment_to_transactionsEditFragment)
             true
         }
     }
@@ -86,28 +84,27 @@ class TransactionFragment : Fragment() {
     private fun setViewModel() {
 
         tradeViewModel.trades.observe(viewLifecycleOwner) {
-            fragmentTransactionBinding.textTotalSales.text = "${it.size}"
+            fragmentTradeBinding.textTotalSales.text = "${it.size}"
         }
 
         tradeViewModel.trades.observe(viewLifecycleOwner) { trades -> // 어댑터에 표시하는 거래내역들
-            tradeAdapter.submitList(trades.sortedByDescending { it.date }) {
-                transactionViewModel.postValueScrollPosition()
-            }
-            // 어댑터에 표시하는 거래내역들의 합계
-            val totalSalesCount = trades.count { !it.type }
-            val totalSalesAmount = trades.sumOf { it.itemCount * it.itemPrice }
-            val totalReceivables = trades.sumOf { it.itemCount * it.itemPrice - it.receivedAmount }
+            tradeAdapter.submitList(trades)
 
-            fragmentTransactionBinding.run {
+            // 어댑터에 표시하는 거래내역들의 합계
+            val totalSalesCount = trades.count { !it.type } // 매출 건 수
+            val totalSalesAmount = trades.sumOf { it.itemCount * it.itemPrice } // 총 판매 금액
+            val totalReceivables = totalSalesAmount - trades.sumOf { it.receivedAmount }// 발생 미수금
+
+            fragmentTradeBinding.run {
                 textTotalSalesCount.text = replaceNumberFormat(totalSalesCount)
                 textTotalSales.text = replaceNumberFormat(totalSalesAmount)
-                textTotalReceivables.text = replaceNumberFormat(totalSalesAmount - totalReceivables)
+                textTotalReceivables.text = replaceNumberFormat(totalReceivables)
             }
         }
 
         transactionViewModel.transactionPosition.observe(viewLifecycleOwner) {// 수정 프래그먼트를 띄웠을 경우 해당 포지션으로 이동 시킴.
             val layoutManager =
-                fragmentTransactionBinding.transactionRecyclerView.layoutManager as LinearLayoutManager
+                fragmentTradeBinding.transactionRecyclerView.layoutManager as LinearLayoutManager
             layoutManager.scrollToPosition(it)
         }
 
@@ -116,11 +113,11 @@ class TransactionFragment : Fragment() {
                 transactionClientViewModel.setSelectClient(it.getClientInformation())
                 when (it.getTransactionType()) {
                     TransactionType.SALES.type -> {
-                        findNavController().navigate(R.id.action_transactionFragment_to_transactionSalesModifyFragment)
+                        findNavController().navigate(R.id.action_tradeFragment_to_transactionSalesModifyFragment)
                     }
 
                     TransactionType.DEPOSIT.type -> {
-                        findNavController().navigate(R.id.action_transactionFragment_to_transactionDepositModifyFragment)
+                        findNavController().navigate(R.id.action_tradeFragment_to_transactionDepositModifyFragment)
                     }
                 }
             } ?: transactionClientViewModel.setSelectClientIndex(null)

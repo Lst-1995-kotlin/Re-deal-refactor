@@ -53,23 +53,23 @@
         android:name="com.hifi.redeal.transaction.view.TransactionDepositModifyFragment"
         android:label="TransactionDepositModifyFragment" />
     <fragment
-        android:id="@+id/transactionFragment"
-        android:name="com.hifi.redeal.transaction.view.TransactionFragment"
-        android:label="TransactionFragment" >
+        android:id="@+id/tradeFragment"
+        android:name="com.hifi.redeal.transaction.view.TradeFragment"
+        android:label="TradeFragment">
         <action
-            android:id="@+id/action_transactionFragment_to_transactionSalesFragment"
+            android:id="@+id/action_tradeFragment_to_transactionSalesFragment"
             app:destination="@id/transactionSalesFragment" />
         <action
-            android:id="@+id/action_transactionFragment_to_transactionSalesModifyFragment"
+            android:id="@+id/action_tradeFragment_to_transactionSalesModifyFragment"
             app:destination="@id/transactionSalesModifyFragment" />
         <action
-            android:id="@+id/action_transactionFragment_to_transactionDepositFragment"
+            android:id="@+id/action_tradeFragment_to_transactionDepositFragment"
             app:destination="@id/transactionDepositFragment" />
         <action
-            android:id="@+id/action_transactionFragment_to_transactionDepositModifyFragment"
+            android:id="@+id/action_tradeFragment_to_transactionDepositModifyFragment"
             app:destination="@id/transactionDepositModifyFragment" />
         <action
-            android:id="@+id/action_transactionFragment_to_transactionsEditFragment"
+            android:id="@+id/action_tradeFragment_to_transactionsEditFragment"
             app:destination="@id/transactionsEditFragment" />
     </fragment>
     <fragment
@@ -121,9 +121,6 @@
         <action
             android:id="@+id/action_accountListFragment_to_myPageFragment"
             app:destination="@id/myPageFragment" />
-        <action
-            android:id="@+id/action_accountListFragment_to_transactionFragment"
-            app:destination="@id/transactionFragment" />
     </fragment>
     <fragment
         android:id="@+id/addPhotoMemoFragment"

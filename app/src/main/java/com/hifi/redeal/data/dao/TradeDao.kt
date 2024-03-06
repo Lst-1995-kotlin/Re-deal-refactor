@@ -19,7 +19,6 @@ interface TradeDao {
            trade.item_price as itemPrice,
            trade.received_amount as receivedAmount,
            trade.type as type,
-           trade.total_item_amount as totalItemAmount,
            trade.date as date,
            trade.client_id as clientId,
            client.name as clientName,
