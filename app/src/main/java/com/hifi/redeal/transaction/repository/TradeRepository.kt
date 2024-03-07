@@ -11,6 +11,7 @@ import com.hifi.redeal.transaction.model.TradeData
 import com.hifi.redeal.transaction.model.TransactionData
 import com.hifi.redeal.transaction.model.toTradeEntry
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.count
 import javax.inject.Inject
 import javax.inject.Singleton
 

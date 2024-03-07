@@ -15,6 +15,10 @@ class TradeAdapter(
     diffCallback: TradeAdapterDiffCallback
 ) : ListAdapter<TradeData, RecyclerView.ViewHolder>(diffCallback) {
 
+    fun updateCount() {
+        notifyItemChanged(itemCount - 1)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val factory = viewHolderFactories[viewType]
             ?: throw IllegalArgumentException("올바르지 못한 클라이언트 타입 입니다.")

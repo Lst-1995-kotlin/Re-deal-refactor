@@ -37,10 +37,8 @@ class TradeFragment : Fragment() {
 
     @Inject
     lateinit var tradeAdapterDiffCallback: TradeAdapterDiffCallback
-
     @Inject
     lateinit var countHolderFactory: CountHolderFactory
-
     @Inject
     lateinit var depositHolderFactory: DepositHolderFactory
     @Inject
@@ -67,23 +65,21 @@ class TradeFragment : Fragment() {
 
         depositHolderFactory.setOnDeleteClickListener { tradeViewModel.deleteTrade(it) }
         depositHolderFactory.setOnEditClickListener {
-            val bundle = Bundle().apply {
-                putInt("tradeId", it.id)
-            }
             findNavController().navigate(
                 R.id.action_tradeFragment_to_transactionDepositModifyFragment,
-                bundle
+                Bundle().apply {
+                    putInt("tradeId", it.id)
+                }
             )
         }
 
         salesHolderFactory.setOnDeleteClickListener { tradeViewModel.deleteTrade(it) }
         salesHolderFactory.setOnEditClickListener {
-            val bundle = Bundle().apply {
-                putInt("tradeId", it.id)
-            }
             findNavController().navigate(
                 R.id.action_tradeFragment_to_transactionSalesModifyFragment,
-                bundle
+                Bundle().apply {
+                    putInt("tradeId", it.id)
+                }
             )
         }
 
@@ -117,7 +113,9 @@ class TradeFragment : Fragment() {
         }
 
         tradeViewModel.trades.observe(viewLifecycleOwner) { trades -> // 어댑터에 표시하는 거래내역들
-            tradeAdapter.submitList(trades)
+            tradeAdapter.submitList(trades) {
+                tradeAdapter.updateCount()
+            }
 
             // 어댑터에 표시하는 거래내역들의 합계
             val totalSalesCount = trades.count { !it.type } // 매출 건 수

@@ -16,7 +16,6 @@ class TradeViewModel @Inject constructor(
     private val tradeRepository: TradeRepository
 ) : ViewModel() {
     val trades: LiveData<List<TradeData>> = tradeRepository.trades.asLiveData()
-    val tradeCount: LiveData<Int> = tradeRepository.trades.asLiveData().map { it.size }
 
     fun deleteTrade(tradeData: TradeData) {
         viewModelScope.launch {
