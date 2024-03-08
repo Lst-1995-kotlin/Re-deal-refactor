@@ -9,7 +9,7 @@ import android.telephony.PhoneNumberUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -24,8 +24,9 @@ import java.text.SimpleDateFormat
 
 class AccountListAdapter(
     val mainActivity: MainActivity,
-    val accountListViewModel: AccountListViewModel
-): ListAdapter<ClientData, RecyclerView.ViewHolder>(diffUtil) {
+    val accountListViewModel: AccountListViewModel,
+    val navController: NavController
+) : ListAdapter<ClientData, RecyclerView.ViewHolder>(diffUtil) {
 
     companion object {
         val diffUtil = object : DiffUtil.ItemCallback<ClientData>() {
@@ -62,6 +63,7 @@ class AccountListAdapter(
                 rowItemAccountListBinding.root.layoutParams = params
                 return AccountListViewHolder(rowItemAccountListBinding)
             }
+
             else -> {
                 val rowFooterAccountListBinding = RowFooterAccountListBinding.inflate(inflater)
                 rowFooterAccountListBinding.root.layoutParams = params
@@ -75,6 +77,7 @@ class AccountListAdapter(
             is AccountListViewHolder -> {
                 holder.bind(currentList[position])
             }
+
             is AccountListFooterViewHolder -> {
                 holder.bind()
             }
@@ -96,25 +99,46 @@ class AccountListAdapter(
     @SuppressLint("UseCompatLoadingForDrawables")
     val drawable = mainActivity.getDrawable(R.drawable.star_fill_16px)
 
-    inner class AccountListViewHolder(val rowItemAccountListBinding: RowItemAccountListBinding): RecyclerView.ViewHolder(rowItemAccountListBinding.root) {
+    inner class AccountListViewHolder(val rowItemAccountListBinding: RowItemAccountListBinding) :
+        RecyclerView.ViewHolder(rowItemAccountListBinding.root) {
         fun bind(clientData: ClientData) {
             rowItemAccountListBinding.run {
                 root.setOnClickListener {
-                    accountListViewModel.accountListRepository.incClientViewCount(mainActivity.uid, clientData.clientIdx ?: 0, clientData.viewCount ?: 0)
+                    accountListViewModel.accountListRepository.incClientViewCount(
+                        mainActivity.uid,
+                        clientData.clientIdx ?: 0,
+                        clientData.viewCount ?: 0
+                    )
 
                     val bundle = Bundle()
                     bundle.putLong("clientIdx", clientData.clientIdx ?: 0)
-                    mainActivity.replaceFragment(MainActivity.ACCOUNT_DETAIL_FRAGMENT, true, bundle)
+//                    mainActivity.replaceFragment(MainActivity.ACCOUNT_DETAIL_FRAGMENT, true, bundle)
 //                    mainActivity.navigateTo(R.id.accountDetailFragment, bundle)
+                    navController.navigate(
+                        R.id.action_accountListFragment_to_accountDetailFragment,
+                        bundle
+                    )
                 }
 
                 textViewRowItemAccountListAccountName.text = clientData.clientName
                 if (clientData.isBookmark == true) {
-                    textViewRowItemAccountListAccountName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.star_fill_16px, 0)
+                    textViewRowItemAccountListAccountName.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        0,
+                        0,
+                        R.drawable.star_fill_16px,
+                        0
+                    )
                 } else {
-                    textViewRowItemAccountListAccountName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0)
+                    textViewRowItemAccountListAccountName.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        0,
+                        0,
+                        0,
+                        0
+                    )
                 }
-                imageViewRowItemAccountListTransactionState.setImageResource(accountStateResIdList[(clientData.clientState?.toInt() ?: 1) - 1] )
+                imageViewRowItemAccountListTransactionState.setImageResource(
+                    accountStateResIdList[(clientData.clientState?.toInt() ?: 1) - 1]
+                )
                 textViewRowItemAccountListRepresentative.text = clientData.clientManagerName
 
                 textViewRowItemAccountListRecentVisitDate.run {
@@ -131,7 +155,8 @@ class AccountListAdapter(
                 }
 
                 buttonRowItemAccountListCall.setOnClickListener {
-                    val formattedPhoneNumber = PhoneNumberUtils.formatNumber(clientData.clientManagerPhone, "KR")
+                    val formattedPhoneNumber =
+                        PhoneNumberUtils.formatNumber(clientData.clientManagerPhone, "KR")
 
                     if (clientData.clientManagerPhone?.isNotEmpty() == true) {
                         AlertDialog.Builder(mainActivity)
@@ -148,7 +173,11 @@ class AccountListAdapter(
                             .setNegativeButton("취소", null)
                             .show()
                     } else {
-                        Snackbar.make(mainActivity.activityMainBinding.root, "등록된 담당자 연락처가 없습니다", Snackbar.LENGTH_SHORT).apply {
+                        Snackbar.make(
+                            mainActivity.activityMainBinding.root,
+                            "등록된 담당자 연락처가 없습니다",
+                            Snackbar.LENGTH_SHORT
+                        ).apply {
                             anchorView = mainActivity.activityMainBinding.bottomNavigationViewMain
                         }.show()
                     }
@@ -157,7 +186,8 @@ class AccountListAdapter(
         }
     }
 
-    inner class AccountListFooterViewHolder(val rowFooterAccountListBinding: RowFooterAccountListBinding): RecyclerView.ViewHolder(rowFooterAccountListBinding.root) {
+    inner class AccountListFooterViewHolder(val rowFooterAccountListBinding: RowFooterAccountListBinding) :
+        RecyclerView.ViewHolder(rowFooterAccountListBinding.root) {
         fun bind() {
             if (currentList.isEmpty()) {
                 rowFooterAccountListBinding.textViewRowFooterAccountList.text = "거래처가 없습니다"
@@ -170,7 +200,8 @@ class AccountListAdapter(
                     else -> "총"
                 }
 
-                rowFooterAccountListBinding.textViewRowFooterAccountList.text = "$criterion ${currentList.size}개"
+                rowFooterAccountListBinding.textViewRowFooterAccountList.text =
+                    "$criterion ${currentList.size}개"
             }
         }
     }
