@@ -11,7 +11,10 @@ import javax.inject.Singleton
 class TradeRepository @Inject constructor(
     private val tradeDao: TradeDao
 ) {
-    val trades: Flow<List<TradeData>> = tradeDao.getAllTrade()
+    fun getAllTrades(): Flow<List<TradeData>> = tradeDao.getAllTrade()
+
+    fun getAllTradeByClient(clientId: Int): Flow<List<TradeData>> =
+        tradeDao.getClientTrade(clientId)
 
     suspend fun deleteTrade(tradeData: TradeData) {
         tradeDao.deleteTrade(tradeData.toTradeEntry())

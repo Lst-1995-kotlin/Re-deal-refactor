@@ -13,22 +13,40 @@ import kotlinx.coroutines.flow.Flow
 interface TradeDao {
     @Query(
         """
-    SELECT trade.id as id, 
-           trade.item_name as itemName, 
-           trade.item_count as itemCount,
-           trade.item_price as itemPrice,
-           trade.received_amount as receivedAmount,
-           trade.type as type,
-           trade.date as date,
-           trade.client_id as clientId,
-           client.name as clientName,
-           client.manager_name as clientManagerName
+    SELECT trade.id AS id, 
+           trade.item_name AS itemName, 
+           trade.item_count AS itemCount,
+           trade.item_price AS itemPrice,
+           trade.received_amount AS receivedAmount,
+           trade.type AS type,
+           trade.date AS date,
+           trade.client_id AS clientId,
+           client.name AS clientName
     FROM trade 
     INNER JOIN client ON trade.client_id = client.id
     ORDER BY id DESC
 """
     )
     fun getAllTrade(): Flow<List<TradeData>>
+
+    @Query(
+        """
+    SELECT trade.id AS id, 
+           trade.item_name AS itemName, 
+           trade.item_count AS itemCount,
+           trade.item_price AS itemPrice,
+           trade.received_amount AS receivedAmount,
+           trade.type AS type,
+           trade.date AS date,
+           trade.client_id AS clientId,
+           client.name AS clientName
+    FROM trade 
+    INNER JOIN client ON trade.client_id = client.id
+    WHERE trade.client_id = :clientId
+    ORDER BY id DESC
+"""
+    )
+    fun getClientTrade(clientId: Int): Flow<List<TradeData>>
 
     @Insert
     suspend fun insertTrade(tradeEntry: TradeEntry)

@@ -48,7 +48,7 @@ import com.hifi.redeal.schedule.view.ScheduleManageFragment
 import com.hifi.redeal.schedule.view.ScheduleSelectByClientFragment
 import com.hifi.redeal.schedule.view.UnvisitedScheduleFragment
 import com.hifi.redeal.schedule.view.VisitedScheduleFragment
-import com.hifi.redeal.transaction.view.TransactionByClientFragment
+import com.hifi.redeal.transaction.view.TradeByClientFragment
 import com.hifi.redeal.transaction.view.TransactionDepositFragment
 import com.hifi.redeal.transaction.view.TransactionDepositModifyFragment
 import com.hifi.redeal.transaction.view.TradeFragment
@@ -465,7 +465,7 @@ class MainActivity : AppCompatActivity() {
             TRANSACTION_SALES_FRAGMENT -> TransactionSalesFragment()
             TRANSACTION_DEPOSIT_MODIFY_FRAGMENT -> TransactionDepositModifyFragment()
             TRANSACTION_SALES_MODIFY_FRAGMENT -> TransactionSalesModifyFragment()
-            TRANSACTION_BY_CLIENT_FRAGMENT -> TransactionByClientFragment()
+            TRANSACTION_BY_CLIENT_FRAGMENT -> TradeByClientFragment()
             TRANSACTIONS_EDIT_FRAGMENT -> TransactionsEditFragment()
             else -> Fragment()
         }
