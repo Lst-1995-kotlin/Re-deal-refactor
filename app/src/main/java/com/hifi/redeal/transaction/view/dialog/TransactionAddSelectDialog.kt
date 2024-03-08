@@ -20,7 +20,6 @@ class TransactionAddSelectDialog(
             ImgBtnAddDeposit.setOnClickListener {
                 dialog.dismiss()
                 naviController.navigate(R.id.action_tradeFragment_to_transactionDepositFragment)
-
             }
             ImgBtnAddTransaction.setOnClickListener {
                 dialog.dismiss()

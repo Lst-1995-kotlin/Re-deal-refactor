@@ -13,8 +13,7 @@ data class TradeData(
     val type: Boolean,
     val date: Date,
     val clientId: Int,
-    val clientName: String,
-    val clientManagerName: String,
+    val clientName: String
 )
 
 fun TradeData.toTradeEntry(): TradeEntry {

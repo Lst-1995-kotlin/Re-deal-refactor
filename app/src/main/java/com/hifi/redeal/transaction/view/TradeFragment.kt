@@ -29,9 +29,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class TradeFragment : Fragment() {
     private lateinit var fragmentTradeBinding: FragmentTradeBinding
-    private val transactionViewModel: TransactionViewModel by activityViewModels()
     private val tradeViewModel: TradeViewModel by viewModels()
-    private val transactionClientViewModel: TransactionClientViewModel by activityViewModels()
     private lateinit var tradeAdapter: TradeAdapter
     private lateinit var transactionAddSelectDialog: TransactionAddSelectDialog
 
@@ -108,10 +106,6 @@ class TradeFragment : Fragment() {
 
     private fun setViewModel() {
 
-        tradeViewModel.trades.observe(viewLifecycleOwner) {
-            fragmentTradeBinding.textTotalSales.text = "${it.size}"
-        }
-
         tradeViewModel.trades.observe(viewLifecycleOwner) { trades -> // 어댑터에 표시하는 거래내역들
             tradeAdapter.submitList(trades) {
                 tradeAdapter.updateCount()
@@ -128,28 +122,5 @@ class TradeFragment : Fragment() {
                 textTotalReceivables.text = replaceNumberFormat(totalReceivables)
             }
         }
-
-        transactionViewModel.transactionPosition.observe(viewLifecycleOwner) {// 수정 프래그먼트를 띄웠을 경우 해당 포지션으로 이동 시킴.
-            val layoutManager =
-                fragmentTradeBinding.transactionRecyclerView.layoutManager as LinearLayoutManager
-            layoutManager.scrollToPosition(it)
-        }
-
-        transactionViewModel.modifyTransactionBasic.observe(viewLifecycleOwner) {// 수정하려는 거래내역이 선택되었을 때
-            it?.let {
-                transactionClientViewModel.setSelectClient(it.getClientInformation())
-                when (it.getTransactionType()) {
-                    TransactionType.SALES.type -> {
-                        findNavController().navigate(R.id.action_tradeFragment_to_transactionSalesModifyFragment)
-                    }
-
-                    TransactionType.DEPOSIT.type -> {
-                        findNavController().navigate(R.id.action_tradeFragment_to_transactionDepositModifyFragment)
-                    }
-                }
-            } ?: transactionClientViewModel.setSelectClientIndex(null)
-        }
-
-        transactionViewModel.setSelectClientIndex(null) // 기존 선택한 클라이언트 정보를 초기화 시킨다.
     }
 }
