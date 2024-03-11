@@ -1,5 +1,6 @@
 package com.hifi.redeal.transaction.repository
 
+import androidx.lifecycle.LiveData
 import com.hifi.redeal.data.dao.TradeDao
 import com.hifi.redeal.transaction.model.TradeData
 import com.hifi.redeal.transaction.model.toTradeEntry

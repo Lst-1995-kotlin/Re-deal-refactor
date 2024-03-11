@@ -1,5 +1,6 @@
 package com.hifi.redeal.data.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -24,7 +25,7 @@ interface TradeDao {
            client.name AS clientName
     FROM trade 
     INNER JOIN client ON trade.client_id = client.id
-    ORDER BY id DESC
+    ORDER BY date DESC
 """
     )
     fun getAllTrade(): Flow<List<TradeData>>
@@ -43,7 +44,7 @@ interface TradeDao {
     FROM trade 
     INNER JOIN client ON trade.client_id = client.id
     WHERE trade.client_id = :clientId
-    ORDER BY id DESC
+    ORDER BY date DESC
 """
     )
     fun getClientTrade(clientId: Int): Flow<List<TradeData>>

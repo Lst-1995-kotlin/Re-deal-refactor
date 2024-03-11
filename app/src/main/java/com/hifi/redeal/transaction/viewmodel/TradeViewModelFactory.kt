@@ -14,11 +14,6 @@ class TradeViewModelFactory @Inject constructor(
             @Suppress("UNCHECKED_CAST")
             return TradeViewModel(tradeRepository) as T
         }
-
-        if (modelClass.isAssignableFrom(TradeByClientViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return TradeByClientViewModel(tradeRepository) as T
-        }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
