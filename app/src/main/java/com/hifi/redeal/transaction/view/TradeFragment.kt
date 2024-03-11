@@ -18,7 +18,7 @@ import com.hifi.redeal.transaction.adapter.viewHolder.trade.DepositHolderFactory
 import com.hifi.redeal.transaction.adapter.viewHolder.trade.SalesHolderFactory
 import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
-import com.hifi.redeal.transaction.view.dialog.TransactionAddSelectDialog
+import com.hifi.redeal.transaction.view.dialog.TradeAddSelectDialog
 import com.hifi.redeal.transaction.viewmodel.TradeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -28,7 +28,7 @@ class TradeFragment : Fragment() {
     private lateinit var fragmentTradeBinding: FragmentTradeBinding
     private val tradeViewModel: TradeViewModel by viewModels()
     private lateinit var tradeAdapter: TradeAdapter
-    private lateinit var transactionAddSelectDialog: TransactionAddSelectDialog
+    private lateinit var tradeAddSelectDialog: TradeAddSelectDialog
 
     @Inject
     lateinit var tradeAdapterDiffCallback: TradeAdapterDiffCallback
@@ -46,7 +46,7 @@ class TradeFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         fragmentTradeBinding = FragmentTradeBinding.inflate(inflater)
-        transactionAddSelectDialog = TransactionAddSelectDialog(findNavController(), inflater)
+        tradeAddSelectDialog = TradeAddSelectDialog(findNavController(), inflater)
 
         setAdapter()
         setBind()
@@ -92,7 +92,7 @@ class TradeFragment : Fragment() {
         }
 
         fragmentTradeBinding.transactionAddButton.setOnClickListener {
-            transactionAddSelectDialog.dialogShow()
+            tradeAddSelectDialog.dialogShow()
         }
 
         fragmentTradeBinding.toolbarTransactionMain.setOnMenuItemClickListener {

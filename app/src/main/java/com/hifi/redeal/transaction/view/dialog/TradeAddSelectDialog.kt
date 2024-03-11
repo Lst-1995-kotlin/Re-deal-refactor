@@ -6,7 +6,7 @@ import androidx.navigation.NavController
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.DialogTransactionAddSelectBinding
 
-class TransactionAddSelectDialog(
+class TradeAddSelectDialog(
     private val naviController: NavController,
     private val layoutInflater: LayoutInflater
 ) {
