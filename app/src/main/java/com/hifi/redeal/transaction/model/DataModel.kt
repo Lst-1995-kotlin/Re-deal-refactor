@@ -15,14 +15,6 @@ data class TransactionData(
     val transactionItemName: String,
 )
 
-data class ClientData(
-    val clientIdx: Long,
-    val clientName: String,
-    val clientManagerName: String,
-    var clientState: Long,
-    @JvmField val isBookmark: Boolean,
-)
-
 
 data class SelectTransactionData(
     val isSelected: Boolean
