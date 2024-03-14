@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.runtime.snapshots.Snapshot.Companion.observe
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -19,7 +18,7 @@ import com.hifi.redeal.transaction.adapter.viewHolder.trade.DepositHolderFactory
 import com.hifi.redeal.transaction.adapter.viewHolder.trade.SalesHolderFactory
 import com.hifi.redeal.transaction.configuration.TransactionType
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
-import com.hifi.redeal.transaction.viewmodel.TradeViewModel
+import com.hifi.redeal.transaction.viewmodel.TradeByClientViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -27,7 +26,7 @@ import javax.inject.Inject
 class TradeByClientFragment : Fragment() {
 
     private lateinit var fragmentTradeByClientBinding: FragmentTradeByClientBinding
-    private val tradeViewModel: TradeViewModel by viewModels()
+    private val tradeByClientViewModel: TradeByClientViewModel by viewModels()
     private lateinit var tradeAdapter: TradeAdapter
 
     @Inject
@@ -56,7 +55,7 @@ class TradeByClientFragment : Fragment() {
     private fun setAdapter() {
         val viewHolderFactories = HashMap<Int, ViewHolderFactory>()
 
-        depositHolderFactory.setOnDeleteClickListener { tradeViewModel.deleteTrade(it) }
+        depositHolderFactory.setOnDeleteClickListener { tradeByClientViewModel.deleteTrade(it) }
         depositHolderFactory.setOnEditClickListener {
             findNavController().navigate(
                 R.id.action_transactionByClientFragment_to_transactionDepositModifyFragment,
@@ -66,7 +65,7 @@ class TradeByClientFragment : Fragment() {
             )
         }
 
-        salesHolderFactory.setOnDeleteClickListener { tradeViewModel.deleteTrade(it) }
+        salesHolderFactory.setOnDeleteClickListener { tradeByClientViewModel.deleteTrade(it) }
         salesHolderFactory.setOnEditClickListener {
             findNavController().navigate(
                 R.id.action_transactionByClientFragment_to_transactionSalesModifyFragment,
@@ -107,7 +106,7 @@ class TradeByClientFragment : Fragment() {
     }
 
     private fun setViewModel() {
-        tradeViewModel.trades.observe(viewLifecycleOwner) { trades -> // 어댑터에 표시하는 거래내역들
+        tradeByClientViewModel.trades.observe(viewLifecycleOwner) { trades -> // 어댑터에 표시하는 거래내역들
             tradeAdapter.submitList(trades) {
                 tradeAdapter.updateCount()
             }
@@ -124,6 +123,6 @@ class TradeByClientFragment : Fragment() {
                     replaceNumberFormat(totalSalesAmount - totalReceivables)
             }
         }
-        tradeViewModel.setClientId(arguments?.getInt("clientId")!!)
+        tradeByClientViewModel.setClientId(arguments?.getInt("clientId"))
     }
 }

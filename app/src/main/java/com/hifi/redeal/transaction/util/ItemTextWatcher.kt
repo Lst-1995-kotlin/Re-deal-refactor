@@ -8,10 +8,10 @@ import com.google.android.material.textfield.TextInputEditText
 import com.hifi.redeal.transaction.configuration.TransactionAmountConfiguration.Companion.transactionAmountCheck
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.removeNumberFormat
 import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
-import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
+import com.hifi.redeal.transaction.viewmodel.TradeByClientViewModel
 
 class ItemTextWatcher(
-    private val transactionClientViewModel: TransactionClientViewModel,
+    private val tradeByClientViewModel: TradeByClientViewModel,
     private val nowEditText: TextInputEditText,
     private val notEditText: TextInputEditText,
     private val amountEditText: TextInputEditText,
@@ -22,7 +22,7 @@ class ItemTextWatcher(
 
     override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
         button.visibility =
-            if (p0.isNullOrEmpty() || transactionClientViewModel.selectedClient.value == null) View.GONE
+            if (p0.isNullOrEmpty() || tradeByClientViewModel.clientId.value == null) View.GONE
             else View.VISIBLE
     }
 

@@ -119,6 +119,5 @@ class TradeFragment : Fragment() {
                 textTotalReceivables.text = replaceNumberFormat(totalReceivables)
             }
         }
-        tradeViewModel.setClientId(null)
     }
 }

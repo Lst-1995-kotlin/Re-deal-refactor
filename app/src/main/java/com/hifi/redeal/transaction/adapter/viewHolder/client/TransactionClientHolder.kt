@@ -5,30 +5,28 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
 import com.hifi.redeal.transaction.configuration.ClientConfiguration.Companion.setClientBookmarkResource
 import com.hifi.redeal.transaction.configuration.ClientConfiguration.Companion.setClientStateResource
-import com.hifi.redeal.transaction.model.Client
-import com.hifi.redeal.transaction.viewmodel.TransactionClientViewModel
+import com.hifi.redeal.transaction.model.ClientData
 
 class TransactionClientHolder(
     private val transactionSelectClientItemBinding: TransactionSelectClientItemBinding,
-    private val transactionClientViewModel: TransactionClientViewModel,
+    //private val transactionClientViewModel: TransactionClientViewModel,
     private val dialogFragment: DialogFragment
 ) : RecyclerView.ViewHolder(transactionSelectClientItemBinding.root) {
-    fun bind(client: Client) {
+    fun bind(clientData: ClientData) {
         transactionSelectClientItemBinding.run {
-            val clientValuesMap = client.getClientValuesMap()
             setClientStateResource(
-                clientValuesMap["clientState"] as Long,
+                clientData.state,
                 selectTransactionClinetState
             )
             setClientBookmarkResource(
-                clientValuesMap["isBookmark"] as Boolean,
+                clientData.bookmark,
                 selectTransactionClientBookmarkView
             )
-            selectTransactionClientName.text = clientValuesMap["clientName"] as String
-            selectTransactionClientManagerName.text = clientValuesMap["clientManagerName"] as String
+            selectTransactionClientName.text = clientData.name
+            selectTransactionClientManagerName.text = clientData.managerName
         }
         transactionSelectClientItemBinding.root.setOnClickListener {
-            transactionClientViewModel.setSelectClient(client)
+            //transactionClientViewModel.setSelectClient(clientData.id)
             dialogFragment.dismiss()
         }
     }

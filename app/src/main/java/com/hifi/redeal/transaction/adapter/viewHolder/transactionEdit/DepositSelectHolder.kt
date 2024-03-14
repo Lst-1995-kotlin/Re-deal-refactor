@@ -3,20 +3,19 @@ package com.hifi.redeal.transaction.adapter.viewHolder.transactionEdit
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.RowTransactionSelectDepositBinding
-import com.hifi.redeal.transaction.model.TransactionBasic
-import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
+import com.hifi.redeal.transaction.model.TradeData
+import com.hifi.redeal.transaction.viewmodel.TradeViewModel
 
 class DepositSelectHolder(
     private val rowTransactionSelectDepositBinding: RowTransactionSelectDepositBinding,
-    private val transactionViewModel: TransactionViewModel
+    private val tradeViewModel: TradeViewModel
 ) : RecyclerView.ViewHolder(rowTransactionSelectDepositBinding.root) {
-    fun bind(transactionBasic: TransactionBasic) {
-        val valuesMap = transactionBasic.getTransactionValueMap()
+    fun bind(tradeData: TradeData) {
         rowTransactionSelectDepositBinding.run {
-            transactionSelectDateTextView.text = valuesMap["date"]
-            transactionSelectClientNameTextView.text = valuesMap["clientName"]
-            depositPriceTextView.text = valuesMap["amountReceived"]
-            setClickEvent(rowTransactionSelectDepositBinding, transactionBasic)
+            transactionSelectDateTextView.text = tradeData.date.toString()
+            transactionSelectClientNameTextView.text = tradeData.clientName
+            depositPriceTextView.text = tradeData.receivedAmount.toString()
+            setClickEvent(rowTransactionSelectDepositBinding, tradeData)
         }
     }
 
@@ -34,10 +33,10 @@ class DepositSelectHolder(
 
     private fun setClickEvent(
         rowTransactionSelectDepositBinding: RowTransactionSelectDepositBinding,
-        transactionBasic: TransactionBasic
+        tradeData: TradeData
     ) {
         rowTransactionSelectDepositBinding.root.setOnClickListener {
-            transactionViewModel.transactionSelectedChanged(transactionBasic.getTransactionIdx())
+            //tradeViewModel.transactionSelectedChanged(tradeData.id)
         }
     }
 }

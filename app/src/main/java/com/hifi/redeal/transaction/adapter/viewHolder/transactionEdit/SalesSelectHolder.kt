@@ -4,30 +4,30 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.RowTransactionSelectSalesBinding
-import com.hifi.redeal.transaction.model.TransactionBasic
-import com.hifi.redeal.transaction.viewmodel.TransactionViewModel
+import com.hifi.redeal.transaction.model.TradeData
+import com.hifi.redeal.transaction.viewmodel.TradeViewModel
 
 class SalesSelectHolder(
     private val rowTransactionSelectSalesBinding: RowTransactionSelectSalesBinding,
-    private val transactionViewModel: TransactionViewModel
+    private val tradeViewModel: TradeViewModel
 ) : RecyclerView.ViewHolder(rowTransactionSelectSalesBinding.root) {
-    fun bind(transactionBasic: TransactionBasic) {
-        val valuesMap = transactionBasic.getTransactionValueMap()
+    fun bind(tradeData: TradeData) {
         rowTransactionSelectSalesBinding.run {
-            transactionSelectDateTextView.text = valuesMap["date"]
-            transactionSelectClientNameTextView.text = valuesMap["clientName"]
-            itemNameTextView.text = valuesMap["itemName"]
-            itemSalesCountTextView.text = valuesMap["itemCount"]
-            itemPriceTextView.text = valuesMap["itemPrice"]
-            totalSalesAmountTextView.text = valuesMap["totalAmount"]
-            recievedAmountTextView.text = valuesMap["amountReceived"]
-            recievablesTextView.text = valuesMap["receivables"]
-            if (valuesMap["receivables"] == "0") {
+            transactionSelectDateTextView.text = tradeData.date.toString()
+            transactionSelectClientNameTextView.text = tradeData.clientName
+            itemNameTextView.text = tradeData.itemName
+            itemSalesCountTextView.text = tradeData.itemCount.toString()
+            itemPriceTextView.text = tradeData.itemPrice.toString()
+            totalSalesAmountTextView.text = (tradeData.itemPrice * tradeData.itemCount).toString()
+            recievedAmountTextView.text = tradeData.receivedAmount.toString()
+            recievablesTextView.text =
+                ((tradeData.itemPrice * tradeData.itemCount) - tradeData.receivedAmount).toString()
+            if (((tradeData.itemPrice * tradeData.itemCount) - tradeData.receivedAmount).toInt() == 0) {
                 recievablesTextView.visibility = View.GONE
                 textTransaction23.visibility = View.GONE
                 textTransaction24.visibility = View.GONE
             }
-            setClickEvent(rowTransactionSelectSalesBinding, transactionBasic)
+            //setClickEvent(rowTransactionSelectSalesBinding, tradeData)
         }
     }
 
@@ -43,12 +43,12 @@ class SalesSelectHolder(
         )
     }
 
-    private fun setClickEvent(
-        rowTransactionSelectSalesBinding: RowTransactionSelectSalesBinding,
-        transactionBasic: TransactionBasic
-    ) {
-        rowTransactionSelectSalesBinding.root.setOnClickListener {
-            transactionViewModel.transactionSelectedChanged(transactionBasic.getTransactionIdx())
-        }
-    }
+//    private fun setClickEvent(
+//        rowTransactionSelectSalesBinding: RowTransactionSelectSalesBinding,
+//        tradeData: TradeData
+//    ) {
+//        rowTransactionSelectSalesBinding.root.setOnClickListener {
+//            transactionViewModel.transactionSelectedChanged(tradeData.id)
+//        }
+//    }
 }

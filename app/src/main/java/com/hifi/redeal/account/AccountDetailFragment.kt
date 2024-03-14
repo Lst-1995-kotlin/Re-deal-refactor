@@ -45,9 +45,6 @@ class AccountDetailFragment : Fragment() {
 
     var clientIdx = 0L
 
-    @Inject
-    lateinit var tradeViewModelFactory: TradeViewModelFactory
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -95,7 +92,7 @@ class AccountDetailFragment : Fragment() {
 //
 //                        )
                         val bundle = Bundle()
-                        bundle.putInt("clientId", 1)
+                        bundle.putInt("clientId", 2)
                         findNavController().navigate(
                             R.id.action_accountDetailFragment_to_transactionByClientFragment,
                             bundle
