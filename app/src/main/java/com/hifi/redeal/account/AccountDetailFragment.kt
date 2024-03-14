@@ -20,7 +20,6 @@ import com.hifi.redeal.account.repository.model.ClientData
 import com.hifi.redeal.account.repository.model.Coordinate
 import com.hifi.redeal.databinding.DialogAccountShareBinding
 import com.hifi.redeal.databinding.FragmentAccountDetailBinding
-import com.hifi.redeal.transaction.viewmodel.TradeViewModelFactory
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.camera.CameraUpdateFactory
