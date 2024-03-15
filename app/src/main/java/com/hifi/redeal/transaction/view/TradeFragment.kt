@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -17,7 +18,6 @@ import com.hifi.redeal.transaction.adapter.viewHolder.trade.CountHolderFactory
 import com.hifi.redeal.transaction.adapter.viewHolder.trade.DepositHolderFactory
 import com.hifi.redeal.transaction.adapter.viewHolder.trade.SalesHolderFactory
 import com.hifi.redeal.transaction.configuration.TransactionType
-import com.hifi.redeal.transaction.util.TransactionNumberFormatUtil.replaceNumberFormat
 import com.hifi.redeal.transaction.view.dialog.TradeAddSelectDialog
 import com.hifi.redeal.transaction.viewmodel.TradeViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,10 +32,13 @@ class TradeFragment : Fragment() {
 
     @Inject
     lateinit var tradeAdapterDiffCallback: TradeAdapterDiffCallback
+
     @Inject
     lateinit var countHolderFactory: CountHolderFactory
+
     @Inject
     lateinit var depositHolderFactory: DepositHolderFactory
+
     @Inject
     lateinit var salesHolderFactory: SalesHolderFactory
 
@@ -45,9 +48,11 @@ class TradeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        fragmentTradeBinding = FragmentTradeBinding.inflate(inflater)
+        fragmentTradeBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_trade, container, false)
         tradeAddSelectDialog = TradeAddSelectDialog(findNavController(), inflater)
-
+        fragmentTradeBinding.lifecycleOwner = viewLifecycleOwner
+        fragmentTradeBinding.viewModel = tradeViewModel
         setAdapter()
         setBind()
         setViewModel()
@@ -102,21 +107,9 @@ class TradeFragment : Fragment() {
     }
 
     private fun setViewModel() {
-
         tradeViewModel.trades.observe(viewLifecycleOwner) { trades -> // 어댑터에 표시하는 거래내역들
             tradeAdapter.submitList(trades) {
                 tradeAdapter.updateCount()
-            }
-
-            // 어댑터에 표시하는 거래내역들의 합계
-            val totalSalesCount = trades.count { !it.type } // 매출 건 수
-            val totalSalesAmount = trades.sumOf { it.itemCount * it.itemPrice } // 총 판매 금액
-            val totalReceivables = totalSalesAmount - trades.sumOf { it.receivedAmount }// 발생 미수금
-
-            fragmentTradeBinding.run {
-                textTotalSalesCount.text = replaceNumberFormat(totalSalesCount)
-                textTotalSales.text = replaceNumberFormat(totalSalesAmount)
-                textTotalReceivables.text = replaceNumberFormat(totalReceivables)
             }
         }
     }
