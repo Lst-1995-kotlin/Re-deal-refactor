@@ -28,9 +28,5 @@ enum class ClientConfiguration(private val state: Long) {
             }
             view.visibility = View.GONE
         }
-
-        fun isClientStateNotStop(value: Long): Boolean {
-            return value != STATE_STOP.state
-        }
     }
 }

@@ -3,11 +3,15 @@ package com.hifi.redeal.trade.domain.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.hifi.redeal.trade.data.model.TradeData
 import com.hifi.redeal.trade.data.repository.TradeRepository
+import com.hifi.redeal.trade.util.TransactionNumberFormatUtil.replaceNumberFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,36 +21,18 @@ class TradeViewModel @Inject constructor(
 ) : ViewModel() {
 
     val trades: LiveData<List<TradeData>> = tradeRepository.getAllTrades().asLiveData()
-    private val _salesTradeCount = MutableLiveData<Int>()
-    private val _salesTradeAmount = MutableLiveData<Long>()
-    private val _salesTradeReceivables = MutableLiveData<Long>()
-    val salesTradeCount: LiveData<Int> get() = _salesTradeCount
-    val salesTradeAmount: LiveData<Long> get() = _salesTradeAmount
-    val salesTradeReceivables: LiveData<Long> get() = _salesTradeReceivables
-
-    private val tradesCountObserver = { trades: List<TradeData> ->
-        _salesTradeCount.postValue(trades.size)
-    }
-    private val tradesAmountObserver = { trades: List<TradeData> ->
-        _salesTradeAmount.postValue(trades.sumOf { it.itemCount * it.itemPrice })
-    }
-    private val tradesReceivables = { trades: List<TradeData> ->
-        _salesTradeReceivables.postValue(
-            trades.sumOf { it.itemCount * it.itemPrice } - trades.sumOf { it.receivedAmount })
-    }
+    private val _salesTradeCount = MutableLiveData<String>()
+    private val _salesTradeAmount = MutableLiveData<String>()
+    private val _tradeReceivables = MutableLiveData<String>()
+    val salesTradeCount: LiveData<String> get() = _salesTradeCount
+    val salesTradeAmount: LiveData<String> get() = _salesTradeAmount
+    val tradeReceivables: LiveData<String> get() = _tradeReceivables
 
 
     init {
-        observeTrades()
+        updateLiveData()
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        // trades LiveData에 등록된 옵저버를 제거합니다.
-        trades.removeObserver(tradesCountObserver)
-        trades.removeObserver(tradesAmountObserver)
-        trades.removeObserver(tradesReceivables)
-    }
 
     fun deleteTrade(tradeData: TradeData) {
         viewModelScope.launch {
@@ -54,10 +40,34 @@ class TradeViewModel @Inject constructor(
         }
     }
 
-    private fun observeTrades() {
-        trades.observeForever(tradesCountObserver)
-        trades.observeForever(tradesAmountObserver)
-        trades.observeForever(tradesReceivables)
+    private fun updateLiveData() {
+        viewModelScope.launch {
+            trades.asFlow().collect { trades ->
+                updateSalesTradeCount(trades)
+                updateSalesTradeAmount(trades)
+                updateSalesTradeReceivables(trades)
+            }
+        }
+    }
+
+    private fun updateSalesTradeCount(trades: List<TradeData>) {
+        _salesTradeCount.postValue(replaceNumberFormat(trades.count { !it.type }))
+    }
+
+    private fun updateSalesTradeAmount(trades: List<TradeData>) {
+        _salesTradeAmount.postValue(
+            replaceNumberFormat(
+                trades.sumOf { it.itemCount * it.itemPrice }
+            )
+        )
+    }
+
+    private fun updateSalesTradeReceivables(trades: List<TradeData>) {
+        _tradeReceivables.postValue(
+            replaceNumberFormat(
+                trades.sumOf { it.itemCount * it.itemPrice - it.receivedAmount }
+            )
+        )
     }
 
 }

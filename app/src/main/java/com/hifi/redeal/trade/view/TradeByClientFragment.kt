@@ -16,7 +16,7 @@ import com.hifi.redeal.trade.ui.adapter.viewHolder.ViewHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.CountHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.DepositHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.SalesHolderFactory
-import com.hifi.redeal.trade.configuration.TransactionType
+import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.util.TransactionNumberFormatUtil.replaceNumberFormat
 import com.hifi.redeal.trade.domain.viewmodel.TradeByClientViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -75,9 +75,9 @@ class TradeByClientFragment : Fragment() {
             )
         }
 
-        viewHolderFactories[TransactionType.DEPOSIT.type] = depositHolderFactory
-        viewHolderFactories[TransactionType.SALES.type] = salesHolderFactory
-        viewHolderFactories[TransactionType.COUNT.type] = countHolderFactory
+        viewHolderFactories[TradeType.DEPOSIT.type] = depositHolderFactory
+        viewHolderFactories[TradeType.SALES.type] = salesHolderFactory
+        viewHolderFactories[TradeType.COUNT.type] = countHolderFactory
 
         tradeAdapter = TradeAdapter(viewHolderFactories, tradeAdapterDiffCallback)
     }

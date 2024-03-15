@@ -7,7 +7,7 @@ import com.hifi.redeal.trade.ui.adapter.viewHolder.ViewHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.CountHolder
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.DepositHolder
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.SalesHolder
-import com.hifi.redeal.trade.configuration.TransactionType
+import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.data.model.TradeData
 
 class TradeAdapter(
@@ -43,13 +43,12 @@ class TradeAdapter(
 
     override fun getItemCount() = currentList.size + 1
 
-
     override fun getItemViewType(position: Int): Int {
-        if (position == itemCount - 1) return TransactionType.COUNT.type
+        if (position == itemCount - 1) return TradeType.COUNT.type
         return when {
-            currentList[position].type -> TransactionType.DEPOSIT.type
-            !currentList[position].type -> TransactionType.SALES.type
-            else -> TransactionType.ERROR.type
+            currentList[position].type -> TradeType.DEPOSIT.type
+            !currentList[position].type -> TradeType.SALES.type
+            else -> TradeType.ERROR.type
         }
     }
 }

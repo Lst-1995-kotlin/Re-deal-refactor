@@ -5,7 +5,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import com.google.android.material.textfield.TextInputEditText
-import com.hifi.redeal.trade.configuration.TransactionAmountConfiguration.Companion.transactionAmountCheck
+import com.hifi.redeal.trade.configuration.TradeAmountConfiguration.Companion.transactionAmountCheck
 import com.hifi.redeal.trade.util.TransactionNumberFormatUtil.removeNumberFormat
 import com.hifi.redeal.trade.util.TransactionNumberFormatUtil.replaceNumberFormat
 import com.hifi.redeal.trade.domain.viewmodel.TradeByClientViewModel

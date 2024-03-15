@@ -17,7 +17,7 @@ import com.hifi.redeal.trade.ui.adapter.viewHolder.ViewHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.CountHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.DepositHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.SalesHolderFactory
-import com.hifi.redeal.trade.configuration.TransactionType
+import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.view.dialog.TradeAddSelectDialog
 import com.hifi.redeal.trade.domain.viewmodel.TradeViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,14 +50,27 @@ class TradeFragment : Fragment() {
     ): View {
         fragmentTradeBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_trade, container, false)
-        tradeAddSelectDialog = TradeAddSelectDialog(findNavController(), inflater)
         fragmentTradeBinding.lifecycleOwner = viewLifecycleOwner
         fragmentTradeBinding.viewModel = tradeViewModel
+
+        setDialog(inflater)
         setAdapter()
         setBind()
         setViewModel()
 
         return fragmentTradeBinding.root
+    }
+
+    private fun setDialog(inflater: LayoutInflater) {
+        tradeAddSelectDialog = TradeAddSelectDialog(inflater)
+        tradeAddSelectDialog.setOnAddDepositClickListener {
+            findNavController()
+                .navigate(R.id.action_tradeFragment_to_transactionDepositFragment)
+        }
+        tradeAddSelectDialog.setOnAddSalesClickListener {
+            findNavController()
+                .navigate(R.id.action_tradeFragment_to_transactionSalesFragment)
+        }
     }
 
     private fun setAdapter() {
@@ -83,9 +96,9 @@ class TradeFragment : Fragment() {
             )
         }
 
-        viewHolderFactories[TransactionType.DEPOSIT.type] = depositHolderFactory
-        viewHolderFactories[TransactionType.SALES.type] = salesHolderFactory
-        viewHolderFactories[TransactionType.COUNT.type] = countHolderFactory
+        viewHolderFactories[TradeType.DEPOSIT.type] = depositHolderFactory
+        viewHolderFactories[TradeType.SALES.type] = salesHolderFactory
+        viewHolderFactories[TradeType.COUNT.type] = countHolderFactory
 
         tradeAdapter = TradeAdapter(viewHolderFactories, tradeAdapterDiffCallback)
     }
