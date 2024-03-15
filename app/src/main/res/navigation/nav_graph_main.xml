@@ -26,7 +26,7 @@
     </fragment>
     <fragment
         android:id="@+id/transactionByClientFragment"
-        android:name="com.hifi.redeal.transaction.view.TradeByClientFragment"
+        android:name="com.hifi.redeal.trade.view.TradeByClientFragment"
         android:label="TransactionByClientFragment" >
         <action
             android:id="@+id/action_transactionByClientFragment_to_transactionDepositFragment"
@@ -46,15 +46,15 @@
     </fragment>
     <fragment
         android:id="@+id/transactionDepositFragment"
-        android:name="com.hifi.redeal.transaction.view.TransactionDepositFragment"
+        android:name="com.hifi.redeal.trade.view.TransactionDepositFragment"
         android:label="TransactionDepositFragment" />
     <fragment
         android:id="@+id/transactionDepositModifyFragment"
-        android:name="com.hifi.redeal.transaction.view.TransactionDepositModifyFragment"
+        android:name="com.hifi.redeal.trade.view.TransactionDepositModifyFragment"
         android:label="TransactionDepositModifyFragment" />
     <fragment
         android:id="@+id/tradeFragment"
-        android:name="com.hifi.redeal.transaction.view.TradeFragment"
+        android:name="com.hifi.redeal.trade.ui.fragment.TradeFragment"
         android:label="TradeFragment">
         <action
             android:id="@+id/action_tradeFragment_to_transactionSalesFragment"
@@ -74,11 +74,11 @@
     </fragment>
     <fragment
         android:id="@+id/transactionSalesFragment"
-        android:name="com.hifi.redeal.transaction.view.TransactionSalesFragment"
+        android:name="com.hifi.redeal.trade.view.TransactionSalesFragment"
         android:label="TransactionSalesFragment" />
     <fragment
         android:id="@+id/transactionSalesModifyFragment"
-        android:name="com.hifi.redeal.transaction.view.TransactionSalesModifyFragment"
+        android:name="com.hifi.redeal.trade.view.TransactionSalesModifyFragment"
         android:label="TransactionSalesModifyFragment" />
     <fragment
         android:id="@+id/accountDetailFragment"
@@ -242,7 +242,7 @@
     </fragment>
     <fragment
         android:id="@+id/transactionsEditFragment"
-        android:name="com.hifi.redeal.transaction.view.TransactionsEditFragment"
+        android:name="com.hifi.redeal.trade.view.TransactionsEditFragment"
         android:label="fragment_transactions_edit"
         tools:layout="@layout/fragment_transactions_edit" />
     <fragment

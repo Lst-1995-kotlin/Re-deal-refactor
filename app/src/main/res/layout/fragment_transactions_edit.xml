@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     android:transitionGroup="true"
-    tools:context=".transaction.view.TransactionsEditFragment">
+    tools:context=".trade.view.TransactionsEditFragment">
 
     <LinearLayout
         android:id="@+id/appBarLayoutTransactionEdit"

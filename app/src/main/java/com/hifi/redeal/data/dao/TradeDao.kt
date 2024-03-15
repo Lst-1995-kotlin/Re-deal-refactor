@@ -1,13 +1,12 @@
 package com.hifi.redeal.data.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.hifi.redeal.data.entrie.TradeEntry
-import com.hifi.redeal.transaction.model.TradeData
+import com.hifi.redeal.trade.data.model.TradeData
 import kotlinx.coroutines.flow.Flow
 
 @Dao
