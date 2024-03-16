@@ -1,18 +1,15 @@
 package com.hifi.redeal.trade.view.dialog
 
 import android.view.LayoutInflater
-import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.navigation.NavController
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.DialogTransactionAddSelectBinding
-import com.hifi.redeal.trade.data.model.TradeData
 
 class TradeAddSelectDialog(
     private val layoutInflater: LayoutInflater
 ) {
 
-    private lateinit var addDepositClickEvent:  () -> Unit
+    private lateinit var addDepositClickEvent: () -> Unit
     private lateinit var addSalesClickEvent: () -> Unit
 
     fun setOnAddDepositClickEvent(event: () -> Unit) {
@@ -22,6 +19,7 @@ class TradeAddSelectDialog(
     fun setOnAddSalesClickEvent(event: () -> Unit) {
         addSalesClickEvent = event
     }
+
     fun dialogShow() {
         val context = layoutInflater.context
         val builder = AlertDialog.Builder(context, R.style.RoundedAlertDialog)
