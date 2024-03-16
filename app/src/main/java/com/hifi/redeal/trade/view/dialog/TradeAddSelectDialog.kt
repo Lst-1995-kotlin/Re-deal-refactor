@@ -12,15 +12,15 @@ class TradeAddSelectDialog(
     private val layoutInflater: LayoutInflater
 ) {
 
-    private lateinit var onAddDepositClickListener:  () -> Unit
-    private lateinit var onAddSalesClickListener: () -> Unit
+    private lateinit var addDepositClickEvent:  () -> Unit
+    private lateinit var addSalesClickEvent: () -> Unit
 
-    fun setOnAddDepositClickListener(listener: () -> Unit) {
-        onAddDepositClickListener = listener
+    fun setOnAddDepositClickEvent(event: () -> Unit) {
+        addDepositClickEvent = event
     }
 
-    fun setOnAddSalesClickListener(listener: () -> Unit) {
-        onAddSalesClickListener = listener
+    fun setOnAddSalesClickEvent(event: () -> Unit) {
+        addSalesClickEvent = event
     }
     fun dialogShow() {
         val context = layoutInflater.context
@@ -30,11 +30,11 @@ class TradeAddSelectDialog(
         val dialog = builder.show()
         view.run {
             ImgBtnAddDeposit.setOnClickListener {
-                onAddDepositClickListener()
+                addDepositClickEvent()
                 dialog.dismiss()
             }
             ImgBtnAddTransaction.setOnClickListener {
-                onAddSalesClickListener()
+                addSalesClickEvent()
                 dialog.dismiss()
             }
         }

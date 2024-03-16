@@ -63,11 +63,11 @@ class TradeFragment : Fragment() {
 
     private fun setDialog(inflater: LayoutInflater) {
         tradeAddSelectDialog = TradeAddSelectDialog(inflater)
-        tradeAddSelectDialog.setOnAddDepositClickListener {
+        tradeAddSelectDialog.setOnAddDepositClickEvent {
             findNavController()
                 .navigate(R.id.action_tradeFragment_to_transactionDepositFragment)
         }
-        tradeAddSelectDialog.setOnAddSalesClickListener {
+        tradeAddSelectDialog.setOnAddSalesClickEvent {
             findNavController()
                 .navigate(R.id.action_tradeFragment_to_transactionSalesFragment)
         }
