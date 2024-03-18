@@ -4,33 +4,30 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.hifi.redeal.MainActivity
-import com.hifi.redeal.databinding.FragmentTransactionDepositBinding
+import androidx.fragment.app.viewModels
+import com.hifi.redeal.R
+import com.hifi.redeal.databinding.FragmentTradeDepositBinding
+import com.hifi.redeal.trade.domain.viewmodel.TradeAddViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TransactionDepositFragment : Fragment() {
+class TradeDepositFragment : Fragment() {
 
-    private lateinit var mainActivity: MainActivity
-    private lateinit var fragmentTransactionDepositBinding: FragmentTransactionDepositBinding
-    //private val transactionClientViewModel: TransactionClientViewModel by activityViewModels()
-    //private val transactionViewModel: TransactionViewModel by activityViewModels()
+    private lateinit var fragmentTradeDepositBinding: FragmentTradeDepositBinding
+    private val tradeAddViewModel : TradeAddViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        fragmentTransactionDepositBinding = FragmentTransactionDepositBinding.inflate(inflater)
-        mainActivity = activity as MainActivity
+        fragmentTradeDepositBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_trade_deposit, container, false)
 //        setBind()
 //        setViewModel()
-        return fragmentTransactionDepositBinding.root
-    }
-    override fun onDestroyView() {
-        super.onDestroyView()
-        //transactionClientViewModel.setSelectClientIndex(null)
+        return fragmentTradeDepositBinding.root
     }
 
 //    private fun setBind() {

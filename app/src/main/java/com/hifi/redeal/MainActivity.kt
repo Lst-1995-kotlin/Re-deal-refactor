@@ -50,7 +50,7 @@ import com.hifi.redeal.schedule.view.UnvisitedScheduleFragment
 import com.hifi.redeal.schedule.view.VisitedScheduleFragment
 import com.hifi.redeal.trade.view_refactor_before.TradeByClientFragment
 import com.hifi.redeal.trade.ui.fragment.TradeFragment
-import com.hifi.redeal.trade.view_refactor_before.TransactionDepositFragment
+import com.hifi.redeal.trade.view_refactor_before.TradeDepositFragment
 import com.hifi.redeal.trade.view_refactor_before.TransactionDepositModifyFragment
 import com.hifi.redeal.trade.view_refactor_before.TransactionSalesFragment
 import com.hifi.redeal.trade.view_refactor_before.TransactionSalesModifyFragment
@@ -461,7 +461,7 @@ class MainActivity : AppCompatActivity() {
             MY_PAGE_FRAGMENT -> MyPageFragment()
             MY_PAGE_EDIT_NAME_FRAGMENT -> MyPageEditNameFragment()
             MY_PAGE_REQUEST_FRAGMENT -> MyPageRequestFragment()
-            TRANSACTION_DEPOSIT_FRAGMENT -> TransactionDepositFragment()
+            TRANSACTION_DEPOSIT_FRAGMENT -> TradeDepositFragment()
             TRANSACTION_SALES_FRAGMENT -> TransactionSalesFragment()
             TRANSACTION_DEPOSIT_MODIFY_FRAGMENT -> TransactionDepositModifyFragment()
             TRANSACTION_SALES_MODIFY_FRAGMENT -> TransactionSalesModifyFragment()
