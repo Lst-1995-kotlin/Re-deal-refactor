@@ -10,7 +10,7 @@ class TradeAddViewModel @Inject constructor(
     private val tradeRepository: TradeRepository
 ) : ViewModel() {
 
-    fun addTrade() {
+    fun addDepositTrade() {
 
     }
 }

@@ -5,7 +5,7 @@
 
     <data>
         <variable
-            name="viewModel"
+            name="tradeViewModel"
             type="com.hifi.redeal.trade.domain.viewmodel.TradeViewModel" />
     </data>
 
@@ -100,7 +100,7 @@
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:textColor="@color/text10"
                 android:textSize="16sp"
-                android:text="@{viewModel.salesTradeCount}"
+                android:text="@{tradeViewModel.salesTradeCount}"
                 app:layout_constraintEnd_toStartOf="@+id/textViewTran2"
                 app:layout_constraintStart_toEndOf="@+id/textViewTran1"
                 app:layout_constraintTop_toTopOf="@+id/textViewTran1" />
@@ -113,7 +113,7 @@
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:textColor="@color/text10"
                 android:textSize="16sp"
-                android:text="@{viewModel.salesTradeAmount}"
+                android:text="@{tradeViewModel.salesTradeAmount}"
                 app:layout_constraintEnd_toStartOf="@+id/textViewTran3"
                 app:layout_constraintTop_toTopOf="@+id/textViewTran2" />
 
@@ -125,7 +125,7 @@
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:textColor="@color/primary20"
                 android:textSize="16sp"
-                android:text="@{viewModel.tradeReceivables}"
+                android:text="@{tradeViewModel.tradeReceivables}"
                 app:layout_constraintEnd_toStartOf="@+id/textViewTran4"
                 app:layout_constraintTop_toTopOf="@+id/textViewTran5" />
 
