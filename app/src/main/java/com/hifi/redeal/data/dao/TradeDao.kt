@@ -20,6 +20,7 @@ interface TradeDao {
            trade.received_amount AS receivedAmount,
            trade.type AS type,
            trade.date AS date,
+           trade.checked AS checked,
            trade.client_id AS clientId,
            client.name AS clientName
     FROM trade 
@@ -38,6 +39,7 @@ interface TradeDao {
            trade.received_amount AS receivedAmount,
            trade.type AS type,
            trade.date AS date,
+           trade.checked AS checked,
            trade.client_id AS clientId,
            client.name AS clientName
     FROM trade 

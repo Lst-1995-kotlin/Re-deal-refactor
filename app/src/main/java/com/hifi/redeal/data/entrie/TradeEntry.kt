@@ -18,6 +18,7 @@ data class TradeEntry(
     val receivedAmount: Long, //  받은 금액
     @ColumnInfo val type: Boolean,
     @ColumnInfo val date: Date,
+    @ColumnInfo val checked: Boolean,
     @ColumnInfo(name = "client_id")
-    val clientId: Int,
+    val clientId: Int
 )

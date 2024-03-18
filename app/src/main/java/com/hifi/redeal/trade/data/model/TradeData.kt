@@ -12,6 +12,7 @@ data class TradeData(
     val receivedAmount: Long,
     val type: Boolean,
     val date: Date,
+    val checked: Boolean,
     val clientId: Int,
     val clientName: String
 )
@@ -25,6 +26,7 @@ fun TradeData.toTradeEntry(): TradeEntry {
         this.receivedAmount,
         this.type,
         this.date,
+        this.checked,
         this.clientId
     )
 }
