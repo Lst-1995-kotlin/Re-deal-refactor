@@ -1,4 +1,4 @@
-package com.hifi.redeal.trade.view.dialog
+package com.hifi.redeal.trade.view_refactor_before.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.hifi.redeal.databinding.DialogSelectTransactionClientBinding
-import com.hifi.redeal.trade.ui.adapter.ClientAdapterDiffCallback
 import com.hifi.redeal.trade.configuration.DialogConfiguration.Companion.dialogResize
+import com.hifi.redeal.trade.ui.adapter.ClientAdapterDiffCallback
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

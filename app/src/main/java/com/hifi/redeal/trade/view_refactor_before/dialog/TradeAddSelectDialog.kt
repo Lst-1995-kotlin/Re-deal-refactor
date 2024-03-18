@@ -1,4 +1,4 @@
-package com.hifi.redeal.trade.view.dialog
+package com.hifi.redeal.trade.view_refactor_before.dialog
 
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog

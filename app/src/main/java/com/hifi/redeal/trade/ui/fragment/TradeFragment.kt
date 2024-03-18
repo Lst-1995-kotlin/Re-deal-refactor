@@ -18,7 +18,7 @@ import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.CountHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.DepositHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.SalesHolderFactory
 import com.hifi.redeal.trade.configuration.TradeType
-import com.hifi.redeal.trade.view.dialog.TradeAddSelectDialog
+import com.hifi.redeal.trade.view_refactor_before.dialog.TradeAddSelectDialog
 import com.hifi.redeal.trade.domain.viewmodel.TradeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
