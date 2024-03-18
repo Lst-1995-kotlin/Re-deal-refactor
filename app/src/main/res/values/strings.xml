@@ -23,7 +23,12 @@
     <string name="add_record_add_file_button">새로 파일을 등록하거나 녹음 하실 수 있어요</string>
     <string name="add_record_save_dialog_title">녹음 파일 저장</string>
 
-    <!--    Transaction-->
+    <!--    Trade-->
     <string name="edit_menu">수정하기</string>
     <string name="delete_menu">삭제하기</string>
+    <string name="trade_history">거래 내역</string>
+    <string name="trade_sales">매출</string>
+    <string name="trade_unit">건</string>
+    <string name="amount_unit">원</string>
+    <string name="accounts_receivable">미수금</string>
 </resources>
