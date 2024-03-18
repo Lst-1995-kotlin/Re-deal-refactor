@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="tradeAddViewModel"
+            type="com.hifi.redeal.trade.domain.viewmodel.TradeAddViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        android:orientation="vertical"
+        android:transitionGroup="true">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/addDepositMaterialToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/arrow_back_ios_24px"
+            app:title="입금 내역 추가"
+            app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance" />
+
+        <View
+            android:id="@+id/transactionDepositDivider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/primary20"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addDepositMaterialToolbar" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/addDepositPriceInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
+            android:textColorHint="@color/text30"
+            app:boxBackgroundMode="none"
+            app:endIconMode="clear_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addDepositMaterialToolbar">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/addDepositPriceEditTextNumber"
+                style="@style/transaction_text_input_edit_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bottom_border_not_focus"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:hint="금액 입력"
+                android:inputType="number"
+                android:maxLength="19"
+                android:singleLine="true"
+                android:textAlignment="viewStart"
+                android:textColor="@color/text10"
+                android:textColorLink="@color/primary20"
+                android:textSize="20sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/selectDepositClientTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
+            android:textColorHint="@color/text30"
+            app:boxBackgroundMode="none"
+            app:endIconMode="clear_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addDepositPriceInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/selectDepositClientTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bottom_border_not_focus"
+                android:drawableEnd="@drawable/search_24px_primary20"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:hint="거래처 선택"
+                android:inputType="number"
+                android:paddingStart="0dp"
+                android:textColor="@color/text10"
+                android:textColorLink="@color/primary20"
+                android:textSize="20sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/addDepositBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/btn_round_primary20"
+            android:fontFamily="@font/nanumsquareneo_bold"
+            android:text="입금 내역 추가"
+            android:textColor="@color/primary99"
+            android:textSize="20sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
