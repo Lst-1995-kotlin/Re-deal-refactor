@@ -8,7 +8,7 @@ import com.hifi.redeal.R
 import com.hifi.redeal.databinding.DialogTransactionEditBinding
 import com.hifi.redeal.databinding.RowTransactionDepositBinding
 import com.hifi.redeal.trade.data.model.TradeData
-import com.hifi.redeal.trade.util.TransactionNumberFormatUtil.replaceNumberFormat
+import com.hifi.redeal.util.toNumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -27,7 +27,7 @@ class DepositHolder(
         rowTransactionDepositBinding.run {
             textTransactionDate.text = dateFormat.format(tradeData.date)
             transctionClientNameTextView.text = tradeData.clientName
-            depositPriceTextView.text = replaceNumberFormat(tradeData.receivedAmount)
+            depositPriceTextView.text = tradeData.receivedAmount.toNumberFormat()
             setLongClickEvent(root, tradeData)
         }
     }

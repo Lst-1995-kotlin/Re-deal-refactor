@@ -4,7 +4,7 @@
 
     <data>
         <variable
-            name="tradeAddViewModel"
+            name="viewModel"
             type="com.hifi.redeal.trade.domain.viewmodel.TradeAddViewModel" />
     </data>
 
@@ -113,7 +113,7 @@
             android:textColor="@color/primary99"
             android:textSize="20sp"
             android:visibility="gone"
-            android:onClick="@{() -> tradeAddViewModel.insertTrade()}"
+            android:onClick="@{() -> viewModel.insertTrade()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
