@@ -111,7 +111,7 @@ class TradeByClientFragment : Fragment() {
                 tradeAdapter.updateCount()
             }
             // 어댑터에 표시하는 거래내역들의 합계
-            val totalSalesCount = trades.count { !it.type } // 매출 건 수
+            val totalSalesCount = trades.count { it.type == TradeType.SALES.type } // 매출 건 수
             val totalSalesAmount = trades.sumOf { it.itemCount * it.itemPrice } // 총 판매 금액
             val totalReceivables =
                 totalSalesAmount - trades.sumOf { it.receivedAmount }// 발생 미수금

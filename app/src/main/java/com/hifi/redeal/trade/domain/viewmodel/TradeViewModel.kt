@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.data.model.TradeData
 import com.hifi.redeal.trade.data.repository.TradeRepository
 import com.hifi.redeal.trade.util.TransactionNumberFormatUtil.replaceNumberFormat
@@ -51,7 +52,7 @@ class TradeViewModel @Inject constructor(
     }
 
     private fun updateSalesTradeCount(trades: List<TradeData>) {
-        _salesTradeCount.postValue(replaceNumberFormat(trades.count { !it.type }))
+        _salesTradeCount.postValue(replaceNumberFormat(trades.count { it.type == TradeType.SALES.type }))
     }
 
     private fun updateSalesTradeAmount(trades: List<TradeData>) {

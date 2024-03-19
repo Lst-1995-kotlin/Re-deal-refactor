@@ -45,9 +45,9 @@ class TradeAdapter(
 
     override fun getItemViewType(position: Int): Int {
         if (position == itemCount - 1) return TradeType.COUNT.type
-        return when {
-            currentList[position].type -> TradeType.DEPOSIT.type
-            !currentList[position].type -> TradeType.SALES.type
+        return when (currentList[position].type) {
+            TradeType.DEPOSIT.type -> TradeType.DEPOSIT.type
+            TradeType.SALES.type -> TradeType.SALES.type
             else -> TradeType.ERROR.type
         }
     }

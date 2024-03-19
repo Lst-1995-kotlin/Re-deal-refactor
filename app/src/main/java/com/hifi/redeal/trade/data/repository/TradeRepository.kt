@@ -1,6 +1,7 @@
 package com.hifi.redeal.trade.data.repository
 
 import com.hifi.redeal.data.dao.TradeDao
+import com.hifi.redeal.data.entrie.TradeEntry
 import com.hifi.redeal.trade.data.model.TradeData
 import com.hifi.redeal.trade.data.model.toTradeEntry
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +19,10 @@ class TradeRepository @Inject constructor(
 
     suspend fun deleteTrade(tradeData: TradeData) {
         tradeDao.deleteTrade(tradeData.toTradeEntry())
+    }
+
+    suspend fun insertTrade(tradeEntry: TradeEntry) {
+        tradeDao.insertTrade(tradeEntry)
     }
 
 }

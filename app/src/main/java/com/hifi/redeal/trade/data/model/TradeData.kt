@@ -10,7 +10,7 @@ data class TradeData(
     val itemCount: Long,
     val itemPrice: Long,
     val receivedAmount: Long,
-    val type: Boolean,
+    val type: Int,
     val date: Date,
     val checked: Boolean,
     val clientId: Int,
