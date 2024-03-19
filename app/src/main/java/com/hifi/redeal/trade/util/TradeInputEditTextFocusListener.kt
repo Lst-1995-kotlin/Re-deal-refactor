@@ -2,6 +2,7 @@ package com.hifi.redeal.trade.util
 
 import android.view.View
 import com.hifi.redeal.trade.configuration.FocusBackgroundConfiguration
+import javax.inject.Inject
 
 class TradeInputEditTextFocusListener: View.OnFocusChangeListener {
     override fun onFocusChange(v: View, hasFocus: Boolean) {

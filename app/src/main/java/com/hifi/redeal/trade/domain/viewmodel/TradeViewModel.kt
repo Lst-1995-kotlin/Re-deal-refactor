@@ -9,10 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.data.model.TradeData
 import com.hifi.redeal.trade.data.repository.TradeRepository
-import com.hifi.redeal.trade.util.TransactionNumberFormatUtil.replaceNumberFormat
+import com.hifi.redeal.util.toNumberFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.count
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -52,22 +50,19 @@ class TradeViewModel @Inject constructor(
     }
 
     private fun updateSalesTradeCount(trades: List<TradeData>) {
-        _salesTradeCount.postValue(replaceNumberFormat(trades.count { it.type == TradeType.SALES.type }))
+        _salesTradeCount.postValue(trades.count { it.type == TradeType.SALES.type }
+            .toNumberFormat())
     }
 
     private fun updateSalesTradeAmount(trades: List<TradeData>) {
         _salesTradeAmount.postValue(
-            replaceNumberFormat(
-                trades.sumOf { it.itemCount * it.itemPrice }
-            )
+            trades.sumOf { it.itemCount * it.itemPrice }.toNumberFormat()
         )
     }
 
     private fun updateSalesTradeReceivables(trades: List<TradeData>) {
         _tradeReceivables.postValue(
-            replaceNumberFormat(
-                trades.sumOf { it.itemCount * it.itemPrice - it.receivedAmount }
-            )
+            trades.sumOf { it.itemCount * it.itemPrice - it.receivedAmount }.toNumberFormat()
         )
     }
 

@@ -9,6 +9,8 @@ import com.hifi.redeal.databinding.DialogTransactionEditBinding
 import com.hifi.redeal.databinding.RowTransactionSalesBinding
 import com.hifi.redeal.trade.data.model.TradeData
 import com.hifi.redeal.trade.util.TransactionNumberFormatUtil.replaceNumberFormat
+import com.hifi.redeal.util.toDateYearOfDayFormat
+import com.hifi.redeal.util.toNumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -24,15 +26,15 @@ class SalesHolder(
     }
     fun bind(tradeData: TradeData) {
         rowTransactionReleaseBinding.run {
-            textTransactionDate.text = dateFormat.format(tradeData.date)
+            textTransactionDate.text = tradeData.date.toDateYearOfDayFormat()
             transctionClientNameTextView.text = tradeData.clientName
             itemNameTextView.text = tradeData.itemName
-            itemSalesCountTextView.text = replaceNumberFormat(tradeData.itemCount)
-            itemPriceTextView.text = replaceNumberFormat(tradeData.itemPrice)
-            totalSalesAmountTextView.text = replaceNumberFormat(tradeData.itemCount * tradeData.itemPrice)
-            recievedAmountTextView.text = replaceNumberFormat(tradeData.receivedAmount)
+            itemSalesCountTextView.text = (tradeData.itemCount).toNumberFormat()
+            itemPriceTextView.text = (tradeData.itemPrice).toNumberFormat()
+            totalSalesAmountTextView.text = (tradeData.itemCount * tradeData.itemPrice).toNumberFormat()
+            recievedAmountTextView.text = (tradeData.receivedAmount).toNumberFormat()
             recievablesTextView.text =
-                replaceNumberFormat(tradeData.itemCount * tradeData.itemPrice - tradeData.receivedAmount)
+                (tradeData.itemCount * tradeData.itemPrice - tradeData.receivedAmount).toNumberFormat()
             if (tradeData.itemCount * tradeData.itemPrice - tradeData.receivedAmount == 0L) {
                 recievablesTextView.visibility = View.GONE
                 textTransaction23.visibility = View.GONE

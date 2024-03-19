@@ -51,7 +51,7 @@ class TradeFragment : Fragment() {
         fragmentTradeBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_trade, container, false)
         fragmentTradeBinding.lifecycleOwner = viewLifecycleOwner
-        fragmentTradeBinding.tradeViewModel = tradeViewModel
+        fragmentTradeBinding.viewModel = tradeViewModel
 
         setDialog(inflater)
         setAdapter()
