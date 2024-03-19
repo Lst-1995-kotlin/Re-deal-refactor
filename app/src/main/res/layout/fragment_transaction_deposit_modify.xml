@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
+        android:theme="@style/Theme.ReDeal.ToolbarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -48,7 +48,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/modifyDepositPriceEditTextNumber"
-            style="@style/transaction_text_input_edit_text_style"
+            style="@style/trade_text_input_edit_text_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bottom_border_not_focus"
