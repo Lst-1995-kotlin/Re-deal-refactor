@@ -26,9 +26,6 @@ class TradeDepositFragment : Fragment() {
     private lateinit var fragmentTradeDepositBinding: FragmentTradeDepositBinding
     private val tradeAddViewModel: TradeAddViewModel by viewModels()
 
-    @Inject
-    lateinit var amountTextWatcher: AmountTextWatcher
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -64,6 +61,7 @@ class TradeDepositFragment : Fragment() {
             }
 
             // 금액을 입력 하였을 경우
+            val amountTextWatcher = AmountTextWatcher()
             amountTextWatcher.setOnTextChangeListener {// 변경되고 나서
                 addDepositBtn.visibility =
                     if (it.isNullOrEmpty() ||
