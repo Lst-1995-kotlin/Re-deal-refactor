@@ -7,8 +7,8 @@ import android.widget.Button
 import com.google.android.material.textfield.TextInputEditText
 import com.hifi.redeal.trade.configuration.TradeAmountConfiguration.Companion.tradeAmountCheck
 import com.hifi.redeal.trade.domain.viewmodel.TradeByClientViewModel
-import com.hifi.redeal.trade.util.TransactionNumberFormatUtil.removeNumberFormat
-import com.hifi.redeal.trade.util.TransactionNumberFormatUtil.replaceNumberFormat
+import com.hifi.redeal.util.numberFormatToLong
+import com.hifi.redeal.util.toNumberFormat
 
 class AmountSalesTextWatcher(
     private val tradeByClientViewModel: TradeByClientViewModel,
@@ -31,16 +31,16 @@ class AmountSalesTextWatcher(
             textInputEditText.text = null
             textInputEditText.addTextChangedListener(this)
         } else if ("$p0".all { it.isDigit() || it == ',' }) {
-            var inputNumber = removeNumberFormat("$p0")
+            var inputNumber = "$p0".numberFormatToLong()
             while (!tradeAmountCheck(inputNumber)) {
                 inputNumber /= 10L
             }
-            val itemAmount = itemAmountView.text?.let { removeNumberFormat(it.toString()) } ?: 0L
-            val itemCount = itemCountView.text?.let { removeNumberFormat(it.toString()) } ?: 0L
+            val itemAmount = itemAmountView.text?.let { "$it".numberFormatToLong() } ?: 0L
+            val itemCount = itemCountView.text?.let { "$it".numberFormatToLong() } ?: 0L
             while (inputNumber > itemAmount * itemCount) {
                 inputNumber /= 10L
             }
-            val replaceNumber = replaceNumberFormat(inputNumber)
+            val replaceNumber = inputNumber.toNumberFormat()
 
             textInputEditText.removeTextChangedListener(this)
             textInputEditText.setText(replaceNumber)

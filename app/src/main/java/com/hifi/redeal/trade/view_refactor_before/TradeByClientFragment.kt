@@ -10,15 +10,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTradeByClientBinding
+import com.hifi.redeal.trade.configuration.TradeType
+import com.hifi.redeal.trade.domain.viewmodel.TradeByClientViewModel
 import com.hifi.redeal.trade.ui.adapter.TradeAdapter
 import com.hifi.redeal.trade.ui.adapter.TradeAdapterDiffCallback
 import com.hifi.redeal.trade.ui.adapter.viewHolder.ViewHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.CountHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.DepositHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.SalesHolderFactory
-import com.hifi.redeal.trade.configuration.TradeType
-import com.hifi.redeal.trade.util.TransactionNumberFormatUtil.replaceNumberFormat
-import com.hifi.redeal.trade.domain.viewmodel.TradeByClientViewModel
+import com.hifi.redeal.util.toNumberFormat
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -117,10 +117,10 @@ class TradeByClientFragment : Fragment() {
                 totalSalesAmount - trades.sumOf { it.receivedAmount }// 발생 미수금
 
             fragmentTradeByClientBinding.run {
-                textTotalSalesCountByClient.text = replaceNumberFormat(totalSalesCount)
-                textTotalSalesByClient.text = replaceNumberFormat(totalSalesAmount)
+                textTotalSalesCountByClient.text = totalSalesCount.toNumberFormat()
+                textTotalSalesByClient.text = totalSalesAmount.toNumberFormat()
                 textTotalReceivablesByClient.text =
-                    replaceNumberFormat(totalSalesAmount - totalReceivables)
+                    (totalSalesAmount - totalReceivables).toNumberFormat()
             }
         }
         tradeByClientViewModel.setClientId(arguments?.getInt("clientId"))

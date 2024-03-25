@@ -8,7 +8,6 @@ import com.hifi.redeal.R
 import com.hifi.redeal.databinding.DialogTransactionEditBinding
 import com.hifi.redeal.databinding.RowTransactionSalesBinding
 import com.hifi.redeal.trade.data.model.TradeData
-import com.hifi.redeal.trade.util.TransactionNumberFormatUtil.replaceNumberFormat
 import com.hifi.redeal.util.toDateYearOfDayFormat
 import com.hifi.redeal.util.toNumberFormat
 import java.text.SimpleDateFormat
@@ -24,6 +23,7 @@ class SalesHolder(
     private val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).apply {
         timeZone = TimeZone.getTimeZone("UTC")
     }
+
     fun bind(tradeData: TradeData) {
         rowTransactionReleaseBinding.run {
             textTransactionDate.text = tradeData.date.toDateYearOfDayFormat()
@@ -31,7 +31,8 @@ class SalesHolder(
             itemNameTextView.text = tradeData.itemName
             itemSalesCountTextView.text = (tradeData.itemCount).toNumberFormat()
             itemPriceTextView.text = (tradeData.itemPrice).toNumberFormat()
-            totalSalesAmountTextView.text = (tradeData.itemCount * tradeData.itemPrice).toNumberFormat()
+            totalSalesAmountTextView.text =
+                (tradeData.itemCount * tradeData.itemPrice).toNumberFormat()
             recievedAmountTextView.text = (tradeData.receivedAmount).toNumberFormat()
             recievablesTextView.text =
                 (tradeData.itemCount * tradeData.itemPrice - tradeData.receivedAmount).toNumberFormat()
