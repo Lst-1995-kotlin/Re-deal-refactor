@@ -42,12 +42,12 @@ class TradeDepositFragment : Fragment() {
     private fun setBind() {
         fragmentTradeDepositBinding.run {
             // 금액 입력 뷰 포커스 변경에 따른 백 그라운드 이미지 설정
-            addDepositPriceEditTextNumber.onFocusChangeListener =
+            addDepositAmountEditTextNumber.onFocusChangeListener =
                 TradeInputEditTextFocusListener()
 
             // 키보드 내려 갔을 경우 포커스 제거
-            addDepositPriceEditTextNumber.viewTreeObserver.addOnGlobalLayoutListener(
-                KeyboardFocusClearListener(addDepositPriceEditTextNumber)
+            addDepositAmountEditTextNumber.viewTreeObserver.addOnGlobalLayoutListener(
+                KeyboardFocusClearListener(addDepositAmountEditTextNumber)
             )
 
             selectDepositClientTextInputEditText.viewTreeObserver.addOnGlobalLayoutListener(
@@ -55,7 +55,7 @@ class TradeDepositFragment : Fragment() {
             )
 
             // 상단 툴바 내 백버튼 눌렀을 경우.
-            addDepositMaterialToolbar.setNavigationOnClickListener {
+            addDepositTradeMaterialToolbar.setNavigationOnClickListener {
                 findNavController().popBackStack()
             }
 
@@ -75,7 +75,7 @@ class TradeDepositFragment : Fragment() {
                         inputNumber /= 10L
                     }
                     val replaceNumber = inputNumber.toNumberFormat()
-                    addDepositPriceEditTextNumber.run {
+                    addDepositAmountEditTextNumber.run {
                         removeTextChangedListener(amountTextWatcher)
                         setText(replaceNumber)
                         setSelection(replaceNumber.length)
@@ -83,7 +83,7 @@ class TradeDepositFragment : Fragment() {
                     }
                 }
             }
-            addDepositPriceEditTextNumber.addTextChangedListener(amountTextWatcher)
+            addDepositAmountEditTextNumber.addTextChangedListener(amountTextWatcher)
 
             // 거래처 선택 뷰를 클릭 하였을 경우
 
