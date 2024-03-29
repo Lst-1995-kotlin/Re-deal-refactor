@@ -13,12 +13,11 @@ import com.hifi.redeal.databinding.FragmentTradeDepositBinding
 import com.hifi.redeal.trade.configuration.TradeAmountConfiguration.Companion.tradeAmountCheck
 import com.hifi.redeal.trade.domain.viewmodel.TradeAddViewModel
 import com.hifi.redeal.trade.util.AmountTextWatcher
-import com.hifi.redeal.util.KeyboardFocusClearListener
 import com.hifi.redeal.trade.util.TradeInputEditTextFocusListener
+import com.hifi.redeal.util.KeyboardFocusClearListener
 import com.hifi.redeal.util.numberFormatToLong
 import com.hifi.redeal.util.toNumberFormat
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class TradeDepositFragment : Fragment() {
