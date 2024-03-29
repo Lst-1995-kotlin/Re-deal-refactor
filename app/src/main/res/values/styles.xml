@@ -114,12 +114,17 @@
         <item name="textStartPadding">0dp</item>
     </style>
 
-    <style name="transaction_text_input_edit_text_style" parent="Widget.Material3.TextInputEditText.OutlinedBox">
+    <style name="trade_text_input_edit_text_style" parent="Widget.Material3.TextInputEditText.OutlinedBox">
         <item name="colorControlActivated">@color/primary20</item>
         <item name="android:paddingStart">0dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/nanumsquareneo_regular</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textColor">@color/text10</item>
+        <item name="android:textColorLink">@color/primary20</item>
     </style>
 
-    <style name="transaction_edit_delete_button_style">
+    <style name="trade_edit_delete_button_style">
         <item name="backgroundTint">@color/primary20</item>
         <item name="android:fontFamily">@font/nanumsquareneo_bold</item>
         <item name="android:layout_gravity">center</item>
@@ -127,7 +132,7 @@
         <item name="android:layout_margin">4dp</item>
     </style>
 
-    <style name="transaction_edit_cancel_button_style">
+    <style name="trade_edit_cancel_button_style">
         <item name="backgroundTint">@color/primary80</item>
         <item name="android:fontFamily">@font/nanumsquareneo_bold</item>
         <item name="android:textSize">16sp</item>

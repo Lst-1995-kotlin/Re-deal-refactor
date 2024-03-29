@@ -77,7 +77,7 @@
 
         <Button
             android:id="@+id/select_transaction_delete_button"
-            style="@style/transaction_edit_delete_button_style"
+            style="@style/trade_edit_delete_button_style"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -85,7 +85,7 @@
 
         <Button
             android:id="@+id/transaction_edit_cancel_button"
-            style="@style/transaction_edit_cancel_button_style"
+            style="@style/trade_edit_cancel_button_style"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

@@ -16,30 +16,32 @@
         android:transitionGroup="true">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/addDepositMaterialToolbar"
+            android:id="@+id/addDepositTradeMaterialToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
+            android:theme="@style/Theme.ReDeal.ToolbarTheme"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/arrow_back_ios_24px"
             app:title="입금 내역 추가"
+            app:navigationOnClickListener="@{() -> viewModel.callFragmentCloseEvent()}"
             app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance" />
 
         <View
-            android:id="@+id/transactionDepositDivider"
+            android:id="@+id/tradeDepositAddDivider"
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/primary20"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addDepositMaterialToolbar" />
+            app:layout_constraintTop_toBottomOf="@+id/addDepositTradeMaterialToolbar" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/addDepositPriceInputLayout"
+            android:id="@+id/addDepositAmountInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -51,11 +53,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addDepositMaterialToolbar">
+            app:layout_constraintTop_toBottomOf="@+id/addDepositTradeMaterialToolbar">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/addDepositPriceEditTextNumber"
-                style="@style/transaction_text_input_edit_text_style"
+                android:id="@+id/addDepositAmountEditTextNumber"
+                style="@style/trade_text_input_edit_text_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bottom_border_not_focus"
@@ -63,11 +65,7 @@
                 android:hint="금액 입력"
                 android:inputType="number"
                 android:maxLength="19"
-                android:singleLine="true"
-                android:textAlignment="viewStart"
-                android:textColor="@color/text10"
-                android:textColorLink="@color/primary20"
-                android:textSize="20sp" />
+                android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -83,7 +81,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addDepositPriceInputLayout">
+            app:layout_constraintTop_toBottomOf="@+id/addDepositAmountInputLayout">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/selectDepositClientTextInputEditText"
@@ -94,10 +92,7 @@
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:hint="거래처 선택"
                 android:inputType="number"
-                android:paddingStart="0dp"
-                android:textColor="@color/text10"
-                android:textColorLink="@color/primary20"
-                android:textSize="20sp" />
+                style="@style/trade_text_input_edit_text_style" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -109,11 +104,11 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/btn_round_primary20"
             android:fontFamily="@font/nanumsquareneo_bold"
+            android:onClick="@{() -> viewModel.insertTrade()}"
             android:text="입금 내역 추가"
             android:textColor="@color/primary99"
             android:textSize="20sp"
             android:visibility="gone"
-            android:onClick="@{() -> viewModel.insertTrade()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"

@@ -11,8 +11,10 @@
     <style name="Theme.ReDeal" parent="Base.Theme.ReDeal"/>
     <style name="Theme.ReDeal.ToolbarTheme" parent="ThemeOverlay.Material3.Light">
         <item name="android:fontFamily">@font/nanumsquareneo_extrabold</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textColorPrimary">@color/primary20</item>
         <item name="android:backgroundTint">@color/background</item>
+        <item name="titleTextAppearance">@style/TextAppearance.Material3.TitleLarge</item>
     </style>
 
     <style name="Theme.ReDeal.ClientSearchBarTheme" parent="Theme.ReDeal">
