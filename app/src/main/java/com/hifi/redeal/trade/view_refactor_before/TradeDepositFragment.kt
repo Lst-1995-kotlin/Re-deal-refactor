@@ -14,6 +14,8 @@ import com.hifi.redeal.trade.configuration.TradeAmountConfiguration.Companion.tr
 import com.hifi.redeal.trade.domain.viewmodel.TradeAddViewModel
 import com.hifi.redeal.trade.util.AmountTextWatcher
 import com.hifi.redeal.trade.util.TradeInputEditTextFocusListener
+import com.hifi.redeal.trade.util.TradeSelectClientEditTextFocusListener
+import com.hifi.redeal.trade.view_refactor_before.dialog.SelectTransactionClientDialog
 import com.hifi.redeal.util.KeyboardFocusClearListener
 import com.hifi.redeal.util.numberFormatToLong
 import com.hifi.redeal.util.toNumberFormat
@@ -86,7 +88,11 @@ class TradeDepositFragment : Fragment() {
             addDepositAmountEditTextNumber.addTextChangedListener(amountTextWatcher)
 
             // 거래처 선택 뷰를 클릭 하였을 경우
-
+            selectDepositClientTextInputEditText.onFocusChangeListener =
+                TradeSelectClientEditTextFocusListener(
+                    SelectTransactionClientDialog(),
+                    childFragmentManager
+                )
         }
     }
 

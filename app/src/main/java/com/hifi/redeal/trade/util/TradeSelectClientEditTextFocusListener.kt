@@ -4,7 +4,7 @@ import android.view.View
 import androidx.fragment.app.FragmentManager
 import com.hifi.redeal.trade.view_refactor_before.dialog.SelectTransactionClientDialog
 
-class TransactionSelectEditTextFocusListener(
+class TradeSelectClientEditTextFocusListener(
     private val selectTransactionClientDialog: SelectTransactionClientDialog,
     private val childFragmentManager: FragmentManager
 ) : View.OnFocusChangeListener {
