@@ -6,8 +6,6 @@ import androidx.room.TypeConverters
 import com.hifi.redeal.data.dao.ClientDao
 import com.hifi.redeal.data.dao.TradeDao
 import com.hifi.redeal.data.entrie.ClientEntry
-import com.hifi.redeal.data.entrie.Test2Entry
-import com.hifi.redeal.data.entrie.TestEntry
 import com.hifi.redeal.data.entrie.TradeEntry
 
 @Database(
