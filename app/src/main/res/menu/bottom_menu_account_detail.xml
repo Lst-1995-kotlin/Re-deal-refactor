@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/transactionFragment"
+        android:id="@+id/tradeFragment"
         android:icon="@drawable/work_history_24px_primary10"
         android:title="거래 내역"
         android:menuCategory="secondary"/>

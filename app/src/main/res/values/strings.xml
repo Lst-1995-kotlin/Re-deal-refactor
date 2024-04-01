@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">"리딜"</string>
+    <string name="loading">불러 오는 중</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <!--    Memo-->
     <string name="memo_toolbar_title">메모 전체 보기</string>
@@ -23,8 +24,16 @@
     <string name="add_record_add_file_button">새로 파일을 등록하거나 녹음 하실 수 있어요</string>
     <string name="add_record_save_dialog_title">녹음 파일 저장</string>
 
-    <!--    Transaction-->
-    <string name="edit_menu">수정하기</string>
-    <string name="delete_menu">삭제하기</string>
-      <string name="title_core">Module Title</string>
+    <!--    Trade-->
+    <string name="trade_edit">거래 내역 수정</string>
+    <string name="trade_delete">거래 내역 삭제</string>
+    <string name="trade_history">거래 내역</string>
+    <string name="trade_sales">매출</string>
+    <string name="trade_unit">건</string>
+    <string name="amount_unit">원</string>
+    <string name="accounts_receivable">미수금</string>
+    <string name="overdue_receivables">발생 미수금</string>
+    <string name="received_amount">받은 금액</string>
+    <string name="trade_total_sales_amount">총 판매 금액</string>
+    <string name="amount">금액</string>
 </resources>

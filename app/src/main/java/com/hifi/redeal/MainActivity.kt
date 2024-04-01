@@ -48,13 +48,13 @@ import com.hifi.redeal.schedule.view.ScheduleManageFragment
 import com.hifi.redeal.schedule.view.ScheduleSelectByClientFragment
 import com.hifi.redeal.schedule.view.UnvisitedScheduleFragment
 import com.hifi.redeal.schedule.view.VisitedScheduleFragment
-import com.hifi.redeal.transaction.view.TransactionByClientFragment
-import com.hifi.redeal.transaction.view.TransactionDepositFragment
-import com.hifi.redeal.transaction.view.TransactionDepositModifyFragment
-import com.hifi.redeal.transaction.view.TransactionFragment
-import com.hifi.redeal.transaction.view.TransactionSalesFragment
-import com.hifi.redeal.transaction.view.TransactionSalesModifyFragment
-import com.hifi.redeal.transaction.view.TransactionsEditFragment
+import com.hifi.redeal.trade.view_refactor_before.TradeByClientFragment
+import com.hifi.redeal.trade.ui.fragment.TradeFragment
+import com.hifi.redeal.trade.ui.fragment.TradeDepositFragment
+import com.hifi.redeal.trade.view_refactor_before.TransactionDepositModifyFragment
+import com.hifi.redeal.trade.view_refactor_before.TransactionSalesFragment
+import com.hifi.redeal.trade.view_refactor_before.TransactionSalesModifyFragment
+import com.hifi.redeal.trade.view_refactor_before.TransactionsEditFragment
 import com.skt.tmap.TMapTapi
 import com.skt.tmap.TMapTapi.OnAuthenticationListenerCallback
 import dagger.hilt.android.AndroidEntryPoint
@@ -89,6 +89,7 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.RECORD_AUDIO,
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
         Manifest.permission.CALL_PHONE,
+        Manifest.permission.ANSWER_PHONE_CALLS,
     )
     val NOTIFICATION_CHANNEL1_ID = "CHANNEL_REDEAL1"
     val NOTIFICATION_CHANNEL1_NAME = "리딜"
@@ -212,9 +213,9 @@ class MainActivity : AppCompatActivity() {
                         navController.navigate(R.id.mapFragment)
                     }
 
-                    R.id.transactionFragment -> {
-                        navController.popBackStack(R.id.transactionFragment, true)
-                        navController.navigate(R.id.transactionFragment)
+                    R.id.tradeFragment -> {
+                        navController.popBackStack(R.id.tradeFragment, true)
+                        navController.navigate(R.id.tradeFragment)
                     }
 
                     R.id.memoFragment -> {
@@ -236,7 +237,7 @@ class MainActivity : AppCompatActivity() {
                         fragment is ScheduleManageFragment ||
                         fragment is MapFragment ||
                         fragment is MemoFragment ||
-                        fragment is TransactionFragment
+                        fragment is TradeFragment
                     ) View.VISIBLE else View.GONE
 
                     when (fragment) {
@@ -270,10 +271,10 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
-                        is TransactionFragment -> {
+                        is TradeFragment -> {
                             activityMainBinding.bottomNavigationViewMain.run {
                                 menu.forEach {
-                                    if (it.itemId == R.id.transactionFragment) {
+                                    if (it.itemId == R.id.tradeFragment) {
                                         it.isChecked = true
                                     }
                                 }
@@ -455,16 +456,16 @@ class MainActivity : AppCompatActivity() {
             AUTH_FIND_PW_FRAGMENT -> AuthFindPwFragment()
             MAP_FRAGMENT -> MapFragment()
             MAP_SEARCH_REGION_FRAGMENT -> MapSearchRegionFragment()
-            TRANSACTION_FRAGMENT -> TransactionFragment()
+            TRANSACTION_FRAGMENT -> TradeFragment()
             NOTIFICATION_FRAGMENT -> NotificationFragment()
             MY_PAGE_FRAGMENT -> MyPageFragment()
             MY_PAGE_EDIT_NAME_FRAGMENT -> MyPageEditNameFragment()
             MY_PAGE_REQUEST_FRAGMENT -> MyPageRequestFragment()
-            TRANSACTION_DEPOSIT_FRAGMENT -> TransactionDepositFragment()
+            TRANSACTION_DEPOSIT_FRAGMENT -> TradeDepositFragment()
             TRANSACTION_SALES_FRAGMENT -> TransactionSalesFragment()
             TRANSACTION_DEPOSIT_MODIFY_FRAGMENT -> TransactionDepositModifyFragment()
             TRANSACTION_SALES_MODIFY_FRAGMENT -> TransactionSalesModifyFragment()
-            TRANSACTION_BY_CLIENT_FRAGMENT -> TransactionByClientFragment()
+            TRANSACTION_BY_CLIENT_FRAGMENT -> TradeByClientFragment()
             TRANSACTIONS_EDIT_FRAGMENT -> TransactionsEditFragment()
             else -> Fragment()
         }
