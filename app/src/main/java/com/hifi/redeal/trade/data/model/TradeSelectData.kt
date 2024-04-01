@@ -3,8 +3,7 @@ package com.hifi.redeal.trade.data.model
 import com.hifi.redeal.data.entrie.TradeEntry
 import java.util.Date
 
-
-data class TradeData(
+data class TradeSelectData(
     val id: Int,
     val itemName: String,
     val itemCount: Long,
@@ -12,11 +11,12 @@ data class TradeData(
     val receivedAmount: Long,
     val type: Int,
     val date: Date,
+    val checked: Boolean,
     val clientId: Int,
     val clientName: String
 )
 
-fun TradeData.toTradeEntry(): TradeEntry {
+fun TradeSelectData.toTradeEntry(): TradeEntry {
     return TradeEntry(
         this.id,
         this.itemName,
@@ -25,7 +25,7 @@ fun TradeData.toTradeEntry(): TradeEntry {
         this.receivedAmount,
         this.type,
         this.date,
-        false,
+        this.checked,
         this.clientId
     )
 }
