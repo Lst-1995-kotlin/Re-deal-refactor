@@ -20,12 +20,16 @@ import com.hifi.redeal.util.KeyboardFocusClearListener
 import com.hifi.redeal.util.numberFormatToLong
 import com.hifi.redeal.util.toNumberFormat
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TradeDepositFragment : Fragment() {
 
     private lateinit var fragmentTradeDepositBinding: FragmentTradeDepositBinding
     private val tradeAddViewModel: TradeAddViewModel by viewModels()
+
+    @Inject
+    lateinit var selectTransactionClientDialog: SelectTransactionClientDialog
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -90,9 +94,11 @@ class TradeDepositFragment : Fragment() {
             // 거래처 선택 뷰를 클릭 하였을 경우
             selectDepositClientTextInputEditText.onFocusChangeListener =
                 TradeSelectClientEditTextFocusListener(
-                    SelectTransactionClientDialog(),
+                    selectTransactionClientDialog,
                     childFragmentManager
                 )
+
+
         }
     }
 
