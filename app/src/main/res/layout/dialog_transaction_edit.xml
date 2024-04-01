@@ -16,7 +16,7 @@
         android:fontFamily="@font/nanumsquareneo_bold"
         android:gravity="center"
         android:padding="10dp"
-        android:text="거래 내역 수정"
+        android:text="@string/trade_edit"
         android:textColor="@color/primary10"
         android:textSize="16sp" />
 
@@ -35,7 +35,7 @@
         android:fontFamily="@font/nanumsquareneo_bold"
         android:gravity="center"
         android:padding="10dp"
-        android:text="거래 내역 삭제"
+        android:text="@string/trade_delete"
         android:textColor="@color/primary10"
         android:textSize="16sp" />
 </LinearLayout>

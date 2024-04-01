@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
@@ -16,14 +17,15 @@ import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentUnvisitedScheduleBinding
 import com.hifi.redeal.schedule.schedule_repository.ScheduleRepository
 import com.hifi.redeal.schedule.vm.ScheduleVM
+import dagger.hilt.android.AndroidEntryPoint
 import java.sql.Date
 import java.util.Calendar
-
+@AndroidEntryPoint
 class UnvisitedScheduleFragment : Fragment() {
 
     lateinit var fragmentUnvisitedScheduleBinding: FragmentUnvisitedScheduleBinding
     lateinit var mainActivity: MainActivity
-    lateinit var scheduleVM: ScheduleVM
+    private val scheduleVM: ScheduleVM by activityViewModels()
     private val uid = Firebase.auth.uid!!
     var scheduleIdx = 0L
     override fun onCreateView(
@@ -40,7 +42,6 @@ class UnvisitedScheduleFragment : Fragment() {
     }
 
     private fun setViewModel(){
-        scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
 
         scheduleVM.run{
 

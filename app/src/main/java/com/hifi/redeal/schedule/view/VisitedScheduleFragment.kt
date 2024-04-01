@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
@@ -19,15 +20,16 @@ import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentVisitedScheduleBinding
 import com.hifi.redeal.schedule.schedule_repository.ScheduleRepository
 import com.hifi.redeal.schedule.vm.ScheduleVM
+import dagger.hilt.android.AndroidEntryPoint
 import java.sql.Date
 import java.util.Calendar
 
-
+@AndroidEntryPoint
 class VisitedScheduleFragment : Fragment() {
 
     lateinit var fragmentVisitedScheduleBinding: FragmentVisitedScheduleBinding
     lateinit var mainActivity: MainActivity
-    lateinit var scheduleVM: ScheduleVM
+    private val scheduleVM: ScheduleVM by activityViewModels()
     private val uid = Firebase.auth.uid!!
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,8 +51,6 @@ class VisitedScheduleFragment : Fragment() {
     }
 
     private fun setViewModel(){
-
-        scheduleVM = ViewModelProvider(requireActivity())[ScheduleVM::class.java]
 
         scheduleVM.run{
 

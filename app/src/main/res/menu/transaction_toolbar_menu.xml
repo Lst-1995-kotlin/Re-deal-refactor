@@ -5,7 +5,7 @@
         android:id="@+id/transactionsEditMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:icon="@drawable/edit_24px"
+        android:icon="@drawable/delete_24px_primary20"
         android:title="거래내역 편집"
         app:showAsAction="always" />
 </menu>
