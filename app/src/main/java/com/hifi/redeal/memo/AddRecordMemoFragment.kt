@@ -20,7 +20,7 @@ import javax.inject.Inject
 class AddRecordMemoFragment : Fragment() {
     @Inject
     lateinit var recordMemoRepository: RecordMemoRepository
-
+    // lateinit var db:AppDatabase
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,7 +32,10 @@ class AddRecordMemoFragment : Fragment() {
         ).apply {
             val clientIdx = arguments?.getLong("clientIdx")!!
             val mainActivity = activity as MainActivity
-
+//            db = Room.databaseBuilder(
+//                mainActivity,
+//                AppDatabase::class.java, "app-database"
+//            ).build()
             setViewCompositionStrategy(
                 ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
             )
@@ -47,4 +50,8 @@ class AddRecordMemoFragment : Fragment() {
             }
         }
     }
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        db.close()
+//    }
 }

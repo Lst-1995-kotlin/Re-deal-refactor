@@ -2,17 +2,13 @@ package com.hifi.redeal.memo.vm
 
 import android.content.Context
 import android.net.Uri
-import android.os.Environment
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.hifi.redeal.memo.model.RecordMemoData
 import com.hifi.redeal.memo.repository.RecordMemoRepository
-import com.hifi.redeal.memo.utils.getUriForFile
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,7 +16,9 @@ class RecordMemoViewModel @Inject constructor(
     private val recordMemoRepository: RecordMemoRepository
 ) : ViewModel() {
     val recordMemoList: LiveData<List<RecordMemoData>> get() = _recordMemoList
+    // val recordMemoListTest: LiveData<List<RecordMemoDataTest>> get() = _recordMemoListTest
     private val _recordMemoList = MutableLiveData<List<RecordMemoData>>()
+    // private val _recordMemoListTest = MutableLiveData<List<RecordMemoDataTest>>()
     fun getRecordMemoList(clientIdx: Long, mainContext: Context) {
         recordMemoRepository.getRecordMemoAll(clientIdx) { documentSnapshot ->
             val recordMemoData = mutableListOf<RecordMemoData>()
@@ -42,4 +40,8 @@ class RecordMemoViewModel @Inject constructor(
             _recordMemoList.value = recordMemoData.sortedByDescending { it.date }
         }
     }
+
+//    fun getRecordMemoListTest(clientIdx:Long, db:AppDatabase){
+//        _recordMemoListTest.value = db.recordMemoDao().getAll().sortedByDescending { it.date }
+//    }
 }

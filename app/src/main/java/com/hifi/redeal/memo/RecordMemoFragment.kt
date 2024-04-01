@@ -20,6 +20,7 @@ import javax.inject.Inject
 class RecordMemoFragment : Fragment() {
     @Inject
     lateinit var recordMemoRepository: RecordMemoRepository
+    //private lateinit var db : AppDatabase
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,10 +31,15 @@ class RecordMemoFragment : Fragment() {
             val recordMemoViewModel: RecordMemoViewModel by viewModels()
             val mainActivity = activity as MainActivity
             val clientIdx = arguments?.getLong("clientIdx") ?: 1L
+//            db = Room.databaseBuilder(
+//                mainActivity,
+//                AppDatabase::class.java, "app-database"
+//            ).build()
             recordMemoViewModel.getRecordMemoList(clientIdx, mainActivity)
             setViewCompositionStrategy(
                 ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
             )
+
             setContent {
                 RedealTheme {
                     RecordMemoScreen(
@@ -45,4 +51,8 @@ class RecordMemoFragment : Fragment() {
             }
         }
     }
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        db.close()
+//    }
 }
