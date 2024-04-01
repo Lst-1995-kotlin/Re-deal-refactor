@@ -1,4 +1,4 @@
-package com.hifi.redeal.trade.view_refactor_before
+package com.hifi.redeal.trade.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
