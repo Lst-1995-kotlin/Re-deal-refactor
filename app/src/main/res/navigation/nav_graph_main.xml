@@ -26,7 +26,7 @@
     </fragment>
     <fragment
         android:id="@+id/transactionByClientFragment"
-        android:name="com.hifi.redeal.transaction.view.TransactionByClientFragment"
+        android:name="com.hifi.redeal.trade.view_refactor_before.TradeByClientFragment"
         android:label="TransactionByClientFragment" >
         <action
             android:id="@+id/action_transactionByClientFragment_to_transactionDepositFragment"
@@ -46,39 +46,39 @@
     </fragment>
     <fragment
         android:id="@+id/transactionDepositFragment"
-        android:name="com.hifi.redeal.transaction.view.TransactionDepositFragment"
+        android:name="com.hifi.redeal.trade.ui.fragment.TradeDepositFragment"
         android:label="TransactionDepositFragment" />
     <fragment
         android:id="@+id/transactionDepositModifyFragment"
-        android:name="com.hifi.redeal.transaction.view.TransactionDepositModifyFragment"
+        android:name="com.hifi.redeal.trade.view_refactor_before.TransactionDepositModifyFragment"
         android:label="TransactionDepositModifyFragment" />
     <fragment
-        android:id="@+id/transactionFragment"
-        android:name="com.hifi.redeal.transaction.view.TransactionFragment"
-        android:label="TransactionFragment" >
+        android:id="@+id/tradeFragment"
+        android:name="com.hifi.redeal.trade.ui.fragment.TradeFragment"
+        android:label="TradeFragment">
         <action
-            android:id="@+id/action_transactionFragment_to_transactionSalesFragment"
+            android:id="@+id/action_tradeFragment_to_transactionSalesFragment"
             app:destination="@id/transactionSalesFragment" />
         <action
-            android:id="@+id/action_transactionFragment_to_transactionSalesModifyFragment"
+            android:id="@+id/action_tradeFragment_to_transactionSalesModifyFragment"
             app:destination="@id/transactionSalesModifyFragment" />
         <action
-            android:id="@+id/action_transactionFragment_to_transactionDepositFragment"
+            android:id="@+id/action_tradeFragment_to_transactionDepositFragment"
             app:destination="@id/transactionDepositFragment" />
         <action
-            android:id="@+id/action_transactionFragment_to_transactionDepositModifyFragment"
+            android:id="@+id/action_tradeFragment_to_transactionDepositModifyFragment"
             app:destination="@id/transactionDepositModifyFragment" />
         <action
-            android:id="@+id/action_transactionFragment_to_transactionsEditFragment"
+            android:id="@+id/action_tradeFragment_to_transactionsEditFragment"
             app:destination="@id/transactionsEditFragment" />
     </fragment>
     <fragment
         android:id="@+id/transactionSalesFragment"
-        android:name="com.hifi.redeal.transaction.view.TransactionSalesFragment"
+        android:name="com.hifi.redeal.trade.view_refactor_before.TransactionSalesFragment"
         android:label="TransactionSalesFragment" />
     <fragment
         android:id="@+id/transactionSalesModifyFragment"
-        android:name="com.hifi.redeal.transaction.view.TransactionSalesModifyFragment"
+        android:name="com.hifi.redeal.trade.view_refactor_before.TransactionSalesModifyFragment"
         android:label="TransactionSalesModifyFragment" />
     <fragment
         android:id="@+id/accountDetailFragment"
@@ -121,9 +121,6 @@
         <action
             android:id="@+id/action_accountListFragment_to_myPageFragment"
             app:destination="@id/myPageFragment" />
-        <action
-            android:id="@+id/action_accountListFragment_to_transactionFragment"
-            app:destination="@id/transactionFragment" />
     </fragment>
     <fragment
         android:id="@+id/addPhotoMemoFragment"
@@ -245,7 +242,7 @@
     </fragment>
     <fragment
         android:id="@+id/transactionsEditFragment"
-        android:name="com.hifi.redeal.transaction.view.TransactionsEditFragment"
+        android:name="com.hifi.redeal.trade.view_refactor_before.TransactionsEditFragment"
         android:label="fragment_transactions_edit"
         tools:layout="@layout/fragment_transactions_edit" />
     <fragment

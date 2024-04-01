@@ -3,6 +3,7 @@ package com.hifi.redeal.data.entrie
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.sql.Timestamp
 
 @Entity("test")
 data class TestEntry(

@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
@@ -20,7 +21,6 @@ import com.hifi.redeal.account.repository.model.Coordinate
 import com.hifi.redeal.databinding.DialogAccountShareBinding
 import com.hifi.redeal.databinding.FragmentAccountDetailBinding
 import com.kakao.vectormap.KakaoMap
-import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.mapwidget.InfoWindowOptions
@@ -28,9 +28,12 @@ import com.kakao.vectormap.mapwidget.component.GuiImage
 import com.kakao.vectormap.mapwidget.component.GuiLayout
 import com.kakao.vectormap.mapwidget.component.GuiText
 import com.kakao.vectormap.mapwidget.component.Orientation
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class AccountDetailFragment : Fragment() {
 
     lateinit var mainActivity: MainActivity
@@ -50,8 +53,8 @@ class AccountDetailFragment : Fragment() {
         fragmentAccountDetailBinding = FragmentAccountDetailBinding.inflate(layoutInflater)
 
         mainActivity.activityMainBinding.bottomNavigationViewMain.visibility = View.GONE
-      
-        if(arguments?.getLong("notifyClientIdx") != null){
+
+        if (arguments?.getLong("notifyClientIdx") != null) {
             clientIdx = arguments?.getLong("notifyClientIdx")!!
             mainActivity.activityMainBinding.bottomNavigationViewMain.isVisible = false
         }
@@ -82,14 +85,19 @@ class AccountDetailFragment : Fragment() {
         fragmentAccountDetailBinding.run {
             bottomNavigationViewAccountDetail.setOnItemSelectedListener {
                 when (it.itemId) {
-                    R.id.transactionFragment -> {
+                    R.id.tradeFragment -> {
+//                        mainActivity.replaceFragment(
+//                            MainActivity.TRANSACTION_BY_CLIENT_FRAGMENT,
+//                            true,
+//
+//                        )
                         val bundle = Bundle()
-                        bundle.putLong("clientIdx", clientIdx)
-                        mainActivity.replaceFragment(
-                            MainActivity.TRANSACTION_BY_CLIENT_FRAGMENT,
-                            true,
+                        bundle.putInt("clientId", 2)
+                        findNavController().navigate(
+                            R.id.action_accountDetailFragment_to_transactionByClientFragment,
                             bundle
                         )
+
                     }
 
                     R.id.recordMemoFragment -> {
@@ -101,6 +109,7 @@ class AccountDetailFragment : Fragment() {
                             bundle
                         )
                     }
+
                     R.id.photoMemoFragment -> {
                         val bundle = Bundle()
                         bundle.putLong("clientIdx", clientIdx)
@@ -150,15 +159,24 @@ class AccountDetailFragment : Fragment() {
                     .setMessage("티맵 길 안내를 시작하시겠습니까?")
                     .setPositiveButton("확인") { _, _ ->
                         if (mainActivity.tMapTapi.isTmapApplicationInstalled) {
-                            mainActivity.tMapTapi.invokeRoute(clientName, coordinate.newLon.toFloat(), coordinate.newLat.toFloat())
+                            mainActivity.tMapTapi.invokeRoute(
+                                clientName,
+                                coordinate.newLon.toFloat(),
+                                coordinate.newLat.toFloat()
+                            )
                         } else {
-                            Snackbar.make(fragmentAccountDetailBinding.root, "티맵 앱 설치 후 다시 시도해주세요", Snackbar.LENGTH_SHORT)
+                            Snackbar.make(
+                                fragmentAccountDetailBinding.root,
+                                "티맵 앱 설치 후 다시 시도해주세요",
+                                Snackbar.LENGTH_SHORT
+                            )
                                 .setAction("설치하기") {
                                     val intent = Intent(Intent.ACTION_VIEW)
                                     intent.data = Uri.parse("market://details?id=com.skt.tmap.ku")
                                     startActivity(intent)
                                 }.apply {
-                                    anchorView = mainActivity.activityMainBinding.bottomNavigationViewMain
+                                    anchorView =
+                                        mainActivity.activityMainBinding.bottomNavigationViewMain
                                 }
                                 .show()
                         }
@@ -182,7 +200,8 @@ class AccountDetailFragment : Fragment() {
                 setOnMenuItemClickListener {
                     when (it.itemId) {
                         R.id.accountDetailMenuItemShare -> {
-                            val dialogAccountShareBinding = DialogAccountShareBinding.inflate(layoutInflater)
+                            val dialogAccountShareBinding =
+                                DialogAccountShareBinding.inflate(layoutInflater)
 
                             AlertDialog.Builder(mainActivity)
                                 .setTitle("거래처 공유")
@@ -194,15 +213,25 @@ class AccountDetailFragment : Fragment() {
                                         dialogAccountShareBinding.editTextDialogAccountShareEmail.text.toString()
                                     ) { isSuccessful ->
                                         if (isSuccessful) {
-                                            Snackbar.make(fragmentAccountDetailBinding.root, "거래처 정보가 공유되었습니다", Snackbar.LENGTH_SHORT)
+                                            Snackbar.make(
+                                                fragmentAccountDetailBinding.root,
+                                                "거래처 정보가 공유되었습니다",
+                                                Snackbar.LENGTH_SHORT
+                                            )
                                                 .apply {
-                                                    anchorView = fragmentAccountDetailBinding.bottomNavigationViewAccountDetail
+                                                    anchorView =
+                                                        fragmentAccountDetailBinding.bottomNavigationViewAccountDetail
                                                 }
                                                 .show()
                                         } else {
-                                            Snackbar.make(fragmentAccountDetailBinding.root, "거래처 정보 공유에 실패했습니다", Snackbar.LENGTH_SHORT)
+                                            Snackbar.make(
+                                                fragmentAccountDetailBinding.root,
+                                                "거래처 정보 공유에 실패했습니다",
+                                                Snackbar.LENGTH_SHORT
+                                            )
                                                 .apply {
-                                                    anchorView = fragmentAccountDetailBinding.bottomNavigationViewAccountDetail
+                                                    anchorView =
+                                                        fragmentAccountDetailBinding.bottomNavigationViewAccountDetail
                                                 }
                                                 .show()
                                         }
@@ -211,21 +240,32 @@ class AccountDetailFragment : Fragment() {
                                 .setNegativeButton("취소", null)
                                 .show()
                         }
+
                         R.id.accountDetailMenuItemEdit -> {
                             val bundle = Bundle()
                             bundle.putLong("clientIdx", clientIdx)
-                            mainActivity.replaceFragment(MainActivity.ACCOUNT_EDIT_FRAGMENT, true, bundle)
+                            mainActivity.replaceFragment(
+                                MainActivity.ACCOUNT_EDIT_FRAGMENT,
+                                true,
+                                bundle
+                            )
 //                            mainActivity.navigateTo(R.id.accountEditFragment, bundle)
                         }
+
                         R.id.accountDetailMenuItemDelete -> {
                             AlertDialog.Builder(mainActivity)
                                 .setTitle("거래처 삭제")
                                 .setMessage("거래처 정보를 삭제하시겠습니까?")
                                 .setPositiveButton("확인") { _, _ ->
-                                    accountDetailRepository.deleteClient(mainActivity.uid, clientIdx) {
-                                        Snackbar.make(root, "거래처가 삭제되었습니다", Snackbar.LENGTH_SHORT).apply {
-                                            anchorView = mainActivity.activityMainBinding.bottomNavigationViewMain
-                                        }.show()
+                                    accountDetailRepository.deleteClient(
+                                        mainActivity.uid,
+                                        clientIdx
+                                    ) {
+                                        Snackbar.make(root, "거래처가 삭제되었습니다", Snackbar.LENGTH_SHORT)
+                                            .apply {
+                                                anchorView =
+                                                    mainActivity.activityMainBinding.bottomNavigationViewMain
+                                            }.show()
                                         mainActivity.removeFragment(MainActivity.ACCOUNT_DETAIL_FRAGMENT)
 //                                        findNavController().popBackStack()
                                     }
@@ -323,14 +363,16 @@ class AccountDetailFragment : Fragment() {
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                 val contactTime = dateFormat.format(client.recentContactDate!!.toDate())
 
-                textViewAccountDetailRecentContact.text = "${mainActivity.intervalBetweenDateText(contactTime)}"
+                textViewAccountDetailRecentContact.text =
+                    "${mainActivity.intervalBetweenDateText(contactTime)}"
             }
 
             if (client.recentVisitDate != null) {
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                 val visitTime = dateFormat.format(client.recentVisitDate!!.toDate())
 
-                textViewAccountDetailRecentVisit.text = "${mainActivity.intervalBetweenDateText(visitTime)}"
+                textViewAccountDetailRecentVisit.text =
+                    "${mainActivity.intervalBetweenDateText(visitTime)}"
             }
 
             if (client.isBookmark == true) {
@@ -347,7 +389,11 @@ class AccountDetailFragment : Fragment() {
                     imageViewAccountDetailFavorite.setImageResource(R.drawable.star_fill_24px)
                     client.isBookmark = true
                 }
-                accountDetailRepository.updateBookmark(mainActivity.uid, clientIdx, client.isBookmark ?: false)
+                accountDetailRepository.updateBookmark(
+                    mainActivity.uid,
+                    clientIdx,
+                    client.isBookmark ?: false
+                )
             }
 
             var ceoPhoneNumber = PhoneNumberUtils.formatNumber(client.clientCeoPhone, "KR")
@@ -364,7 +410,7 @@ class AccountDetailFragment : Fragment() {
 
             textViewAccountDetailShortDescription.text = client.clientExplain
             textViewAccountDetailGeneralNumber.append(ceoPhoneNumber)
-            if(faxNumber != null) {
+            if (faxNumber != null) {
                 textViewAccountDetailFaxNumber.append(faxNumber)
             }
             textViewAccountDetailAddress.text = "${client.clientAddress} ${client.clientDetailAdd}"

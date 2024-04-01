@@ -9,17 +9,15 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
-import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.google.android.material.chip.Chip
 import com.google.android.material.search.SearchView
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.account.adapter.AccountListAdapter
@@ -91,8 +89,12 @@ class AccountListFragment : Fragment() {
                 }
 
                 frameLayoutAccountListNotification.foreground = badgeDrawable
-                frameLayoutAccountListNotification.addOnLayoutChangeListener {v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-                    BadgeUtils.attachBadgeDrawable(badgeDrawable, buttonAccountListNotification, frameLayoutAccountListNotification)
+                frameLayoutAccountListNotification.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+                    BadgeUtils.attachBadgeDrawable(
+                        badgeDrawable,
+                        buttonAccountListNotification,
+                        frameLayoutAccountListNotification
+                    )
                 }
             }
 
@@ -100,7 +102,8 @@ class AccountListFragment : Fragment() {
                 mainActivity.replaceFragment(MainActivity.NOTIFICATION_FRAGMENT, true)
             }
 
-            val accountListAdapter = AccountListAdapter(mainActivity, accountListViewModel)
+            val accountListAdapter =
+                AccountListAdapter(mainActivity, accountListViewModel, findNavController())
             val searchResultAdapter = SearchResultAdapter(mainActivity, accountListViewModel)
 
             searchViewAccountList.editText.setOnEditorActionListener { v, actionId, event ->
@@ -138,16 +141,20 @@ class AccountListFragment : Fragment() {
 
                 for (i in 0..3) {
                     val tab = newTab()
-                    val tabItemBinding = TabItemLayoutAccountListStateBinding.inflate(layoutInflater)
-                    tabItemBinding.imageViewTabItemAccountListCriterion.setImageResource(tabItemStateInfoList[0][i] as Int)
-                    tabItemBinding.textViewTabItemAccountListCriterion.text = tabItemStateInfoList[1][i] as String
+                    val tabItemBinding =
+                        TabItemLayoutAccountListStateBinding.inflate(layoutInflater)
+                    tabItemBinding.imageViewTabItemAccountListCriterion.setImageResource(
+                        tabItemStateInfoList[0][i] as Int
+                    )
+                    tabItemBinding.textViewTabItemAccountListCriterion.text =
+                        tabItemStateInfoList[1][i] as String
                     tabItemTextViewListState.add(tabItemBinding.textViewTabItemAccountListCount)
                     tab.setCustomView(tabItemBinding.root)
                     tabItemListState.add(tab)
                     addTab(tab)
                 }
 
-                addOnTabSelectedListener(object : OnTabSelectedListener{
+                addOnTabSelectedListener(object : OnTabSelectedListener {
                     override fun onTabSelected(tab: Tab?) {
                         accountListViewModel.setSelectedTabItemPosState(tab?.position ?: -1)
                     }
@@ -245,7 +252,12 @@ class AccountListFragment : Fragment() {
             recyclerViewAccountList.run {
                 adapter = accountListAdapter
                 layoutManager = LinearLayoutManager(mainActivity)
-                addItemDecoration(DividerItemDecoration(mainActivity, DividerItemDecoration.VERTICAL))
+                addItemDecoration(
+                    DividerItemDecoration(
+                        mainActivity,
+                        DividerItemDecoration.VERTICAL
+                    )
+                )
             }
 
             accountListViewModel.clientList.observe(viewLifecycleOwner) {
@@ -260,7 +272,12 @@ class AccountListFragment : Fragment() {
             recyclerViewAccountListSearchResult.run {
                 adapter = searchResultAdapter
                 layoutManager = LinearLayoutManager(mainActivity)
-                addItemDecoration(DividerItemDecoration(mainActivity, DividerItemDecoration.VERTICAL))
+                addItemDecoration(
+                    DividerItemDecoration(
+                        mainActivity,
+                        DividerItemDecoration.VERTICAL
+                    )
+                )
             }
 
             accountListViewModel.searchResultList.observe(viewLifecycleOwner) {
@@ -293,7 +310,8 @@ class AccountListFragment : Fragment() {
         } else {
             tabItemChipListSort[tabIdx].setCloseIconResource(R.drawable.arrow_drop_down_24px)
         }
-        accountListViewModel.tabItemDescListSort[tabIdx] = !accountListViewModel.tabItemDescListSort[tabIdx]
+        accountListViewModel.tabItemDescListSort[tabIdx] =
+            !accountListViewModel.tabItemDescListSort[tabIdx]
     }
 
     fun selectTabSort(tabIdx: Int) {
