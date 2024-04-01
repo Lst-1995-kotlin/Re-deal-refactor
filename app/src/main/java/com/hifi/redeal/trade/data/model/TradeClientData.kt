@@ -1,6 +1,6 @@
 package com.hifi.redeal.trade.data.model
 
-data class ClientData(
+data class TradeClientData(
     val id: Int,
     val name: String,
     val managerName: String,
