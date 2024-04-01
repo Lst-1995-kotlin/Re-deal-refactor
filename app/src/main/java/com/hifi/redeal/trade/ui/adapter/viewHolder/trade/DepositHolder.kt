@@ -8,6 +8,7 @@ import com.hifi.redeal.R
 import com.hifi.redeal.databinding.DialogTransactionEditBinding
 import com.hifi.redeal.databinding.RowTransactionDepositBinding
 import com.hifi.redeal.trade.data.model.TradeData
+import com.hifi.redeal.util.toDateYearOfDayFormat
 import com.hifi.redeal.util.toNumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -19,13 +20,9 @@ class DepositHolder(
     private val onEditClickListener: (TradeData) -> Unit
 ) : RecyclerView.ViewHolder(rowTransactionDepositBinding.root) {
 
-    private val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).apply {
-        timeZone = TimeZone.getTimeZone("UTC")
-    }
-
     fun bind(tradeData: TradeData) {
         rowTransactionDepositBinding.run {
-            textTransactionDate.text = dateFormat.format(tradeData.date)
+            textTransactionDate.text = tradeData.date.toDateYearOfDayFormat()
             transctionClientNameTextView.text = tradeData.clientName
             depositPriceTextView.text = tradeData.receivedAmount.toNumberFormat()
             setLongClickEvent(root, tradeData)

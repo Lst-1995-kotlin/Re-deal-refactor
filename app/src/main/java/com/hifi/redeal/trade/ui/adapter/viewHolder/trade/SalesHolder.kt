@@ -20,10 +20,6 @@ class SalesHolder(
     private val onEditClickListener: (TradeData) -> Unit
 ) : RecyclerView.ViewHolder(rowTransactionReleaseBinding.root) {
 
-    private val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).apply {
-        timeZone = TimeZone.getTimeZone("UTC")
-    }
-
     fun bind(tradeData: TradeData) {
         rowTransactionReleaseBinding.run {
             textTransactionDate.text = tradeData.date.toDateYearOfDayFormat()
