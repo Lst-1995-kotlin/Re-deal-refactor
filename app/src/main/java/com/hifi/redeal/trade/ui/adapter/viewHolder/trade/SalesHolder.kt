@@ -10,9 +10,6 @@ import com.hifi.redeal.databinding.RowTransactionSalesBinding
 import com.hifi.redeal.trade.data.model.TradeData
 import com.hifi.redeal.util.toDateYearOfDayFormat
 import com.hifi.redeal.util.toNumberFormat
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
 
 class SalesHolder(
     private val rowTransactionReleaseBinding: RowTransactionSalesBinding,

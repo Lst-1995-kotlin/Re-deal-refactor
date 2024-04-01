@@ -10,9 +10,6 @@ import com.hifi.redeal.databinding.RowTransactionDepositBinding
 import com.hifi.redeal.trade.data.model.TradeData
 import com.hifi.redeal.util.toDateYearOfDayFormat
 import com.hifi.redeal.util.toNumberFormat
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
 
 class DepositHolder(
     private val rowTransactionDepositBinding: RowTransactionDepositBinding,
