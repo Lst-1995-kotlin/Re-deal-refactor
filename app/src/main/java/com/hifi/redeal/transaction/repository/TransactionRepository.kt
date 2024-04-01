@@ -6,7 +6,6 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.hifi.redeal.CurrentUserClass
-import com.hifi.redeal.data.dao.TestDao2
 import com.hifi.redeal.transaction.model.TransactionData
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,9 +13,7 @@ import javax.inject.Singleton
 @Singleton
 class TransactionRepository @Inject constructor(
     private val currentUser: CurrentUserClass,
-    private val dao: TestDao2
 ) {
-    suspend fun test() = dao.getAllTest()
 
     private val uid = currentUser.userIdx
     private val db = Firebase.firestore

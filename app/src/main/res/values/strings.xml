@@ -26,4 +26,5 @@
     <!--    Transaction-->
     <string name="edit_menu">수정하기</string>
     <string name="delete_menu">삭제하기</string>
+      <string name="title_core">Module Title</string>
 </resources>
