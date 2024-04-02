@@ -5,7 +5,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,13 +15,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.outlined.PhotoLibrary
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,8 +26,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,81 +44,7 @@ import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.memo.model.BottomButtonState
 import com.hifi.redeal.memo.repository.PhotoMemoRepository
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun AddPhotoMemoToolbar(
-    title: String,
-    modifier: Modifier = Modifier,
-    mainActivity: MainActivity,
-    onAlbumResult: (uris: List<Uri>) -> Unit
-) {
-    val albumLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickMultipleVisualMedia(),
-        onResult = { uris ->
-            onAlbumResult(uris)
-        }
-    )
-
-    Box {
-        TopAppBar(
-            title = {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.ExtraBold
-                    )
-                )
-            },
-            navigationIcon = {
-                IconButton(onClick = {
-                    mainActivity.removeFragment(MainActivity.ADD_PHOTO_MEMO_FRAGMENT)
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBackIos,
-                        contentDescription = null,
-                    )
-                }
-            },
-            actions = {
-                IconButton(onClick = {
-                    albumLauncher.launch(
-                        PickVisualMediaRequest(
-                            ActivityResultContracts.PickVisualMedia.ImageOnly
-                        )
-                    )
-                }) {
-                    Icon(
-                        imageVector = Icons.Outlined.PhotoLibrary,
-                        contentDescription = null,
-                    )
-                }
-                IconButton(onClick = {
-                    // todo : device Camara 불러오기
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.CameraAlt,
-                        contentDescription = null,
-                    )
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.White,
-                navigationIconContentColor = MaterialTheme.colorScheme.primary,
-                titleContentColor = MaterialTheme.colorScheme.primary,
-                actionIconContentColor = MaterialTheme.colorScheme.primary
-            ),
-            modifier = modifier
-        )
-
-        Divider(
-            thickness = 2.dp,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.align(Alignment.BottomStart)
-        )
-    }
-}
+import com.hifi.redeal.memo.ui.MemoTopAppBar
 
 @Composable
 private fun AddPhotoMemoBody(
@@ -237,10 +157,6 @@ fun AddPhotoMemoScreen(
 
     var selectedImageList by remember { mutableStateOf<List<Uri>>(emptyList()) }
     var bottomButtonState by remember { mutableStateOf(BottomButtonState.DISABLED) }
-    val onAlbumResult = { uriList: List<Uri> ->
-        bottomButtonState = BottomButtonState.IDLE
-        selectedImageList = uriList
-    }
     var memoValue by remember { mutableStateOf("") }
     val onChangeMemoValue = { text: String ->
         memoValue = text
@@ -252,12 +168,43 @@ fun AddPhotoMemoScreen(
             mainActivity.removeFragment(MainActivity.ADD_PHOTO_MEMO_FRAGMENT)
         }
     }
+    val albumLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickMultipleVisualMedia(),
+        onResult = { uris ->
+            bottomButtonState = BottomButtonState.IDLE
+            selectedImageList = uris
+        }
+    )
     Scaffold(
         topBar = {
-            AddPhotoMemoToolbar(
-                title = stringResource(id = R.string.add_photo_memo_toolbar),
-                onAlbumResult = onAlbumResult,
-                mainActivity = mainActivity
+            MemoTopAppBar(
+                titleRes = R.string.add_photo_memo_toolbar,
+                canNavigateBack = true,
+                onNavigationClick = {
+                    mainActivity.removeFragment(MainActivity.ADD_PHOTO_MEMO_FRAGMENT)
+                },
+                actions = {
+                    IconButton(onClick = {
+                        albumLauncher.launch(
+                            PickVisualMediaRequest(
+                                ActivityResultContracts.PickVisualMedia.ImageOnly
+                            )
+                        )
+                    }) {
+                        Icon(
+                            imageVector = Icons.Outlined.PhotoLibrary,
+                            contentDescription = null,
+                        )
+                    }
+                    IconButton(onClick = {
+                        // todo : device Camara 불러오기
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.CameraAlt,
+                            contentDescription = null,
+                        )
+                    }
+                }
             )
         },
         containerColor = Color.White,

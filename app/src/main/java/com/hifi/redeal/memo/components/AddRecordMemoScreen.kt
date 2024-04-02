@@ -12,7 +12,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,7 +31,6 @@ import androidx.compose.material.icons.rounded.Stop
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -46,8 +44,6 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -59,7 +55,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -73,6 +68,7 @@ import com.hifi.redeal.R
 import com.hifi.redeal.memo.model.BottomButtonState
 import com.hifi.redeal.memo.record.VoiceMemoRecorder
 import com.hifi.redeal.memo.repository.RecordMemoRepository
+import com.hifi.redeal.memo.ui.MemoTopAppBar
 import com.hifi.redeal.memo.utils.convertToDurationTime
 import com.hifi.redeal.memo.utils.createAudioUri
 import com.hifi.redeal.memo.utils.formatRecordTime
@@ -85,48 +81,6 @@ private enum class RecordState {
     BEFORE_RECORDING,
     ON_RECORDING,
     AFTER_RECORDING,
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun AddRecordMemoToolbar(
-    title: String,
-    onClickNavigation: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Box {
-        TopAppBar(
-            title = {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.ExtraBold
-                    )
-                )
-            },
-            navigationIcon = {
-                IconButton(onClick = onClickNavigation) {
-                    Icon(
-                        painter = painterResource(R.drawable.arrow_back_ios_24px),
-                        contentDescription = null,
-                    )
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.White,
-                navigationIconContentColor = MaterialTheme.colorScheme.primary,
-                titleContentColor = MaterialTheme.colorScheme.primary
-            ),
-            modifier = modifier
-        )
-
-        Divider(
-            thickness = 2.dp,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.align(Alignment.BottomStart)
-        )
-    }
 }
 
 @Composable
@@ -700,10 +654,13 @@ fun AddRecordMemoScreen(
 
     Scaffold(
         topBar = {
-            AddRecordMemoToolbar(
-                title = stringResource(id = R.string.add_record_memo_toolbar), onClickNavigation = {
+            MemoTopAppBar(
+                titleRes = R.string.add_record_memo_toolbar,
+                canNavigateBack = true,
+                onNavigationClick = {
                     mainActivity.removeFragment(MainActivity.ADD_RECORD_MEMO_FRAGMENT)
-                })
+                }
+            )
         },
         bottomBar = {
             BottomButton(

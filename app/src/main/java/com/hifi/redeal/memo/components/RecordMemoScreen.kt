@@ -2,7 +2,6 @@ package com.hifi.redeal.memo.components
 
 import android.os.Bundle
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,7 +15,6 @@ import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -27,8 +25,6 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -39,85 +35,23 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.memo.model.RecordMemoData
+import com.hifi.redeal.memo.ui.MemoTopAppBar
 import com.hifi.redeal.memo.utils.convertToDurationTime
 import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.RecordMemoViewModel
 import com.hifi.redeal.theme.RedealTheme
 import kotlinx.coroutines.delay
 import java.util.Date
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun RecordMemoToolbar(
-    title: String,
-    mainActivity: MainActivity,
-    modifier: Modifier = Modifier
-) {
-    Box {
-        TopAppBar(
-            title = {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.ExtraBold
-                    )
-                )
-            },
-            navigationIcon = {
-                IconButton(onClick = {
-                    mainActivity.removeFragment(MainActivity.RECORD_MEMO_FRAGMENT)
-                }) {
-                    Icon(
-                        painter = painterResource(R.drawable.arrow_back_ios_24px),
-                        contentDescription = null,
-                    )
-                }
-            },
-            actions = {
-                IconButton(
-                    onClick = {
-                        // todo : 편집 버튼 클릭시 삭제, 이름 변경, 즐겨찾기 등록할 수 있도록
-                    },
-                    colors = IconButtonDefaults.iconButtonColors(
-                        contentColor = MaterialTheme.colorScheme.primary
-                    )
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.EditNote,
-                        contentDescription = null,
-                    )
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.White,
-                navigationIconContentColor = MaterialTheme.colorScheme.primary,
-                titleContentColor = MaterialTheme.colorScheme.primary
-            ),
-            modifier = modifier
-        )
-
-        Divider(
-            thickness = 2.dp,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.align(Alignment.BottomStart)
-        )
-    }
-}
 
 @Composable
 private fun DateText(
@@ -393,9 +327,27 @@ fun RecordMemoScreen(
     val recordMemoDataList by recordMemoViewModel.recordMemoList.observeAsState()
     Scaffold(
         topBar = {
-            RecordMemoToolbar(
-                title = stringResource(id = R.string.record_memo_toolbar),
-                mainActivity = mainActivity
+            MemoTopAppBar(
+                titleRes = R.string.record_memo_toolbar,
+                canNavigateBack = true,
+                onNavigationClick = {
+                    mainActivity.removeFragment(MainActivity.RECORD_MEMO_FRAGMENT)
+                },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            // todo : 편집 버튼 클릭시 삭제, 이름 변경, 즐겨찾기 등록할 수 있도록
+                        },
+                        colors = IconButtonDefaults.iconButtonColors(
+                            contentColor = MaterialTheme.colorScheme.primary
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.EditNote,
+                            contentDescription = null,
+                        )
+                    }
+                }
             )
         },
         floatingActionButton = {

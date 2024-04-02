@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,16 +17,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,68 +31,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.memo.model.PhotoMemoData
 import com.hifi.redeal.memo.repository.PhotoMemoRepository
+import com.hifi.redeal.memo.ui.MemoTopAppBar
 import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.PhotoMemoViewModel
 import java.util.Date
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun PhotoMemoToolbar(
-    title: String,
-    modifier: Modifier = Modifier,
-    mainActivity: MainActivity
-) {
-    Box {
-        TopAppBar(
-            title = {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.ExtraBold
-                    )
-                )
-            },
-            navigationIcon = {
-                IconButton(onClick = {
-                    mainActivity.removeFragment(MainActivity.PHOTO_MEMO_FRAGMENT)
-                }) {
-                    Icon(
-                        painter = painterResource(R.drawable.arrow_back_ios_24px),
-                        contentDescription = null,
-                    )
-                }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color.White,
-                navigationIconContentColor = MaterialTheme.colorScheme.primary,
-                titleContentColor = MaterialTheme.colorScheme.primary
-            ),
-            modifier = modifier
-        )
-
-        Divider(
-            thickness = 2.dp,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.align(Alignment.BottomStart)
-        )
-    }
-}
 
 @Composable
 private fun DateText(
@@ -219,20 +168,24 @@ private fun PhotoMemoList(
         modifier = modifier
     )
 }
-
 @Composable
 fun PhotoMemoScreen(
     photoMemoViewModel: PhotoMemoViewModel,
     repository: PhotoMemoRepository,
     mainActivity: MainActivity,
-    clientIdx: Long
+    clientIdx: Long,
+    modifier: Modifier = Modifier
 ) {
     val photoMemoDataList by photoMemoViewModel.photoMemoList.observeAsState()
     Scaffold(
+        modifier = modifier,
         topBar = {
-            PhotoMemoToolbar(
-                title = stringResource(id = R.string.photo_memo_toolbar),
-                mainActivity = mainActivity
+            MemoTopAppBar(
+                titleRes = R.string.photo_memo_toolbar,
+                canNavigateBack = true,
+                onNavigationClick = {
+                    mainActivity.removeFragment(MainActivity.PHOTO_MEMO_FRAGMENT)
+                }
             )
         },
         floatingActionButton = {
