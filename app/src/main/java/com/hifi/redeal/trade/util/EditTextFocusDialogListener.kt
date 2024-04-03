@@ -1,16 +1,16 @@
 package com.hifi.redeal.trade.util
 
 import android.view.View
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
-import com.hifi.redeal.trade.view_refactor_before.dialog.SelectTransactionClientDialog
 
-class TradeSelectClientEditTextFocusListener(
-    private val selectTransactionClientDialog: SelectTransactionClientDialog,
+class EditTextFocusDialogListener(
+    private val dialogFragment: DialogFragment,
     private val childFragmentManager: FragmentManager
 ) : View.OnFocusChangeListener {
     override fun onFocusChange(v: View, hasFocus: Boolean) {
         if (v.hasFocus()) {
-            selectTransactionClientDialog.show(childFragmentManager, null)
+            dialogFragment.show(childFragmentManager, null)
         }
         v.clearFocus()
     }

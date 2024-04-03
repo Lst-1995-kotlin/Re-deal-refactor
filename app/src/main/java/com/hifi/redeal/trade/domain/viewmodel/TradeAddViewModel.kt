@@ -20,10 +20,10 @@ class TradeAddViewModel @Inject constructor(
 
     private val _closeFragmentEvent = MutableLiveData<Unit>()
     private val _inputAmount = MutableLiveData<Long>()
-    private val _selectedClient = MutableLiveData<TradeClientData?>()
+    private val _selectedClient = MutableLiveData<TradeClientData>()
     val closeFragmentEvent: LiveData<Unit> get() = _closeFragmentEvent
     val inputAmount: LiveData<Long> get() = _inputAmount
-    val selectedClient: LiveData<TradeClientData?> get() = _selectedClient
+    val selectedClient: LiveData<TradeClientData> get() = _selectedClient
 
     fun callFragmentCloseEvent() {
         _closeFragmentEvent.postValue(Unit)
@@ -47,4 +47,9 @@ class TradeAddViewModel @Inject constructor(
             }
         }
     }
+
+    fun setTradeClientData(tradeClientData: TradeClientData) {
+        _selectedClient.postValue(tradeClientData)
+    }
+
 }

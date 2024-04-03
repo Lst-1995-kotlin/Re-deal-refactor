@@ -1,5 +1,6 @@
-package com.hifi.redeal.trade.ui.adapter.viewHolder
+package com.hifi.redeal.trade.di
 
+import com.hifi.redeal.trade.ui.adapter.viewHolder.client.TradeClientHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.CountHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.DepositHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.SalesHolderFactory
@@ -29,5 +30,11 @@ object ViewHolderFactoryModule {
     @Provides
     fun provideSalesHolderFactory(): SalesHolderFactory {
         return SalesHolderFactory()
+    }
+
+    @Singleton
+    @Provides
+    fun provideTradeClientHolderFactory(): TradeClientHolderFactory {
+        return TradeClientHolderFactory()
     }
 }

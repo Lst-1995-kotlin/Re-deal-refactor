@@ -12,10 +12,11 @@ import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTradeDepositBinding
 import com.hifi.redeal.trade.configuration.TradeAmountConfiguration.Companion.tradeAmountCheck
 import com.hifi.redeal.trade.domain.viewmodel.TradeAddViewModel
+import com.hifi.redeal.trade.ui.adapter.viewHolder.client.TradeClientHolderFactory
 import com.hifi.redeal.trade.util.AmountTextWatcher
 import com.hifi.redeal.trade.util.TradeInputEditTextFocusListener
-import com.hifi.redeal.trade.util.TradeSelectClientEditTextFocusListener
-import com.hifi.redeal.trade.view_refactor_before.dialog.SelectTransactionClientDialog
+import com.hifi.redeal.trade.util.EditTextFocusDialogListener
+import com.hifi.redeal.trade.ui.dialog.SelectTradeClientDialog
 import com.hifi.redeal.util.KeyboardFocusClearListener
 import com.hifi.redeal.util.numberFormatToLong
 import com.hifi.redeal.util.toNumberFormat
@@ -29,7 +30,10 @@ class TradeDepositFragment : Fragment() {
     private val tradeAddViewModel: TradeAddViewModel by viewModels()
 
     @Inject
-    lateinit var selectTransactionClientDialog: SelectTransactionClientDialog
+    lateinit var selectTradeClientDialog: SelectTradeClientDialog
+
+    @Inject
+    lateinit var tradeClientHolderFactory: TradeClientHolderFactory
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,12 +97,16 @@ class TradeDepositFragment : Fragment() {
 
             // 거래처 선택 뷰를 클릭 하였을 경우
             selectDepositClientTextInputEditText.onFocusChangeListener =
-                TradeSelectClientEditTextFocusListener(
-                    selectTransactionClientDialog,
+                EditTextFocusDialogListener(
+                    selectTradeClientDialog,
                     childFragmentManager
                 )
 
-
+            // 거래처를 클릭하여 선택하였을 경우
+            tradeClientHolderFactory.setOnClickListener {
+                tradeAddViewModel.setTradeClientData(it)
+                selectTradeClientDialog.dismiss()
+            }
         }
     }
 

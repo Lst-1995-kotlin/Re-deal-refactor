@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.hifi.redeal.trade.domain.viewmodel.TradeAddViewModel" />
@@ -26,8 +27,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/arrow_back_ios_24px"
-            app:title="입금 내역 추가"
             app:navigationOnClickListener="@{() -> viewModel.callFragmentCloseEvent()}"
+            app:title="입금 내역 추가"
             app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance" />
 
         <View
@@ -85,14 +86,15 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/selectDepositClientTextInputEditText"
+                style="@style/trade_text_input_edit_text_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bottom_border_not_focus"
                 android:drawableEnd="@drawable/search_24px_primary20"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:hint="거래처 선택"
-                android:inputType="number"
-                style="@style/trade_text_input_edit_text_style" />
+                android:text='@{viewModel.selectedClient != null ? viewModel.selectedClient.name + " " + viewModel.selectedClient.managerName : ""}'
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
