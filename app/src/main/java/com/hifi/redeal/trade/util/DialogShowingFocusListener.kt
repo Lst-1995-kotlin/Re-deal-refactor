@@ -4,7 +4,7 @@ import android.view.View
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 
-class EditTextFocusDialogListener(
+class DialogShowingFocusListener(
     private val dialogFragment: DialogFragment,
     private val childFragmentManager: FragmentManager
 ) : View.OnFocusChangeListener {
