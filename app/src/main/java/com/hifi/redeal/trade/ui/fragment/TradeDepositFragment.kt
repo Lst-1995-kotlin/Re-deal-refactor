@@ -33,6 +33,9 @@ class TradeDepositFragment : Fragment() {
     lateinit var selectTradeClientDialog: SelectTradeClientDialog
 
     @Inject
+    lateinit var amountTextWatcher: AmountTextWatcher
+
+    @Inject
     lateinit var tradeClientHolderFactory: TradeClientHolderFactory
 
     override fun onCreateView(
@@ -70,7 +73,6 @@ class TradeDepositFragment : Fragment() {
             }
 
             // 금액을 입력 하였을 경우
-            val amountTextWatcher = AmountTextWatcher()
             amountTextWatcher.setOnTextChangeListener {// 변경되고 나서
                 addDepositBtn.visibility =
                     if (it.isNullOrEmpty() ||
@@ -105,8 +107,12 @@ class TradeDepositFragment : Fragment() {
             // 거래처를 클릭하여 선택하였을 경우
             tradeClientHolderFactory.setOnClickListener {
                 tradeAddViewModel.setTradeClientData(it)
+                if (!addDepositAmountEditTextNumber.text.isNullOrEmpty()) {
+                    addDepositBtn.visibility = View.VISIBLE
+                }
                 selectTradeClientDialog.dismiss()
             }
+
         }
     }
 

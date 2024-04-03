@@ -18,18 +18,16 @@ class TradeAddViewModel @Inject constructor(
     private val tradeRepository: TradeRepository
 ) : ViewModel() {
 
-    private val _closeFragmentEvent = MutableLiveData<Unit>()
     private val _inputAmount = MutableLiveData<Long>()
     private val _selectedClient = MutableLiveData<TradeClientData>()
-    val closeFragmentEvent: LiveData<Unit> get() = _closeFragmentEvent
-    val inputAmount: LiveData<Long> get() = _inputAmount
+    private val inputAmount: LiveData<Long> get() = _inputAmount
     val selectedClient: LiveData<TradeClientData> get() = _selectedClient
 
-    fun callFragmentCloseEvent() {
-        _closeFragmentEvent.postValue(Unit)
+    fun setInputAmount(value: Long) {
+        _inputAmount.postValue(value)
     }
 
-    fun insertTrade() {
+    fun insertDepositTrade() {
         viewModelScope.launch {
             inputAmount.value?.let { receivedAmount ->
                 tradeRepository.insertTrade(
@@ -41,7 +39,7 @@ class TradeAddViewModel @Inject constructor(
                         type = TradeType.DEPOSIT.type,
                         date = Date(),
                         checked = false,
-                        clientId = 0
+                        clientId = 1
                     )
                 )
             }

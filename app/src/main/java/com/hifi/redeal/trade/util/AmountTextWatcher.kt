@@ -2,8 +2,9 @@ package com.hifi.redeal.trade.util
 
 import android.text.Editable
 import android.text.TextWatcher
+import javax.inject.Inject
 
-class AmountTextWatcher : TextWatcher {
+class AmountTextWatcher @Inject constructor() : TextWatcher {
 
     private lateinit var onTextChangeListener: (CharSequence?) -> Unit
     private lateinit var afterTextChangListener: (CharSequence?) -> Unit

@@ -27,7 +27,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/arrow_back_ios_24px"
-            app:navigationOnClickListener="@{() -> viewModel.callFragmentCloseEvent()}"
             app:title="입금 내역 추가"
             app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance" />
 
@@ -105,8 +104,6 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/btn_round_primary20"
-            android:fontFamily="@font/nanumsquareneo_bold"
-            android:onClick="@{() -> viewModel.insertTrade()}"
             android:text="입금 내역 추가"
             android:textColor="@color/primary99"
             android:textSize="20sp"
