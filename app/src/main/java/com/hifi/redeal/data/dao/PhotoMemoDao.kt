@@ -12,10 +12,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PhotoMemoDao {
     @Query("SELECT * FROM photoMemos ORDER BY timestamp ASC")
-    fun getAllPhotoMemo(): Flow<List<PhotoMemo>>
+    fun getPhotoMemoEntities(): Flow<List<PhotoMemo>>
 
     @Query("SELECT * FROM photoMemos WHERE id = :id")
-    fun getPhotoMemo(id: Int): Flow<PhotoMemo>
+    fun getPhotoMemoEntity(id: Int): Flow<PhotoMemo>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertPhotoMemo(photoMemo: PhotoMemo)
