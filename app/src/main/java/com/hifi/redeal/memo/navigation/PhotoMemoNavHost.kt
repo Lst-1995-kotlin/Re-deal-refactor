@@ -7,10 +7,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.hifi.redeal.memo.components.AddPhotoMemoDestination
 import com.hifi.redeal.memo.components.PhotoDetailDestination
 import com.hifi.redeal.memo.components.PhotoDetailScreen
 import com.hifi.redeal.memo.components.PhotoMemoDestination
+import com.hifi.redeal.memo.components.PhotoMemoEntryDestination
 import com.hifi.redeal.memo.components.PhotoMemoEntryScreen
 import com.hifi.redeal.memo.components.PhotoMemoScreen
 
@@ -35,7 +35,7 @@ fun PhotoMemoNavHost(
             PhotoMemoScreen(
                 onBackClick = navController::popBackStack,
                 onFabClick = {
-                    navController.navigate("${AddPhotoMemoDestination.route}/${clientId}")
+                    navController.navigate("${PhotoMemoEntryDestination.route}/${clientId}")
                 },
                 onPhotoMemoClick = {
                     navController.navigate("${PhotoDetailDestination.route}/${it}")
@@ -43,9 +43,10 @@ fun PhotoMemoNavHost(
             )
         }
         composable(
-            route = AddPhotoMemoDestination.routeWithArgs,
-            arguments = listOf(navArgument(AddPhotoMemoDestination.clientIdArg) {
+            route = PhotoMemoEntryDestination.routeWithArgs,
+            arguments = listOf(navArgument(PhotoMemoEntryDestination.clientIdArg) {
                 type = NavType.IntType
+                defaultValue = clientId
             })
         ) {
             PhotoMemoEntryScreen(

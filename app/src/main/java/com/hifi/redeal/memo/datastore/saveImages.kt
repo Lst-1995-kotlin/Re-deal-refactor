@@ -4,16 +4,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import androidx.core.net.toUri
 import java.io.File
 import java.io.FileOutputStream
 
-fun saveImages(context: Context, imageUris: List<Uri>):List<String> {
-    val savedImagePaths = mutableListOf<String>()
-
-    val imagesDirectory = File(context.filesDir, "images")
-    if (!imagesDirectory.exists()) {
-        imagesDirectory.mkdirs()
-    }
+fun saveImages(context: Context, imageUris: List<Uri>):List<Uri> {
+    val savedImagePaths = mutableListOf<Uri>()
 
     for (imageUri in imageUris) {
         val imagePath = saveImageFile(context, imageUri)
@@ -25,7 +21,7 @@ fun saveImages(context: Context, imageUris: List<Uri>):List<String> {
     return savedImagePaths
 }
 
-private fun saveImageFile(context: Context, imageUri: Uri): String? {
+fun saveImageFile(context: Context, imageUri: Uri): Uri? {
     val inputStream = context.contentResolver.openInputStream(imageUri)
     val bitmap = BitmapFactory.decodeStream(inputStream)
 
@@ -42,7 +38,7 @@ private fun saveImageFile(context: Context, imageUri: Uri): String? {
             bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, fos)
             fos.flush()
         }
-        return file.absolutePath
+        return file.toUri()
     } catch (e: Exception) {
         e.printStackTrace()
     } finally {

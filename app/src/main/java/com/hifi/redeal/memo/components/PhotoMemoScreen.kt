@@ -1,5 +1,6 @@
 package com.hifi.redeal.memo.components
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -24,16 +24,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
@@ -131,7 +127,7 @@ private fun PhotoMemoItem(
                 .padding(start = 4.dp)
         )
         LazyRowImageList(
-            imageUris = photoMemo.imageUris,
+            imageUris = photoMemo.imageUris.map { it.toUri() },
             onPhotoMemoClick = onPhotoMemoClick,
             modifier = Modifier
                 .padding(top = 8.dp)
@@ -143,7 +139,7 @@ private fun PhotoMemoItem(
 
 @Composable
 private fun LazyRowImageList(
-    imageUris: List<String>,
+    imageUris: List<Uri>,
     modifier: Modifier = Modifier,
     onPhotoMemoClick: () -> Unit = {}
 ) {
@@ -151,35 +147,16 @@ private fun LazyRowImageList(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(horizontal = 2.dp),
         content = {
-            itemsIndexed(imageUris) { idx, path ->
-                var imageUrl by remember { mutableStateOf("") }
-                val coroutineScope = rememberCoroutineScope()
-//                LaunchedEffect(coroutineScope) {
-//                    imageUrl = repository.getPhotoMemoImgUrlToCoroutine(src)
-//                }
-                val painter = if (imageUrl == "")
-                    painterResource(id = R.drawable.empty_photo) else
-                    rememberAsyncImagePainter(imageUrl)
+            items(imageUris) { uri ->
                 Image(
-                    painter = painter,
+                    painter = rememberAsyncImagePainter(uri),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(100.dp)
                         .clip(shape = RoundedCornerShape(8.dp))
                         .clickable {
-//                            val newBundle = Bundle()
-//                            newBundle.putInt("order", idx)
-//                            newBundle.putStringArrayList(
-//                                "srcArr",
-//                                imageUris as ArrayList<String>
-//                            )
                             onPhotoMemoClick()
-//                            mainActivity.replaceFragment(
-//                                MainActivity.PHOTO_DETAIL_FRAGMENT,
-//                                true,
-//                                newBundle
-//                            )
                         }
                 )
             }

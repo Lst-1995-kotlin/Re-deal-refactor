@@ -27,30 +27,29 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.hifi.redeal.R
+import com.hifi.redeal.memo.datastore.saveImages
 import com.hifi.redeal.memo.model.PhotoMemo
 import com.hifi.redeal.memo.navigation.NavigationDestination
 import com.hifi.redeal.memo.ui.MemoTopAppBar
 import com.hifi.redeal.memo.vm.PhotoMemoEntryViewModel
 import kotlinx.coroutines.launch
 
-object AddPhotoMemoDestination : NavigationDestination{
-    override val route = "client_add_photo_memo"
+object PhotoMemoEntryDestination : NavigationDestination{
+    override val route = "client_photo_memo_entry"
     override val titleRes = R.string.add_photo_memo_toolbar
     const val clientIdArg = "clientId"
     val routeWithArgs = "$route/{$clientIdArg}"
@@ -62,13 +61,13 @@ fun PhotoMemoEntryScreen(
     viewModel: PhotoMemoEntryViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    var selectedImageList by remember { mutableStateOf<List<Uri>>(emptyList()) }
-
+    val context = LocalContext.current
     val albumLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(),
         onResult = { uris ->
+            val imageUris = saveImages(context, uris)
             viewModel.updateUiState(viewModel.photoMemoUiState.photoMemo.copy(
-                imageUris = uris.map{it.toString()}
+                imageUris = imageUris.map{it.toString()}
             ))
         }
     )
@@ -76,7 +75,7 @@ fun PhotoMemoEntryScreen(
     Scaffold(
         topBar = {
             MemoTopAppBar(
-                titleRes = R.string.add_photo_memo_toolbar,
+                titleRes = PhotoMemoEntryDestination.titleRes,
                 canNavigateBack = true,
                 onNavigationClick = onBackClick,
                 actions = {
@@ -114,7 +113,7 @@ fun PhotoMemoEntryScreen(
             AddPhotoMemoBody(
                 photoMemo = viewModel.photoMemoUiState.photoMemo,
                 onPhotoMemoValueChange = viewModel::updateUiState,
-                selectedImageList = selectedImageList,
+                selectedImageList = viewModel.photoMemoUiState.photoMemo.imageUris.map{it.toUri()},
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 20.dp)
