@@ -12,11 +12,11 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PhotoMemoDao {
-    @Query("SELECT * FROM photoMemos ORDER BY timestamp ASC")
+    @Query("SELECT * FROM photoMemos ORDER BY timestamp DESC")
     fun getPhotoMemoEntities(): Flow<List<PhotoMemoEntity>>
 
     @Transaction
-    @Query("Select * FROM photoMemos WHERE clientOwnerId = :clientId ORDER BY timestamp ASC")
+    @Query("Select * FROM photoMemos WHERE clientOwnerId = :clientId ORDER BY timestamp DESC")
     fun getClientWithPhotoMemoEntities(clientId:Int): Flow<List<PhotoMemoEntity>>
     @Query("SELECT * FROM photoMemos WHERE id = :id")
     fun getPhotoMemoEntity(id: Int): Flow<PhotoMemoEntity>

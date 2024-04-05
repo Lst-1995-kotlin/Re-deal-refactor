@@ -29,6 +29,9 @@ class PhotoMemoEntryViewModel @Inject constructor(
 
     suspend fun savePhotoMemo() {
         if (validateInput()) {
+            updateUiState(photoMemoUiState.photoMemo.copy(
+                timestamp = System.currentTimeMillis()
+            ))
             photoMemosRepository.insertPhotoMemo(photoMemoUiState.photoMemo)
         }
     }
