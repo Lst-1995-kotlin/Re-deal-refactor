@@ -56,7 +56,7 @@ object AddPhotoMemoDestination : NavigationDestination{
     val routeWithArgs = "$route/{$clientIdArg}"
 }
 @Composable
-fun AddPhotoMemoScreen(
+fun PhotoMemoEntryScreen(
     modifier: Modifier = Modifier,
     onBackClick:() -> Unit = {},
     viewModel: PhotoMemoEntryViewModel = hiltViewModel()

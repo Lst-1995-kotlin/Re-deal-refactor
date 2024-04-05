@@ -8,10 +8,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.hifi.redeal.memo.components.AddPhotoMemoDestination
-import com.hifi.redeal.memo.components.AddPhotoMemoScreen
 import com.hifi.redeal.memo.components.PhotoDetailDestination
 import com.hifi.redeal.memo.components.PhotoDetailScreen
 import com.hifi.redeal.memo.components.PhotoMemoDestination
+import com.hifi.redeal.memo.components.PhotoMemoEntryScreen
 import com.hifi.redeal.memo.components.PhotoMemoScreen
 
 @Composable
@@ -48,7 +48,7 @@ fun PhotoMemoNavHost(
                 type = NavType.IntType
             })
         ) {
-            AddPhotoMemoScreen(
+            PhotoMemoEntryScreen(
                 onBackClick = navController::popBackStack,
             )
         }
