@@ -7,42 +7,30 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import com.hifi.redeal.MainActivity
-import com.hifi.redeal.memo.components.PhotoMemoScreen
-import com.hifi.redeal.memo.repository.PhotoMemoRepository
-import com.hifi.redeal.memo.vm.PhotoMemoViewModel
+import androidx.navigation.compose.rememberNavController
+import com.hifi.redeal.memo.navigation.PhotoMemoNavHost
 import com.hifi.redeal.theme.RedealTheme
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class PhotoMemoFragment : Fragment() {
-    @Inject
-    lateinit var photoMemoRepository: PhotoMemoRepository
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         return ComposeView(
             requireContext()
         ).apply {
-            val photoMemoViewModel: PhotoMemoViewModel by viewModels()
-            val mainActivity = activity as MainActivity
-            val clientIdx = arguments?.getLong("clientIdx") ?: 1L
-            photoMemoViewModel.getPhotoMemoList(clientIdx)
+            val clientIdx = arguments?.getInt("clientIdx") ?: 1
             setViewCompositionStrategy(
                 ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
             )
             setContent {
                 RedealTheme {
-                    PhotoMemoScreen(
-                        photoMemoViewModel = photoMemoViewModel,
-                        repository = photoMemoRepository,
-                        mainActivity = mainActivity,
-                        clientIdx = clientIdx
+                    PhotoMemoNavHost(
+                        navController = rememberNavController(),
+                        clientId = clientIdx
                     )
                 }
             }
