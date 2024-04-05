@@ -3,6 +3,7 @@ package com.hifi.redeal.data
 import android.content.Context
 import androidx.room.Room
 import com.hifi.redeal.data.dao.ClientDao
+import com.hifi.redeal.data.dao.PhotoMemoDao
 import com.hifi.redeal.data.dao.TradeDao
 import dagger.Module
 import dagger.Provides
@@ -28,4 +29,7 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideTransactionsDao(appDatabase: AppDatabase): TradeDao = appDatabase.tradeDao()
+
+    @Provides
+    fun providePhotoMemoDao(appDatabase: AppDatabase): PhotoMemoDao = appDatabase.photoMemoDao()
 }
