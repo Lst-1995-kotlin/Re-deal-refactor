@@ -11,7 +11,6 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import java.util.Date
 
 fun dpToPx(context: Context, dp: Int): Int {
     val scale = context.resources.displayMetrics.density
@@ -34,8 +33,12 @@ fun getCurrentDuration(currentPosition: Int): String {
     return String.format("%02d:%02d", minutes, seconds)
 }
 
-fun intervalBetweenDateText(date: Date): String {
-    val beforeFormat = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault())
+fun intervalBetweenDateText(timestamp: Long): String {
+    val beforeFormat =
+        LocalDateTime.ofInstant(
+            java.time.Instant.ofEpochMilli(timestamp),
+            ZoneId.systemDefault()
+        )
     val nowFormat = LocalDateTime.now()
 
     val units = arrayOf("시간", "분")
@@ -47,17 +50,17 @@ fun intervalBetweenDateText(date: Date): String {
 
     for (i in amounts.indices) {
         if (amounts[i] > 0) {
-            return if(i == 0){
+            return if (i == 0) {
                 beforeFormat.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-            }else
-                "${amounts[i]}${units[i-1]} 전"
+            } else
+                "${amounts[i]}${units[i - 1]} 전"
         }
     }
 
     return "방금"
 }
 
-fun formatRecordTime(time:Long):String{
+fun formatRecordTime(time: Long): String {
     val ms = time / 10
     val sec = ms / 100
     val min = sec / 60
@@ -90,6 +93,7 @@ fun formatRecordTime(time:Long):String{
 
     return "$hoursString$minutesString:$secondsString.$milliSecondsString"
 }
+
 fun Long.convertToDurationTime(): String {
     val sec = this / 1000
     val min = sec / 60
