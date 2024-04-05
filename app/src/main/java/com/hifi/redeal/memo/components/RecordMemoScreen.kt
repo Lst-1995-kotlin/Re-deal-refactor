@@ -45,27 +45,12 @@ import androidx.media3.exoplayer.ExoPlayer
 import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.memo.model.RecordMemoData
+import com.hifi.redeal.memo.ui.DateText
 import com.hifi.redeal.memo.ui.MemoTopAppBar
 import com.hifi.redeal.memo.utils.convertToDurationTime
-import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.RecordMemoViewModel
 import com.hifi.redeal.theme.RedealTheme
 import kotlinx.coroutines.delay
-import java.util.Date
-
-@Composable
-private fun DateText(
-    date: Date,
-    modifier: Modifier = Modifier
-) {
-    Text(
-        text = intervalBetweenDateText(date),
-        style = MaterialTheme.typography.bodySmall.copy(
-            fontWeight = FontWeight.Bold
-        ),
-        modifier = modifier
-    )
-}
 
 @Composable
 private fun MemoMultiText(
@@ -225,7 +210,8 @@ private fun RecordMemoItem(
 ) {
     Column(modifier) {
         DateText(
-            date = item.date,
+            //todo : 수정
+            timestamp = 1000000,
             modifier = Modifier
                 .fillMaxWidth()
         )
