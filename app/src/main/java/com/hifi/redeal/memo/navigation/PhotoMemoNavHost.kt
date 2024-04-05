@@ -18,7 +18,8 @@ import com.hifi.redeal.memo.components.PhotoMemoScreen
 fun PhotoMemoNavHost(
     navController: NavHostController,
     clientId: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClickRemoveFragment: () -> Unit = {},
 ) {
     NavHost(
         navController = navController,
@@ -33,7 +34,7 @@ fun PhotoMemoNavHost(
             })
         ) {
             PhotoMemoScreen(
-                onBackClick = navController::popBackStack,
+                onBackClick = onClickRemoveFragment,
                 onFabClick = {
                     navController.navigate("${PhotoMemoEntryDestination.route}/${clientId}")
                 },

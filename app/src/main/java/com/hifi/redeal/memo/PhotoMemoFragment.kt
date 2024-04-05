@@ -8,6 +8,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.fragment.findNavController
 import com.hifi.redeal.memo.navigation.PhotoMemoNavHost
 import com.hifi.redeal.theme.RedealTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,7 +31,10 @@ class PhotoMemoFragment : Fragment() {
                 RedealTheme {
                     PhotoMemoNavHost(
                         navController = rememberNavController(),
-                        clientId = clientIdx
+                        clientId = clientIdx,
+                        onClickRemoveFragment = {
+                            findNavController().popBackStack()
+                        }
                     )
                 }
             }
