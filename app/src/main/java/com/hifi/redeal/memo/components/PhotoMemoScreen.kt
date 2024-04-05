@@ -1,6 +1,5 @@
 package com.hifi.redeal.memo.components
 
-import android.os.Bundle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,9 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -36,49 +33,46 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
-import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.memo.model.PhotoMemo
-import com.hifi.redeal.memo.repository.PhotoMemoRepository
+import com.hifi.redeal.memo.navigation.NavigationDestination
+import com.hifi.redeal.memo.ui.DateText
 import com.hifi.redeal.memo.ui.MemoTopAppBar
-import com.hifi.redeal.memo.utils.intervalBetweenDateText
 import com.hifi.redeal.memo.vm.PhotoMemoViewModel
-import java.util.Date
+
+object PhotoMemoDestination : NavigationDestination {
+    override val route = "client_photo_memo"
+    override val titleRes = R.string.photo_memo_toolbar
+    const val clientIdArg = "clientId"
+    val routeWithArgs = "$route/{$clientIdArg}"
+}
 
 @Composable
 fun PhotoMemoScreen(
-    photoMemoViewModel: PhotoMemoViewModel,
-    repository: PhotoMemoRepository,
-    mainActivity: MainActivity,
-    clientIdx: Long,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit = {},
+    onFabClick: () -> Unit = {},
+    onPhotoMemoClick: (photoMemoId: Int) -> Unit = {},
+    viewModel: PhotoMemoViewModel = hiltViewModel(),
 ) {
-    val photoMemoDataList by photoMemoViewModel.photoMemoList.observeAsState()
+    val photoMemoUiState by viewModel.photoMemosUiState.collectAsStateWithLifecycle()
+
     Scaffold(
         modifier = modifier,
         topBar = {
             MemoTopAppBar(
-                titleRes = R.string.photo_memo_toolbar,
+                titleRes = PhotoMemoDestination.titleRes,
                 canNavigateBack = true,
-                onNavigationClick = {
-                    mainActivity.removeFragment(MainActivity.PHOTO_MEMO_FRAGMENT)
-                }
+                onNavigationClick = onBackClick
             )
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    val newBundle = Bundle()
-                    newBundle.putLong("clientIdx", clientIdx)
-                    mainActivity.replaceFragment(
-                        MainActivity.ADD_PHOTO_MEMO_FRAGMENT,
-                        true,
-                        newBundle
-                    )
-                },
+                onClick = onFabClick,
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -89,35 +83,32 @@ fun PhotoMemoScreen(
         floatingActionButtonPosition = FabPosition.End,
         containerColor = Color.White
     ) { padding ->
-        photoMemoDataList?.let {
-            PhotoMemoList(
-                photoMemoItemList = photoMemoDataList!!,
-                mainActivity = mainActivity,
-                repository = repository,
-                modifier = Modifier
-                    .padding(padding)
-                    .padding(vertical = 16.dp, horizontal = 20.dp),
-            )
-        }
+        PhotoMemoColumn(
+            photoMemos = photoMemoUiState.photoMemos,
+            onPhotoMemoClick = onPhotoMemoClick,
+            modifier = Modifier
+                .padding(padding)
+                .padding(vertical = 16.dp, horizontal = 20.dp),
+        )
 
         // todo : 리스트 마지막 부분에 맨위로 가는 기능 등 처리 해주기
     }
 }
 
 @Composable
-private fun PhotoMemoList(
-    photoMemoItemList: List<PhotoMemo>,
-    mainActivity: MainActivity,
-    repository: PhotoMemoRepository,
+private fun PhotoMemoColumn(
+    photoMemos: List<PhotoMemo>,
     modifier: Modifier = Modifier,
+    onPhotoMemoClick: (photoMemoId: Int) -> Unit = {}
 ) {
     LazyColumn(
         content = {
-            items(photoMemoItemList) { item ->
+            items(photoMemos) { photoMemo ->
                 PhotoMemoItem(
-                    item = item,
-                    mainActivity = mainActivity,
-                    repository = repository
+                    photoMemo = photoMemo,
+                    onPhotoMemoClick = {
+                        onPhotoMemoClick(photoMemo.id)
+                    },
                 )
                 Divider(Modifier.padding(vertical = 16.dp))
             }
@@ -128,61 +119,44 @@ private fun PhotoMemoList(
 
 @Composable
 private fun PhotoMemoItem(
-    item: PhotoMemo,
-    mainActivity: MainActivity,
+    photoMemo: PhotoMemo,
     modifier: Modifier = Modifier,
-    repository: PhotoMemoRepository
+    onPhotoMemoClick: () -> Unit = {}
 ) {
     Column(modifier) {
         DateText(
-            date = item.date,
+            timestamp = photoMemo.timestamp,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 4.dp)
         )
         LazyRowImageList(
-            srcArr = item.imagePaths,
-            repository = repository,
-            mainActivity = mainActivity,
+            imageUris = photoMemo.imageUris,
+            onPhotoMemoClick = onPhotoMemoClick,
             modifier = Modifier
                 .padding(top = 8.dp)
                 .fillMaxWidth()
         )
-        MemoMultiText(modifier = Modifier.padding(top = 20.dp, start = 4.dp), text = item.memo)
+        MemoMultiText(modifier = Modifier.padding(top = 20.dp, start = 4.dp), text = photoMemo.memo)
     }
 }
 
 @Composable
-private fun DateText(
-    date: Date,
-    modifier: Modifier = Modifier
-) {
-    Text(
-        text = intervalBetweenDateText(date),
-        style = MaterialTheme.typography.bodySmall.copy(
-            fontWeight = FontWeight.Bold
-        ),
-        modifier = modifier
-    )
-}
-
-@Composable
 private fun LazyRowImageList(
-    srcArr: List<String>,
-    repository: PhotoMemoRepository,
-    mainActivity: MainActivity,
-    modifier: Modifier = Modifier
+    imageUris: List<String>,
+    modifier: Modifier = Modifier,
+    onPhotoMemoClick: () -> Unit = {}
 ) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(horizontal = 2.dp),
         content = {
-            itemsIndexed(srcArr) { idx, src ->
+            itemsIndexed(imageUris) { idx, path ->
                 var imageUrl by remember { mutableStateOf("") }
                 val coroutineScope = rememberCoroutineScope()
-                LaunchedEffect(coroutineScope) {
-                    imageUrl = repository.getPhotoMemoImgUrlToCoroutine(src)
-                }
+//                LaunchedEffect(coroutineScope) {
+//                    imageUrl = repository.getPhotoMemoImgUrlToCoroutine(src)
+//                }
                 val painter = if (imageUrl == "")
                     painterResource(id = R.drawable.empty_photo) else
                     rememberAsyncImagePainter(imageUrl)
@@ -194,17 +168,18 @@ private fun LazyRowImageList(
                         .size(100.dp)
                         .clip(shape = RoundedCornerShape(8.dp))
                         .clickable {
-                            val newBundle = Bundle()
-                            newBundle.putInt("order", idx)
-                            newBundle.putStringArrayList(
-                                "srcArr",
-                                srcArr as ArrayList<String>
-                            )
-                            mainActivity.replaceFragment(
-                                MainActivity.PHOTO_DETAIL_FRAGMENT,
-                                true,
-                                newBundle
-                            )
+//                            val newBundle = Bundle()
+//                            newBundle.putInt("order", idx)
+//                            newBundle.putStringArrayList(
+//                                "srcArr",
+//                                imageUris as ArrayList<String>
+//                            )
+                            onPhotoMemoClick()
+//                            mainActivity.replaceFragment(
+//                                MainActivity.PHOTO_DETAIL_FRAGMENT,
+//                                true,
+//                                newBundle
+//                            )
                         }
                 )
             }

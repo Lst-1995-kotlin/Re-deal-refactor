@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,17 +40,105 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
-import com.hifi.redeal.memo.model.BottomButtonState
-import com.hifi.redeal.memo.repository.PhotoMemoRepository
+import com.hifi.redeal.memo.model.PhotoMemo
+import com.hifi.redeal.memo.navigation.NavigationDestination
 import com.hifi.redeal.memo.ui.MemoTopAppBar
+import com.hifi.redeal.memo.vm.PhotoMemoEntryViewModel
+import kotlinx.coroutines.launch
 
+object AddPhotoMemoDestination : NavigationDestination{
+    override val route = "client_add_photo_memo"
+    override val titleRes = R.string.add_photo_memo_toolbar
+    const val clientIdArg = "clientId"
+    val routeWithArgs = "$route/{$clientIdArg}"
+}
+@Composable
+fun AddPhotoMemoScreen(
+    modifier: Modifier = Modifier,
+    onBackClick:() -> Unit = {},
+    viewModel: PhotoMemoEntryViewModel = hiltViewModel()
+) {
+    val coroutineScope = rememberCoroutineScope()
+    var selectedImageList by remember { mutableStateOf<List<Uri>>(emptyList()) }
+
+    val albumLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickMultipleVisualMedia(),
+        onResult = { uris ->
+            viewModel.updateUiState(viewModel.photoMemoUiState.photoMemo.copy(
+                imageUris = uris.map{it.toString()}
+            ))
+        }
+    )
+
+    Scaffold(
+        topBar = {
+            MemoTopAppBar(
+                titleRes = R.string.add_photo_memo_toolbar,
+                canNavigateBack = true,
+                onNavigationClick = onBackClick,
+                actions = {
+                    IconButton(onClick = {
+                        albumLauncher.launch(
+                            PickVisualMediaRequest(
+                                ActivityResultContracts.PickVisualMedia.ImageOnly
+                            )
+                        )
+                    }) {
+                        Icon(
+                            imageVector = Icons.Outlined.PhotoLibrary,
+                            contentDescription = null,
+                        )
+                    }
+                    IconButton(onClick = {
+                        // todo : device Camara 불러오기
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.CameraAlt,
+                            contentDescription = null,
+                        )
+                    }
+                }
+            )
+        },
+        containerColor = Color.White,
+        modifier = modifier
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(padding)
+        ) {
+            AddPhotoMemoBody(
+                photoMemo = viewModel.photoMemoUiState.photoMemo,
+                onPhotoMemoValueChange = viewModel::updateUiState,
+                selectedImageList = selectedImageList,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 20.dp)
+            )
+
+            BottomButton(
+                enabled = viewModel.photoMemoUiState.isEntryValid,
+                onSaveClick = {
+                    coroutineScope.launch{
+                        viewModel.savePhotoMemo()
+                        onBackClick()
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 24.dp, horizontal = 28.dp)
+            )
+        }
+    }
+}
 @Composable
 private fun AddPhotoMemoBody(
-    memoValue: String,
-    onChangeMemoValue: (text: String) -> Unit,
+    photoMemo: PhotoMemo,
+    onPhotoMemoValueChange: (PhotoMemo) -> Unit,
     selectedImageList: List<Uri>,
     modifier: Modifier = Modifier
 ) {
@@ -86,9 +175,9 @@ private fun AddPhotoMemoBody(
         }
 
         OutlinedTextField(
-            value = memoValue,
+            value = photoMemo.memo,
             onValueChange = {
-                onChangeMemoValue(it)
+                onPhotoMemoValueChange(photoMemo.copy(memo = it))
             },
             label = {
                 Text(
@@ -108,130 +197,29 @@ private fun AddPhotoMemoBody(
 
 @Composable
 private fun BottomButton(
-    state: BottomButtonState,
-    onClick: () -> Unit,
+    enabled: Boolean,
+    onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val buttonText = when (state) {
-        BottomButtonState.IDLE -> {
-            stringResource(id = R.string.add_photo_memo_bottom_button)
-        }
-
-        BottomButtonState.PRESSED -> {
-            stringResource(id = R.string.add_photo_memo_bottom_button_clicked)
-        }
-
-        BottomButtonState.DISABLED -> {
-            stringResource(id = R.string.add_photo_memo_bottom_button_disable)
-        }
-    }
     Button(
-        onClick = onClick,
+        onClick = onSaveClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
             disabledContentColor = MaterialTheme.colorScheme.onSecondary,
             disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
         ),
-        enabled = state == BottomButtonState.IDLE,
+        enabled = enabled,
         shape = RoundedCornerShape(4.dp),
         modifier = modifier
             .height(48.dp)
     ) {
         Text(
-            text = buttonText,
+            text = stringResource(id = R.string.add_photo_memo_bottom_button),
             style = MaterialTheme.typography.bodyLarge.copy(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
         )
-    }
-}
-
-@Composable
-fun AddPhotoMemoScreen(
-    clientIdx: Long,
-    repository: PhotoMemoRepository,
-    mainActivity: MainActivity,
-    modifier: Modifier = Modifier
-) {
-
-    var selectedImageList by remember { mutableStateOf<List<Uri>>(emptyList()) }
-    var bottomButtonState by remember { mutableStateOf(BottomButtonState.DISABLED) }
-    var memoValue by remember { mutableStateOf("") }
-    val onChangeMemoValue = { text: String ->
-        memoValue = text
-    }
-
-    val onClickBottomButton = {
-        bottomButtonState = BottomButtonState.PRESSED
-        repository.addPhotoMemo(clientIdx, memoValue, selectedImageList.toList()) {
-            mainActivity.removeFragment(MainActivity.ADD_PHOTO_MEMO_FRAGMENT)
-        }
-    }
-    val albumLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickMultipleVisualMedia(),
-        onResult = { uris ->
-            bottomButtonState = BottomButtonState.IDLE
-            selectedImageList = uris
-        }
-    )
-    Scaffold(
-        topBar = {
-            MemoTopAppBar(
-                titleRes = R.string.add_photo_memo_toolbar,
-                canNavigateBack = true,
-                onNavigationClick = {
-                    mainActivity.removeFragment(MainActivity.ADD_PHOTO_MEMO_FRAGMENT)
-                },
-                actions = {
-                    IconButton(onClick = {
-                        albumLauncher.launch(
-                            PickVisualMediaRequest(
-                                ActivityResultContracts.PickVisualMedia.ImageOnly
-                            )
-                        )
-                    }) {
-                        Icon(
-                            imageVector = Icons.Outlined.PhotoLibrary,
-                            contentDescription = null,
-                        )
-                    }
-                    IconButton(onClick = {
-                        // todo : device Camara 불러오기
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.CameraAlt,
-                            contentDescription = null,
-                        )
-                    }
-                }
-            )
-        },
-        containerColor = Color.White,
-        modifier = modifier
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(padding)
-        ) {
-            AddPhotoMemoBody(
-                memoValue = memoValue,
-                onChangeMemoValue = onChangeMemoValue,
-                selectedImageList = selectedImageList,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 20.dp)
-            )
-
-            BottomButton(
-                state = bottomButtonState,
-                onClick = onClickBottomButton,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 24.dp, horizontal = 28.dp)
-            )
-        }
     }
 }
 

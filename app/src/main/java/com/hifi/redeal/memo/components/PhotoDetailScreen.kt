@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,20 +32,63 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
-import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
-import com.hifi.redeal.memo.repository.PhotoMemoRepository
+import com.hifi.redeal.memo.navigation.NavigationDestination
 import com.hifi.redeal.memo.ui.MemoTopAppBar
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+
+object PhotoDetailDestination : NavigationDestination {
+    override val route = "photo_memo_detail"
+    override val titleRes = R.string.photo_memo_detail_toolbar
+    const val photoMemoId = "photoMemoId"
+    val routeWithArgs = "$route/{$photoMemoId}"
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun PhotoDetailScreen(
+    imgOrder: Int,
+    imgSrcArr: List<String>,
+    onBackClick: () -> Unit = {}
+) {
+    val pagerState = rememberPagerState(initialPage = imgOrder)
+    val coroutineScope = rememberCoroutineScope()
+    Scaffold(
+        topBar = {
+            MemoTopAppBar(
+                titleRes = R.string.photo_memo_detail_toolbar,
+                canNavigateBack = true,
+                onNavigationClick = onBackClick
+            )
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier.padding(padding)
+        ) {
+            ImageSlider(
+                pagerState = pagerState,
+                images = imgSrcArr,
+                modifier = Modifier.weight(1f)
+            )
+
+            BottomImageList(
+                pagerState = pagerState,
+                srcArr = imgSrcArr,
+                onClick = {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(page = it)
+                    }
+                }
+            )
+        }
+    }
+}
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 private fun ImageSlider(
     pagerState: PagerState,
     images: List<String>,
-    repository: PhotoMemoRepository,
     modifier: Modifier = Modifier
 ) {
     HorizontalPager(
@@ -60,11 +102,11 @@ private fun ImageSlider(
             .background(Color.White)
     ) { page ->
         var imageUrl by remember { mutableStateOf("") }
-        LaunchedEffect(Unit) {
-            imageUrl = withContext(Dispatchers.IO) {
-                repository.getPhotoMemoImgUrlToCoroutine(images[page])
-            }
-        }
+//        LaunchedEffect(Unit) {
+//            imageUrl = withContext(Dispatchers.IO) {
+//                repository.getPhotoMemoImgUrlToCoroutine(images[page])
+//            }
+//        }
 
         val painter = if (imageUrl == "")
             painterResource(id = R.drawable.empty_photo) else
@@ -84,7 +126,6 @@ private fun ImageSlider(
 private fun BottomImageList(
     pagerState: PagerState,
     srcArr: List<String>,
-    repository: PhotoMemoRepository,
     onClick: (order: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -92,11 +133,11 @@ private fun BottomImageList(
         content = {
             itemsIndexed(srcArr) { idx, src ->
                 var imageUrl by remember { mutableStateOf("") }
-                LaunchedEffect(Unit) {
-                    imageUrl = withContext(Dispatchers.IO) {
-                        repository.getPhotoMemoImgUrlToCoroutine(src)
-                    }
-                }
+//                LaunchedEffect(Unit) {
+//                    imageUrl = withContext(Dispatchers.IO) {
+//                        repository.getPhotoMemoImgUrlToCoroutine(src)
+//                    }
+//                }
                 val painter = if (imageUrl == "")
                     painterResource(id = R.drawable.empty_photo) else
                     rememberAsyncImagePainter(imageUrl)
@@ -122,50 +163,5 @@ private fun BottomImageList(
             .fillMaxWidth()
             .background(Color.White)
     )
-}
-
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-fun PhotoDetailScreen(
-    imgOrder: Int,
-    imgSrcArr: List<String>,
-    repository: PhotoMemoRepository,
-    mainActivity: MainActivity
-) {
-    val pagerState = rememberPagerState(initialPage = imgOrder)
-    val coroutineScope = rememberCoroutineScope()
-    Scaffold(
-        topBar = {
-            MemoTopAppBar(
-                titleRes = R.string.photo_memo_detail_toolbar,
-                canNavigateBack = true,
-                onNavigationClick = {
-                    mainActivity.removeFragment(MainActivity.PHOTO_DETAIL_FRAGMENT)
-                }
-            )
-        }
-    ) { padding ->
-        Column(
-            modifier = Modifier.padding(padding)
-        ) {
-            ImageSlider(
-                pagerState = pagerState,
-                images = imgSrcArr,
-                repository = repository,
-                modifier = Modifier.weight(1f)
-            )
-
-            BottomImageList(
-                pagerState = pagerState,
-                srcArr = imgSrcArr,
-                repository = repository,
-                onClick = {
-                    coroutineScope.launch {
-                        pagerState.animateScrollToPage(page = it)
-                    }
-                }
-            )
-        }
-    }
 }
 
