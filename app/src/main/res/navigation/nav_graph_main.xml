@@ -18,9 +18,6 @@
         android:name="com.hifi.redeal.memo.PhotoMemoFragment"
         android:label="PhotoMemoFragment" >
         <action
-            android:id="@+id/action_photoMemoFragment_to_photoDetailFragment"
-            app:destination="@id/photoDetailFragment" />
-        <action
             android:id="@+id/action_photoMemoFragment_to_addPhotoMemoFragment"
             app:destination="@id/addPhotoMemoFragment" />
     </fragment>
@@ -208,11 +205,6 @@
         android:name="com.hifi.redeal.account.NotificationFragment"
         android:label="fragment_notification"
         tools:layout="@layout/fragment_notification" />
-    <fragment
-        android:id="@+id/photoDetailFragment"
-        android:name="com.hifi.redeal.memo.PhotoDetailFragment"
-        android:label="fragment_photo_detail"
-        tools:layout="@layout/fragment_photo_detail" />
     <fragment
         android:id="@+id/recordMemoFragment"
         android:name="com.hifi.redeal.memo.RecordMemoFragment"
