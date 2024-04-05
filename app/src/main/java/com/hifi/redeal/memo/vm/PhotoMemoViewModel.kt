@@ -1,32 +1,36 @@
 package com.hifi.redeal.memo.vm
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.google.firebase.Timestamp
-import com.hifi.redeal.memo.model.PhotoMemoData
-import com.hifi.redeal.memo.repository.PhotoMemoRepository
+import androidx.lifecycle.viewModelScope
+import com.hifi.redeal.memo.components.PhotoMemoDestination
+import com.hifi.redeal.memo.model.PhotoMemo
+import com.hifi.redeal.memo.repository.PhotoMemosRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class PhotoMemoViewModel @Inject constructor(
-    private val photoMemoRepository: PhotoMemoRepository,
+    savedStateHandle: SavedStateHandle,
+    photoMemosRepository: PhotoMemosRepository
 ) : ViewModel() {
-    private val _photoMemoList = MutableLiveData<List<PhotoMemoData>>()
-    val photoMemoList: LiveData<List<PhotoMemoData>> get() = _photoMemoList
 
-    fun getPhotoMemoList(clientIdx: Long) {
-        photoMemoRepository.getPhotoMemoAll(clientIdx) { documentSnapshot ->
-            val updatedList = mutableListOf<PhotoMemoData>()
-            for (item in documentSnapshot) {
-                val context = item.get("photoMemoContext") as String
-                val date = item.get("photoMemoDate") as Timestamp
-                val srcArr = item.get("photoMemoSrcArr") as List<String>
-                val newPhotoMemo = PhotoMemoData(context, date.toDate(), srcArr, clientIdx)
-                updatedList.add(newPhotoMemo)
+    private val clientId: Int = checkNotNull(savedStateHandle[PhotoMemoDestination.clientIdArg])
+
+    val photoMemosUiState: StateFlow<PhotoMemosUiState> =
+        photoMemosRepository.getClientWithPhotoMemos(clientId)
+            .map {
+                PhotoMemosUiState(it)
             }
-            _photoMemoList.value = updatedList.sortedByDescending { it.date }
-        }
-    }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000L),
+                initialValue = PhotoMemosUiState()
+            )
 }
+
+data class PhotoMemosUiState(val photoMemos: List<PhotoMemo> = listOf())
