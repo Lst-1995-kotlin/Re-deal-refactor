@@ -29,13 +29,13 @@ class TradeAddViewModel @Inject constructor(
 
     fun insertDepositTrade() {
         viewModelScope.launch {
-            inputAmount.value?.let { receivedAmount ->
+            inputAmount.value?.let { amount ->
                 tradeRepository.insertTrade(
                     TradeEntry(
                         itemName = "",
                         itemCount = 0L,
                         itemPrice = 0L,
-                        receivedAmount = receivedAmount,
+                        receivedAmount = amount,
                         type = TradeType.DEPOSIT.type,
                         date = Date(),
                         checked = false,

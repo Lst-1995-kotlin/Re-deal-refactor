@@ -86,6 +86,7 @@ class TradeDepositFragment : Fragment() {
                     while (!tradeAmountCheck(inputNumber)) {
                         inputNumber /= 10L
                     }
+                    tradeAddViewModel.setInputAmount(inputNumber)
                     val replaceNumber = inputNumber.toNumberFormat()
                     addDepositAmountEditTextNumber.run {
                         removeTextChangedListener(amountTextWatcher)
@@ -111,6 +112,11 @@ class TradeDepositFragment : Fragment() {
                     addDepositBtn.visibility = View.VISIBLE
                 }
                 selectTradeClientDialog.dismiss()
+            }
+
+            addDepositBtn.setOnClickListener {
+                tradeAddViewModel.insertDepositTrade()
+                findNavController().popBackStack()
             }
 
         }

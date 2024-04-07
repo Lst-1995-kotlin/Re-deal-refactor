@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="viewModel"
             type="com.hifi.redeal.trade.domain.viewmodel.TradeAddViewModel" />
@@ -93,7 +92,7 @@
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:hint="거래처 선택"
                 android:text='@{viewModel.selectedClient != null ? viewModel.selectedClient.name + " " + viewModel.selectedClient.managerName : ""}'
-                />
+                android:textAppearance="@style/TextAppearance.App.BodySmall" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
