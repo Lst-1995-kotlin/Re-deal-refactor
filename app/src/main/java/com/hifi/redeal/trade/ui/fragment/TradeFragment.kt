@@ -62,15 +62,10 @@ class TradeFragment : Fragment() {
     }
 
     private fun setDialog(inflater: LayoutInflater) {
-        tradeAddSelectDialog = TradeAddSelectDialog(inflater)
-        tradeAddSelectDialog.setOnAddDepositClickEvent {
-            findNavController()
-                .navigate(R.id.action_tradeFragment_to_transactionDepositFragment)
-        }
-        tradeAddSelectDialog.setOnAddSalesClickEvent {
-            findNavController()
-                .navigate(R.id.action_tradeFragment_to_transactionSalesFragment)
-        }
+        tradeAddSelectDialog = TradeAddSelectDialog(inflater,
+            { findNavController().navigate(R.id.action_tradeFragment_to_transactionDepositFragment) },
+            { findNavController().navigate(R.id.action_tradeFragment_to_transactionSalesFragment) }
+        )
     }
 
     private fun setAdapter() {

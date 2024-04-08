@@ -6,19 +6,10 @@ import com.hifi.redeal.R
 import com.hifi.redeal.databinding.DialogTransactionAddSelectBinding
 
 class TradeAddSelectDialog(
-    private val layoutInflater: LayoutInflater
+    private val layoutInflater: LayoutInflater,
+    private val addDepositClickEvent: () -> Unit,
+    private val addSalesClickEvent: () -> Unit
 ) {
-
-    private lateinit var addDepositClickEvent: () -> Unit
-    private lateinit var addSalesClickEvent: () -> Unit
-
-    fun setOnAddDepositClickEvent(event: () -> Unit) {
-        addDepositClickEvent = event
-    }
-
-    fun setOnAddSalesClickEvent(event: () -> Unit) {
-        addSalesClickEvent = event
-    }
 
     fun dialogShow() {
         val context = layoutInflater.context
