@@ -1,9 +1,9 @@
 package com.hifi.redeal.memo.components
 
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
@@ -37,7 +37,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.hifi.redeal.R
@@ -47,6 +46,8 @@ import com.hifi.redeal.memo.navigation.NavigationDestination
 import com.hifi.redeal.memo.ui.MemoTopAppBar
 import com.hifi.redeal.memo.vm.PhotoMemoEntryViewModel
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 object PhotoMemoEntryDestination : NavigationDestination{
     override val route = "client_photo_memo_entry"
@@ -58,6 +59,7 @@ object PhotoMemoEntryDestination : NavigationDestination{
 fun PhotoMemoEntryScreen(
     modifier: Modifier = Modifier,
     onBackClick:() -> Unit = {},
+    onClickPhoto: (photoMemoUris: String, order:Int) -> Unit = {_, _ ->},
     viewModel: PhotoMemoEntryViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -113,7 +115,8 @@ fun PhotoMemoEntryScreen(
             AddPhotoMemoBody(
                 photoMemo = viewModel.photoMemoUiState.photoMemo,
                 onPhotoMemoValueChange = viewModel::updateUiState,
-                selectedImageList = viewModel.photoMemoUiState.photoMemo.imageUris.map{it.toUri()},
+                imageUris = viewModel.photoMemoUiState.photoMemo.imageUris,
+                onClickPhoto = onClickPhoto,
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 20.dp)
@@ -138,13 +141,14 @@ fun PhotoMemoEntryScreen(
 private fun AddPhotoMemoBody(
     photoMemo: PhotoMemo,
     onPhotoMemoValueChange: (PhotoMemo) -> Unit,
-    selectedImageList: List<Uri>,
-    modifier: Modifier = Modifier
+    imageUris: List<String>,
+    modifier: Modifier = Modifier,
+    onClickPhoto: (photoMemoUris: String, order:Int) -> Unit = {_, _ ->}
 ) {
     Column(
         modifier = modifier
     ) {
-        if (selectedImageList.isEmpty()) {
+        if (imageUris.isEmpty()) {
             Text(
                 text = stringResource(id = R.string.add_photo_memo_body_empty_photo),
                 color = MaterialTheme.colorScheme.primary,
@@ -161,12 +165,20 @@ private fun AddPhotoMemoBody(
                 contentPadding = PaddingValues(horizontal = 2.dp),
                 modifier = Modifier.padding(vertical = 32.dp),
                 content = {
-                    items(selectedImageList) { uri ->
+                    itemsIndexed(imageUris) { idx, uri ->
                         AsyncImage(
                             model = uri,
                             contentDescription = null,
-                            modifier = Modifier.size(100.dp),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.size(100.dp).clickable {
+                                val encodedUrls = imageUris.map {
+                                    URLEncoder.encode(
+                                        it,
+                                        StandardCharsets.UTF_8.toString()
+                                    )
+                                }
+                                onClickPhoto(encodedUrls.joinToString(separator = ","), idx)
+                            },
                         )
                     }
                 }

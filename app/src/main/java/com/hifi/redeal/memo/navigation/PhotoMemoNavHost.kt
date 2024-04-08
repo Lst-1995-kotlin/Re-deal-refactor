@@ -26,6 +26,9 @@ fun PhotoMemoNavHost(
         startDestination = PhotoMemoDestination.routeWithArgs,
         modifier = modifier
     ) {
+        val onClickPhoto = { imageUris:String, order:Int ->
+            navController.navigate("${PhotoDetailDestination.route}/${imageUris}/${order}")
+        }
         composable(
             route = PhotoMemoDestination.routeWithArgs,
             arguments = listOf(navArgument(PhotoMemoDestination.clientIdArg) {
@@ -38,9 +41,7 @@ fun PhotoMemoNavHost(
                 onFabClick = {
                     navController.navigate("${PhotoMemoEntryDestination.route}/${clientId}")
                 },
-                onClickPhoto = { imageUris, order ->
-                    navController.navigate("${PhotoDetailDestination.route}/${imageUris}/${order}")
-                }
+                onClickPhoto = onClickPhoto
             )
         }
         composable(
@@ -52,6 +53,7 @@ fun PhotoMemoNavHost(
         ) {
             PhotoMemoEntryScreen(
                 onBackClick = navController::popBackStack,
+                onClickPhoto = onClickPhoto
             )
         }
         composable(
