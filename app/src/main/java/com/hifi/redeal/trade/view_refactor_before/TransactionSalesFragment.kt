@@ -4,120 +4,92 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.hifi.redeal.MainActivity
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTransactionSalesBinding
+import com.hifi.redeal.trade.domain.viewmodel.SalesTradeAddViewModel
+import com.hifi.redeal.trade.ui.adapter.viewHolder.client.TradeClientHolderFactory
+import com.hifi.redeal.trade.ui.dialog.SelectTradeClientDialog
+import com.hifi.redeal.trade.util.AmountSalesTextWatcher
+import com.hifi.redeal.trade.util.DialogShowingFocusListener
+import com.hifi.redeal.trade.util.ItemNameTextWatcher
+import com.hifi.redeal.trade.util.ItemTextWatcher
+import com.hifi.redeal.trade.util.TradeInputEditTextFocusListener
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TransactionSalesFragment : Fragment() {
-    private lateinit var mainActivity: MainActivity
-    private lateinit var fragmentTransactionSalesBinding: FragmentTransactionSalesBinding
+    private lateinit var fragmentTradeSalesBinding: FragmentTransactionSalesBinding
+    private val salesTradeAddViewModel: SalesTradeAddViewModel by viewModels()
 
-    //private val transactionClientViewModel: TransactionClientViewModel by activityViewModels()
-    //private val transactionViewModel: TransactionViewModel by activityViewModels()
+    @Inject
+    lateinit var selectTradeClientDialog: SelectTradeClientDialog
+
+    @Inject
+    lateinit var tradeClientHolderFactory: TradeClientHolderFactory
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        fragmentTransactionSalesBinding = FragmentTransactionSalesBinding.inflate(inflater)
-        mainActivity = activity as MainActivity
-//        setViewModel()
-//        setBind()
+        fragmentTradeSalesBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_transaction_sales, container, false)
+        setBind()
 
-        return fragmentTransactionSalesBinding.root
+        return fragmentTradeSalesBinding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        //transactionClientViewModel.setSelectClientIndex(null)
-    }
 
-//    private fun setBind() {
-//        fragmentTransactionSalesBinding.run {
-//            addSalesMaterialToolbar.setNavigationOnClickListener {
-//                findNavController().popBackStack()
-//            }
-//
-//            addSalesBtn.setOnClickListener {
-//                val itemPrice = removeNumberFormat("${transactionItemPriceEditText.text}")
-//                val itemCount = removeNumberFormat("${transactionItemCountEditText.text}")
-//                val amountReceived = removeNumberFormat("${transactionAmountReceivedEditText.text}")
-//
-//                transactionClientViewModel.selectedClient.value?.let { client ->
-//                    transactionViewModel.addSalesTransaction(
-//                        client,
-//                        "${transactionItemNameEditText.text}",
-//                        itemCount,
-//                        itemPrice,
-//                        amountReceived
-//                    )
-//                    transactionViewModel.setMoveToPosition(0)
-//                    findNavController().popBackStack()
-//                }
-//            }
-//
-//            transactionItemNameEditText.onFocusChangeListener =
-//                TransactionInputEditTextFocusListener()
-//            transactionItemCountEditText.onFocusChangeListener =
-//                TransactionInputEditTextFocusListener()
-//            transactionItemPriceEditText.onFocusChangeListener =
-//                TransactionInputEditTextFocusListener()
-//            transactionAmountReceivedEditText.onFocusChangeListener =
-//                TransactionInputEditTextFocusListener()
-//
-//            transactionClientSelectEditText.onFocusChangeListener =
-//                TransactionSelectEditTextFocusListener(
-//                    SelectTransactionClientDialog(transactionClientViewModel),
-//                    childFragmentManager
-//                )
-//
+    private fun setBind() {
+        fragmentTradeSalesBinding.run {
+            addSalesMaterialToolbar.setNavigationOnClickListener {
+                findNavController().popBackStack()
+            }
+
+            addSalesBtn.setOnClickListener {
+                salesTradeAddViewModel.insertSalesTrade()
+                findNavController().popBackStack()
+            }
+
+            transactionItemNameEditText.onFocusChangeListener =
+                TradeInputEditTextFocusListener()
+            transactionItemCountEditText.onFocusChangeListener =
+                TradeInputEditTextFocusListener()
+            transactionItemPriceEditText.onFocusChangeListener =
+                TradeInputEditTextFocusListener()
+            transactionAmountReceivedEditText.onFocusChangeListener =
+                TradeInputEditTextFocusListener()
+
+            transactionClientSelectEditText.onFocusChangeListener =
+                DialogShowingFocusListener(
+                    selectTradeClientDialog,
+                    childFragmentManager
+                )
+
 //            transactionItemNameEditText.addTextChangedListener(
-//                ItemNameTextWatcher(
-//                    transactionClientViewModel,
-//                    addSalesBtn
-//                )
+//
 //            )
 //
 //            transactionItemCountEditText.addTextChangedListener(
-//                ItemTextWatcher(
-//                    transactionClientViewModel,
-//                    transactionItemCountEditText,
-//                    transactionItemPriceEditText,
-//                    transactionAmountReceivedEditText,
-//                    addSalesBtn
-//                )
+//
 //            )
 //
 //            transactionItemPriceEditText.addTextChangedListener(
-//                ItemTextWatcher(
-//                    transactionClientViewModel,
-//                    transactionItemPriceEditText,
-//                    transactionItemCountEditText,
-//                    transactionAmountReceivedEditText,
-//                    addSalesBtn
-//                )
+//
 //            )
 //
 //            transactionAmountReceivedEditText.addTextChangedListener(
-//                AmountSalesTextWatcher(
-//                    transactionClientViewModel,
-//                    transactionAmountReceivedEditText,
-//                    transactionItemPriceEditText,
-//                    transactionItemCountEditText,
-//                    addSalesBtn
-//                )
+//
 //            )
-//
-//            setTransactionAmountMessage(amountMessageTextView)
-//
-//            mainActivity.hideKeyboardAndClearFocus(transactionItemNameEditText)
-//            mainActivity.hideKeyboardAndClearFocus(transactionItemCountEditText)
-//            mainActivity.hideKeyboardAndClearFocus(transactionItemPriceEditText)
-//            mainActivity.hideKeyboardAndClearFocus(transactionAmountReceivedEditText)
-//        }
-//    }
+
+
+        }
+    }
 //
 //    private fun setViewModel() {
 //        transactionClientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->

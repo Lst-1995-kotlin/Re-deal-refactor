@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTradeDepositBinding
 import com.hifi.redeal.trade.configuration.TradeAmountConfiguration.Companion.tradeAmountCheck
-import com.hifi.redeal.trade.domain.viewmodel.TradeAddViewModel
+import com.hifi.redeal.trade.domain.viewmodel.DepositTradeAddViewModel
 import com.hifi.redeal.trade.ui.adapter.viewHolder.client.TradeClientHolderFactory
 import com.hifi.redeal.trade.util.AmountTextWatcher
 import com.hifi.redeal.trade.util.TradeInputEditTextFocusListener
@@ -27,7 +27,7 @@ import javax.inject.Inject
 class TradeDepositFragment : Fragment() {
 
     private lateinit var fragmentTradeDepositBinding: FragmentTradeDepositBinding
-    private val tradeAddViewModel: TradeAddViewModel by viewModels()
+    private val depositTradeAddViewModel: DepositTradeAddViewModel by viewModels()
 
     @Inject
     lateinit var selectTradeClientDialog: SelectTradeClientDialog
@@ -46,7 +46,7 @@ class TradeDepositFragment : Fragment() {
         fragmentTradeDepositBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_trade_deposit, container, false)
         fragmentTradeDepositBinding.lifecycleOwner = viewLifecycleOwner
-        fragmentTradeDepositBinding.viewModel = tradeAddViewModel
+        fragmentTradeDepositBinding.viewModel = depositTradeAddViewModel
 
         setBind()
         return fragmentTradeDepositBinding.root
@@ -76,7 +76,7 @@ class TradeDepositFragment : Fragment() {
             amountTextWatcher.setOnTextChangeListener {// 변경되고 나서
                 addDepositBtn.visibility =
                     if (it.isNullOrEmpty() ||
-                        tradeAddViewModel.selectedClient.value == null
+                        depositTradeAddViewModel.selectedClient.value == null
                     ) View.GONE
                     else View.VISIBLE
             }
@@ -86,7 +86,7 @@ class TradeDepositFragment : Fragment() {
                     while (!tradeAmountCheck(inputNumber)) {
                         inputNumber /= 10L
                     }
-                    tradeAddViewModel.setInputAmount(inputNumber)
+                    depositTradeAddViewModel.setInputAmount(inputNumber)
                     val replaceNumber = inputNumber.toNumberFormat()
                     addDepositAmountEditTextNumber.run {
                         removeTextChangedListener(amountTextWatcher)
@@ -107,7 +107,7 @@ class TradeDepositFragment : Fragment() {
 
             // 거래처를 클릭하여 선택하였을 경우
             tradeClientHolderFactory.setOnClickListener {
-                tradeAddViewModel.setTradeClientData(it)
+                depositTradeAddViewModel.setTradeClientData(it)
                 if (!addDepositAmountEditTextNumber.text.isNullOrEmpty()) {
                     addDepositBtn.visibility = View.VISIBLE
                 }
@@ -115,7 +115,7 @@ class TradeDepositFragment : Fragment() {
             }
 
             addDepositBtn.setOnClickListener {
-                tradeAddViewModel.insertDepositTrade()
+                depositTradeAddViewModel.insertDepositTrade()
                 findNavController().popBackStack()
             }
 
