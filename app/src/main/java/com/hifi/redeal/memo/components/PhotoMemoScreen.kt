@@ -1,6 +1,5 @@
 package com.hifi.redeal.memo.components
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -29,7 +29,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
@@ -39,6 +38,8 @@ import com.hifi.redeal.memo.navigation.NavigationDestination
 import com.hifi.redeal.memo.ui.DateText
 import com.hifi.redeal.memo.ui.MemoTopAppBar
 import com.hifi.redeal.memo.vm.PhotoMemoViewModel
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 object PhotoMemoDestination : NavigationDestination {
     override val route = "client_photo_memo"
@@ -52,7 +53,7 @@ fun PhotoMemoScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {},
     onFabClick: () -> Unit = {},
-    onPhotoMemoClick: (photoMemoId: Int) -> Unit = {},
+    onClickPhoto: (photoMemoUris: String, order:Int) -> Unit = {_, _ ->},
     viewModel: PhotoMemoViewModel = hiltViewModel(),
 ) {
     val photoMemoUiState by viewModel.photoMemosUiState.collectAsStateWithLifecycle()
@@ -81,7 +82,7 @@ fun PhotoMemoScreen(
     ) { padding ->
         PhotoMemoColumn(
             photoMemos = photoMemoUiState.photoMemos,
-            onPhotoMemoClick = onPhotoMemoClick,
+            onClickPhoto = onClickPhoto,
             modifier = Modifier
                 .padding(padding)
                 .padding(vertical = 16.dp, horizontal = 20.dp),
@@ -95,16 +96,14 @@ fun PhotoMemoScreen(
 private fun PhotoMemoColumn(
     photoMemos: List<PhotoMemo>,
     modifier: Modifier = Modifier,
-    onPhotoMemoClick: (photoMemoId: Int) -> Unit = {}
+    onClickPhoto: (photoMemoUris: String, order:Int) -> Unit = {_, _ ->},
 ) {
     LazyColumn(
         content = {
             items(photoMemos) { photoMemo ->
                 PhotoMemoItem(
                     photoMemo = photoMemo,
-                    onPhotoMemoClick = {
-                        onPhotoMemoClick(photoMemo.id)
-                    },
+                    onClickPhoto = onClickPhoto,
                 )
                 Divider(Modifier.padding(vertical = 16.dp))
             }
@@ -117,7 +116,7 @@ private fun PhotoMemoColumn(
 private fun PhotoMemoItem(
     photoMemo: PhotoMemo,
     modifier: Modifier = Modifier,
-    onPhotoMemoClick: () -> Unit = {}
+    onClickPhoto: (photoMemoUris: String, order:Int) -> Unit = {_, _ ->}
 ) {
     Column(modifier) {
         DateText(
@@ -127,8 +126,8 @@ private fun PhotoMemoItem(
                 .padding(start = 4.dp)
         )
         LazyRowImageList(
-            imageUris = photoMemo.imageUris.map { it.toUri() },
-            onPhotoMemoClick = onPhotoMemoClick,
+            imageUris = photoMemo.imageUris,
+            onClickPhoto = onClickPhoto,
             modifier = Modifier
                 .padding(top = 8.dp)
                 .fillMaxWidth()
@@ -139,15 +138,15 @@ private fun PhotoMemoItem(
 
 @Composable
 private fun LazyRowImageList(
-    imageUris: List<Uri>,
+    imageUris: List<String>,
     modifier: Modifier = Modifier,
-    onPhotoMemoClick: () -> Unit = {}
+    onClickPhoto: (photoMemoUris: String, order:Int) -> Unit = {_, _ ->}
 ) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(horizontal = 2.dp),
         content = {
-            items(imageUris) { uri ->
+            itemsIndexed(imageUris) { idx, uri ->
                 Image(
                     painter = rememberAsyncImagePainter(uri),
                     contentDescription = null,
@@ -156,7 +155,13 @@ private fun LazyRowImageList(
                         .size(100.dp)
                         .clip(shape = RoundedCornerShape(8.dp))
                         .clickable {
-                            onPhotoMemoClick()
+                            val encodedUrls = imageUris.map {
+                                URLEncoder.encode(
+                                    it,
+                                    StandardCharsets.UTF_8.toString()
+                                )
+                            }
+                            onClickPhoto(encodedUrls.joinToString(separator = ","), idx)
                         }
                 )
             }

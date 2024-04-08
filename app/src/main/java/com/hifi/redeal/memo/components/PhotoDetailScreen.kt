@@ -16,16 +16,11 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -39,42 +34,45 @@ import kotlinx.coroutines.launch
 
 object PhotoDetailDestination : NavigationDestination {
     override val route = "photo_memo_detail"
-    override val titleRes = R.string.photo_memo_detail_toolbar
-    const val photoMemoId = "photoMemoId"
-    val routeWithArgs = "$route/{$photoMemoId}"
+    override val titleRes = R.string.photo_detail_toolbar
+    const val imageUris = "imageUris"
+    const val initialOrder = "initialOrder"
+    val routeWithArgs = "$route/{$imageUris}/{$initialOrder}"
 }
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun PhotoDetailScreen(
-    imgOrder: Int,
-    imgSrcArr: List<String>,
+    imageUris: List<String>,
+    modifier: Modifier = Modifier,
+    initialOrder: Int = 0,
     onBackClick: () -> Unit = {}
 ) {
-    val pagerState = rememberPagerState(initialPage = imgOrder)
+    val pagerState = rememberPagerState(initialPage = initialOrder)
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = {
             MemoTopAppBar(
-                titleRes = R.string.photo_memo_detail_toolbar,
+                titleRes = PhotoDetailDestination.titleRes,
                 canNavigateBack = true,
                 onNavigationClick = onBackClick
             )
-        }
+        },
+        modifier = modifier
     ) { padding ->
         Column(
             modifier = Modifier.padding(padding)
         ) {
             ImageSlider(
                 pagerState = pagerState,
-                images = imgSrcArr,
+                imageUris = imageUris,
                 modifier = Modifier.weight(1f)
             )
 
-            BottomImageList(
+            BottomImageRow(
                 pagerState = pagerState,
-                srcArr = imgSrcArr,
-                onClick = {
+                imageUris = imageUris,
+                onClickImage = {
                     coroutineScope.launch {
                         pagerState.animateScrollToPage(page = it)
                     }
@@ -88,11 +86,11 @@ fun PhotoDetailScreen(
 @Composable
 private fun ImageSlider(
     pagerState: PagerState,
-    images: List<String>,
+    imageUris: List<String>,
     modifier: Modifier = Modifier
 ) {
     HorizontalPager(
-        count = images.size,
+        count = imageUris.size,
         state = pagerState,
         itemSpacing = 16.dp,
         verticalAlignment = Alignment.CenterVertically,
@@ -101,18 +99,8 @@ private fun ImageSlider(
             .fillMaxWidth()
             .background(Color.White)
     ) { page ->
-        var imageUrl by remember { mutableStateOf("") }
-//        LaunchedEffect(Unit) {
-//            imageUrl = withContext(Dispatchers.IO) {
-//                repository.getPhotoMemoImgUrlToCoroutine(images[page])
-//            }
-//        }
-
-        val painter = if (imageUrl == "")
-            painterResource(id = R.drawable.empty_photo) else
-            rememberAsyncImagePainter(imageUrl)
         Image(
-            painter = painter,
+            painter = rememberAsyncImagePainter(imageUris[page]),
             contentDescription = "$page",
             contentScale = ContentScale.Fit,
             modifier = Modifier
@@ -123,32 +111,23 @@ private fun ImageSlider(
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-private fun BottomImageList(
+private fun BottomImageRow(
     pagerState: PagerState,
-    srcArr: List<String>,
-    onClick: (order: Int) -> Unit,
-    modifier: Modifier = Modifier
+    imageUris: List<String>,
+    onClickImage: (order: Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     LazyRow(
         content = {
-            itemsIndexed(srcArr) { idx, src ->
-                var imageUrl by remember { mutableStateOf("") }
-//                LaunchedEffect(Unit) {
-//                    imageUrl = withContext(Dispatchers.IO) {
-//                        repository.getPhotoMemoImgUrlToCoroutine(src)
-//                    }
-//                }
-                val painter = if (imageUrl == "")
-                    painterResource(id = R.drawable.empty_photo) else
-                    rememberAsyncImagePainter(imageUrl)
+            itemsIndexed(imageUris) { idx, src ->
                 Image(
-                    painter = painter,
+                    painter = rememberAsyncImagePainter(src),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(60.dp)
                         .clickable {
-                            onClick(idx)
+                            onClickImage(idx)
                         }
                         .border(
                             width = if (pagerState.currentPage == idx) 4.dp else 0.dp,

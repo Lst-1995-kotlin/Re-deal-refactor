@@ -38,8 +38,8 @@ fun PhotoMemoNavHost(
                 onFabClick = {
                     navController.navigate("${PhotoMemoEntryDestination.route}/${clientId}")
                 },
-                onPhotoMemoClick = {
-                    navController.navigate("${PhotoDetailDestination.route}/${it}")
+                onClickPhoto = { imageUris, order ->
+                    navController.navigate("${PhotoDetailDestination.route}/${imageUris}/${order}")
                 }
             )
         }
@@ -56,14 +56,22 @@ fun PhotoMemoNavHost(
         }
         composable(
             route = PhotoDetailDestination.routeWithArgs,
-            arguments = listOf(navArgument(PhotoDetailDestination.photoMemoId) {
-                type = NavType.IntType
-            })
+            arguments = listOf(
+                navArgument(PhotoDetailDestination.imageUris) {
+                    type = NavType.StringType
+                },
+                navArgument(PhotoDetailDestination.initialOrder) {
+                    type = NavType.IntType
+                }
+            )
         ) {
+            val imageUris: List<String> =
+                it.arguments?.getString(PhotoDetailDestination.imageUris)?.split(",") ?: emptyList()
+            val initialOrder: Int = it.arguments?.getInt(PhotoDetailDestination.initialOrder) ?: 0
             PhotoDetailScreen(
                 onBackClick = navController::popBackStack,
-                imgOrder = 0,
-                imgSrcArr = emptyList(),
+                initialOrder = initialOrder,
+                imageUris = imageUris,
             )
         }
     }
