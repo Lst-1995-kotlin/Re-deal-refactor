@@ -122,6 +122,7 @@ class TradeFragment : Fragment() {
     private fun setViewModel() {
         tradeViewModel.trades.observe(viewLifecycleOwner) { trades -> // 어댑터에 표시하는 거래내역들
             tradeAdapter.submitList(trades) {
+                fragmentTradeBinding.transactionRecyclerView.scrollToPosition(0)
                 tradeAdapter.updateCount()
             }
         }
