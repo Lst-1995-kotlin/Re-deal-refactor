@@ -13,10 +13,7 @@ import com.hifi.redeal.databinding.FragmentTransactionSalesBinding
 import com.hifi.redeal.trade.domain.viewmodel.SalesTradeAddViewModel
 import com.hifi.redeal.trade.ui.adapter.viewHolder.client.TradeClientHolderFactory
 import com.hifi.redeal.trade.ui.dialog.SelectTradeClientDialog
-import com.hifi.redeal.trade.util.AmountSalesTextWatcher
 import com.hifi.redeal.trade.util.DialogShowingFocusListener
-import com.hifi.redeal.trade.util.ItemNameTextWatcher
-import com.hifi.redeal.trade.util.ItemTextWatcher
 import com.hifi.redeal.trade.util.TradeInputEditTextFocusListener
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
