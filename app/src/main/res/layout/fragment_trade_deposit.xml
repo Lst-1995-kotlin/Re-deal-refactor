@@ -59,12 +59,9 @@
                 style="@style/trade_text_input_edit_text_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bottom_border_not_focus"
-                android:fontFamily="@font/nanumsquareneo_regular"
                 android:hint="금액 입력"
                 android:inputType="number"
-                android:maxLength="19"
-                android:singleLine="true" />
+                android:textAppearance="@style/AuthMainToolbarTitleTextAppearance" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -87,9 +84,7 @@
                 style="@style/trade_text_input_edit_text_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bottom_border_not_focus"
                 android:drawableEnd="@drawable/search_24px_primary20"
-                android:fontFamily="@font/nanumsquareneo_regular"
                 android:hint="거래처 선택"
                 android:text='@{viewModel.selectedClient != null ? viewModel.selectedClient.name + " " + viewModel.selectedClient.managerName : ""}'
                 android:textAppearance="@style/TextAppearance.App.BodySmall" />
@@ -98,7 +93,7 @@
         <Button
             android:id="@+id/addDepositBtn"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp"
@@ -106,7 +101,7 @@
             android:text="입금 내역 추가"
             android:textColor="@color/primary99"
             android:textSize="20sp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"

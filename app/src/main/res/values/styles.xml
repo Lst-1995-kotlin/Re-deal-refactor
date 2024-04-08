@@ -122,6 +122,9 @@
         <item name="android:textAlignment">viewStart</item>
         <item name="android:textColor">@color/text10</item>
         <item name="android:textColorLink">@color/primary20</item>
+        <item name="android:maxLength">19</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:background">@drawable/bottom_border_not_focus</item>
     </style>
 
     <style name="trade_edit_delete_button_style">
