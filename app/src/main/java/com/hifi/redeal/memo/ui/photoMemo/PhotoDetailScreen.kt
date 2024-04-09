@@ -1,4 +1,4 @@
-package com.hifi.redeal.memo.components
+package com.hifi.redeal.memo.ui.photoMemo
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -30,6 +31,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.hifi.redeal.R
 import com.hifi.redeal.memo.navigation.NavigationDestination
 import com.hifi.redeal.memo.ui.MemoTopAppBar
+import com.hifi.redeal.theme.RedealTheme
 import kotlinx.coroutines.launch
 
 object PhotoDetailDestination : NavigationDestination {
@@ -42,9 +44,9 @@ object PhotoDetailDestination : NavigationDestination {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun PhotoDetailScreen(
-    imageUris: List<String>,
+internal fun PhotoDetailScreen(
     modifier: Modifier = Modifier,
+    imageUris: List<String> = emptyList(),
     initialOrder: Int = 0,
     onBackClick: () -> Unit = {}
 ) {
@@ -60,87 +62,82 @@ fun PhotoDetailScreen(
         },
         modifier = modifier
     ) { padding ->
-        Column(
-            modifier = Modifier.padding(padding)
-        ) {
-            ImageSlider(
-                pagerState = pagerState,
-                imageUris = imageUris,
-                modifier = Modifier.weight(1f)
-            )
-
-            BottomImageRow(
-                pagerState = pagerState,
-                imageUris = imageUris,
-                onClickImage = {
-                    coroutineScope.launch {
-                        pagerState.animateScrollToPage(page = it)
-                    }
+        PhotoPager(
+            modifier = Modifier.padding(padding),
+            pagerState = pagerState,
+            imageUris = imageUris,
+            onClickBottomImage = {
+                coroutineScope.launch {
+                    pagerState.animateScrollToPage(page = it)
                 }
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-private fun ImageSlider(
-    pagerState: PagerState,
-    imageUris: List<String>,
-    modifier: Modifier = Modifier
-) {
-    HorizontalPager(
-        count = imageUris.size,
-        state = pagerState,
-        itemSpacing = 16.dp,
-        verticalAlignment = Alignment.CenterVertically,
-        contentPadding = PaddingValues(vertical = 16.dp),
-        modifier = modifier
-            .fillMaxWidth()
-            .background(Color.White)
-    ) { page ->
-        Image(
-            painter = rememberAsyncImagePainter(imageUris[page]),
-            contentDescription = "$page",
-            contentScale = ContentScale.Fit,
-            modifier = Modifier
-                .fillMaxSize()
+            }
         )
     }
 }
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-private fun BottomImageRow(
+private fun PhotoPager(
     pagerState: PagerState,
     imageUris: List<String>,
-    onClickImage: (order: Int) -> Unit,
-    modifier: Modifier = Modifier,
+    onClickBottomImage: (order: Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    LazyRow(
-        content = {
-            itemsIndexed(imageUris) { idx, src ->
-                Image(
-                    painter = rememberAsyncImagePainter(src),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(60.dp)
-                        .clickable {
-                            onClickImage(idx)
-                        }
-                        .border(
-                            width = if (pagerState.currentPage == idx) 4.dp else 0.dp,
-                            MaterialTheme.colorScheme.primary
-                        )
-                )
-            }
-        },
-        contentPadding = PaddingValues(20.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    Column(
         modifier = modifier
-            .fillMaxWidth()
-            .background(Color.White)
-    )
+    ) {
+        HorizontalPager(
+            count = imageUris.size,
+            state = pagerState,
+            itemSpacing = 16.dp,
+            verticalAlignment = Alignment.CenterVertically,
+            contentPadding = PaddingValues(vertical = 16.dp),
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .background(Color.White)
+        ) { page ->
+            Image(
+                painter = rememberAsyncImagePainter(imageUris[page]),
+                contentDescription = "$page",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxSize()
+            )
+        }
+
+        LazyRow(
+            content = {
+                itemsIndexed(imageUris) { idx, src ->
+                    Image(
+                        painter = rememberAsyncImagePainter(src),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(60.dp)
+                            .clickable {
+                                onClickBottomImage(idx)
+                            }
+                            .border(
+                                width = if (pagerState.currentPage == idx) 4.dp else 0.dp,
+                                MaterialTheme.colorScheme.primary
+                            )
+                    )
+                }
+            },
+            contentPadding = PaddingValues(20.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White)
+        )
+    }
+}
+@Preview("Photo Detail Screen")
+@Composable
+private fun PhotoDetailScreenPreview(){
+    RedealTheme {
+        PhotoDetailScreen()
+    }
 }
 

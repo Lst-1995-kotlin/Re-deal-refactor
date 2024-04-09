@@ -1,4 +1,4 @@
-package com.hifi.redeal.memo.components
+package com.hifi.redeal.memo.ui.recordMemo
 
 import android.content.ContentResolver
 import android.content.ContentValues
@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.Pause
@@ -28,7 +27,6 @@ import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.Stop
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,9 +37,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -57,9 +53,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.MediaItem
@@ -67,18 +63,17 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.hifi.redeal.R
 import com.hifi.redeal.memo.datastore.saveAudioFile
+import com.hifi.redeal.memo.model.RecordMemo
 import com.hifi.redeal.memo.navigation.NavigationDestination
 import com.hifi.redeal.memo.record.VoiceMemoRecorder
 import com.hifi.redeal.memo.ui.MemoTopAppBar
+import com.hifi.redeal.memo.ui.SaveDialog
 import com.hifi.redeal.memo.utils.convertToDurationTime
 import com.hifi.redeal.memo.utils.createAudioUri
 import com.hifi.redeal.memo.utils.formatRecordTime
-import com.hifi.redeal.memo.vm.RecordMemoEntryViewModel
+import com.hifi.redeal.theme.RedealTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 private enum class RecordState {
     BEFORE_RECORDING,
@@ -87,26 +82,60 @@ private enum class RecordState {
 }
 
 object RecordMemoEntryDestination : NavigationDestination {
-    override val route = "client_photo_memo_entry"
+    override val route = "client_record_memo_entry"
     override val titleRes = R.string.add_record_memo_toolbar
     const val clientId = "clientId"
     val routeWithArgs = "$route/{$clientId}"
 }
+
 @Composable
-fun RecordMemoEntryScreen(
+internal fun RecordMemoEntryRoute(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {},
     viewModel: RecordMemoEntryViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+    RecordMemoEntryScreen(
+        onBackClick = onBackClick,
+        recordMemoUiState = viewModel.recordMemoUiState,
+        updateUiState = {
+            viewModel.updateUiState(it)
+        },
+        onSaveClick = {
+            coroutineScope.launch {
+                val saveAudioFileUri = saveAudioFile(
+                    context,
+                    viewModel.recordMemoUiState.recordMemo.audioFileUri
+                )
+                viewModel.updateUiState(
+                    viewModel.recordMemoUiState.recordMemo.copy(
+                        audioFileUri = saveAudioFileUri
+                    )
+                )
+                viewModel.saveRecordMemo()
+                onBackClick()
+            }
+        },
+        modifier = modifier
+    )
+}
+
+@Composable
+internal fun RecordMemoEntryScreen(
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit = {},
+    recordMemoUiState: RecordMemoUiState = RecordMemoUiState(),
+    updateUiState: (RecordMemo) -> Unit = {},
+    onSaveClick: () -> Unit = {}
+) {
     var recordState by remember { mutableStateOf(RecordState.ON_RECORDING) }
     val albumLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
             recordState = RecordState.AFTER_RECORDING
-            viewModel.updateUiState(
-                viewModel.recordMemoUiState.recordMemo.copy(
+            updateUiState(
+                recordMemoUiState.recordMemo.copy(
                     audioFileUri = uri.toString()
                 )
             )
@@ -123,23 +152,9 @@ fun RecordMemoEntryScreen(
             )
         },
         bottomBar = {
-            BottomButton(
-                enabled = viewModel.recordMemoUiState.isEntryValid,
-                onClick = {
-                    coroutineScope.launch {
-                        val saveAudioFileUri = saveAudioFile(
-                            context,
-                            viewModel.recordMemoUiState.recordMemo.audioFileUri
-                        )
-                        viewModel.updateUiState(
-                            viewModel.recordMemoUiState.recordMemo.copy(
-                                audioFileUri = saveAudioFileUri
-                            )
-                        )
-                        viewModel.saveRecordMemo()
-                        onBackClick()
-                    }
-                },
+            SaveButton(
+                enabled = recordMemoUiState.isEntryValid,
+                onClick = onSaveClick,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 24.dp, horizontal = 28.dp)
@@ -153,18 +168,22 @@ fun RecordMemoEntryScreen(
                 .padding(horizontal = 28.dp)
                 .padding(top = 40.dp)
         ) {
-            MemoTextField(
-                value = viewModel.recordMemoUiState.recordMemo.memo,
-                onChangeValue = {
-                    viewModel.updateUiState(
-                        viewModel.recordMemoUiState.recordMemo.copy(
-                            memo = it
-                        )
-                    )
+            OutlinedTextField(
+                value = recordMemoUiState.recordMemo.memo,
+                onValueChange = {
+                    updateUiState(recordMemoUiState.recordMemo.copy(memo = it))
                 },
+                textStyle = MaterialTheme.typography.bodyMedium,
+                label = {
+                    Text(text = stringResource(id = R.string.add_record_memo_body_text_field_placeholder))
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedLabelColor = MaterialTheme.colorScheme.primary,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.outline
+                ),
                 modifier = Modifier.fillMaxWidth()
             )
-            if (viewModel.recordMemoUiState.recordMemo.audioFileUri.isBlank()) {
+            if (recordMemoUiState.recordMemo.audioFileUri.isBlank()) {
                 AddFileButton(
                     onClick = {
                         albumLauncher.launch("audio/*")
@@ -176,24 +195,24 @@ fun RecordMemoEntryScreen(
                 )
             }
             AudioMemoPlayer(
-                uri = viewModel.recordMemoUiState.recordMemo.audioFileUri.toUri(),
+                uri = recordMemoUiState.recordMemo.audioFileUri.toUri(),
                 setUri = {
-                    viewModel.updateUiState(
-                        viewModel.recordMemoUiState.recordMemo.copy(
+                    updateUiState(
+                        recordMemoUiState.recordMemo.copy(
                             audioFileUri = it.toString()
                         )
                     )
                 },
                 setDuration = {
-                    viewModel.updateUiState(
-                        viewModel.recordMemoUiState.recordMemo.copy(
+                    updateUiState(
+                        recordMemoUiState.recordMemo.copy(
                             duration = it
                         )
                     )
                 },
                 setRecordedFilename = {
-                    viewModel.updateUiState(
-                        viewModel.recordMemoUiState.recordMemo.copy(
+                    updateUiState(
+                        recordMemoUiState.recordMemo.copy(
                             audioFilename = it
                         )
                     )
@@ -205,29 +224,6 @@ fun RecordMemoEntryScreen(
             )
         }
     }
-}
-
-@Composable
-private fun MemoTextField(
-    value: String,
-    onChangeValue: (value: String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = {
-            onChangeValue(it)
-        },
-        textStyle = MaterialTheme.typography.bodyMedium,
-        label = {
-            Text(text = stringResource(id = R.string.add_record_memo_body_text_field_placeholder))
-        },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedLabelColor = MaterialTheme.colorScheme.primary,
-            unfocusedLabelColor = MaterialTheme.colorScheme.outline
-        ),
-        modifier = modifier
-    )
 }
 
 @Composable
@@ -593,7 +589,7 @@ private fun AudioPlayer(
 
 
 @Composable
-private fun BottomButton(
+private fun SaveButton(
     enabled: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -620,89 +616,10 @@ private fun BottomButton(
     }
 }
 
+@Preview("Record Memo Entry Screen")
 @Composable
-private fun SaveDialog(
-    onSave: (title: String) -> Unit,
-    onDismiss: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    var value by remember {
-        mutableStateOf(
-            SimpleDateFormat(
-                "yyyyMMdd_HHmm ss",
-                Locale.getDefault()
-            ).format(Date())
-        )
-    }
-    Dialog(onDismissRequest = { onDismiss(false) }) {
-        Surface(
-            shape = RoundedCornerShape(16.dp),
-            color = Color.White,
-            modifier = modifier
-        ) {
-            Column(
-                modifier = Modifier.padding(20.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.add_record_save_dialog_title),
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontWeight = FontWeight.Bold
-                    )
-                )
-                // todo : Dialog 가 처음 띄워질 때 포커싱 & 글자 선택된 상태
-                BasicTextField(
-                    value = value,
-                    onValueChange = { value = it },
-                    singleLine = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 24.dp)
-                )
-                Divider(
-                    thickness = 1.dp,
-                    color = Color.Black,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 4.dp)
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 20.dp)
-                ) {
-                    TextButton(
-                        onClick = {
-                            onDismiss(false)
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            text = "취소",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                    Text(
-                        text = "|",
-                        color = Color.LightGray,
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 12.sp
-                        )
-                    )
-                    TextButton(
-                        onClick = {
-                            onSave(value)
-                            onDismiss(false)
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            text = "저장",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                }
-            }
-        }
+private fun RecordMemoEntryScreenPreview(){
+    RedealTheme {
+        RecordMemoEntryScreen()
     }
 }

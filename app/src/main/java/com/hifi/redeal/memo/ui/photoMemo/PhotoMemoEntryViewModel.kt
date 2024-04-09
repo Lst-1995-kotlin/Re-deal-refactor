@@ -1,11 +1,10 @@
-package com.hifi.redeal.memo.vm
+package com.hifi.redeal.memo.ui.photoMemo
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.hifi.redeal.memo.components.PhotoMemoEntryDestination
 import com.hifi.redeal.memo.model.PhotoMemo
 import com.hifi.redeal.memo.repository.PhotoMemosRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,6 +43,6 @@ class PhotoMemoEntryViewModel @Inject constructor(
 }
 
 data class PhotoMemoUiState(
-    val photoMemo: PhotoMemo,
+    val photoMemo: PhotoMemo = PhotoMemo(),
     val isEntryValid: Boolean = false
 )

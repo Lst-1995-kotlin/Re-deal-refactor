@@ -7,10 +7,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.hifi.redeal.memo.components.RecordMemoDestination
-import com.hifi.redeal.memo.components.RecordMemoEntryDestination
-import com.hifi.redeal.memo.components.RecordMemoEntryScreen
-import com.hifi.redeal.memo.components.RecordMemoScreen
+import com.hifi.redeal.memo.ui.recordMemo.RecordMemoDestination
+import com.hifi.redeal.memo.ui.recordMemo.RecordMemoEntryDestination
+import com.hifi.redeal.memo.ui.recordMemo.RecordMemoEntryRoute
+import com.hifi.redeal.memo.ui.recordMemo.RecordMemoRoute
 
 @Composable
 fun RecordMemoNavHost(
@@ -31,7 +31,7 @@ fun RecordMemoNavHost(
                 defaultValue = clientId
             })
         ){
-            RecordMemoScreen(
+            RecordMemoRoute(
                 onBackClick = onClickRemoveFragment,
                 onFabClick = {
                     navController.navigate("${RecordMemoEntryDestination.route}/${clientId}")
@@ -45,7 +45,7 @@ fun RecordMemoNavHost(
                 type = NavType.IntType
             })
         ){
-            RecordMemoEntryScreen(
+            RecordMemoEntryRoute(
                 onBackClick = navController::popBackStack
             )
         }

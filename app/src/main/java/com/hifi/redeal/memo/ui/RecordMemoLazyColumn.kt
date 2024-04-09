@@ -1,4 +1,4 @@
-package com.hifi.redeal.memo.components
+package com.hifi.redeal.memo.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
@@ -9,19 +9,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Divider
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,84 +33,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
-import com.hifi.redeal.R
 import com.hifi.redeal.memo.model.RecordMemo
-import com.hifi.redeal.memo.navigation.NavigationDestination
-import com.hifi.redeal.memo.ui.DateText
-import com.hifi.redeal.memo.ui.MemoTopAppBar
 import com.hifi.redeal.memo.utils.convertToDurationTime
-import com.hifi.redeal.memo.vm.RecordMemoViewModel
 import com.hifi.redeal.theme.RedealTheme
 import kotlinx.coroutines.delay
 
-object RecordMemoDestination : NavigationDestination {
-    override val route = "client_record_memo"
-    override val titleRes = R.string.record_memo_toolbar
-    const val clientId = "clientId"
-    val routeWithArgs = "$route/{$clientId}"
-}
-
 @Composable
-fun RecordMemoScreen(
-    modifier: Modifier = Modifier,
-    onBackClick: () -> Unit = {},
-    onFabClick: () -> Unit = {},
-    viewModel: RecordMemoViewModel = hiltViewModel()
-) {
-    val recordMemosUiState by viewModel.recordMemosUiState.collectAsStateWithLifecycle()
-    Scaffold(
-        modifier = modifier,
-        topBar = {
-            MemoTopAppBar(
-                titleRes = R.string.record_memo_toolbar,
-                canNavigateBack = true,
-                onNavigationClick = onBackClick,
-                actions = {
-                    IconButton(
-                        onClick = {
-                            // todo : 편집 버튼 클릭시 삭제, 이름 변경, 즐겨찾기 등록할 수 있도록
-                        },
-                        colors = IconButtonDefaults.iconButtonColors(
-                            contentColor = MaterialTheme.colorScheme.primary
-                        )
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.EditNote,
-                            contentDescription = null,
-                        )
-                    }
-                }
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = onFabClick,
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = null
-                )
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End,
-        containerColor = Color.White
-    ) { padding ->
-        RecordMemoList(
-            recordMemos = recordMemosUiState.recordMemos,
-            modifier = Modifier
-                .padding(padding)
-                .padding(vertical = 20.dp, horizontal = 24.dp),
-        )
-    }
-}
-
-
-@Composable
-private fun RecordMemoList(
+internal fun RecordMemoList(
     recordMemos: List<RecordMemo>,
     modifier: Modifier = Modifier,
 ) {
@@ -186,85 +111,50 @@ private fun RecordMemoList(
 }
 
 @Composable
-private fun MemoMultiText(
-    modifier: Modifier = Modifier,
-    text: String
-) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.bodyMedium,
-        modifier = modifier
-    )
-}
-
-@Composable
-private fun AudioPlayerToggleButton(
+private fun RecordMemoItem(
+    recordMemo: RecordMemo,
     isPlaying: Boolean,
     isFocusing: Boolean,
-    onClickPlayer: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    OutlinedIconButton(
-        onClick = {
-            onClickPlayer()
-        },
-        colors = IconButtonDefaults.iconButtonColors(
-            containerColor = if (isFocusing && isPlaying) MaterialTheme.colorScheme.primary else Color.White,
-            contentColor = if (isFocusing && isPlaying) Color.White else MaterialTheme.colorScheme.primary
-        ),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-        modifier = modifier
-    ) {
-        Icon(
-            imageVector = if (isFocusing && isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-            contentDescription = null
-        )
-    }
-}
-
-@Composable
-private fun AudioPlayerFileName(
-    text: String,
-    isFocusing: Boolean,
-    modifier: Modifier = Modifier
-) {
-    Text(
-        text = text,
-        color = if (isFocusing) MaterialTheme.colorScheme.primary else Color.Black,
-        style = MaterialTheme.typography.bodyLarge.copy(
-            fontWeight = FontWeight.Bold
-        ),
-        modifier = modifier
-    )
-}
-
-@Composable
-private fun AudioPlayerDurationTimeText(
-    duration: Long,
+    sliderPosition: Long,
     currentPosition: Long,
-    isFocusing: Boolean,
+    onClickPlayer: () -> Unit,
+    onValueChange: (newValue: Float) -> Unit,
+    onValueChangeFinished: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    Row(
+    Column(
         modifier = modifier
     ) {
-        if (isFocusing) {
-            Text(
-                text = "${(currentPosition).convertToDurationTime()} / ",
-                style = MaterialTheme.typography.bodySmall,
-            )
-        }
+        DateText(
+            timestamp = recordMemo.timestamp,
+            modifier = Modifier
+                .fillMaxWidth()
+        )
         Text(
-            text = duration.convertToDurationTime(),
-            modifier = Modifier,
-            style = MaterialTheme.typography.bodySmall,
+            text = recordMemo.memo,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+
+        AudioPlayer(
+            audioFilename = recordMemo.audioFilename,
+            isPlaying = isPlaying,
+            isFocusing = isFocusing,
+            sliderPosition = sliderPosition,
+            currentPosition = currentPosition,
+            duration = recordMemo.duration,
+            onClickPlayer = onClickPlayer,
+            onValueChange = onValueChange,
+            onValueChangeFinished = onValueChangeFinished,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 20.dp)
         )
     }
 }
 
 @Composable
-private fun AudioPlayer(
+internal fun AudioPlayer(
     audioFilename: String,
     duration: Long,
     isPlaying: Boolean,
@@ -288,7 +178,14 @@ private fun AudioPlayer(
                 .weight(1f)
                 .padding(start = 16.dp)
         ) {
-            AudioPlayerFileName(text = audioFilename, isFocusing = isFocusing)
+            Text(
+                text = audioFilename,
+                color = if (isFocusing) MaterialTheme.colorScheme.primary else Color.Black,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Bold
+                ),
+                modifier = modifier
+            )
             AudioPlayerDurationTimeText(
                 duration = duration,
                 isFocusing = isFocusing,
@@ -311,6 +208,63 @@ private fun AudioPlayer(
     }
 }
 
+@Composable
+private fun AudioPlayerToggleButton(
+    isPlaying: Boolean,
+    isFocusing: Boolean,
+    onClickPlayer: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    OutlinedIconButton(
+        onClick = {
+            onClickPlayer()
+        },
+        colors = IconButtonDefaults.iconButtonColors(
+            containerColor = if (isFocusing && isPlaying) {
+                MaterialTheme.colorScheme.primary
+            } else {
+                Color.White
+            },
+            contentColor = if (isFocusing && isPlaying) {
+                Color.White
+            } else {
+                MaterialTheme.colorScheme.primary
+            }
+        ),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+        modifier = modifier
+    ) {
+        Icon(
+            imageVector = if (isFocusing && isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+            contentDescription = null
+        )
+    }
+}
+
+@Composable
+private fun AudioPlayerDurationTimeText(
+    duration: Long,
+    currentPosition: Long,
+    isFocusing: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+    ) {
+        if (isFocusing) {
+            Text(
+                text = "${(currentPosition).convertToDurationTime()} / ",
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
+        Text(
+            text = duration.convertToDurationTime(),
+            modifier = Modifier,
+            style = MaterialTheme.typography.bodySmall,
+        )
+    }
+}
+
 @Preview(name = "AudioPlayer", showBackground = true)
 @Composable
 private fun AudioPlayerPreview() {
@@ -328,42 +282,3 @@ private fun AudioPlayerPreview() {
         )
     }
 }
-
-@Composable
-private fun RecordMemoItem(
-    recordMemo: RecordMemo,
-    isPlaying: Boolean,
-    isFocusing: Boolean,
-    sliderPosition: Long,
-    currentPosition: Long,
-    onClickPlayer: () -> Unit,
-    onValueChange: (newValue: Float) -> Unit,
-    onValueChangeFinished: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(modifier) {
-        DateText(
-            //todo : 수정
-            timestamp = 1000000,
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-        MemoMultiText(modifier = Modifier.padding(top = 8.dp), text = recordMemo.memo)
-
-        AudioPlayer(
-            audioFilename = recordMemo.audioFilename,
-            isPlaying = isPlaying,
-            isFocusing = isFocusing,
-            sliderPosition = sliderPosition,
-            currentPosition = currentPosition,
-            duration = recordMemo.duration,
-            onClickPlayer = onClickPlayer,
-            onValueChange = onValueChange,
-            onValueChangeFinished = onValueChangeFinished,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 20.dp)
-        )
-    }
-}
-

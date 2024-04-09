@@ -7,12 +7,12 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.hifi.redeal.memo.components.PhotoDetailDestination
-import com.hifi.redeal.memo.components.PhotoDetailScreen
-import com.hifi.redeal.memo.components.PhotoMemoDestination
-import com.hifi.redeal.memo.components.PhotoMemoEntryDestination
-import com.hifi.redeal.memo.components.PhotoMemoEntryScreen
-import com.hifi.redeal.memo.components.PhotoMemoScreen
+import com.hifi.redeal.memo.ui.photoMemo.PhotoDetailDestination
+import com.hifi.redeal.memo.ui.photoMemo.PhotoDetailScreen
+import com.hifi.redeal.memo.ui.photoMemo.PhotoMemoDestination
+import com.hifi.redeal.memo.ui.photoMemo.PhotoMemoEntryDestination
+import com.hifi.redeal.memo.ui.photoMemo.PhotoMemoEntryRoute
+import com.hifi.redeal.memo.ui.photoMemo.PhotoMemoRoute
 
 @Composable
 fun PhotoMemoNavHost(
@@ -36,7 +36,7 @@ fun PhotoMemoNavHost(
                 defaultValue = clientId
             })
         ) {
-            PhotoMemoScreen(
+            PhotoMemoRoute(
                 onBackClick = onClickRemoveFragment,
                 onFabClick = {
                     navController.navigate("${PhotoMemoEntryDestination.route}/${clientId}")
@@ -51,7 +51,7 @@ fun PhotoMemoNavHost(
                 defaultValue = clientId
             })
         ) {
-            PhotoMemoEntryScreen(
+            PhotoMemoEntryRoute(
                 onBackClick = navController::popBackStack,
                 onClickPhoto = onClickPhoto
             )

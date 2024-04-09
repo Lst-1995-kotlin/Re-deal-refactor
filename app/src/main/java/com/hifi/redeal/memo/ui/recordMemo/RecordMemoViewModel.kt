@@ -1,9 +1,8 @@
-package com.hifi.redeal.memo.vm
+package com.hifi.redeal.memo.ui.recordMemo
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hifi.redeal.memo.components.RecordMemoDestination
 import com.hifi.redeal.memo.model.RecordMemo
 import com.hifi.redeal.memo.repository.RecordMemosRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

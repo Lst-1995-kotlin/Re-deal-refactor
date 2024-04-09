@@ -27,10 +27,10 @@ import com.hifi.redeal.theme.RedealTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MemoTopAppBar(
+internal fun MemoTopAppBar(
     @StringRes titleRes: Int,
-    canNavigateBack: Boolean,
     modifier: Modifier = Modifier,
+    canNavigateBack: Boolean = false,
     actions: @Composable (RowScope.() -> Unit) = {},
     onNavigationClick: () -> Unit = {},
 ) {
@@ -73,8 +73,7 @@ fun MemoTopAppBar(
 private fun MemoTopAppBarPreview() {
     RedealTheme {
         MemoTopAppBar(
-            titleRes = string.untitled,
-            canNavigateBack = true
+            titleRes = string.untitled
         )
     }
 }

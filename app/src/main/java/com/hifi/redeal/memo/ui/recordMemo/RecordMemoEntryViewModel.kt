@@ -1,11 +1,10 @@
-package com.hifi.redeal.memo.vm
+package com.hifi.redeal.memo.ui.recordMemo
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.hifi.redeal.memo.components.RecordMemoEntryDestination
 import com.hifi.redeal.memo.model.RecordMemo
 import com.hifi.redeal.memo.repository.RecordMemosRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -57,6 +56,6 @@ class RecordMemoEntryViewModel @Inject constructor(
 }
 
 data class RecordMemoUiState(
-    val recordMemo: RecordMemo,
-    val isEntryValid: Boolean
+    val recordMemo: RecordMemo = RecordMemo(),
+    val isEntryValid: Boolean = false
 )
