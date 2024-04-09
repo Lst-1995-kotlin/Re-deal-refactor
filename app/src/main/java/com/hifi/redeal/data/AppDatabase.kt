@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.hifi.redeal.data.dao.ClientDao
 import com.hifi.redeal.data.dao.PhotoMemoDao
+import com.hifi.redeal.data.dao.RecordMemoDao
 import com.hifi.redeal.data.dao.TradeDao
 import com.hifi.redeal.data.entrie.ClientEntry
 import com.hifi.redeal.data.entrie.PhotoMemoEntity
@@ -19,4 +20,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun clientDao(): ClientDao
     abstract fun tradeDao(): TradeDao
     abstract fun photoMemoDao(): PhotoMemoDao
+    abstract fun recordMemoDao(): RecordMemoDao
 }
