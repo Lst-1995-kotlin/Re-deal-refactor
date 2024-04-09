@@ -33,7 +33,6 @@ import com.hifi.redeal.auth.AuthLoginFragment
 import com.hifi.redeal.databinding.ActivityMainBinding
 import com.hifi.redeal.map.view.MapFragment
 import com.hifi.redeal.map.view.MapSearchRegionFragment
-import com.hifi.redeal.memo.AddRecordMemoFragment
 import com.hifi.redeal.memo.PhotoMemoFragment
 import com.hifi.redeal.memo.RecordMemoFragment
 import com.hifi.redeal.myPage.MyPageEditNameFragment
@@ -99,8 +98,6 @@ class MainActivity : AppCompatActivity() {
         val PHOTO_MEMO_FRAGMENT = "PhotoMemoFragment"
         val RECORD_MEMO_FRAGMENT = "RecrodMemoFragment"
         val MEMO_FRAGMENT = "MemoFragment"
-        val ADD_RECORD_MEMO_FRAGMENT = "AddRecordMemoFragment"
-        val PHOTO_DETAIL_FRAGMENT = "PhotoDetailFragment"
         val SCHEDULE_MANAGE_FRAGMENT = "ScheduleManageFragment"
         val UNVISITED_SCHEDULE_FRAGMENT = "UnvisitedScheduleFragment"
         val VISITED_SCHEDULE_FRAGMENT = "VisitedScheduleFragment"
@@ -438,7 +435,6 @@ class MainActivity : AppCompatActivity() {
 //            MEMO_FRAGMENT -> MemoFragment()
             PHOTO_MEMO_FRAGMENT -> PhotoMemoFragment()
             RECORD_MEMO_FRAGMENT -> RecordMemoFragment()
-            ADD_RECORD_MEMO_FRAGMENT -> AddRecordMemoFragment()
             SCHEDULE_MANAGE_FRAGMENT -> ScheduleManageFragment()
             UNVISITED_SCHEDULE_FRAGMENT -> UnvisitedScheduleFragment()
             VISITED_SCHEDULE_FRAGMENT -> VisitedScheduleFragment()
