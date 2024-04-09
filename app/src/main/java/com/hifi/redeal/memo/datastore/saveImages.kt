@@ -9,16 +9,16 @@ import java.io.File
 import java.io.FileOutputStream
 
 fun saveImages(context: Context, imageUris: List<Uri>):List<Uri> {
-    val savedImagePaths = mutableListOf<Uri>()
+    val savedImageUris = mutableListOf<Uri>()
 
     for (imageUri in imageUris) {
-        val imagePath = saveImageFile(context, imageUri)
-        if (imagePath != null) {
-            savedImagePaths.add(imagePath)
+        val saveImageUri = saveImageFile(context, imageUri)
+        if (saveImageUri != null) {
+            savedImageUris.add(saveImageUri)
         }
     }
 
-    return savedImagePaths
+    return savedImageUris
 }
 
 fun saveImageFile(context: Context, imageUri: Uri): Uri? {
