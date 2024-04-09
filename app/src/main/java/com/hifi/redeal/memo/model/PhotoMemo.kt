@@ -17,8 +17,3 @@ fun PhotoMemo.toPhotoMemoEntity() = PhotoMemoEntity(
     timestamp = timestamp,
     imageUris = imageUris
 )
-enum class BottomButtonState {
-    IDLE,
-    PRESSED,
-    DISABLED
-}
