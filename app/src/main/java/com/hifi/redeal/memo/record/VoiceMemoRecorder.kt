@@ -5,9 +5,6 @@ import android.media.MediaRecorder
 import android.net.Uri
 import android.os.Build
 import android.os.ParcelFileDescriptor
-import com.hifi.redeal.MainActivity
-import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
 
 
@@ -23,7 +20,7 @@ class VoiceMemoRecorder(
         } else MediaRecorder()
     }
 
-    fun start(context:MainActivity, fileUri:Uri) {
+    fun start(context:Context, fileUri:Uri) {
         initialRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
