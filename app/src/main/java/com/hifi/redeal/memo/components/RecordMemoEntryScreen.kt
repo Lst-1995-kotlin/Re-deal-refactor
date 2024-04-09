@@ -55,6 +55,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -63,9 +64,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import com.hifi.redeal.MainActivity
 import com.hifi.redeal.R
 import com.hifi.redeal.memo.model.BottomButtonState
+import com.hifi.redeal.memo.navigation.NavigationDestination
 import com.hifi.redeal.memo.record.VoiceMemoRecorder
 import com.hifi.redeal.memo.repository.RecordMemoRepository
 import com.hifi.redeal.memo.ui.MemoTopAppBar
@@ -81,6 +82,121 @@ private enum class RecordState {
     BEFORE_RECORDING,
     ON_RECORDING,
     AFTER_RECORDING,
+}
+
+object RecordMemoEntryDestination : NavigationDestination {
+    override val route = "client_photo_memo_entry"
+    override val titleRes = R.string.add_record_memo_toolbar
+    const val clientId = "clientId"
+    val routeWithArgs = "$route/{$clientId}"
+}
+
+@RequiresApi(Build.VERSION_CODES.S)
+@Composable
+fun RecordMemoEntryScreen(
+    repository: RecordMemoRepository,
+    onBackClick: () -> Unit = {}
+) {
+    var recordedUri by remember { mutableStateOf<Uri?>(null) }
+    var recordState by remember { mutableStateOf(RecordState.ON_RECORDING) }
+    var recordedDuration by remember { mutableLongStateOf(0) }
+    var bottomButtonState by remember { mutableStateOf(BottomButtonState.DISABLED) }
+    var recordedFilename by remember {
+        mutableStateOf(
+            SimpleDateFormat(
+                "yyyyMMdd_HHmm ss",
+                Locale.getDefault()
+            ).format(Date())
+        )
+    }
+    var memoTextValue by remember { mutableStateOf("") }
+
+//    val onClickBottomButton = {
+//        bottomButtonState = BottomButtonState.PRESSED
+////        val newRecordMemo = RecordMemoDataTest(
+////            Date().time,
+////            clientIdx,
+////            memoTextValue,
+////            Date(),
+////            recordedUri!!,
+////            recordedFilename,
+////            recordedDuration)
+////        db.recordMemoDao().insert(newRecordMemo)
+//        repository.addRecordMemo(
+//            clientIdx,
+//            memoTextValue,
+//            recordedUri!!,
+//            recordedFilename,
+//            recordedDuration
+//        ) {
+//            onBackClick()
+//        }
+//    }
+
+    Scaffold(
+        topBar = {
+            MemoTopAppBar(
+                titleRes = RecordMemoEntryDestination.titleRes,
+                canNavigateBack = true,
+                onNavigationClick = onBackClick
+            )
+        },
+        bottomBar = {
+            BottomButton(
+                state = bottomButtonState,
+                onClick = {},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 24.dp, horizontal = 28.dp)
+            )
+        },
+        containerColor = Color.White
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .padding(horizontal = 28.dp)
+                .padding(top = 40.dp)
+        ) {
+            MemoTextField(
+                value = memoTextValue,
+                onChangeValue = {
+                    memoTextValue = it
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+            if (recordedUri == null) {
+                AddFileButton(
+                    setRecordUri = {
+                        recordedUri = it
+                        recordState = RecordState.AFTER_RECORDING
+                        bottomButtonState = BottomButtonState.IDLE
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                        .height(52.dp)
+                )
+            }
+            AudioMemoPlayer(
+                uri = recordedUri,
+                setUri = {
+                    recordedUri = it
+                    bottomButtonState = BottomButtonState.IDLE
+                },
+                setDuration = {
+                    recordedDuration = it
+                },
+                setRecordedFilename = {
+                    recordedFilename = it
+                },
+                state = recordState,
+                changeState = {
+                    recordState = it
+                }
+            )
+        }
+    }
 }
 
 @Composable
@@ -106,6 +222,96 @@ private fun MemoTextField(
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.S)
+@Composable
+private fun AudioMemoPlayer(
+    uri: Uri?,
+    setUri: (uri: Uri?) -> Unit,
+    setDuration: (duration: Long) -> Unit,
+    setRecordedFilename: (name: String) -> Unit,
+    state: RecordState,
+    changeState: (state: RecordState) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    var fileUri by remember { mutableStateOf<Uri?>(null) }
+    val voiceRecorder by remember { mutableStateOf(VoiceMemoRecorder(context)) }
+    var showDialog by remember { mutableStateOf(false) }
+
+    val onSaveDialog = { title: String ->
+        voiceRecorder.stop()
+        changeState(RecordState.AFTER_RECORDING)
+        val values = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, title)
+        }
+
+        context.contentResolver.update(
+            fileUri!!,
+            values,
+            null,
+            null
+        )
+
+        setUri(fileUri)
+    }
+
+    var filename by remember { mutableStateOf("") }
+
+    LaunchedEffect(key1 = uri) {
+        if (uri != null) {
+            val contentResolver: ContentResolver = context.contentResolver
+            val cursor = contentResolver.query(uri, null, null, null, null)
+            cursor?.use {
+                if (it.moveToFirst()) {
+                    filename = it.getString(it.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
+                    setRecordedFilename(filename)
+                }
+            }
+        }
+    }
+
+    Column(
+        modifier = modifier
+    ) {
+        Crossfade(targetState = state, label = "Record and Playback Cross fade") { state ->
+            when (state) {
+                RecordState.BEFORE_RECORDING,
+                RecordState.ON_RECORDING -> {
+                    VoiceRecorder(
+                        onStart = {
+                            fileUri = createAudioUri(context)
+                            voiceRecorder.start(context, fileUri!!)
+                        },
+                        onToggle = { voiceRecorder.togglePause() },
+                        onStop = {
+                            showDialog = true
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 28.dp)
+                    )
+                }
+
+                RecordState.AFTER_RECORDING -> {
+                    AudioPlayer(
+                        uri = uri!!,
+                        filename = filename,
+                        setDuration = setDuration,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 28.dp)
+                    )
+                }
+            }
+        }
+        if (showDialog) {
+            SaveDialog(
+                onSave = { onSaveDialog(it) },
+                onDismiss = { showDialog = false }
+            )
+        }
+    }
+}
 
 @Composable
 private fun AddFileButton(
@@ -115,7 +321,7 @@ private fun AddFileButton(
     val albumLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
-            if(uri != null) {
+            if (uri != null) {
                 setRecordUri(uri)
             }
         }
@@ -303,15 +509,15 @@ private fun AudioPlayer(
     uri: Uri,
     filename: String,
     setDuration: (duration: Long) -> Unit,
-    mainActivity: MainActivity,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     var currentPosition by remember { mutableLongStateOf(0) }
     var isPlaying by remember { mutableStateOf(false) }
     var sliderPosition by remember { mutableLongStateOf(0) }
     var duration by remember { mutableLongStateOf(0) }
     val player = remember {
-        ExoPlayer.Builder(mainActivity).build().apply {
+        ExoPlayer.Builder(context).build().apply {
             setMediaItem(MediaItem.fromUri(uri))
             prepare()
         }
@@ -383,98 +589,6 @@ private fun AudioPlayer(
                     player.seekTo(sliderPosition)
                 },
                 valueRange = 0f..duration.toFloat(),
-            )
-        }
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.S)
-@Composable
-private fun AudioMemoPlayer(
-    uri: Uri?,
-    setUri: (uri: Uri?) -> Unit,
-    setDuration: (duration: Long) -> Unit,
-    setRecordedFilename: (name: String) -> Unit,
-    state: RecordState,
-    changeState: (state: RecordState) -> Unit,
-    mainActivity: MainActivity,
-    modifier: Modifier = Modifier
-) {
-    var fileUri by remember { mutableStateOf<Uri?>(null) }
-    val voiceRecorder by remember { mutableStateOf(VoiceMemoRecorder(mainActivity)) }
-    var showDialog by remember { mutableStateOf(false) }
-
-    val onSaveDialog = { title: String ->
-        voiceRecorder.stop()
-        changeState(RecordState.AFTER_RECORDING)
-        val values = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, title)
-        }
-
-        mainActivity.contentResolver.update(
-            fileUri!!,
-            values,
-            null,
-            null
-        )
-
-        setUri(fileUri)
-    }
-
-    var filename by remember { mutableStateOf("") }
-
-    LaunchedEffect(key1 = uri) {
-        if (uri != null) {
-            val contentResolver: ContentResolver = mainActivity.contentResolver
-            val cursor = contentResolver.query(uri, null, null, null, null)
-            cursor?.use {
-                if (it.moveToFirst()) {
-                    filename = it.getString(it.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
-                    setRecordedFilename(filename)
-                }
-            }
-        }
-    }
-
-    Column(
-        modifier = modifier
-    ) {
-        Crossfade(targetState = state, label = "Record and Playback Cross fade") { state ->
-            when (state) {
-                RecordState.BEFORE_RECORDING,
-                RecordState.ON_RECORDING -> {
-                    VoiceRecorder(
-                        onStart = {
-                            fileUri = createAudioUri(mainActivity)
-                            voiceRecorder.start(mainActivity, fileUri!!)
-                        },
-                        onToggle = { voiceRecorder.togglePause() },
-                        onStop = {
-                            showDialog = true
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 28.dp)
-                    )
-                }
-
-                RecordState.AFTER_RECORDING -> {
-                    AudioPlayer(
-                        uri = uri!!,
-                        filename = filename,
-                        setDuration = setDuration,
-                        mainActivity = mainActivity,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 28.dp)
-                    )
-                }
-            }
-        }
-        if (showDialog) {
-            SaveDialog(
-                onSave = { onSaveDialog(it) },
-                onDismiss = { showDialog = false }
             )
         }
     }
@@ -605,118 +719,6 @@ private fun SaveDialog(
                     }
                 }
             }
-        }
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.S)
-@Composable
-fun AddRecordMemoScreen(
-    clientIdx: Long,
-    repository: RecordMemoRepository,
-    mainActivity: MainActivity
-) {
-    var recordedUri by remember { mutableStateOf<Uri?>(null) }
-    var recordState by remember { mutableStateOf(RecordState.ON_RECORDING) }
-    var recordedDuration by remember { mutableLongStateOf(0) }
-    var bottomButtonState by remember { mutableStateOf(BottomButtonState.DISABLED) }
-    var recordedFilename by remember {
-        mutableStateOf(
-            SimpleDateFormat(
-                "yyyyMMdd_HHmm ss",
-                Locale.getDefault()
-            ).format(Date())
-        )
-    }
-    var memoTextValue by remember { mutableStateOf("") }
-
-    val onClickBottomButton = {
-        bottomButtonState = BottomButtonState.PRESSED
-//        val newRecordMemo = RecordMemoDataTest(
-//            Date().time,
-//            clientIdx,
-//            memoTextValue,
-//            Date(),
-//            recordedUri!!,
-//            recordedFilename,
-//            recordedDuration)
-//        db.recordMemoDao().insert(newRecordMemo)
-        repository.addRecordMemo(
-            clientIdx,
-            memoTextValue,
-            recordedUri!!,
-            recordedFilename,
-            recordedDuration
-        ) {
-            mainActivity.removeFragment(MainActivity.ADD_RECORD_MEMO_FRAGMENT)
-        }
-    }
-
-    Scaffold(
-        topBar = {
-            MemoTopAppBar(
-                titleRes = R.string.add_record_memo_toolbar,
-                canNavigateBack = true,
-                onNavigationClick = {
-                    mainActivity.removeFragment(MainActivity.ADD_RECORD_MEMO_FRAGMENT)
-                }
-            )
-        },
-        bottomBar = {
-            BottomButton(
-                state = bottomButtonState,
-                onClick = onClickBottomButton,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 24.dp, horizontal = 28.dp)
-            )
-        },
-        containerColor = Color.White
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .padding(horizontal = 28.dp)
-                .padding(top = 40.dp)
-        ) {
-            MemoTextField(
-                value = memoTextValue,
-                onChangeValue = {
-                    memoTextValue = it
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-            if (recordedUri == null) {
-                AddFileButton(
-                    setRecordUri = {
-                        recordedUri = it
-                        recordState = RecordState.AFTER_RECORDING
-                        bottomButtonState = BottomButtonState.IDLE
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp)
-                        .height(52.dp)
-                )
-            }
-            AudioMemoPlayer(
-                uri = recordedUri,
-                setUri = {
-                    recordedUri = it
-                    bottomButtonState = BottomButtonState.IDLE
-                },
-                setDuration = {
-                    recordedDuration = it
-                },
-                setRecordedFilename = {
-                    recordedFilename = it
-                },
-                state = recordState,
-                changeState = {
-                    recordState = it
-                },
-                mainActivity = mainActivity
-            )
         }
     }
 }
