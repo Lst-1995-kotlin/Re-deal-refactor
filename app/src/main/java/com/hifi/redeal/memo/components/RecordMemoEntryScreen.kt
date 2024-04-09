@@ -3,12 +3,10 @@ package com.hifi.redeal.memo.components
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.net.Uri
-import android.os.Build
 import android.provider.MediaStore
 import android.provider.OpenableColumns
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -51,6 +49,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,19 +60,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.core.net.toUri
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.hifi.redeal.R
-import com.hifi.redeal.memo.model.BottomButtonState
+import com.hifi.redeal.memo.datastore.saveAudioFile
 import com.hifi.redeal.memo.navigation.NavigationDestination
 import com.hifi.redeal.memo.record.VoiceMemoRecorder
-import com.hifi.redeal.memo.repository.RecordMemoRepository
 import com.hifi.redeal.memo.ui.MemoTopAppBar
 import com.hifi.redeal.memo.utils.convertToDurationTime
 import com.hifi.redeal.memo.utils.createAudioUri
 import com.hifi.redeal.memo.utils.formatRecordTime
+import com.hifi.redeal.memo.vm.RecordMemoEntryViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -90,50 +92,29 @@ object RecordMemoEntryDestination : NavigationDestination {
     const val clientId = "clientId"
     val routeWithArgs = "$route/{$clientId}"
 }
-
-@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun RecordMemoEntryScreen(
-    repository: RecordMemoRepository,
-    onBackClick: () -> Unit = {}
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit = {},
+    viewModel: RecordMemoEntryViewModel = hiltViewModel()
 ) {
-    var recordedUri by remember { mutableStateOf<Uri?>(null) }
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     var recordState by remember { mutableStateOf(RecordState.ON_RECORDING) }
-    var recordedDuration by remember { mutableLongStateOf(0) }
-    var bottomButtonState by remember { mutableStateOf(BottomButtonState.DISABLED) }
-    var recordedFilename by remember {
-        mutableStateOf(
-            SimpleDateFormat(
-                "yyyyMMdd_HHmm ss",
-                Locale.getDefault()
-            ).format(Date())
-        )
-    }
-    var memoTextValue by remember { mutableStateOf("") }
-
-//    val onClickBottomButton = {
-//        bottomButtonState = BottomButtonState.PRESSED
-////        val newRecordMemo = RecordMemoDataTest(
-////            Date().time,
-////            clientIdx,
-////            memoTextValue,
-////            Date(),
-////            recordedUri!!,
-////            recordedFilename,
-////            recordedDuration)
-////        db.recordMemoDao().insert(newRecordMemo)
-//        repository.addRecordMemo(
-//            clientIdx,
-//            memoTextValue,
-//            recordedUri!!,
-//            recordedFilename,
-//            recordedDuration
-//        ) {
-//            onBackClick()
-//        }
-//    }
+    val albumLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri ->
+            recordState = RecordState.AFTER_RECORDING
+            viewModel.updateUiState(
+                viewModel.recordMemoUiState.recordMemo.copy(
+                    audioFileUri = uri.toString()
+                )
+            )
+        }
+    )
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             MemoTopAppBar(
                 titleRes = RecordMemoEntryDestination.titleRes,
@@ -143,8 +124,22 @@ fun RecordMemoEntryScreen(
         },
         bottomBar = {
             BottomButton(
-                state = bottomButtonState,
-                onClick = {},
+                enabled = viewModel.recordMemoUiState.isEntryValid,
+                onClick = {
+                    coroutineScope.launch {
+                        val saveAudioFileUri = saveAudioFile(
+                            context,
+                            viewModel.recordMemoUiState.recordMemo.audioFileUri
+                        )
+                        viewModel.updateUiState(
+                            viewModel.recordMemoUiState.recordMemo.copy(
+                                audioFileUri = saveAudioFileUri
+                            )
+                        )
+                        viewModel.saveRecordMemo()
+                        onBackClick()
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 24.dp, horizontal = 28.dp)
@@ -159,18 +154,20 @@ fun RecordMemoEntryScreen(
                 .padding(top = 40.dp)
         ) {
             MemoTextField(
-                value = memoTextValue,
+                value = viewModel.recordMemoUiState.recordMemo.memo,
                 onChangeValue = {
-                    memoTextValue = it
+                    viewModel.updateUiState(
+                        viewModel.recordMemoUiState.recordMemo.copy(
+                            memo = it
+                        )
+                    )
                 },
                 modifier = Modifier.fillMaxWidth()
             )
-            if (recordedUri == null) {
+            if (viewModel.recordMemoUiState.recordMemo.audioFileUri.isBlank()) {
                 AddFileButton(
-                    setRecordUri = {
-                        recordedUri = it
-                        recordState = RecordState.AFTER_RECORDING
-                        bottomButtonState = BottomButtonState.IDLE
+                    onClick = {
+                        albumLauncher.launch("audio/*")
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -179,16 +176,27 @@ fun RecordMemoEntryScreen(
                 )
             }
             AudioMemoPlayer(
-                uri = recordedUri,
+                uri = viewModel.recordMemoUiState.recordMemo.audioFileUri.toUri(),
                 setUri = {
-                    recordedUri = it
-                    bottomButtonState = BottomButtonState.IDLE
+                    viewModel.updateUiState(
+                        viewModel.recordMemoUiState.recordMemo.copy(
+                            audioFileUri = it.toString()
+                        )
+                    )
                 },
                 setDuration = {
-                    recordedDuration = it
+                    viewModel.updateUiState(
+                        viewModel.recordMemoUiState.recordMemo.copy(
+                            duration = it
+                        )
+                    )
                 },
                 setRecordedFilename = {
-                    recordedFilename = it
+                    viewModel.updateUiState(
+                        viewModel.recordMemoUiState.recordMemo.copy(
+                            audioFilename = it
+                        )
+                    )
                 },
                 state = recordState,
                 changeState = {
@@ -222,7 +230,6 @@ private fun MemoTextField(
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 private fun AudioMemoPlayer(
     uri: Uri?,
@@ -315,21 +322,11 @@ private fun AudioMemoPlayer(
 
 @Composable
 private fun AddFileButton(
-    setRecordUri: (uri: Uri?) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
 ) {
-    val albumLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { uri ->
-            if (uri != null) {
-                setRecordUri(uri)
-            }
-        }
-    )
     FilledIconButton(
-        onClick = {
-            albumLauncher.launch("audio/*")
-        },
+        onClick = onClick,
         shape = RoundedCornerShape(4.dp),
         colors = IconButtonDefaults.filledIconButtonColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -597,23 +594,10 @@ private fun AudioPlayer(
 
 @Composable
 private fun BottomButton(
-    state: BottomButtonState,
+    enabled: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val buttonText = when (state) {
-        BottomButtonState.IDLE -> {
-            stringResource(id = R.string.add_record_memo_bottom_button)
-        }
-
-        BottomButtonState.PRESSED -> {
-            stringResource(id = R.string.add_record_memo_bottom_button_clicked)
-        }
-
-        BottomButtonState.DISABLED -> {
-            stringResource(id = R.string.add_record_memo_bottom_button_disable)
-        }
-    }
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
@@ -621,13 +605,13 @@ private fun BottomButton(
             disabledContentColor = MaterialTheme.colorScheme.onSecondary,
             disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
         ),
-        enabled = state == BottomButtonState.IDLE,
+        enabled = enabled,
         shape = RoundedCornerShape(4.dp),
         modifier = modifier
             .height(48.dp)
     ) {
         Text(
-            text = buttonText,
+            text = stringResource(id = R.string.add_record_memo_bottom_button),
             style = MaterialTheme.typography.bodyLarge.copy(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
