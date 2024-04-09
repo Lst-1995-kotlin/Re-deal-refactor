@@ -6,7 +6,6 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
-import com.hifi.redeal.MainActivity
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -119,7 +118,7 @@ fun Long.convertToDurationTime(): String {
     return "$hoursString:$minutesString:$secondsString"
 }
 
-fun createAudioUri(context: MainActivity): Uri? {
+fun createAudioUri(context: Context): Uri? {
     val values = ContentValues()
     values.put(
         MediaStore.MediaColumns.DISPLAY_NAME,
