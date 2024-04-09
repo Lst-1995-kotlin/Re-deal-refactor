@@ -1,5 +1,7 @@
 package com.hifi.redeal.trade.domain.viewmodel
 
+import android.util.Log
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,36 +20,64 @@ class DepositTradeAddViewModel @Inject constructor(
     private val tradeRepository: TradeRepository
 ) : ViewModel() {
 
-    private val _inputAmount = MutableLiveData<Long>()
+    private val _receivedAmount = MutableLiveData<Long?>()
     private val _selectedClient = MutableLiveData<TradeClientData>()
-    private val inputAmount: LiveData<Long> get() = _inputAmount
-    val selectedClient: LiveData<TradeClientData> get() = _selectedClient
+    private val _visibility = MutableLiveData<Int>()
 
-    fun setInputAmount(value: Long) {
-        _inputAmount.postValue(value)
+    val receivedAmount: LiveData<Long?> get() = _receivedAmount
+    val selectedClient: LiveData<TradeClientData> get() = _selectedClient
+    val visibility: LiveData<Int> = _visibility // 버튼의 visibility 값을 관리.
+
+    init {
+        _visibility.postValue(View.GONE)
+
+        receivedAmount.observeForever {
+            buttonVisibilityCheck()
+        }
+
+        selectedClient.observeForever {
+            buttonVisibilityCheck()
+        }
+    }
+
+    private fun liveDataValueCheck(): Boolean {
+        return receivedAmount.value != null &&
+                selectedClient.value != null
+    }
+
+    private fun buttonVisibilityCheck() {
+        if (liveDataValueCheck()) {
+            _visibility.postValue(View.VISIBLE)
+            return
+        }
+        _visibility.postValue(View.GONE)
+    }
+
+    fun setTradeClientData(tradeClientData: TradeClientData) {
+        _selectedClient.postValue(tradeClientData)
+    }
+
+    fun setReceivedAmount(value: Long?) {
+        _receivedAmount.postValue(value)
     }
 
     fun insertDepositTrade() {
         viewModelScope.launch {
-            inputAmount.value?.let { amount ->
+            if (receivedAmount.value != null && selectedClient.value != null) {
                 tradeRepository.insertTrade(
                     TradeEntry(
                         itemName = "",
                         itemCount = 0L,
                         itemPrice = 0L,
-                        receivedAmount = amount,
+                        receivedAmount = receivedAmount.value!!,
                         type = TradeType.DEPOSIT.type,
                         date = Date(),
                         checked = false,
-                        clientId = 1
+                        clientId = selectedClient.value!!.id
                     )
                 )
             }
         }
-    }
-
-    fun setTradeClientData(tradeClientData: TradeClientData) {
-        _selectedClient.postValue(tradeClientData)
     }
 
 }

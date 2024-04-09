@@ -36,6 +36,8 @@ class TransactionSalesFragment : Fragment() {
     ): View {
         fragmentTradeSalesBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_transaction_sales, container, false)
+        fragmentTradeSalesBinding.lifecycleOwner = viewLifecycleOwner
+        fragmentTradeSalesBinding.viewModel = salesTradeAddViewModel
         setBind()
 
         return fragmentTradeSalesBinding.root

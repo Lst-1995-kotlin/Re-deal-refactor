@@ -6,8 +6,8 @@ import javax.inject.Inject
 
 class AmountTextWatcher @Inject constructor() : TextWatcher {
 
-    private lateinit var onTextChangeListener: (CharSequence?) -> Unit
-    private lateinit var afterTextChangListener: (CharSequence?) -> Unit
+    private var onTextChangeListener: (CharSequence?) -> Unit = { _ -> }
+    private var afterTextChangListener: (CharSequence?) -> Unit = { _ -> }
 
     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 

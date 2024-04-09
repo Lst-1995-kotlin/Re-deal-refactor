@@ -1,6 +1,7 @@
 package com.hifi.redeal.trade.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,29 +74,28 @@ class TradeDepositFragment : Fragment() {
             }
 
             // 금액을 입력 하였을 경우
-            amountTextWatcher.setOnTextChangeListener {// 변경되고 나서
-                addDepositBtn.visibility =
-                    if (it.isNullOrEmpty() ||
-                        depositTradeAddViewModel.selectedClient.value == null
-                    ) View.GONE
-                    else View.VISIBLE
-            }
-            amountTextWatcher.setAfterTextChangListener { // 변경이 진행될 때
-                if (!it.isNullOrEmpty()) {
-                    var inputNumber = "$it".numberFormatToLong()
-                    while (!tradeAmountCheck(inputNumber)) {
-                        inputNumber /= 10L
-                    }
-                    depositTradeAddViewModel.setInputAmount(inputNumber)
+            amountTextWatcher.setOnTextChangeListener {// 변경이 진행될 때
+                var inputNumber = "$it".numberFormatToLong()
+                if (!it.isNullOrEmpty() && inputNumber != 0L) {
+                    if (!tradeAmountCheck(inputNumber)) inputNumber /= 10L
                     val replaceNumber = inputNumber.toNumberFormat()
+                    depositTradeAddViewModel.setReceivedAmount(inputNumber)
                     addDepositAmountEditTextNumber.run {
                         removeTextChangedListener(amountTextWatcher)
                         setText(replaceNumber)
                         setSelection(replaceNumber.length)
                         addTextChangedListener(amountTextWatcher)
                     }
+                    return@setOnTextChangeListener
+                }
+                addDepositAmountEditTextNumber.run {
+                    depositTradeAddViewModel.setReceivedAmount(null)
+                    removeTextChangedListener(amountTextWatcher)
+                    text = null
+                    addTextChangedListener(amountTextWatcher)
                 }
             }
+
             addDepositAmountEditTextNumber.addTextChangedListener(amountTextWatcher)
 
             // 거래처 선택 뷰를 클릭 하였을 경우
@@ -108,9 +108,6 @@ class TradeDepositFragment : Fragment() {
             // 거래처를 클릭하여 선택하였을 경우
             tradeClientHolderFactory.setOnClickListener {
                 depositTradeAddViewModel.setTradeClientData(it)
-                if (!addDepositAmountEditTextNumber.text.isNullOrEmpty()) {
-                    addDepositBtn.visibility = View.VISIBLE
-                }
                 selectTradeClientDialog.dismiss()
             }
 
