@@ -1,4 +1,4 @@
-package com.hifi.redeal.memo.record
+package com.hifi.redeal.memo.utils
 
 import android.content.Context
 import android.media.MediaRecorder

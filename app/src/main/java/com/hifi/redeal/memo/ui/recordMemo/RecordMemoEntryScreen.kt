@@ -65,7 +65,7 @@ import com.hifi.redeal.R
 import com.hifi.redeal.memo.datastore.saveAudioFile
 import com.hifi.redeal.memo.model.RecordMemo
 import com.hifi.redeal.memo.navigation.NavigationDestination
-import com.hifi.redeal.memo.record.VoiceMemoRecorder
+import com.hifi.redeal.memo.utils.VoiceMemoRecorder
 import com.hifi.redeal.memo.ui.MemoTopAppBar
 import com.hifi.redeal.memo.ui.SaveDialog
 import com.hifi.redeal.memo.utils.convertToDurationTime
