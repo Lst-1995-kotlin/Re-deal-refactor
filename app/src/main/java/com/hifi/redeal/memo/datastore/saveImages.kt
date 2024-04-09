@@ -8,21 +8,21 @@ import androidx.core.net.toUri
 import java.io.File
 import java.io.FileOutputStream
 
-fun saveImages(context: Context, imageUris: List<Uri>):List<Uri> {
-    val savedImageUris = mutableListOf<Uri>()
+fun saveImages(context: Context, imageUris: List<String>):List<String> {
+    val savedImageUris = mutableListOf<String>()
 
     for (imageUri in imageUris) {
         val saveImageUri = saveImageFile(context, imageUri)
         if (saveImageUri != null) {
-            savedImageUris.add(saveImageUri)
+            savedImageUris.add(saveImageUri.toString())
         }
     }
 
     return savedImageUris
 }
 
-fun saveImageFile(context: Context, imageUri: Uri): Uri? {
-    val inputStream = context.contentResolver.openInputStream(imageUri)
+fun saveImageFile(context: Context, imageUri: String): Uri? {
+    val inputStream = context.contentResolver.openInputStream(imageUri.toUri())
     val bitmap = BitmapFactory.decodeStream(inputStream)
 
     val imagesDirectory = File(context.filesDir, "images")
