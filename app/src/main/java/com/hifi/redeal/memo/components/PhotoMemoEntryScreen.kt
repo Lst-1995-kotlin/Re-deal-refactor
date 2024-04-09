@@ -67,9 +67,8 @@ fun PhotoMemoEntryScreen(
     val albumLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(),
         onResult = { uris ->
-            val imageUris = saveImages(context, uris)
             viewModel.updateUiState(viewModel.photoMemoUiState.photoMemo.copy(
-                imageUris = imageUris.map{it.toString()}
+                imageUris = uris.map{it.toString()}
             ))
         }
     )
@@ -126,6 +125,10 @@ fun PhotoMemoEntryScreen(
                 enabled = viewModel.photoMemoUiState.isEntryValid,
                 onSaveClick = {
                     coroutineScope.launch{
+                        val saveImageUris = saveImages(context, viewModel.photoMemoUiState.photoMemo.imageUris)
+                        viewModel.updateUiState(viewModel.photoMemoUiState.photoMemo.copy(
+                            imageUris = saveImageUris
+                        ))
                         viewModel.savePhotoMemo()
                         onBackClick()
                     }
