@@ -19,11 +19,11 @@ interface RecordMemoDao {
     fun getRecordMemoEntity(id: Int): Flow<RecordMemoEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertRecordMemo(photoMemo: RecordMemoEntity)
+    suspend fun insertRecordMemo(recordMemo: RecordMemoEntity)
 
     @Update
-    suspend fun updateRecordMemo(photoMemo: RecordMemoEntity)
+    suspend fun updateRecordMemo(recordMemo: RecordMemoEntity)
 
     @Delete
-    suspend fun deleteRecordMemo(photoMemo: RecordMemoEntity)
+    suspend fun deleteRecordMemo(recordMemo: RecordMemoEntity)
 }
