@@ -21,7 +21,7 @@ fun saveImages(context: Context, imageUris: List<String>):List<String> {
     return savedImageUris
 }
 
-fun saveImageFile(context: Context, imageUri: String): Uri? {
+private fun saveImageFile(context: Context, imageUri: String): Uri? {
     val inputStream = context.contentResolver.openInputStream(imageUri.toUri())
     val bitmap = BitmapFactory.decodeStream(inputStream)
 
