@@ -9,10 +9,16 @@ import com.hifi.redeal.data.dao.RecordMemoDao
 import com.hifi.redeal.data.dao.TradeDao
 import com.hifi.redeal.data.entrie.ClientEntry
 import com.hifi.redeal.data.entrie.PhotoMemoEntity
+import com.hifi.redeal.data.entrie.RecordMemoEntity
 import com.hifi.redeal.data.entrie.TradeEntry
 
 @Database(
-    entities = [ClientEntry::class, TradeEntry::class, PhotoMemoEntity::class],
+    entities = [
+        ClientEntry::class,
+        TradeEntry::class,
+        PhotoMemoEntity::class,
+        RecordMemoEntity::class,
+    ],
     version = 1
 )
 @TypeConverters(DateConverters::class, StringListToJsonConverter::class)
