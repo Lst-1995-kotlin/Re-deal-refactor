@@ -1,17 +1,17 @@
 package com.hifi.redeal.trade.ui.adapter.viewHolder.client
 
 import androidx.recyclerview.widget.RecyclerView
-import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
+import com.hifi.redeal.databinding.TradeSelectClientItemBinding
 import com.hifi.redeal.trade.configuration.ClientConfiguration.Companion.setClientBookmarkResource
 import com.hifi.redeal.trade.configuration.ClientConfiguration.Companion.setClientStateResource
 import com.hifi.redeal.trade.data.model.TradeClientData
 
 class TradeClientHolder(
-    private val transactionSelectClientItemBinding: TransactionSelectClientItemBinding,
+    private val tradeSelectClientItemBinding: TradeSelectClientItemBinding,
     private val onClickListener: (TradeClientData) -> Unit
-) : RecyclerView.ViewHolder(transactionSelectClientItemBinding.root) {
+) : RecyclerView.ViewHolder(tradeSelectClientItemBinding.root) {
     fun bind(tradeClientData: TradeClientData) {
-        transactionSelectClientItemBinding.run {
+        tradeSelectClientItemBinding.run {
             setClientStateResource(
                 tradeClientData.state,
                 selectTransactionClinetState
@@ -23,7 +23,7 @@ class TradeClientHolder(
             selectTransactionClientName.text = tradeClientData.name
             selectTransactionClientManagerName.text = tradeClientData.managerName
         }
-        transactionSelectClientItemBinding.root.setOnClickListener {
+        tradeSelectClientItemBinding.root.setOnClickListener {
             onClickListener(tradeClientData)
         }
     }

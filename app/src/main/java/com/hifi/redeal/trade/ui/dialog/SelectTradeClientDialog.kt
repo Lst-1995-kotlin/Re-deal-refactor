@@ -10,7 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.divider.MaterialDividerItemDecoration
-import com.hifi.redeal.databinding.DialogSelectTransactionClientBinding
+import com.hifi.redeal.databinding.DialogSelectTradeClientBinding
 import com.hifi.redeal.trade.configuration.DialogConfiguration.Companion.dialogResize
 import com.hifi.redeal.trade.domain.viewmodel.ClientTradeViewModel
 import com.hifi.redeal.trade.ui.adapter.ClientAdapter
@@ -25,7 +25,7 @@ class SelectTradeClientDialog @Inject constructor(
     private val clientAdapterDiffCallback: ClientAdapterDiffCallback,
     private val tradeClientHolderFactory: TradeClientHolderFactory
 ) : DialogFragment() {
-    private lateinit var dialogSelectTransactionClientBinding: DialogSelectTransactionClientBinding
+    private lateinit var dialogSelectTransactionClientBinding: DialogSelectTradeClientBinding
     private lateinit var clientAdapter: ClientAdapter
 
     private val clientTradeViewModel: ClientTradeViewModel by viewModels()
@@ -35,7 +35,7 @@ class SelectTradeClientDialog @Inject constructor(
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        dialogSelectTransactionClientBinding = DialogSelectTransactionClientBinding.inflate(inflater)
+        dialogSelectTransactionClientBinding = DialogSelectTradeClientBinding.inflate(inflater)
         setAdapter()
         setBind()
         setViewModel()

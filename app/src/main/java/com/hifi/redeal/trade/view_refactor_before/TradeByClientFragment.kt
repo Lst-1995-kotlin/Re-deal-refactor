@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -45,7 +46,11 @@ class TradeByClientFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        fragmentTradeByClientBinding = FragmentTradeByClientBinding.inflate(inflater)
+        fragmentTradeByClientBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_trade_by_client, container, false)
+        fragmentTradeByClientBinding.lifecycleOwner = viewLifecycleOwner
+        fragmentTradeByClientBinding.viewModel = tradeByClientViewModel
+
         setAdapter()
         setBind()
         setViewModel()
@@ -58,7 +63,7 @@ class TradeByClientFragment : Fragment() {
         depositHolderFactory.setOnDeleteClickListener { tradeByClientViewModel.deleteTrade(it) }
         depositHolderFactory.setOnEditClickListener {
             findNavController().navigate(
-                R.id.action_transactionByClientFragment_to_transactionDepositModifyFragment,
+                R.id.action_tradeByClientFragment_to_tradeDepositModifyFragment,
                 Bundle().apply {
                     putInt("tradeId", it.id)
                 }
@@ -68,7 +73,7 @@ class TradeByClientFragment : Fragment() {
         salesHolderFactory.setOnDeleteClickListener { tradeByClientViewModel.deleteTrade(it) }
         salesHolderFactory.setOnEditClickListener {
             findNavController().navigate(
-                R.id.action_transactionByClientFragment_to_transactionSalesModifyFragment,
+                R.id.action_tradeByClientFragment_to_tradeSalesModifyFragment,
                 Bundle().apply {
                     putInt("tradeId", it.id)
                 }
@@ -91,15 +96,15 @@ class TradeByClientFragment : Fragment() {
             }
 
             ImgBtnAddDepositByClient.setOnClickListener {
-                findNavController().navigate(R.id.action_transactionByClientFragment_to_transactionDepositFragment)
+                findNavController().navigate(R.id.action_tradeByClientFragment_to_tradeDepositFragment)
             }
 
             ImgBtnAddTransactionByClient.setOnClickListener {
-                findNavController().navigate(R.id.action_transactionByClientFragment_to_transactionSalesFragment)
+                findNavController().navigate(R.id.action_tradeByClientFragment_to_tradeSalesFragment)
             }
 
             toolbarTransactionByClientMain.setOnMenuItemClickListener {
-                findNavController().navigate(R.id.action_transactionByClientFragment_to_transactionsEditFragment)
+                findNavController().navigate(R.id.action_tradeByClientFragment_to_tradeEditFragment)
                 true
             }
         }
@@ -108,19 +113,8 @@ class TradeByClientFragment : Fragment() {
     private fun setViewModel() {
         tradeByClientViewModel.trades.observe(viewLifecycleOwner) { trades -> // 어댑터에 표시하는 거래내역들
             tradeAdapter.submitList(trades) {
+                fragmentTradeByClientBinding.transactionByClientRecyclerView.scrollToPosition(0)
                 tradeAdapter.updateCount()
-            }
-            // 어댑터에 표시하는 거래내역들의 합계
-            val totalSalesCount = trades.count { it.type == TradeType.SALES.type } // 매출 건 수
-            val totalSalesAmount = trades.sumOf { it.itemCount * it.itemPrice } // 총 판매 금액
-            val totalReceivables =
-                totalSalesAmount - trades.sumOf { it.receivedAmount }// 발생 미수금
-
-            fragmentTradeByClientBinding.run {
-                textTotalSalesCountByClient.text = totalSalesCount.toNumberFormat()
-                textTotalSalesByClient.text = totalSalesAmount.toNumberFormat()
-                textTotalReceivablesByClient.text =
-                    (totalSalesAmount - totalReceivables).toNumberFormat()
             }
         }
         tradeByClientViewModel.setClientId(arguments?.getInt("clientId"))

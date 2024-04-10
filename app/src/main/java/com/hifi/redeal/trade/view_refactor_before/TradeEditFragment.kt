@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.hifi.redeal.databinding.FragmentTransactionsEditBinding
+import com.hifi.redeal.databinding.FragmentTradeEditBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TransactionsEditFragment : Fragment() {
+class TradeEditFragment : Fragment() {
 
-    private lateinit var fragmentTransactionEditBinding: FragmentTransactionsEditBinding
+    private lateinit var fragmentTransactionEditBinding: FragmentTradeEditBinding
 
     //private lateinit var transactionSelectAdapter: TransactionSelectAdapter
     //private val transactionViewModel: TransactionViewModel by activityViewModels()
@@ -23,7 +23,7 @@ class TransactionsEditFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        fragmentTransactionEditBinding = FragmentTransactionsEditBinding.inflate(inflater)
+        fragmentTransactionEditBinding = FragmentTradeEditBinding.inflate(inflater)
 
 //        setAdapter()
 //        setBind()

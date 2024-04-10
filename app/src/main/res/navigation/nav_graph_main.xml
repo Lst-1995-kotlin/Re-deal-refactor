@@ -25,69 +25,69 @@
             app:destination="@id/addPhotoMemoFragment" />
     </fragment>
     <fragment
-        android:id="@+id/transactionByClientFragment"
+        android:id="@+id/tradeByClientFragment"
         android:name="com.hifi.redeal.trade.view_refactor_before.TradeByClientFragment"
-        android:label="TransactionByClientFragment" >
+        android:label="TradeByClientFragment" >
         <action
-            android:id="@+id/action_transactionByClientFragment_to_transactionDepositFragment"
-            app:destination="@id/transactionDepositFragment" />
+            android:id="@+id/action_tradeByClientFragment_to_tradeDepositFragment"
+            app:destination="@id/tradeDepositFragment" />
         <action
-            android:id="@+id/action_transactionByClientFragment_to_transactionDepositModifyFragment"
-            app:destination="@id/transactionDepositModifyFragment" />
+            android:id="@+id/action_tradeByClientFragment_to_tradeDepositModifyFragment"
+            app:destination="@id/tradeDepositModifyFragment" />
         <action
-            android:id="@+id/action_transactionByClientFragment_to_transactionSalesFragment"
-            app:destination="@id/transactionSalesFragment" />
+            android:id="@+id/action_tradeByClientFragment_to_tradeSalesFragment"
+            app:destination="@id/tradealesFragment" />
         <action
-            android:id="@+id/action_transactionByClientFragment_to_transactionSalesModifyFragment"
-            app:destination="@id/transactionSalesModifyFragment" />
+            android:id="@+id/action_tradeByClientFragment_to_tradeSalesModifyFragment"
+            app:destination="@id/tradealesModifyFragment" />
         <action
-            android:id="@+id/action_transactionByClientFragment_to_transactionsEditFragment"
-            app:destination="@id/transactionsEditFragment" />
+            android:id="@+id/action_tradeByClientFragment_to_tradeEditFragment"
+            app:destination="@id/tradeEditFragment" />
     </fragment>
     <fragment
-        android:id="@+id/transactionDepositFragment"
+        android:id="@+id/tradeDepositFragment"
         android:name="com.hifi.redeal.trade.ui.fragment.TradeDepositFragment"
-        android:label="TransactionDepositFragment" />
+        android:label="TradeDepositFragment" />
     <fragment
-        android:id="@+id/transactionDepositModifyFragment"
-        android:name="com.hifi.redeal.trade.view_refactor_before.TransactionDepositModifyFragment"
-        android:label="TransactionDepositModifyFragment" />
+        android:id="@+id/tradeDepositModifyFragment"
+        android:name="com.hifi.redeal.trade.view_refactor_before.TradeDepositModifyFragment"
+        android:label="TradeDepositModifyFragment" />
     <fragment
         android:id="@+id/tradeFragment"
         android:name="com.hifi.redeal.trade.ui.fragment.TradeFragment"
         android:label="TradeFragment">
         <action
-            android:id="@+id/action_tradeFragment_to_transactionSalesFragment"
-            app:destination="@id/transactionSalesFragment" />
+            android:id="@+id/action_tradeFragment_to_tradeSalesFragment"
+            app:destination="@id/tradealesFragment" />
         <action
-            android:id="@+id/action_tradeFragment_to_transactionSalesModifyFragment"
-            app:destination="@id/transactionSalesModifyFragment" />
+            android:id="@+id/action_tradeFragment_to_tradeSalesModifyFragment"
+            app:destination="@id/tradealesModifyFragment" />
         <action
-            android:id="@+id/action_tradeFragment_to_transactionDepositFragment"
-            app:destination="@id/transactionDepositFragment" />
+            android:id="@+id/action_tradeFragment_to_tradeDepositFragment"
+            app:destination="@id/tradeDepositFragment" />
         <action
-            android:id="@+id/action_tradeFragment_to_transactionDepositModifyFragment"
-            app:destination="@id/transactionDepositModifyFragment" />
+            android:id="@+id/action_tradeFragment_to_tradeDepositModifyFragment"
+            app:destination="@id/tradeDepositModifyFragment" />
         <action
-            android:id="@+id/action_tradeFragment_to_transactionsEditFragment"
-            app:destination="@id/transactionsEditFragment" />
+            android:id="@+id/action_tradeFragment_to_tradeEditFragment"
+            app:destination="@id/tradeEditFragment" />
     </fragment>
     <fragment
-        android:id="@+id/transactionSalesFragment"
-        android:name="com.hifi.redeal.trade.view_refactor_before.TradeSalesFragment"
-        android:label="TransactionSalesFragment" />
+        android:id="@+id/tradealesFragment"
+        android:name="com.hifi.redeal.trade.ui.fragment.TradeSalesFragment"
+        android:label="TradealesFragment" />
     <fragment
-        android:id="@+id/transactionSalesModifyFragment"
-        android:name="com.hifi.redeal.trade.view_refactor_before.TransactionSalesModifyFragment"
-        android:label="TransactionSalesModifyFragment" />
+        android:id="@+id/tradealesModifyFragment"
+        android:name="com.hifi.redeal.trade.view_refactor_before.TradeSalesModifyFragment"
+        android:label="TradealesModifyFragment" />
     <fragment
         android:id="@+id/accountDetailFragment"
         android:name="com.hifi.redeal.account.AccountDetailFragment"
         android:label="fragment_account_detail"
         tools:layout="@layout/fragment_account_detail" >
         <action
-            android:id="@+id/action_accountDetailFragment_to_transactionByClientFragment"
-            app:destination="@id/transactionByClientFragment" />
+            android:id="@+id/action_accountDetailFragment_to_tradeByClientFragment"
+            app:destination="@id/tradeByClientFragment" />
         <action
             android:id="@+id/action_accountDetailFragment_to_accountEditFragment"
             app:destination="@id/accountEditFragment" />
@@ -241,10 +241,10 @@
             app:destination="@id/visitedScheduleFragment" />
     </fragment>
     <fragment
-        android:id="@+id/transactionsEditFragment"
-        android:name="com.hifi.redeal.trade.view_refactor_before.TransactionsEditFragment"
-        android:label="fragment_transactions_edit"
-        tools:layout="@layout/fragment_transactions_edit" />
+        android:id="@+id/tradeEditFragment"
+        android:name="com.hifi.redeal.trade.view_refactor_before.TradeEditFragment"
+        android:label="fragment_trade_edit"
+        tools:layout="@layout/fragment_trade_edit" />
     <fragment
         android:id="@+id/unvisitedScheduleFragment"
         android:name="com.hifi.redeal.schedule.view.UnvisitedScheduleFragment"
@@ -256,3 +256,4 @@
         android:label="fragment_visited_schedule"
         tools:layout="@layout/fragment_visited_schedule" />
 </navigation>
+

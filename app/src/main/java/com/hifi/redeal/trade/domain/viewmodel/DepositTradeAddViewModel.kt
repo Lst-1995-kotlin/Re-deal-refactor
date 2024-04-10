@@ -1,12 +1,11 @@
 package com.hifi.redeal.trade.domain.viewmodel
 
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hifi.redeal.data.entrie.TradeEntry
+import com.hifi.redeal.data.entrie.TradeEntity
 import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.data.model.TradeClientData
 import com.hifi.redeal.trade.data.repository.TradeRepository
@@ -65,7 +64,7 @@ class DepositTradeAddViewModel @Inject constructor(
         viewModelScope.launch {
             if (receivedAmount.value != null && selectedClient.value != null) {
                 tradeRepository.insertTrade(
-                    TradeEntry(
+                    TradeEntity(
                         itemName = "",
                         itemCount = 0L,
                         itemPrice = 0L,

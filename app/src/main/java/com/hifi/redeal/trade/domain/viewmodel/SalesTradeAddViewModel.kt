@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hifi.redeal.data.entrie.TradeEntry
+import com.hifi.redeal.data.entrie.TradeEntity
 import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.data.model.TradeClientData
 import com.hifi.redeal.trade.data.repository.TradeRepository
@@ -93,7 +93,7 @@ class SalesTradeAddViewModel @Inject constructor(
         viewModelScope.launch {
             if (liveDataValueCheck()) {
                 tradeRepository.insertTrade(
-                    TradeEntry(
+                    TradeEntity(
                         itemName = itemName.value!!,
                         itemCount = itemCount.value!!,
                         itemPrice = itemPrice.value!!,

@@ -6,10 +6,10 @@ import androidx.room.TypeConverters
 import com.hifi.redeal.data.dao.ClientDao
 import com.hifi.redeal.data.dao.TradeDao
 import com.hifi.redeal.data.entrie.ClientEntry
-import com.hifi.redeal.data.entrie.TradeEntry
+import com.hifi.redeal.data.entrie.TradeEntity
 
 @Database(
-    entities = [ClientEntry::class, TradeEntry::class],
+    entities = [ClientEntry::class, TradeEntity::class],
     version = 1
 )
 @TypeConverters(DateConverters::class)

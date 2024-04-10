@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.hifi.redeal.MainActivity
-import com.hifi.redeal.databinding.FragmentTransactionDepositModifyBinding
+import com.hifi.redeal.databinding.FragmentTradeDepositModifyBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TransactionDepositModifyFragment : Fragment() {
+class TradeDepositModifyFragment : Fragment() {
     private lateinit var mainActivity: MainActivity
-    private lateinit var fragmentTransactionDepositModifyBinding: FragmentTransactionDepositModifyBinding
+    private lateinit var fragmentTransactionDepositModifyBinding: FragmentTradeDepositModifyBinding
 
     //private val transactionClientViewModel: TransactionClientViewModel by activityViewModels()
     //private val transactionViewModel: TransactionViewModel by activityViewModels()
@@ -23,7 +23,7 @@ class TransactionDepositModifyFragment : Fragment() {
     ): View {
         mainActivity = activity as MainActivity
         fragmentTransactionDepositModifyBinding =
-            FragmentTransactionDepositModifyBinding.inflate(inflater)
+            FragmentTradeDepositModifyBinding.inflate(inflater)
 //        setBind()
 //        setViewModel()
 

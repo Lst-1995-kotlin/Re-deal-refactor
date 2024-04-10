@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import java.util.Date
 
 @Entity("trade")
-data class TradeEntry(
+data class TradeEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "item_name")
     val itemName: String,

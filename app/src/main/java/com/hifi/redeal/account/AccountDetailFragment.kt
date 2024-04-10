@@ -94,7 +94,7 @@ class AccountDetailFragment : Fragment() {
                         val bundle = Bundle()
                         bundle.putInt("clientId", 2)
                         findNavController().navigate(
-                            R.id.action_accountDetailFragment_to_transactionByClientFragment,
+                            R.id.action_accountDetailFragment_to_tradeByClientFragment,
                             bundle
                         )
 
