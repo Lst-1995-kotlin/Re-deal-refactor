@@ -102,18 +102,20 @@ class AccountDetailFragment : Fragment() {
 
                     R.id.recordMemoFragment -> {
                         val bundle = Bundle()
-                        bundle.putLong("clientIdx", clientIdx)
-                        mainActivity.replaceFragment(
-                            MainActivity.RECORD_MEMO_FRAGMENT,
-                            true,
+                        bundle.putInt("clientId", 1)
+                        findNavController().navigate(
+                            R.id.action_accountDetailFragment_to_recordMemoFragment,
                             bundle
                         )
                     }
 
                     R.id.photoMemoFragment -> {
                         val bundle = Bundle()
-                        bundle.putLong("clientIdx", clientIdx)
-                        mainActivity.replaceFragment(MainActivity.PHOTO_MEMO_FRAGMENT, true, bundle)
+                        bundle.putInt("clientIdx", 1)
+                        findNavController().navigate(
+                            R.id.action_accountDetailFragment_to_photoMemoFragment,
+                            bundle
+                        )
                     }
                 }
                 true
