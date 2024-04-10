@@ -1,6 +1,5 @@
 package com.hifi.redeal.trade.domain.viewmodel
 
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -83,11 +82,6 @@ class SalesTradeAddViewModel @Inject constructor(
     }
 
     private fun liveDataValueCheck(): Boolean {
-        Log.d("tttt", "itemName.value = ${itemName.value}")
-        Log.d("tttt", "itemCount.value = ${itemCount.value}")
-        Log.d("tttt", "itemPrice.value = ${itemPrice.value}")
-        Log.d("tttt", "receivedAmount.value = ${receivedAmount.value}")
-        Log.d("tttt", "selectedClient.value = ${selectedClient.value}")
         return itemName.value != null &&
                 itemCount.value != null &&
                 itemPrice.value != null &&
