@@ -15,6 +15,7 @@ import com.hifi.redeal.trade.ui.adapter.viewHolder.client.TradeClientHolderFacto
 import com.hifi.redeal.trade.ui.dialog.SelectTradeClientDialog
 import com.hifi.redeal.trade.util.DialogShowingFocusListener
 import com.hifi.redeal.trade.util.TradeInputEditTextFocusListener
+import com.hifi.redeal.util.KeyboardFocusClearListener
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -55,16 +56,32 @@ class TransactionSalesFragment : Fragment() {
                 findNavController().popBackStack()
             }
 
-            transactionItemNameEditText.onFocusChangeListener =
+            // 입력 뷰 포커스 변경에 따른 백 그라운드 이미지 설정
+            tradeItemNameEditText.onFocusChangeListener =
                 TradeInputEditTextFocusListener()
-            transactionItemCountEditText.onFocusChangeListener =
+            tradeItemCountEditText.onFocusChangeListener =
                 TradeInputEditTextFocusListener()
-            transactionItemPriceEditText.onFocusChangeListener =
+            tradeItemPriceEditText.onFocusChangeListener =
                 TradeInputEditTextFocusListener()
             transactionAmountReceivedEditText.onFocusChangeListener =
                 TradeInputEditTextFocusListener()
 
-            transactionClientSelectEditText.onFocusChangeListener =
+            // 키보드 내려 갔을 경우 포커스 제거
+            tradeItemNameEditText.viewTreeObserver.addOnGlobalLayoutListener(
+                KeyboardFocusClearListener(tradeItemNameEditText)
+            )
+            tradeItemCountEditText.viewTreeObserver.addOnGlobalLayoutListener(
+                KeyboardFocusClearListener(tradeItemCountEditText)
+            )
+            tradeItemPriceEditText.viewTreeObserver.addOnGlobalLayoutListener(
+                KeyboardFocusClearListener(tradeItemPriceEditText)
+            )
+            transactionAmountReceivedEditText.viewTreeObserver.addOnGlobalLayoutListener(
+                KeyboardFocusClearListener(transactionAmountReceivedEditText)
+            )
+
+
+            tradeClientSelectEditText.onFocusChangeListener =
                 DialogShowingFocusListener(
                     selectTradeClientDialog,
                     childFragmentManager

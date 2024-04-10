@@ -31,7 +31,7 @@
             app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance" />
 
         <View
-            android:id="@+id/transactionSalesDivider"
+            android:id="@+id/tradeSalesDivider"
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/primary20"
@@ -41,7 +41,7 @@
             app:layout_constraintTop_toBottomOf="@+id/addSalesMaterialToolbar" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/transactionNameLayout"
+            android:id="@+id/tradeNameLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -53,10 +53,10 @@
             app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/transactionSalesDivider">
+            app:layout_constraintTop_toBottomOf="@+id/tradeSalesDivider">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/transactionItemNameEditText"
+                android:id="@+id/tradeItemNameEditText"
                 style="@style/trade_text_input_edit_text_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/transactionItemCountLayout"
+            android:id="@+id/tradeItemCountLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -81,10 +81,10 @@
             app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/transactionNameLayout">
+            app:layout_constraintTop_toBottomOf="@+id/tradeNameLayout">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/transactionItemCountEditText"
+                android:id="@+id/tradeItemCountEditText"
                 style="@style/trade_text_input_edit_text_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/transactionItemPriceLayout"
+            android:id="@+id/tradeItemPriceLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -109,10 +109,10 @@
             app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/transactionItemCountLayout">
+            app:layout_constraintTop_toBottomOf="@+id/tradeItemCountLayout">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/transactionItemPriceEditText"
+                android:id="@+id/tradeItemPriceEditText"
                 style="@style/trade_text_input_edit_text_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/transactionAmountReceivedLayout"
+            android:id="@+id/tradeAmountReceivedLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -137,7 +137,7 @@
             app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/transactionItemPriceLayout">
+            app:layout_constraintTop_toBottomOf="@+id/tradeItemPriceLayout">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/transactionAmountReceivedEditText"
@@ -157,11 +157,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/text60"
-            app:layout_constraintEnd_toEndOf="@+id/transactionAmountReceivedLayout"
-            app:layout_constraintTop_toBottomOf="@+id/transactionAmountReceivedLayout" />
+            app:layout_constraintEnd_toEndOf="@+id/tradeAmountReceivedLayout"
+            app:layout_constraintTop_toBottomOf="@+id/tradeAmountReceivedLayout" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/transactionClientSelectLayout"
+            android:id="@+id/tradeClientSelectLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -176,7 +176,7 @@
             app:layout_constraintTop_toBottomOf="@+id/amountMessageTextView">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/transactionClientSelectEditText"
+                android:id="@+id/tradeClientSelectEditText"
                 style="@style/trade_text_input_edit_text_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
