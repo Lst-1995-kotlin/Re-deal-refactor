@@ -10,17 +10,9 @@
         android:label="fragment_memo"
         tools:layout="@layout/fragment_memo" />
     <fragment
-        android:id="@+id/addRecordMemoFragment"
-        android:name="com.hifi.redeal.memo.AddRecordMemoFragment"
-        android:label="AddRecordMemoFragment" />
-    <fragment
         android:id="@+id/photoMemoFragment"
         android:name="com.hifi.redeal.memo.PhotoMemoFragment"
-        android:label="PhotoMemoFragment" >
-        <action
-            android:id="@+id/action_photoMemoFragment_to_addPhotoMemoFragment"
-            app:destination="@id/addPhotoMemoFragment" />
-    </fragment>
+        android:label="PhotoMemoFragment" />
     <fragment
         android:id="@+id/transactionByClientFragment"
         android:name="com.hifi.redeal.trade.view_refactor_before.TradeByClientFragment"
@@ -120,11 +112,6 @@
             app:destination="@id/myPageFragment" />
     </fragment>
     <fragment
-        android:id="@+id/addPhotoMemoFragment"
-        android:name="com.hifi.redeal.memo.AddPhotoMemoFragment"
-        android:label="fragment_add_photo_memo"
-        tools:layout="@layout/fragment_add_photo_memo" />
-    <fragment
         android:id="@+id/addressSearchFragment"
         android:name="com.hifi.redeal.account.AddressSearchFragment"
         android:label="fragment_address_search"
@@ -209,11 +196,7 @@
         android:id="@+id/recordMemoFragment"
         android:name="com.hifi.redeal.memo.RecordMemoFragment"
         android:label="fragment_record_memo"
-        tools:layout="@layout/fragment_record_memo" >
-        <action
-            android:id="@+id/action_recordMemoFragment_to_addRecordMemoFragment"
-            app:destination="@id/addRecordMemoFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_record_memo" />
     <fragment
         android:id="@+id/scheduleManageFragment"
         android:name="com.hifi.redeal.schedule.view.ScheduleManageFragment"
