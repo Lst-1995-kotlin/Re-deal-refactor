@@ -4,7 +4,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import javax.inject.Inject
 
-class AmountTextWatcher @Inject constructor() : TextWatcher {
+class TradeTextWatcher : TextWatcher {
 
     private var onTextChangeListener: (CharSequence?) -> Unit = { _ -> }
     private var afterTextChangListener: (CharSequence?) -> Unit = { _ -> }

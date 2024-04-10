@@ -1,7 +1,6 @@
 package com.hifi.redeal.trade.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,7 @@ import com.hifi.redeal.databinding.FragmentTradeDepositBinding
 import com.hifi.redeal.trade.configuration.TradeAmountConfiguration.Companion.tradeAmountCheck
 import com.hifi.redeal.trade.domain.viewmodel.DepositTradeAddViewModel
 import com.hifi.redeal.trade.ui.adapter.viewHolder.client.TradeClientHolderFactory
-import com.hifi.redeal.trade.util.AmountTextWatcher
+import com.hifi.redeal.trade.util.TradeTextWatcher
 import com.hifi.redeal.trade.util.TradeInputEditTextFocusListener
 import com.hifi.redeal.trade.util.DialogShowingFocusListener
 import com.hifi.redeal.trade.ui.dialog.SelectTradeClientDialog
@@ -28,13 +27,11 @@ import javax.inject.Inject
 class TradeDepositFragment : Fragment() {
 
     private lateinit var fragmentTradeDepositBinding: FragmentTradeDepositBinding
+    private val tradeTextWatcher= TradeTextWatcher()
     private val depositTradeAddViewModel: DepositTradeAddViewModel by viewModels()
 
     @Inject
     lateinit var selectTradeClientDialog: SelectTradeClientDialog
-
-    @Inject
-    lateinit var amountTextWatcher: AmountTextWatcher
 
     @Inject
     lateinit var tradeClientHolderFactory: TradeClientHolderFactory
@@ -74,29 +71,32 @@ class TradeDepositFragment : Fragment() {
             }
 
             // 금액을 입력 하였을 경우
-            amountTextWatcher.setOnTextChangeListener {// 변경이 진행될 때
-                var inputNumber = "$it".numberFormatToLong()
-                if (!it.isNullOrEmpty() && inputNumber != 0L) {
+            tradeTextWatcher.setOnTextChangeListener {
+                if (!it.isNullOrEmpty()) {
+                    var inputNumber = "$it".numberFormatToLong()
+                    if (inputNumber == 0L) {
+                        depositTradeAddViewModel.setReceivedAmount(null)
+                        return@setOnTextChangeListener
+                    }
                     if (!tradeAmountCheck(inputNumber)) inputNumber /= 10L
                     val replaceNumber = inputNumber.toNumberFormat()
                     depositTradeAddViewModel.setReceivedAmount(inputNumber)
                     addDepositAmountEditTextNumber.run {
-                        removeTextChangedListener(amountTextWatcher)
+                        removeTextChangedListener(tradeTextWatcher)
                         setText(replaceNumber)
                         setSelection(replaceNumber.length)
-                        addTextChangedListener(amountTextWatcher)
+                        addTextChangedListener(tradeTextWatcher)
                     }
                     return@setOnTextChangeListener
                 }
                 addDepositAmountEditTextNumber.run {
                     depositTradeAddViewModel.setReceivedAmount(null)
-                    removeTextChangedListener(amountTextWatcher)
+                    removeTextChangedListener(tradeTextWatcher)
                     text = null
-                    addTextChangedListener(amountTextWatcher)
+                    addTextChangedListener(tradeTextWatcher)
                 }
             }
-
-            addDepositAmountEditTextNumber.addTextChangedListener(amountTextWatcher)
+            addDepositAmountEditTextNumber.addTextChangedListener(tradeTextWatcher)
 
             // 거래처 선택 뷰를 클릭 하였을 경우
             selectDepositClientTextInputEditText.onFocusChangeListener =

@@ -52,7 +52,7 @@ import com.hifi.redeal.trade.view_refactor_before.TradeByClientFragment
 import com.hifi.redeal.trade.ui.fragment.TradeFragment
 import com.hifi.redeal.trade.ui.fragment.TradeDepositFragment
 import com.hifi.redeal.trade.view_refactor_before.TransactionDepositModifyFragment
-import com.hifi.redeal.trade.view_refactor_before.TransactionSalesFragment
+import com.hifi.redeal.trade.view_refactor_before.TradeSalesFragment
 import com.hifi.redeal.trade.view_refactor_before.TransactionSalesModifyFragment
 import com.hifi.redeal.trade.view_refactor_before.TransactionsEditFragment
 import com.skt.tmap.TMapTapi
@@ -462,7 +462,7 @@ class MainActivity : AppCompatActivity() {
             MY_PAGE_EDIT_NAME_FRAGMENT -> MyPageEditNameFragment()
             MY_PAGE_REQUEST_FRAGMENT -> MyPageRequestFragment()
             TRANSACTION_DEPOSIT_FRAGMENT -> TradeDepositFragment()
-            TRANSACTION_SALES_FRAGMENT -> TransactionSalesFragment()
+            TRANSACTION_SALES_FRAGMENT -> TradeSalesFragment()
             TRANSACTION_DEPOSIT_MODIFY_FRAGMENT -> TransactionDepositModifyFragment()
             TRANSACTION_SALES_MODIFY_FRAGMENT -> TransactionSalesModifyFragment()
             TRANSACTION_BY_CLIENT_FRAGMENT -> TradeByClientFragment()

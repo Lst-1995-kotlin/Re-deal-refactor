@@ -140,7 +140,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tradeItemPriceLayout">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/transactionAmountReceivedEditText"
+                android:id="@+id/tradeAmountReceivedEditText"
                 style="@style/trade_text_input_edit_text_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -183,7 +183,7 @@
                 android:background="@drawable/bottom_border_not_focus"
                 android:drawableEnd="@drawable/search_24px_primary20"
                 android:fontFamily="@font/nanumsquareneo_regular"
-                android:inputType="number"
+                android:text='@{viewModel.selectedClient != null ? viewModel.selectedClient.name + " " + viewModel.selectedClient.managerName : ""}'
                 android:textColor="@color/text10"
                 android:textSize="20sp" />
         </com.google.android.material.textfield.TextInputLayout>

@@ -74,7 +74,7 @@
     </fragment>
     <fragment
         android:id="@+id/transactionSalesFragment"
-        android:name="com.hifi.redeal.trade.view_refactor_before.TransactionSalesFragment"
+        android:name="com.hifi.redeal.trade.view_refactor_before.TradeSalesFragment"
         android:label="TransactionSalesFragment" />
     <fragment
         android:id="@+id/transactionSalesModifyFragment"

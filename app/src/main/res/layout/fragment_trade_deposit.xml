@@ -101,7 +101,8 @@
             android:text="입금 내역 추가"
             android:textColor="@color/primary99"
             android:textSize="20sp"
-            android:visibility='@{viewModel.visibility.intValue()}'
+            android:fontFamily="@font/nanumsquareneo_bold"
+            android:visibility='@{viewModel.visibility}'
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
