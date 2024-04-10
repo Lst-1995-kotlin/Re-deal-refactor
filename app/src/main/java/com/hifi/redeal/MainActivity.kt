@@ -33,10 +33,6 @@ import com.hifi.redeal.auth.AuthLoginFragment
 import com.hifi.redeal.databinding.ActivityMainBinding
 import com.hifi.redeal.map.view.MapFragment
 import com.hifi.redeal.map.view.MapSearchRegionFragment
-import com.hifi.redeal.memo.AddPhotoMemoFragment
-import com.hifi.redeal.memo.AddRecordMemoFragment
-import com.hifi.redeal.memo.MemoFragment
-import com.hifi.redeal.memo.PhotoDetailFragment
 import com.hifi.redeal.memo.PhotoMemoFragment
 import com.hifi.redeal.memo.RecordMemoFragment
 import com.hifi.redeal.myPage.MyPageEditNameFragment
@@ -48,8 +44,6 @@ import com.hifi.redeal.schedule.view.ScheduleManageFragment
 import com.hifi.redeal.schedule.view.ScheduleSelectByClientFragment
 import com.hifi.redeal.schedule.view.UnvisitedScheduleFragment
 import com.hifi.redeal.schedule.view.VisitedScheduleFragment
-import com.hifi.redeal.trade.view_refactor_before.TradeByClientFragment
-import com.hifi.redeal.trade.ui.fragment.TradeFragment
 import com.hifi.redeal.trade.ui.fragment.TradeDepositFragment
 import com.hifi.redeal.trade.view_refactor_before.TradeDepositModifyFragment
 import com.hifi.redeal.trade.ui.fragment.TradeSalesFragment
@@ -102,9 +96,6 @@ class MainActivity : AppCompatActivity() {
         val PHOTO_MEMO_FRAGMENT = "PhotoMemoFragment"
         val RECORD_MEMO_FRAGMENT = "RecrodMemoFragment"
         val MEMO_FRAGMENT = "MemoFragment"
-        val ADD_PHOTO_MEMO_FRAGMENT = "AddPhotoMemoFragment"
-        val ADD_RECORD_MEMO_FRAGMENT = "AddRecordMemoFragment"
-        val PHOTO_DETAIL_FRAGMENT = "PhotoDetailFragment"
         val SCHEDULE_MANAGE_FRAGMENT = "ScheduleManageFragment"
         val UNVISITED_SCHEDULE_FRAGMENT = "UnvisitedScheduleFragment"
         val VISITED_SCHEDULE_FRAGMENT = "VisitedScheduleFragment"
@@ -236,7 +227,7 @@ class MainActivity : AppCompatActivity() {
                         fragment is AccountListFragment ||
                         fragment is ScheduleManageFragment ||
                         fragment is MapFragment ||
-                        fragment is MemoFragment ||
+//                        fragment is MemoFragment ||
                         fragment is TradeFragment
                     ) View.VISIBLE else View.GONE
 
@@ -281,15 +272,15 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
-                        is MemoFragment -> {
-                            activityMainBinding.bottomNavigationViewMain.run {
-                                menu.forEach {
-                                    if (it.itemId == R.id.memoFragment) {
-                                        it.isChecked = true
-                                    }
-                                }
-                            }
-                        }
+//                        is MemoFragment -> {
+//                            activityMainBinding.bottomNavigationViewMain.run {
+//                                menu.forEach {
+//                                    if (it.itemId == R.id.memoFragment) {
+//                                        it.isChecked = true
+//                                    }
+//                                }
+//                            }
+//                        }
                     }
                 }
             }
@@ -439,12 +430,9 @@ class MainActivity : AppCompatActivity() {
             ACCOUNT_DETAIL_FRAGMENT -> AccountDetailFragment()
             ACCOUNT_EDIT_FRAGMENT -> AccountEditFragment()
             ADDRESS_SEARCH_FRAGMENT -> AddressSearchFragment()
-            MEMO_FRAGMENT -> MemoFragment()
+//            MEMO_FRAGMENT -> MemoFragment()
             PHOTO_MEMO_FRAGMENT -> PhotoMemoFragment()
-            ADD_PHOTO_MEMO_FRAGMENT -> AddPhotoMemoFragment()
-            PHOTO_DETAIL_FRAGMENT -> PhotoDetailFragment()
             RECORD_MEMO_FRAGMENT -> RecordMemoFragment()
-            ADD_RECORD_MEMO_FRAGMENT -> AddRecordMemoFragment()
             SCHEDULE_MANAGE_FRAGMENT -> ScheduleManageFragment()
             UNVISITED_SCHEDULE_FRAGMENT -> UnvisitedScheduleFragment()
             VISITED_SCHEDULE_FRAGMENT -> VisitedScheduleFragment()
