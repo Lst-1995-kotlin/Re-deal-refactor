@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.hifi.redeal.data.entrie.TradeEntry
+import com.hifi.redeal.data.entrie.TradeEntity
 import com.hifi.redeal.trade.data.model.TradeData
 import kotlinx.coroutines.flow.Flow
 
@@ -49,11 +49,11 @@ interface TradeDao {
     fun getClientTrade(clientId: Int): Flow<List<TradeData>>
 
     @Insert
-    suspend fun insertTrade(tradeEntry: TradeEntry)
+    suspend fun insertTrade(tradeEntity: TradeEntity)
 
     @Update
-    suspend fun updateTrade(tradeEntry: TradeEntry)
+    suspend fun updateTrade(tradeEntity: TradeEntity)
 
     @Delete
-    suspend fun deleteTrade(tradeEntry: TradeEntry)
+    suspend fun deleteTrade(tradeEntity: TradeEntity)
 }

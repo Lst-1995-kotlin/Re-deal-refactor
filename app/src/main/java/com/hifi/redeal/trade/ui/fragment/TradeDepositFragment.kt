@@ -11,21 +11,30 @@ import androidx.navigation.fragment.findNavController
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTradeDepositBinding
 import com.hifi.redeal.trade.configuration.TradeAmountConfiguration.Companion.tradeAmountCheck
-import com.hifi.redeal.trade.domain.viewmodel.TradeAddViewModel
-import com.hifi.redeal.trade.util.AmountTextWatcher
+import com.hifi.redeal.trade.domain.viewmodel.DepositTradeAddViewModel
+import com.hifi.redeal.trade.ui.adapter.viewHolder.client.TradeClientHolderFactory
+import com.hifi.redeal.trade.util.TradeTextWatcher
 import com.hifi.redeal.trade.util.TradeInputEditTextFocusListener
-import com.hifi.redeal.trade.util.TradeSelectClientEditTextFocusListener
-import com.hifi.redeal.trade.view_refactor_before.dialog.SelectTransactionClientDialog
+import com.hifi.redeal.trade.util.DialogShowingFocusListener
+import com.hifi.redeal.trade.ui.dialog.SelectTradeClientDialog
 import com.hifi.redeal.util.KeyboardFocusClearListener
 import com.hifi.redeal.util.numberFormatToLong
 import com.hifi.redeal.util.toNumberFormat
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TradeDepositFragment : Fragment() {
 
     private lateinit var fragmentTradeDepositBinding: FragmentTradeDepositBinding
-    private val tradeAddViewModel: TradeAddViewModel by viewModels()
+    private val tradeTextWatcher= TradeTextWatcher()
+    private val depositTradeAddViewModel: DepositTradeAddViewModel by viewModels()
+
+    @Inject
+    lateinit var selectTradeClientDialog: SelectTradeClientDialog
+
+    @Inject
+    lateinit var tradeClientHolderFactory: TradeClientHolderFactory
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,7 +44,7 @@ class TradeDepositFragment : Fragment() {
         fragmentTradeDepositBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_trade_deposit, container, false)
         fragmentTradeDepositBinding.lifecycleOwner = viewLifecycleOwner
-        fragmentTradeDepositBinding.viewModel = tradeAddViewModel
+        fragmentTradeDepositBinding.viewModel = depositTradeAddViewModel
 
         setBind()
         return fragmentTradeDepositBinding.root
@@ -62,37 +71,51 @@ class TradeDepositFragment : Fragment() {
             }
 
             // 금액을 입력 하였을 경우
-            val amountTextWatcher = AmountTextWatcher()
-            amountTextWatcher.setOnTextChangeListener {// 변경되고 나서
-                addDepositBtn.visibility =
-                    if (it.isNullOrEmpty() ||
-                        tradeAddViewModel.selectedClient.value == null
-                    ) View.GONE
-                    else View.VISIBLE
-            }
-            amountTextWatcher.setAfterTextChangListener { // 변경이 진행될 때
+            tradeTextWatcher.setOnTextChangeListener {
                 if (!it.isNullOrEmpty()) {
                     var inputNumber = "$it".numberFormatToLong()
-                    while (!tradeAmountCheck(inputNumber)) {
-                        inputNumber /= 10L
+                    if (inputNumber == 0L) {
+                        depositTradeAddViewModel.setReceivedAmount(null)
+                        return@setOnTextChangeListener
                     }
+                    if (!tradeAmountCheck(inputNumber)) inputNumber /= 10L
                     val replaceNumber = inputNumber.toNumberFormat()
+                    depositTradeAddViewModel.setReceivedAmount(inputNumber)
                     addDepositAmountEditTextNumber.run {
-                        removeTextChangedListener(amountTextWatcher)
+                        removeTextChangedListener(tradeTextWatcher)
                         setText(replaceNumber)
                         setSelection(replaceNumber.length)
-                        addTextChangedListener(amountTextWatcher)
+                        addTextChangedListener(tradeTextWatcher)
                     }
+                    return@setOnTextChangeListener
+                }
+                addDepositAmountEditTextNumber.run {
+                    depositTradeAddViewModel.setReceivedAmount(null)
+                    removeTextChangedListener(tradeTextWatcher)
+                    text = null
+                    addTextChangedListener(tradeTextWatcher)
                 }
             }
-            addDepositAmountEditTextNumber.addTextChangedListener(amountTextWatcher)
+            addDepositAmountEditTextNumber.addTextChangedListener(tradeTextWatcher)
 
             // 거래처 선택 뷰를 클릭 하였을 경우
             selectDepositClientTextInputEditText.onFocusChangeListener =
-                TradeSelectClientEditTextFocusListener(
-                    SelectTransactionClientDialog(),
+                DialogShowingFocusListener(
+                    selectTradeClientDialog,
                     childFragmentManager
                 )
+
+            // 거래처를 클릭하여 선택하였을 경우
+            tradeClientHolderFactory.setOnClickListener {
+                depositTradeAddViewModel.setTradeClientData(it)
+                selectTradeClientDialog.dismiss()
+            }
+
+            addDepositBtn.setOnClickListener {
+                depositTradeAddViewModel.insertDepositTrade()
+                findNavController().popBackStack()
+            }
+
         }
     }
 

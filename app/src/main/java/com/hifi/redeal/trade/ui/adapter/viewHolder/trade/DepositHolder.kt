@@ -5,14 +5,15 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.R
-import com.hifi.redeal.databinding.DialogTransactionEditBinding
-import com.hifi.redeal.databinding.RowTransactionDepositBinding
+import com.hifi.redeal.databinding.DialogTradeEditBinding
+import com.hifi.redeal.databinding.RowTradeDepositBinding
+
 import com.hifi.redeal.trade.data.model.TradeData
 import com.hifi.redeal.util.toDateYearOfDayFormat
 import com.hifi.redeal.util.toNumberFormat
 
 class DepositHolder(
-    private val rowTransactionDepositBinding: RowTransactionDepositBinding,
+    private val rowTransactionDepositBinding: RowTradeDepositBinding,
     private val onDeleteClickListener: (TradeData) -> Unit,
     private val onEditClickListener: (TradeData) -> Unit
 ) : RecyclerView.ViewHolder(rowTransactionDepositBinding.root) {
@@ -30,8 +31,7 @@ class DepositHolder(
         view.setOnLongClickListener {
             val builder = AlertDialog.Builder(view.context, R.style.RoundedAlertDialog)
             val layoutInflater = LayoutInflater.from(view.context)
-            val dialogTransactionEditBinding =
-                DialogTransactionEditBinding.inflate(layoutInflater)
+            val dialogTransactionEditBinding = DialogTradeEditBinding.inflate(layoutInflater)
             builder.setView(dialogTransactionEditBinding.root)
 
             val dialog = builder.show()

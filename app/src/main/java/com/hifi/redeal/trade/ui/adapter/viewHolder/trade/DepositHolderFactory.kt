@@ -3,7 +3,7 @@ package com.hifi.redeal.trade.ui.adapter.viewHolder.trade
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.hifi.redeal.databinding.RowTransactionDepositBinding
+import com.hifi.redeal.databinding.RowTradeDepositBinding
 import com.hifi.redeal.trade.ui.adapter.viewHolder.ViewHolderFactory
 import com.hifi.redeal.trade.data.model.TradeData
 import javax.inject.Inject
@@ -23,7 +23,7 @@ class DepositHolderFactory @Inject constructor() : ViewHolderFactory {
 
     override fun create(parent: ViewGroup): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = RowTransactionDepositBinding.inflate(inflater, parent, false)
+        val binding = RowTradeDepositBinding.inflate(inflater, parent, false)
         return DepositHolder(binding, onDeleteClickListener, onEditClickListener)
     }
 }

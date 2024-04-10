@@ -62,15 +62,10 @@ class TradeFragment : Fragment() {
     }
 
     private fun setDialog(inflater: LayoutInflater) {
-        tradeAddSelectDialog = TradeAddSelectDialog(inflater)
-        tradeAddSelectDialog.setOnAddDepositClickEvent {
-            findNavController()
-                .navigate(R.id.action_tradeFragment_to_transactionDepositFragment)
-        }
-        tradeAddSelectDialog.setOnAddSalesClickEvent {
-            findNavController()
-                .navigate(R.id.action_tradeFragment_to_transactionSalesFragment)
-        }
+        tradeAddSelectDialog = TradeAddSelectDialog(inflater,
+            { findNavController().navigate(R.id.action_tradeFragment_to_tradeDepositFragment) },
+            { findNavController().navigate(R.id.action_tradeFragment_to_tradeSalesFragment) }
+        )
     }
 
     private fun setAdapter() {
@@ -79,7 +74,7 @@ class TradeFragment : Fragment() {
         depositHolderFactory.setOnDeleteClickListener { tradeViewModel.deleteTrade(it) }
         depositHolderFactory.setOnEditClickListener {
             findNavController().navigate(
-                R.id.action_tradeFragment_to_transactionDepositModifyFragment,
+                R.id.action_tradeFragment_to_tradeDepositModifyFragment,
                 Bundle().apply {
                     putInt("tradeId", it.id)
                 }
@@ -89,7 +84,7 @@ class TradeFragment : Fragment() {
         salesHolderFactory.setOnDeleteClickListener { tradeViewModel.deleteTrade(it) }
         salesHolderFactory.setOnEditClickListener {
             findNavController().navigate(
-                R.id.action_tradeFragment_to_transactionSalesModifyFragment,
+                R.id.action_tradeFragment_to_tradeSalesModifyFragment,
                 Bundle().apply {
                     putInt("tradeId", it.id)
                 }
@@ -114,7 +109,7 @@ class TradeFragment : Fragment() {
         }
 
         fragmentTradeBinding.toolbarTransactionMain.setOnMenuItemClickListener {
-            findNavController().navigate(R.id.action_tradeFragment_to_transactionsEditFragment)
+            findNavController().navigate(R.id.action_tradeFragment_to_tradeEditFragment)
             true
         }
     }
@@ -122,6 +117,7 @@ class TradeFragment : Fragment() {
     private fun setViewModel() {
         tradeViewModel.trades.observe(viewLifecycleOwner) { trades -> // 어댑터에 표시하는 거래내역들
             tradeAdapter.submitList(trades) {
+                fragmentTradeBinding.transactionRecyclerView.scrollToPosition(0)
                 tradeAdapter.updateCount()
             }
         }

@@ -1,19 +1,17 @@
 package com.hifi.redeal.trade.ui.adapter.viewHolder.client
 
-import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
-import com.hifi.redeal.databinding.TransactionSelectClientItemBinding
+import com.hifi.redeal.databinding.TradeSelectClientItemBinding
 import com.hifi.redeal.trade.configuration.ClientConfiguration.Companion.setClientBookmarkResource
 import com.hifi.redeal.trade.configuration.ClientConfiguration.Companion.setClientStateResource
 import com.hifi.redeal.trade.data.model.TradeClientData
 
-class TransactionClientHolder(
-    private val transactionSelectClientItemBinding: TransactionSelectClientItemBinding,
-    //private val transactionClientViewModel: TransactionClientViewModel,
-    private val dialogFragment: DialogFragment
-) : RecyclerView.ViewHolder(transactionSelectClientItemBinding.root) {
+class TradeClientHolder(
+    private val tradeSelectClientItemBinding: TradeSelectClientItemBinding,
+    private val onClickListener: (TradeClientData) -> Unit
+) : RecyclerView.ViewHolder(tradeSelectClientItemBinding.root) {
     fun bind(tradeClientData: TradeClientData) {
-        transactionSelectClientItemBinding.run {
+        tradeSelectClientItemBinding.run {
             setClientStateResource(
                 tradeClientData.state,
                 selectTransactionClinetState
@@ -25,9 +23,8 @@ class TransactionClientHolder(
             selectTransactionClientName.text = tradeClientData.name
             selectTransactionClientManagerName.text = tradeClientData.managerName
         }
-        transactionSelectClientItemBinding.root.setOnClickListener {
-            //transactionClientViewModel.setSelectClient(clientData.id)
-            dialogFragment.dismiss()
+        tradeSelectClientItemBinding.root.setOnClickListener {
+            onClickListener(tradeClientData)
         }
     }
 }

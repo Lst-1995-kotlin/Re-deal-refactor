@@ -10,7 +10,7 @@ import com.hifi.redeal.data.dao.TradeDao
 import com.hifi.redeal.data.entrie.ClientEntry
 import com.hifi.redeal.data.entrie.PhotoMemoEntity
 import com.hifi.redeal.data.entrie.RecordMemoEntity
-import com.hifi.redeal.data.entrie.TradeEntry
+import com.hifi.redeal.data.entrie.TradeEntity
 
 @Database(
     entities = [

@@ -45,12 +45,10 @@ import com.hifi.redeal.schedule.view.ScheduleSelectByClientFragment
 import com.hifi.redeal.schedule.view.UnvisitedScheduleFragment
 import com.hifi.redeal.schedule.view.VisitedScheduleFragment
 import com.hifi.redeal.trade.ui.fragment.TradeDepositFragment
-import com.hifi.redeal.trade.ui.fragment.TradeFragment
-import com.hifi.redeal.trade.view_refactor_before.TradeByClientFragment
-import com.hifi.redeal.trade.view_refactor_before.TransactionDepositModifyFragment
-import com.hifi.redeal.trade.view_refactor_before.TransactionSalesFragment
-import com.hifi.redeal.trade.view_refactor_before.TransactionSalesModifyFragment
-import com.hifi.redeal.trade.view_refactor_before.TransactionsEditFragment
+import com.hifi.redeal.trade.view_refactor_before.TradeDepositModifyFragment
+import com.hifi.redeal.trade.ui.fragment.TradeSalesFragment
+import com.hifi.redeal.trade.view_refactor_before.TradeSalesModifyFragment
+import com.hifi.redeal.trade.view_refactor_before.TradeEditFragment
 import com.skt.tmap.TMapTapi
 import com.skt.tmap.TMapTapi.OnAuthenticationListenerCallback
 import dagger.hilt.android.AndroidEntryPoint
@@ -452,11 +450,11 @@ class MainActivity : AppCompatActivity() {
             MY_PAGE_EDIT_NAME_FRAGMENT -> MyPageEditNameFragment()
             MY_PAGE_REQUEST_FRAGMENT -> MyPageRequestFragment()
             TRANSACTION_DEPOSIT_FRAGMENT -> TradeDepositFragment()
-            TRANSACTION_SALES_FRAGMENT -> TransactionSalesFragment()
-            TRANSACTION_DEPOSIT_MODIFY_FRAGMENT -> TransactionDepositModifyFragment()
-            TRANSACTION_SALES_MODIFY_FRAGMENT -> TransactionSalesModifyFragment()
+            TRANSACTION_SALES_FRAGMENT -> TradeSalesFragment()
+            TRANSACTION_DEPOSIT_MODIFY_FRAGMENT -> TradeDepositModifyFragment()
+            TRANSACTION_SALES_MODIFY_FRAGMENT -> TradeSalesModifyFragment()
             TRANSACTION_BY_CLIENT_FRAGMENT -> TradeByClientFragment()
-            TRANSACTIONS_EDIT_FRAGMENT -> TransactionsEditFragment()
+            TRANSACTIONS_EDIT_FRAGMENT -> TradeEditFragment()
             else -> Fragment()
         }
 

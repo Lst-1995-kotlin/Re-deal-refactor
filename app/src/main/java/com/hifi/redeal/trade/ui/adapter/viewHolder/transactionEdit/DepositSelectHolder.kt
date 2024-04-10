@@ -2,12 +2,12 @@ package com.hifi.redeal.trade.ui.adapter.viewHolder.transactionEdit
 
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.R
-import com.hifi.redeal.databinding.RowTransactionSelectDepositBinding
+import com.hifi.redeal.databinding.RowTradeSelectDepositBinding
 import com.hifi.redeal.trade.data.model.TradeData
 import com.hifi.redeal.trade.domain.viewmodel.TradeViewModel
 
 class DepositSelectHolder(
-    private val rowTransactionSelectDepositBinding: RowTransactionSelectDepositBinding,
+    private val rowTransactionSelectDepositBinding: RowTradeSelectDepositBinding,
     private val tradeViewModel: TradeViewModel
 ) : RecyclerView.ViewHolder(rowTransactionSelectDepositBinding.root) {
     fun bind(tradeData: TradeData) {
@@ -32,7 +32,7 @@ class DepositSelectHolder(
     }
 
     private fun setClickEvent(
-        rowTransactionSelectDepositBinding: RowTransactionSelectDepositBinding,
+        rowTransactionSelectDepositBinding: RowTradeSelectDepositBinding,
         tradeData: TradeData
     ) {
         rowTransactionSelectDepositBinding.root.setOnClickListener {

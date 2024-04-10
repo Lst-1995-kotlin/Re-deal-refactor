@@ -1,14 +1,12 @@
 package com.hifi.redeal.trade.data.repository
 
 import com.hifi.redeal.data.dao.TradeDao
-import com.hifi.redeal.data.entrie.TradeEntry
+import com.hifi.redeal.data.entrie.TradeEntity
 import com.hifi.redeal.trade.data.model.TradeData
 import com.hifi.redeal.trade.data.model.toTradeEntry
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class TradeRepository @Inject constructor(
     private val tradeDao: TradeDao
 ) {
@@ -21,8 +19,7 @@ class TradeRepository @Inject constructor(
         tradeDao.deleteTrade(tradeData.toTradeEntry())
     }
 
-    suspend fun insertTrade(tradeEntry: TradeEntry) {
-        tradeDao.insertTrade(tradeEntry)
+    suspend fun insertTrade(tradeEntity: TradeEntity) {
+        tradeDao.insertTrade(tradeEntity)
     }
-
 }

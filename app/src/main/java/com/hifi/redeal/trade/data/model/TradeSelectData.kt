@@ -1,6 +1,6 @@
 package com.hifi.redeal.trade.data.model
 
-import com.hifi.redeal.data.entrie.TradeEntry
+import com.hifi.redeal.data.entrie.TradeEntity
 import java.util.Date
 
 data class TradeSelectData(
@@ -16,8 +16,8 @@ data class TradeSelectData(
     val clientName: String
 )
 
-fun TradeSelectData.toTradeEntry(): TradeEntry {
-    return TradeEntry(
+fun TradeSelectData.toTradeEntry(): TradeEntity {
+    return TradeEntity(
         this.id,
         this.itemName,
         this.itemCount,

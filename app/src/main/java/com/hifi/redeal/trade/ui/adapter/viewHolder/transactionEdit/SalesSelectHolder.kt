@@ -3,12 +3,12 @@ package com.hifi.redeal.trade.ui.adapter.viewHolder.transactionEdit
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.R
-import com.hifi.redeal.databinding.RowTransactionSelectSalesBinding
+import com.hifi.redeal.databinding.RowTradeSelectSalesBinding
 import com.hifi.redeal.trade.data.model.TradeData
 import com.hifi.redeal.trade.domain.viewmodel.TradeViewModel
 
 class SalesSelectHolder(
-    private val rowTransactionSelectSalesBinding: RowTransactionSelectSalesBinding,
+    private val rowTransactionSelectSalesBinding: RowTradeSelectSalesBinding,
     private val tradeViewModel: TradeViewModel
 ) : RecyclerView.ViewHolder(rowTransactionSelectSalesBinding.root) {
     fun bind(tradeData: TradeData) {

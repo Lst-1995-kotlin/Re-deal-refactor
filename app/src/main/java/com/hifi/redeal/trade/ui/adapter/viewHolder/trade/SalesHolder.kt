@@ -5,14 +5,14 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.R
-import com.hifi.redeal.databinding.DialogTransactionEditBinding
-import com.hifi.redeal.databinding.RowTransactionSalesBinding
+import com.hifi.redeal.databinding.DialogTradeEditBinding
+import com.hifi.redeal.databinding.RowTradeSalesBinding
 import com.hifi.redeal.trade.data.model.TradeData
 import com.hifi.redeal.util.toDateYearOfDayFormat
 import com.hifi.redeal.util.toNumberFormat
 
 class SalesHolder(
-    private val rowTransactionReleaseBinding: RowTransactionSalesBinding,
+    private val rowTransactionReleaseBinding: RowTradeSalesBinding,
     private val onDeleteClickListener: (TradeData) -> Unit,
     private val onEditClickListener: (TradeData) -> Unit
 ) : RecyclerView.ViewHolder(rowTransactionReleaseBinding.root) {
@@ -43,7 +43,7 @@ class SalesHolder(
             val builder = AlertDialog.Builder(view.context, R.style.RoundedAlertDialog)
             val layoutInflater = LayoutInflater.from(view.context)
             val dialogTransactionEditBinding =
-                DialogTransactionEditBinding.inflate(layoutInflater)
+                DialogTradeEditBinding.inflate(layoutInflater)
             builder.setView(dialogTransactionEditBinding.root)
 
             val dialog = builder.show()

@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.hifi.redeal.MainActivity
-import com.hifi.redeal.databinding.FragmentTransactionSalesModifyBinding
+import com.hifi.redeal.databinding.FragmentTradeSalesModifyBinding
 
-class TransactionSalesModifyFragment : Fragment() {
+class TradeSalesModifyFragment : Fragment() {
 
-    private lateinit var fragmentTransactionSalesModifyBinding: FragmentTransactionSalesModifyBinding
+    private lateinit var fragmentTransactionSalesModifyBinding: FragmentTradeSalesModifyBinding
     private lateinit var mainActivity: MainActivity
 
     //private val transactionClientViewModel: TransactionClientViewModel by activityViewModels()
@@ -21,7 +21,7 @@ class TransactionSalesModifyFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         fragmentTransactionSalesModifyBinding =
-            FragmentTransactionSalesModifyBinding.inflate(inflater)
+            FragmentTradeSalesModifyBinding.inflate(inflater)
         mainActivity = activity as MainActivity
 //        setBind()
 //        setViewModel()
