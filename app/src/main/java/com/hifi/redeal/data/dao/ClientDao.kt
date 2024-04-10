@@ -5,16 +5,17 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.hifi.redeal.data.entrie.ClientEntry
+import com.hifi.redeal.data.entrie.ClientEntity
 import com.hifi.redeal.trade.data.model.TradeClientData
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ClientDao {
     @Query("SELECT * FROM client")
-    fun getAllClient(): Flow<List<ClientEntry>>
+    fun getAllClient(): Flow<List<ClientEntity>>
 
-    @Query("""
+    @Query(
+        """
         SELECT id,
         name,
         manager_name AS managerName,
@@ -22,15 +23,16 @@ interface ClientDao {
         bookmark        
         FROM client
         ORDER BY id ASC
-    """)
+    """
+    )
     fun getClientTradeData(): Flow<List<TradeClientData>>
 
     @Insert
-    suspend fun insertClient(client: ClientEntry)
+    suspend fun insertClient(client: ClientEntity)
 
     @Update
-    suspend fun updateClient(client: ClientEntry)
+    suspend fun updateClient(client: ClientEntity)
 
     @Delete
-    suspend fun deleteClient(client: ClientEntry)
+    suspend fun deleteClient(client: ClientEntity)
 }

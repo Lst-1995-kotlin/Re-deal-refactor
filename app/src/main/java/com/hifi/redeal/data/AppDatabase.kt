@@ -7,15 +7,15 @@ import com.hifi.redeal.data.dao.ClientDao
 import com.hifi.redeal.data.dao.PhotoMemoDao
 import com.hifi.redeal.data.dao.RecordMemoDao
 import com.hifi.redeal.data.dao.TradeDao
-import com.hifi.redeal.data.entrie.ClientEntry
+import com.hifi.redeal.data.entrie.ClientEntity
 import com.hifi.redeal.data.entrie.PhotoMemoEntity
 import com.hifi.redeal.data.entrie.RecordMemoEntity
 import com.hifi.redeal.data.entrie.TradeEntity
 
 @Database(
     entities = [
-        ClientEntry::class,
-        TradeEntry::class,
+        ClientEntity::class,
+        TradeEntity::class,
         PhotoMemoEntity::class,
         RecordMemoEntity::class,
     ],
