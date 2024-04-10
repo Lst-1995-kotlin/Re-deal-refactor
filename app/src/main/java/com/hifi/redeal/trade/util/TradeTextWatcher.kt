@@ -2,7 +2,6 @@ package com.hifi.redeal.trade.util
 
 import android.text.Editable
 import android.text.TextWatcher
-import javax.inject.Inject
 
 class TradeTextWatcher : TextWatcher {
 
