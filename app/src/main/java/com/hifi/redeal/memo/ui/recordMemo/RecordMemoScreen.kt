@@ -22,7 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hifi.redeal.R
 import com.hifi.redeal.memo.navigation.NavigationDestination
 import com.hifi.redeal.memo.ui.MemoTopAppBar
-import com.hifi.redeal.memo.ui.RecordMemoList
+import com.hifi.redeal.memo.ui.RecordMemoLazyColumn
 import com.hifi.redeal.theme.RedealTheme
 
 object RecordMemoDestination : NavigationDestination {
@@ -91,7 +91,7 @@ internal fun RecordMemoScreen(
         floatingActionButtonPosition = FabPosition.End,
         containerColor = Color.White
     ) { padding ->
-        RecordMemoList(
+        RecordMemoLazyColumn(
             recordMemos = recordMemosUiState.recordMemos,
             modifier = Modifier
                 .padding(padding)

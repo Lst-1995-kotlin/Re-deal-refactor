@@ -41,7 +41,7 @@ import com.hifi.redeal.theme.RedealTheme
 import kotlinx.coroutines.delay
 
 @Composable
-internal fun RecordMemoList(
+internal fun RecordMemoLazyColumn(
     recordMemos: List<RecordMemo>,
     modifier: Modifier = Modifier,
 ) {
