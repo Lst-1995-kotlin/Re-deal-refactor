@@ -16,7 +16,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hifi.redeal.R
@@ -95,7 +94,6 @@ internal fun RecordMemoScreen(
             recordMemos = recordMemosUiState.recordMemos,
             modifier = Modifier
                 .padding(padding)
-                .padding(vertical = 20.dp, horizontal = 24.dp),
         )
     }
 }

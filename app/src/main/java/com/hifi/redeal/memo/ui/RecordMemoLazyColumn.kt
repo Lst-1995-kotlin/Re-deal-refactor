@@ -106,7 +106,7 @@ internal fun RecordMemoLazyColumn(
                 Divider(modifier = Modifier.padding(vertical = 16.dp))
             }
         },
-        modifier = modifier
+        modifier = modifier.padding(vertical = 20.dp, horizontal = 24.dp),
     )
 }
 
