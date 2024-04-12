@@ -5,10 +5,9 @@
     android:id="@+id/nav_graph_main"
     app:startDestination="@id/authLoginFragment">
     <fragment
-        android:id="@+id/memoFragment"
-        android:name="com.hifi.redeal.memo.MemoFragment"
-        android:label="fragment_memo"
-        tools:layout="@layout/fragment_memo" />
+        android:id="@+id/userMemoFragment"
+        android:name="com.hifi.redeal.memo.UserMemoFragment"
+        android:label="fragment_user_memo" />
     <fragment
         android:id="@+id/photoMemoFragment"
         android:name="com.hifi.redeal.memo.PhotoMemoFragment"

@@ -35,6 +35,7 @@ import com.hifi.redeal.map.view.MapFragment
 import com.hifi.redeal.map.view.MapSearchRegionFragment
 import com.hifi.redeal.memo.PhotoMemoFragment
 import com.hifi.redeal.memo.RecordMemoFragment
+import com.hifi.redeal.memo.UserMemoFragment
 import com.hifi.redeal.myPage.MyPageEditNameFragment
 import com.hifi.redeal.myPage.MyPageFragment
 import com.hifi.redeal.myPage.MyPageRequestFragment
@@ -211,9 +212,9 @@ class MainActivity : AppCompatActivity() {
                         navController.navigate(R.id.tradeFragment)
                     }
 
-                    R.id.memoFragment -> {
-                        navController.popBackStack(R.id.memoFragment, true)
-                        navController.navigate(R.id.memoFragment)
+                    R.id.userMemoFragment -> {
+                        navController.popBackStack(R.id.userMemoFragment, true)
+                        navController.navigate(R.id.userMemoFragment)
                     }
                 }
                 true
@@ -229,7 +230,8 @@ class MainActivity : AppCompatActivity() {
                         fragment is AccountListFragment ||
                         fragment is ScheduleManageFragment ||
                         fragment is MapFragment ||
-                        fragment is TradeFragment
+                        fragment is TradeFragment ||
+                        fragment is UserMemoFragment
                     ) View.VISIBLE else View.GONE
 
                     when (fragment) {
@@ -273,15 +275,15 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
-//                        is MemoFragment -> {
-//                            activityMainBinding.bottomNavigationViewMain.run {
-//                                menu.forEach {
-//                                    if (it.itemId == R.id.memoFragment) {
-//                                        it.isChecked = true
-//                                    }
-//                                }
-//                            }
-//                        }
+                        is UserMemoFragment -> {
+                            activityMainBinding.bottomNavigationViewMain.run {
+                                menu.forEach {
+                                    if (it.itemId == R.id.userMemoFragment) {
+                                        it.isChecked = true
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
