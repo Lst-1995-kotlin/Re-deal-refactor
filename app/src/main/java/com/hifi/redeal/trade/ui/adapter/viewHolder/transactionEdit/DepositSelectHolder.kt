@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.RowTradeSelectDepositBinding
 import com.hifi.redeal.trade.data.model.TradeData
-import com.hifi.redeal.trade.domain.viewmodel.TradeViewModel
+import com.hifi.redeal.trade.ui.viewmodel.TradeViewModel
 
 class DepositSelectHolder(
     private val rowTransactionSelectDepositBinding: RowTradeSelectDepositBinding,

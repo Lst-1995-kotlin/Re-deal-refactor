@@ -1,4 +1,4 @@
-package com.hifi.redeal.trade.domain.viewmodel
+package com.hifi.redeal.trade.ui.viewmodel
 
 import android.view.View
 import androidx.lifecycle.LiveData
@@ -10,8 +10,8 @@ import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.data.model.TradeClientData
 import com.hifi.redeal.trade.data.repository.TradeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import okhttp3.internal.wait
 import java.util.Date
 import javax.inject.Inject
 
@@ -92,20 +92,22 @@ class SalesTradeAddViewModel @Inject constructor(
 
     fun insertSalesTrade() {
         viewModelScope.launch {
-            if (liveDataValueCheck()) {
-                tradeRepository.insertTrade(
-                    TradeEntity(
-                        itemName = itemName.value!!,
-                        itemCount = itemCount.value!!,
-                        itemPrice = itemPrice.value!!,
-                        receivedAmount = receivedAmount.value!!,
-                        type = TradeType.SALES.type,
-                        date = Date(),
-                        checked = false,
-                        clientId = selectedClient.value!!.id
+            async {
+                if (liveDataValueCheck()) {
+                    tradeRepository.insertTrade(
+                        TradeEntity(
+                            itemName = itemName.value!!,
+                            itemCount = itemCount.value!!,
+                            itemPrice = itemPrice.value!!,
+                            receivedAmount = receivedAmount.value!!,
+                            type = TradeType.SALES.type,
+                            date = Date(),
+                            checked = false,
+                            clientId = selectedClient.value!!.id
+                        )
                     )
-                )
-            }
+                }
+            }.await()
         }
     }
 

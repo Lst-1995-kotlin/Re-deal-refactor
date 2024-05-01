@@ -1,4 +1,4 @@
-package com.hifi.redeal.trade.domain.viewmodel
+package com.hifi.redeal.trade.ui.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

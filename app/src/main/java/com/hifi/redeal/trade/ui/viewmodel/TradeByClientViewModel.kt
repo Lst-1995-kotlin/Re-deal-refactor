@@ -1,4 +1,4 @@
-package com.hifi.redeal.trade.domain.viewmodel
+package com.hifi.redeal.trade.ui.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,10 +9,10 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.data.model.TradeData
-import com.hifi.redeal.trade.data.repository.TradeRepository
 import com.hifi.redeal.trade.domain.usecase.TradeUseCase
 import com.hifi.redeal.util.toNumberFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,6 +30,7 @@ class TradeByClientViewModel @Inject constructor(
     val tradeReceivables: LiveData<String> get() = _tradeReceivables
 
     val clientId: LiveData<Int?> = _clientId
+
     // _clientId를 관찰하고 _trades를 이에 따라 업데이트하기 위해 switchMap 사용
     val trades: LiveData<List<TradeData>> = clientId.switchMap {
         it?.let {
@@ -47,7 +48,9 @@ class TradeByClientViewModel @Inject constructor(
 
     fun deleteTrade(tradeData: TradeData) {
         viewModelScope.launch {
-            tradeUseCase.deleteTrade(tradeData)
+            async {
+                tradeUseCase.deleteTrade(tradeData)
+            }.await()
         }
     }
 

@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.Button
 import com.google.android.material.textfield.TextInputEditText
 import com.hifi.redeal.trade.configuration.TradeAmountConfiguration.Companion.tradeAmountCheck
-import com.hifi.redeal.trade.domain.viewmodel.TradeByClientViewModel
+import com.hifi.redeal.trade.ui.viewmodel.TradeByClientViewModel
 import com.hifi.redeal.util.numberFormatToLong
 import com.hifi.redeal.util.toNumberFormat
 

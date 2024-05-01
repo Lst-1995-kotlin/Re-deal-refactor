@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.hifi.redeal.trade.domain.viewmodel.DepositTradeAddViewModel" />
+            type="com.hifi.redeal.trade.ui.viewmodel.DepositTradeAddViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

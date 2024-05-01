@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTradeByClientBinding
 import com.hifi.redeal.trade.configuration.TradeType
-import com.hifi.redeal.trade.domain.viewmodel.TradeByClientViewModel
+import com.hifi.redeal.trade.ui.viewmodel.TradeByClientViewModel
 import com.hifi.redeal.trade.ui.adapter.TradeAdapter
 import com.hifi.redeal.trade.ui.adapter.TradeAdapterDiffCallback
 import com.hifi.redeal.trade.ui.adapter.viewHolder.ViewHolderFactory

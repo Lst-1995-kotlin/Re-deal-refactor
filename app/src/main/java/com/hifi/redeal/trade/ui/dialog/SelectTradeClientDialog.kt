@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import com.hifi.redeal.databinding.DialogSelectTradeClientBinding
 import com.hifi.redeal.trade.configuration.DialogConfiguration.Companion.dialogResize
-import com.hifi.redeal.trade.domain.viewmodel.ClientTradeViewModel
+import com.hifi.redeal.trade.ui.viewmodel.ClientTradeViewModel
 import com.hifi.redeal.trade.ui.adapter.ClientAdapter
 import com.hifi.redeal.trade.ui.adapter.ClientAdapterDiffCallback
 import com.hifi.redeal.trade.ui.adapter.viewHolder.ViewHolderFactory

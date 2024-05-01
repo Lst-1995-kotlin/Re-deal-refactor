@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.databinding.RowTradeSelectSalesBinding
 import com.hifi.redeal.trade.ui.adapter.viewHolder.ViewHolderFactory
-import com.hifi.redeal.trade.domain.viewmodel.TradeViewModel
+import com.hifi.redeal.trade.ui.viewmodel.TradeViewModel
 
 class SalesSelectHolderFactory(
     private val tradeViewModel: TradeViewModel

@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTradeDepositBinding
 import com.hifi.redeal.trade.configuration.TradeAmountConfiguration.Companion.tradeAmountCheck
-import com.hifi.redeal.trade.domain.viewmodel.DepositTradeAddViewModel
+import com.hifi.redeal.trade.ui.viewmodel.DepositTradeAddViewModel
 import com.hifi.redeal.trade.ui.adapter.viewHolder.client.TradeClientHolderFactory
 import com.hifi.redeal.trade.util.TradeTextWatcher
 import com.hifi.redeal.trade.util.TradeInputEditTextFocusListener
