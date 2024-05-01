@@ -1,6 +1,7 @@
 package com.hifi.redeal.trade.view_refactor_before
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +20,12 @@ import com.hifi.redeal.trade.ui.adapter.viewHolder.ViewHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.CountHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.DepositHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.SalesHolderFactory
-import com.hifi.redeal.util.toNumberFormat
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -96,27 +101,47 @@ class TradeByClientFragment : Fragment() {
             }
 
             ImgBtnAddDepositByClient.setOnClickListener {
-                findNavController().navigate(R.id.action_tradeByClientFragment_to_tradeDepositFragment)
+                findNavController().navigate(
+                    R.id.action_tradeByClientFragment_to_tradeDepositFragment,
+                    Bundle().apply {
+                        arguments?.getInt("clientId")
+                    })
             }
 
             ImgBtnAddTransactionByClient.setOnClickListener {
-                findNavController().navigate(R.id.action_tradeByClientFragment_to_tradeSalesFragment)
+                findNavController().navigate(
+                    R.id.action_tradeByClientFragment_to_tradeSalesFragment,
+                    Bundle().apply {
+                        arguments?.getInt("clientId")
+                    })
             }
 
             toolbarTransactionByClientMain.setOnMenuItemClickListener {
-                findNavController().navigate(R.id.action_tradeByClientFragment_to_tradeEditFragment)
+                findNavController().navigate(
+                    R.id.action_tradeByClientFragment_to_tradeEditFragment,
+                    Bundle().apply {
+                        arguments?.getInt("clientId")
+                    })
                 true
             }
         }
     }
 
     private fun setViewModel() {
-        tradeByClientViewModel.trades.observe(viewLifecycleOwner) { trades -> // 어댑터에 표시하는 거래내역들
-            tradeAdapter.submitList(trades) {
-                fragmentTradeByClientBinding.transactionByClientRecyclerView.scrollToPosition(0)
-                tradeAdapter.updateCount()
+
+        CoroutineScope(Dispatchers.Main).launch{
+            async {
+                tradeByClientViewModel.setClientId(arguments?.getInt("clientId"))
+            }.await()
+
+            tradeByClientViewModel.trades.observe(viewLifecycleOwner) { trades -> // 어댑터에 표시하는 거래내역들
+                tradeAdapter.submitList(trades) {
+                    fragmentTradeByClientBinding.transactionByClientRecyclerView.scrollToPosition(0)
+                    tradeAdapter.updateCount()
+                }
             }
+
         }
-        tradeByClientViewModel.setClientId(arguments?.getInt("clientId"))
+
     }
 }

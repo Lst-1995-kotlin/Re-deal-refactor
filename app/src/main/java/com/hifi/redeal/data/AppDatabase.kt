@@ -19,7 +19,7 @@ import com.hifi.redeal.data.entrie.TradeEntity
         PhotoMemoEntity::class,
         RecordMemoEntity::class,
     ],
-    version = 1
+    version = 2
 )
 @TypeConverters(DateConverters::class, StringListToJsonConverter::class)
 abstract class AppDatabase : RoomDatabase() {

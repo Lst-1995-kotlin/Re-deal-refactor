@@ -30,7 +30,6 @@ import com.kakao.vectormap.mapwidget.component.GuiText
 import com.kakao.vectormap.mapwidget.component.Orientation
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
-import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -92,7 +91,7 @@ class AccountDetailFragment : Fragment() {
 //
 //                        )
                         val bundle = Bundle()
-                        bundle.putInt("clientId", 2)
+                        bundle.putInt("clientId", clientIdx.toInt())
                         findNavController().navigate(
                             R.id.action_accountDetailFragment_to_tradeByClientFragment,
                             bundle

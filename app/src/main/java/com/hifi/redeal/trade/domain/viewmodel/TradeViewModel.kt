@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.data.model.TradeData
 import com.hifi.redeal.trade.data.repository.TradeRepository
+import com.hifi.redeal.trade.domain.usecase.TradeUseCase
 import com.hifi.redeal.util.toNumberFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -16,10 +17,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TradeViewModel @Inject constructor(
-    private val tradeRepository: TradeRepository
+    private val tradeUseCase: TradeUseCase
 ) : ViewModel() {
 
-    val trades: LiveData<List<TradeData>> = tradeRepository.getAllTrades().asLiveData()
+    val trades: LiveData<List<TradeData>> = tradeUseCase.getTrades().asLiveData()
     private val _salesTradeCount = MutableLiveData<String>()
     private val _salesTradeAmount = MutableLiveData<String>()
     private val _tradeReceivables = MutableLiveData<String>()
@@ -35,7 +36,7 @@ class TradeViewModel @Inject constructor(
 
     fun deleteTrade(tradeData: TradeData) {
         viewModelScope.launch {
-            tradeRepository.deleteTrade(tradeData)
+            tradeUseCase.deleteTrade(tradeData)
         }
     }
 

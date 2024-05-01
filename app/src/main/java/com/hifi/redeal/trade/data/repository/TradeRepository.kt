@@ -10,9 +10,9 @@ import javax.inject.Inject
 class TradeRepository @Inject constructor(
     private val tradeDao: TradeDao
 ) {
-    fun getAllTrades(): Flow<List<TradeData>> = tradeDao.getAllTrade()
+    fun getTrades(): Flow<List<TradeData>> = tradeDao.getAllTrade()
 
-    fun getAllTradeByClient(clientId: Int): Flow<List<TradeData>> =
+    fun getTradeByClient(clientId: Int): Flow<List<TradeData>> =
         tradeDao.getClientTrade(clientId)
 
     suspend fun deleteTrade(tradeData: TradeData) {
