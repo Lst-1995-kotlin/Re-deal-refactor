@@ -121,8 +121,11 @@ class TradeSalesFragment : Fragment() {
                     }
                     val itemPrice =
                         tradeItemPriceEditText.text.toString().numberFormatToLong()
-                    val salesPrice = inputNumber * itemPrice
-                    if (!tradeAmountCheck(salesPrice)) inputNumber /= 10
+                    var salesPrice = inputNumber * itemPrice
+                    if (!tradeAmountCheck(salesPrice)) {
+                        inputNumber /= 10
+                        salesPrice = inputNumber * itemPrice
+                    }
                     salesTradeAddViewModel.setItemCount(inputNumber)
                     val replaceNumber = inputNumber.toNumberFormat()
                     if (salesPrice > 0L) tradeAmountReceivedEditText.setText(salesPrice.toNumberFormat())
@@ -154,8 +157,11 @@ class TradeSalesFragment : Fragment() {
                     }
                     val itemCount =
                         tradeItemCountEditText.text.toString().numberFormatToLong()
-                    val salesPrice = inputNumber * itemCount
-                    if (!tradeAmountCheck(salesPrice)) inputNumber /= 10
+                    var salesPrice = inputNumber * itemCount
+                    if (!tradeAmountCheck(salesPrice)) {
+                        inputNumber /= 10
+                        salesPrice = inputNumber * itemCount
+                    }
                     salesTradeAddViewModel.setItemPrice(inputNumber)
                     val replaceNumber = inputNumber.toNumberFormat()
                     if (salesPrice > 0L) tradeAmountReceivedEditText.setText(salesPrice.toNumberFormat())
@@ -186,6 +192,10 @@ class TradeSalesFragment : Fragment() {
                         return@setOnTextChangeListener
                     }
                     if (!tradeAmountCheck(inputNumber)) inputNumber /= 10
+                    if (tradeItemPriceEditText.text.toString().numberFormatToLong() *
+                        tradeItemCountEditText.text.toString().numberFormatToLong() < inputNumber) {
+                        inputNumber /= 10
+                    }
                     salesTradeAddViewModel.setReceivedAmount(inputNumber)
                     val replaceNumber = inputNumber.toNumberFormat()
                     tradeAmountReceivedEditText.run {
