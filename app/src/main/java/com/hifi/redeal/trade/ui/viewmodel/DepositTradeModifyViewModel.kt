@@ -1,5 +1,6 @@
 package com.hifi.redeal.trade.ui.viewmodel
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,8 +21,9 @@ class DepositTradeModifyViewModel @Inject constructor(
     private val tradeClientUseCase: TradeClientUseCase
 ) : ViewModel() {
 
-    private val _modifyReceivedAmount = MutableLiveData<String>()
+    private val _modifyReceivedAmount = MutableLiveData<String?>()
     private val _modifyClient = MutableLiveData<TradeClientData>()
+    private val _visibility = MutableLiveData<Int>()
 
     private val modifyTradeId = MutableLiveData<Int>()
 
@@ -31,14 +33,35 @@ class DepositTradeModifyViewModel @Inject constructor(
         } ?: MutableLiveData()
     }
 
-    val modifyReceivedAmount: LiveData<String> get() = _modifyReceivedAmount
+    val modifyReceivedAmount: LiveData<String?> get() = _modifyReceivedAmount
     val modifyClient: LiveData<TradeClientData> get() = _modifyClient
+    val visibility: LiveData<Int> = _visibility // 버튼의 visibility 값을 관리.
 
     init {
+        _visibility.postValue(View.VISIBLE)
         modifyTrade.observeForever {
             _modifyReceivedAmount.postValue(it.receivedAmount.toNumberFormat())
             setModifyClient(it.clientId)
         }
+        modifyReceivedAmount.observeForever {
+            buttonVisibilityCheck()
+        }
+        modifyClient.observeForever {
+            buttonVisibilityCheck()
+        }
+    }
+
+    private fun liveDataValueCheck(): Boolean {
+        return modifyTrade.value != null &&
+                modifyReceivedAmount.value != null
+    }
+
+    private fun buttonVisibilityCheck() {
+        if (liveDataValueCheck()) {
+            _visibility.postValue(View.VISIBLE)
+            return
+        }
+        _visibility.postValue(View.GONE)
     }
 
     fun setModifyTradeId(id: Int) {
@@ -47,10 +70,15 @@ class DepositTradeModifyViewModel @Inject constructor(
 
     fun setModifyClient(id: Int) {
         viewModelScope.launch {
-            val temp = tradeClientUseCase.getClientById(id)
-            temp.collect {
+            tradeClientUseCase.getClientById(id).collect {
                 _modifyClient.postValue(it)
             }
         }
+    }
+
+    fun setReceivedAmount(value: Long?) {
+        value?.let {
+            _modifyReceivedAmount.postValue(it.toNumberFormat())
+        } ?: _modifyReceivedAmount.postValue(null)
     }
 }

@@ -10,10 +10,16 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTradeDepositModifyBinding
+import com.hifi.redeal.trade.configuration.TradeAmountConfiguration
 import com.hifi.redeal.trade.ui.adapter.viewHolder.client.TradeClientHolderFactory
 import com.hifi.redeal.trade.ui.dialog.SelectTradeClientDialog
 import com.hifi.redeal.trade.ui.viewmodel.DepositTradeModifyViewModel
 import com.hifi.redeal.trade.util.DialogShowingFocusListener
+import com.hifi.redeal.trade.util.TradeInputEditTextFocusListener
+import com.hifi.redeal.trade.util.TradeTextWatcher
+import com.hifi.redeal.util.KeyboardFocusClearListener
+import com.hifi.redeal.util.numberFormatToLong
+import com.hifi.redeal.util.toNumberFormat
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -22,6 +28,7 @@ class TradeDepositModifyFragment : Fragment() {
 
     private lateinit var fragmentTradeDepositModifyBinding: FragmentTradeDepositModifyBinding
     private val depositTradeModifyViewModel: DepositTradeModifyViewModel by viewModels()
+    private val tradeTextWatcher = TradeTextWatcher()
 
     @Inject
     lateinit var selectTradeClientDialog: SelectTradeClientDialog
@@ -51,6 +58,7 @@ class TradeDepositModifyFragment : Fragment() {
 
     private fun setBind() {
         fragmentTradeDepositModifyBinding.run {
+            // 거래처 선택 뷰를 클릭 하였을 경우
             modifyDepositClientTextInputEditText.onFocusChangeListener =
                 DialogShowingFocusListener(
                     selectTradeClientDialog,
@@ -63,10 +71,42 @@ class TradeDepositModifyFragment : Fragment() {
                 selectTradeClientDialog.dismiss()
             }
 
+            // 금액 입력 뷰 포커스 변경에 따른 백 그라운드 이미지 설정
+            modifyDepositPriceEditTextNumber.onFocusChangeListener =
+                TradeInputEditTextFocusListener()
 
-//            modifyDepositPriceEditTextNumber.addTextChangedListener(
-//
-//            )
+            // 키보드 내려 갔을 경우 포커스 제거
+            modifyDepositPriceEditTextNumber.viewTreeObserver.addOnGlobalLayoutListener(
+                KeyboardFocusClearListener(modifyDepositPriceEditTextNumber)
+            )
+
+            // 금액을 입력 하였을 경우
+            tradeTextWatcher.setOnTextChangeListener {
+                if (!it.isNullOrEmpty()) {
+                    var inputNumber = "$it".numberFormatToLong()
+                    if (inputNumber == 0L) {
+                        depositTradeModifyViewModel.setReceivedAmount(null)
+                        return@setOnTextChangeListener
+                    }
+                    if (!TradeAmountConfiguration.tradeAmountCheck(inputNumber)) inputNumber /= 10L
+                    val replaceNumber = inputNumber.toNumberFormat()
+                    depositTradeModifyViewModel.setReceivedAmount(inputNumber)
+                    modifyDepositPriceEditTextNumber.run {
+                        removeTextChangedListener(tradeTextWatcher)
+                        setText(replaceNumber)
+                        setSelection(replaceNumber.length)
+                        addTextChangedListener(tradeTextWatcher)
+                    }
+                    return@setOnTextChangeListener
+                }
+                modifyDepositPriceEditTextNumber.run {
+                    depositTradeModifyViewModel.setReceivedAmount(null)
+                    removeTextChangedListener(tradeTextWatcher)
+                    text = null
+                    addTextChangedListener(tradeTextWatcher)
+                }
+            }
+            modifyDepositPriceEditTextNumber.addTextChangedListener(tradeTextWatcher)
 
             modifyDepositBtn.setOnClickListener {
 
