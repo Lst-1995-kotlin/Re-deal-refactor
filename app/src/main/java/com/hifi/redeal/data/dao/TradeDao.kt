@@ -48,6 +48,24 @@ interface TradeDao {
     )
     fun getClientTrade(clientId: Int): Flow<List<TradeData>>
 
+    @Query(
+        """
+            SELECT trade.id AS id, 
+           trade.item_name AS itemName, 
+           trade.item_count AS itemCount,
+           trade.item_price AS itemPrice,
+           trade.received_amount AS receivedAmount,
+           trade.type AS type,
+           trade.date AS date,
+           trade.client_id AS clientId,
+           client.name AS clientName
+    FROM trade  
+    INNER JOIN client ON trade.client_id = client.id
+    WHERE trade.id = :tradeId
+        """
+    )
+    fun getTradeById(tradeId: Int): Flow<TradeData>
+
     @Insert
     suspend fun insertTrade(tradeEntity: TradeEntity)
 

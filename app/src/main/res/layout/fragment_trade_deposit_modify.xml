@@ -4,7 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.hifi.redeal.trade.ui.viewmodel.DepositTradeModifyViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -59,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bottom_border_not_focus"
                 android:fontFamily="@font/nanumsquareneo_regular"
-                android:hint="변경 금액"
+                android:hint="@{viewModel.modifyReceivedAmount}"
                 android:inputType="number"
                 android:maxLength="19"
                 android:singleLine="true"
@@ -95,6 +97,7 @@
                 android:paddingStart="0dp"
                 android:textColor="@color/text10"
                 android:textColorLink="@color/primary20"
+                android:hint="@{viewModel.modifyClientName}"
                 android:textSize="20sp" />
         </com.google.android.material.textfield.TextInputLayout>
 

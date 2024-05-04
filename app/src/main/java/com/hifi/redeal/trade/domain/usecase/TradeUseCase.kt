@@ -13,6 +13,10 @@ class TradeUseCase @Inject constructor(
         return tradeRepository.getTrades()
     }
 
+    fun getTradeById(id: Int): Flow<TradeData> {
+        return tradeRepository.getTradeById(id)
+    }
+
     fun getTradeByClient(clientId: Int): Flow<List<TradeData>> {
         return tradeRepository.getTradeByClient(clientId)
     }

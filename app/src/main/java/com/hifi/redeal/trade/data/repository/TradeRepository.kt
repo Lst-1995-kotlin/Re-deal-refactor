@@ -12,6 +12,10 @@ class TradeRepository @Inject constructor(
 ) {
     fun getTrades(): Flow<List<TradeData>> = tradeDao.getAllTrade()
 
+    fun getTradeById(id: Int): Flow<TradeData> {
+        return tradeDao.getTradeById(id)
+    }
+
     fun getTradeByClient(clientId: Int): Flow<List<TradeData>> =
         tradeDao.getClientTrade(clientId)
 

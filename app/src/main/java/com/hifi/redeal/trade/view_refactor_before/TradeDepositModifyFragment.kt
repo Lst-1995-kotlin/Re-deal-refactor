@@ -6,16 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTradeDepositModifyBinding
+import com.hifi.redeal.trade.ui.viewmodel.DepositTradeModifyViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class TradeDepositModifyFragment : Fragment() {
 
     private lateinit var fragmentTradeDepositModifyBinding: FragmentTradeDepositModifyBinding
-
+    private val depositTradeModifyViewModel: DepositTradeModifyViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,9 +32,9 @@ class TradeDepositModifyFragment : Fragment() {
                 false
             )
         fragmentTradeDepositModifyBinding.lifecycleOwner = viewLifecycleOwner
-        //fragmentTradeDepositModifyBinding.viewModel = tradeViewModel
-//        setBind()
-//        setViewModel()
+        fragmentTradeDepositModifyBinding.viewModel = depositTradeModifyViewModel
+        setBind()
+        setViewModel()
 
         return fragmentTradeDepositModifyBinding.root
     }
@@ -58,6 +60,6 @@ class TradeDepositModifyFragment : Fragment() {
     }
 
     private fun setViewModel() {
-
+        arguments?.let { depositTradeModifyViewModel.setModifyTradeId(it.getInt("tradeId")) }
     }
 }
