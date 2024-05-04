@@ -24,4 +24,8 @@ class TradeUseCase @Inject constructor(
     suspend fun insertTrade(tradeEntity: TradeEntity) {
         tradeRepository.insertTrade(tradeEntity)
     }
+
+    suspend fun updateTrade(tradeEntity: TradeEntity) {
+        tradeRepository.insertTrade(tradeEntity)
+    }
 }

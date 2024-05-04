@@ -4,85 +4,60 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.hifi.redeal.MainActivity
+import androidx.navigation.fragment.findNavController
+import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTradeDepositModifyBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class TradeDepositModifyFragment : Fragment() {
-    private lateinit var mainActivity: MainActivity
-    private lateinit var fragmentTransactionDepositModifyBinding: FragmentTradeDepositModifyBinding
 
-    //private val transactionClientViewModel: TransactionClientViewModel by activityViewModels()
-    //private val transactionViewModel: TransactionViewModel by activityViewModels()
+    private lateinit var fragmentTradeDepositModifyBinding: FragmentTradeDepositModifyBinding
+
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mainActivity = activity as MainActivity
-        fragmentTransactionDepositModifyBinding =
-            FragmentTradeDepositModifyBinding.inflate(inflater)
+        fragmentTradeDepositModifyBinding =
+            DataBindingUtil.inflate(
+                inflater,
+                R.layout.fragment_trade_deposit_modify,
+                container,
+                false
+            )
+        fragmentTradeDepositModifyBinding.lifecycleOwner = viewLifecycleOwner
+        //fragmentTradeDepositModifyBinding.viewModel = tradeViewModel
 //        setBind()
 //        setViewModel()
 
-        return fragmentTransactionDepositModifyBinding.root
+        return fragmentTradeDepositModifyBinding.root
     }
 
-    override fun onPause() {
-        super.onPause()
-//        transactionViewModel.modifyTransactionBasic.value?.let {
-//            transactionViewModel.setModifyTransaction(null)
-//        }
-    }
 
-//    private fun setBind() {
-//        fragmentTransactionDepositModifyBinding.run {
-//            modifyDepositClientTextInputEditText.onFocusChangeListener =
-//                TransactionSelectEditTextFocusListener(
-//                    SelectTransactionClientDialog(transactionClientViewModel),
-//                    childFragmentManager
-//                )
-//
+    private fun setBind() {
+        fragmentTradeDepositModifyBinding.run {
+            //modifyDepositClientTextInputEditText.onFocusChangeListener =
+
+
 //            modifyDepositPriceEditTextNumber.addTextChangedListener(
-//                AmountTextWatcher(
-//                    transactionClientViewModel,
-//                    modifyDepositPriceEditTextNumber,
-//                    modifyDepositBtn
-//                )
+//
 //            )
-//
-//            modifyDepositBtn.setOnClickListener {
-//                transactionClientViewModel.selectedClient.value?.let {
-//                    transactionViewModel.updateModifyDepositTransaction(
-//                        it,
-//                        removeNumberFormat("${modifyDepositPriceEditTextNumber.text}")
-//                    )
-//                    transactionViewModel.setModifyTransaction(null)
-//                }
-//            }
-//
-//            modifyDepositMaterialToolbar.setNavigationOnClickListener {
-//                findNavController().popBackStack()
-//            }
-//        }
-//    }
-//
-//    private fun setViewModel() {
-//        transactionViewModel.modifyTransactionBasic.observe(viewLifecycleOwner) { transaction ->
-//            transaction?.let {
-//                transaction.setModifyViewValue(fragmentTransactionDepositModifyBinding.modifyDepositPriceEditTextNumber)
-//                transactionClientViewModel.setSelectClient(transaction.getClientInformation())
-//            } ?: findNavController().popBackStack()
-//        }
-//        transactionClientViewModel.selectedClient.observe(viewLifecycleOwner) { client ->
-//            client?.setClientInfoView(fragmentTransactionDepositModifyBinding.modifyDepositClientTextInputEditText)
-//            if (fragmentTransactionDepositModifyBinding.modifyDepositPriceEditTextNumber.text.isNullOrEmpty()) {
-//                fragmentTransactionDepositModifyBinding.modifyDepositBtn.visibility = View.GONE
-//                return@observe
-//            }
-//            fragmentTransactionDepositModifyBinding.modifyDepositBtn.visibility = View.VISIBLE
-//        }
-//    }
+
+            modifyDepositBtn.setOnClickListener {
+
+            }
+
+            modifyDepositMaterialToolbar.setNavigationOnClickListener {
+                findNavController().popBackStack()
+            }
+        }
+    }
+
+    private fun setViewModel() {
+
+    }
 }

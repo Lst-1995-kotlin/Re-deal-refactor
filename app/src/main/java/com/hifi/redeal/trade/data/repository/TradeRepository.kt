@@ -22,4 +22,8 @@ class TradeRepository @Inject constructor(
     suspend fun insertTrade(tradeEntity: TradeEntity) {
         tradeDao.insertTrade(tradeEntity)
     }
+
+    suspend fun updateTrade(tradeEntity: TradeEntity) {
+        tradeDao.updateTrade(tradeEntity)
+    }
 }

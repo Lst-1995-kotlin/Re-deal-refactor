@@ -111,6 +111,8 @@ class TradeSalesFragment : Fragment() {
             }
             tradeItemNameEditText.addTextChangedListener(itemNameTextWatcher)
 
+            // TODO : 이후 수량, 가격, 받은 금액에 대한 코드 수정 예정
+
             // 수량 수정 될 때
             itemCountTextWatcher.setOnTextChangeListener {
                 if (!it.isNullOrEmpty()) {

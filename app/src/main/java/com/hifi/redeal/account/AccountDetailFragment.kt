@@ -85,13 +85,8 @@ class AccountDetailFragment : Fragment() {
             bottomNavigationViewAccountDetail.setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.tradeFragment -> {
-//                        mainActivity.replaceFragment(
-//                            MainActivity.TRANSACTION_BY_CLIENT_FRAGMENT,
-//                            true,
-//
-//                        )
                         val bundle = Bundle()
-                        bundle.putInt("clientId", clientIdx.toInt())
+                        bundle.putInt("clientId", 1)
                         findNavController().navigate(
                             R.id.action_accountDetailFragment_to_tradeByClientFragment,
                             bundle

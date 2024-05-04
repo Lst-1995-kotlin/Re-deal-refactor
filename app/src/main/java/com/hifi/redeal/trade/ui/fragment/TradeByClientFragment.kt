@@ -1,7 +1,6 @@
-package com.hifi.redeal.trade.view_refactor_before
+package com.hifi.redeal.trade.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +23,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -128,7 +126,7 @@ class TradeByClientFragment : Fragment() {
     }
 
     private fun setViewModel() {
-
+        // 코루틴을 이용하여 불러올 클라이언트 ID 설정 후 거래내역들 표시
         CoroutineScope(Dispatchers.Main).launch{
             async {
                 tradeByClientViewModel.setClientId(arguments?.getInt("clientId"))
