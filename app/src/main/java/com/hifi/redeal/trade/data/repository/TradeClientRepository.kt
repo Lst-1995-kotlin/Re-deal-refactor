@@ -11,4 +11,6 @@ class TradeClientRepository @Inject constructor(
 ) {
     fun getClientTradeData(): Flow<List<TradeClientData>> = clientDao.getClientTradeData()
 
+    fun getClientById(id: Int): Flow<TradeClientData> = clientDao.getClientById(id)
+
 }

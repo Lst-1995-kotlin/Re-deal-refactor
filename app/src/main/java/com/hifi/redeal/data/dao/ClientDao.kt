@@ -27,6 +27,19 @@ interface ClientDao {
     )
     fun getClientTradeData(): Flow<List<TradeClientData>>
 
+    @Query(
+        """
+        SELECT id,
+        name,
+        manager_name AS managerName,
+        state,
+        bookmark        
+        FROM client
+        WHERE id = :id
+    """
+    )
+    fun getClientById(id: Int): Flow<TradeClientData>
+
     @Insert
     suspend fun insertClient(client: ClientEntity)
 

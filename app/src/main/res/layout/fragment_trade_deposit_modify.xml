@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bottom_border_not_focus"
                 android:fontFamily="@font/nanumsquareneo_regular"
-                android:hint="@{viewModel.modifyReceivedAmount}"
+                android:text="@{viewModel.modifyReceivedAmount}"
                 android:inputType="number"
                 android:maxLength="19"
                 android:singleLine="true"
@@ -97,7 +97,7 @@
                 android:paddingStart="0dp"
                 android:textColor="@color/text10"
                 android:textColorLink="@color/primary20"
-                android:hint="@{viewModel.modifyClientName}"
+                android:text="@{viewModel.modifyClient.name}"
                 android:textSize="20sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
