@@ -11,9 +11,9 @@ import androidx.navigation.fragment.findNavController
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTradeSalesBinding
 import com.hifi.redeal.trade.configuration.TradeAmountConfiguration.Companion.tradeAmountCheck
-import com.hifi.redeal.trade.ui.viewmodel.SalesTradeAddViewModel
 import com.hifi.redeal.trade.ui.adapter.viewHolder.client.TradeClientHolderFactory
 import com.hifi.redeal.trade.ui.dialog.SelectTradeClientDialog
+import com.hifi.redeal.trade.ui.viewmodel.SalesTradeAddViewModel
 import com.hifi.redeal.trade.util.DialogShowingFocusListener
 import com.hifi.redeal.trade.util.TradeInputEditTextFocusListener
 import com.hifi.redeal.trade.util.TradeTextWatcher
@@ -203,7 +203,8 @@ class TradeSalesFragment : Fragment() {
                     }
                     if (!tradeAmountCheck(inputNumber)) inputNumber /= 10
                     if (tradeItemPriceEditText.text.toString().numberFormatToLong() *
-                        tradeItemCountEditText.text.toString().numberFormatToLong() < inputNumber) {
+                        tradeItemCountEditText.text.toString().numberFormatToLong() < inputNumber
+                    ) {
                         inputNumber /= 10
                     }
                     salesTradeAddViewModel.setReceivedAmount(inputNumber)
