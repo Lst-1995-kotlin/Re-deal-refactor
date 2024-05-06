@@ -21,6 +21,10 @@ import com.hifi.redeal.util.KeyboardFocusClearListener
 import com.hifi.redeal.util.numberFormatToLong
 import com.hifi.redeal.util.toNumberFormat
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -60,8 +64,12 @@ class TradeSalesFragment : Fragment() {
             }
 
             addSalesBtn.setOnClickListener {
-                salesTradeAddViewModel.insertSalesTrade()
-                findNavController().popBackStack()
+                CoroutineScope(Dispatchers.Main).launch {
+                    async {
+                        salesTradeAddViewModel.insertSalesTrade()
+                    }.await()
+                    findNavController().popBackStack()
+                }
             }
 
             // 입력 뷰 포커스 변경에 따른 백 그라운드 이미지 설정

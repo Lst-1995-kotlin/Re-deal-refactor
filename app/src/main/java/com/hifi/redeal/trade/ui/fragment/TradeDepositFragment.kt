@@ -11,23 +11,27 @@ import androidx.navigation.fragment.findNavController
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTradeDepositBinding
 import com.hifi.redeal.trade.configuration.TradeAmountConfiguration.Companion.tradeAmountCheck
-import com.hifi.redeal.trade.ui.viewmodel.DepositTradeAddViewModel
 import com.hifi.redeal.trade.ui.adapter.viewHolder.client.TradeClientHolderFactory
-import com.hifi.redeal.trade.util.TradeTextWatcher
-import com.hifi.redeal.trade.util.TradeInputEditTextFocusListener
-import com.hifi.redeal.trade.util.DialogShowingFocusListener
 import com.hifi.redeal.trade.ui.dialog.SelectTradeClientDialog
+import com.hifi.redeal.trade.ui.viewmodel.DepositTradeAddViewModel
+import com.hifi.redeal.trade.util.DialogShowingFocusListener
+import com.hifi.redeal.trade.util.TradeInputEditTextFocusListener
+import com.hifi.redeal.trade.util.TradeTextWatcher
 import com.hifi.redeal.util.KeyboardFocusClearListener
 import com.hifi.redeal.util.numberFormatToLong
 import com.hifi.redeal.util.toNumberFormat
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class TradeDepositFragment : Fragment() {
 
     private lateinit var fragmentTradeDepositBinding: FragmentTradeDepositBinding
-    private val tradeTextWatcher= TradeTextWatcher()
+    private val tradeTextWatcher = TradeTextWatcher()
     private val depositTradeAddViewModel: DepositTradeAddViewModel by viewModels()
 
     @Inject
@@ -112,8 +116,12 @@ class TradeDepositFragment : Fragment() {
             }
 
             addDepositBtn.setOnClickListener {
-                depositTradeAddViewModel.insertDepositTrade()
-                findNavController().popBackStack()
+                CoroutineScope(Dispatchers.Main).launch {
+                    async {
+                        depositTradeAddViewModel.insertDepositTrade()
+                    }.await()
+                    findNavController().popBackStack()
+                }
             }
 
         }
