@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/background"
@@ -9,7 +8,7 @@
     android:transitionGroup="true">
 
     <TextView
-        android:id="@+id/textTransactionDate"
+        android:id="@+id/textTradeDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -22,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/transctionClientNameTextView"
+        android:id="@+id/tradeClientNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -30,8 +29,8 @@
         android:text="@string/loading"
         android:textColor="@color/text10"
         android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/textTransactionDate"
-        app:layout_constraintTop_toTopOf="@+id/textTransactionDate" />
+        app:layout_constraintStart_toEndOf="@+id/textTradeDate"
+        app:layout_constraintTop_toTopOf="@+id/textTradeDate" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -48,7 +47,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textTransactionDate">
+        app:layout_constraintTop_toBottomOf="@+id/textTradeDate">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -56,7 +55,7 @@
             android:background="@color/background">
 
             <TextView
-                android:id="@+id/textTransaction24"
+                android:id="@+id/textTrade24"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:layout_marginEnd="16dp"
@@ -78,11 +77,11 @@
                 android:hint="@string/accounts_receivable"
                 android:textColor="@color/primary20"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toStartOf="@+id/textTransaction24"
-                app:layout_constraintTop_toTopOf="@+id/textTransaction23" />
+                app:layout_constraintEnd_toStartOf="@+id/textTrade24"
+                app:layout_constraintTop_toTopOf="@+id/textTrade23" />
 
             <TextView
-                android:id="@+id/textTransaction23"
+                android:id="@+id/textTrade23"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:layout_marginTop="8dp"
@@ -93,8 +92,8 @@
                 android:textColor="@color/text10"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textTransaction21"
-                app:layout_constraintTop_toBottomOf="@+id/textTransaction21"
+                app:layout_constraintStart_toStartOf="@+id/textTrade21"
+                app:layout_constraintTop_toBottomOf="@+id/textTrade21"
                 app:layout_constraintVertical_bias="0.0" />
 
             <TextView
@@ -107,11 +106,11 @@
                 android:hint="@string/received_amount"
                 android:textColor="@color/text10"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toStartOf="@+id/textTransaction22"
-                app:layout_constraintTop_toTopOf="@+id/textTransaction21" />
+                app:layout_constraintEnd_toStartOf="@+id/textTrade22"
+                app:layout_constraintTop_toTopOf="@+id/textTrade21" />
 
             <TextView
-                android:id="@+id/textTransaction21"
+                android:id="@+id/textTrade21"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:layout_marginTop="8dp"
@@ -122,7 +121,7 @@
                 android:textColor="@color/text10"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textTransaction16"
+                app:layout_constraintStart_toStartOf="@+id/textTrade16"
                 app:layout_constraintTop_toBottomOf="@+id/divider9"
                 app:layout_constraintVertical_bias="0.0" />
 
@@ -150,11 +149,11 @@
                 android:hint="@string/trade_total_sales_amount"
                 android:textColor="@color/text10"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toStartOf="@+id/textTransaction20"
-                app:layout_constraintTop_toTopOf="@+id/textTransaction18" />
+                app:layout_constraintEnd_toStartOf="@+id/textTrade20"
+                app:layout_constraintTop_toTopOf="@+id/textTrade18" />
 
             <TextView
-                android:id="@+id/textTransaction18"
+                android:id="@+id/textTrade18"
                 android:layout_width="40dp"
                 android:layout_height="20dp"
                 android:layout_marginEnd="4dp"
@@ -164,10 +163,10 @@
                 android:textColor="@color/text10"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@+id/totalSalesAmountTextView"
-                app:layout_constraintTop_toTopOf="@+id/textTransaction17" />
+                app:layout_constraintTop_toTopOf="@+id/textTrade17" />
 
             <TextView
-                android:id="@+id/textTransaction17"
+                android:id="@+id/textTrade17"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:layout_gravity="left"
@@ -181,7 +180,7 @@
                 app:layout_constraintTop_toTopOf="@+id/itemPriceTextView" />
 
             <TextView
-                android:id="@+id/textTransaction20"
+                android:id="@+id/textTrade20"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:fontFamily="@font/nanumsquareneo_regular"
@@ -189,11 +188,11 @@
                 android:text="@string/amount_unit"
                 android:textColor="@color/text10"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="@+id/textTransaction22"
+                app:layout_constraintEnd_toEndOf="@+id/textTrade22"
                 app:layout_constraintTop_toTopOf="@+id/totalSalesAmountTextView" />
 
             <TextView
-                android:id="@+id/textTransaction22"
+                android:id="@+id/textTrade22"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:layout_marginEnd="16dp"
@@ -215,11 +214,11 @@
                 android:hint="단가"
                 android:textColor="@color/text10"
                 android:textSize="14sp"
-                app:layout_constraintStart_toEndOf="@+id/textTransaction16"
-                app:layout_constraintTop_toTopOf="@+id/textTransaction16" />
+                app:layout_constraintStart_toEndOf="@+id/textTrade16"
+                app:layout_constraintTop_toTopOf="@+id/textTrade16" />
 
             <TextView
-                android:id="@+id/textTransaction16"
+                android:id="@+id/textTrade16"
                 android:layout_width="28dp"
                 android:layout_height="20dp"
                 android:layout_marginTop="8dp"
@@ -228,11 +227,11 @@
                 android:text="단가"
                 android:textColor="@color/text10"
                 android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="@+id/textTransaction13"
-                app:layout_constraintTop_toBottomOf="@+id/textTransaction13" />
+                app:layout_constraintStart_toStartOf="@+id/textTrade13"
+                app:layout_constraintTop_toBottomOf="@+id/textTrade13" />
 
             <TextView
-                android:id="@+id/textTransaction14"
+                android:id="@+id/textTrade14"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:layout_marginStart="4dp"
@@ -254,11 +253,11 @@
                 android:hint="수량"
                 android:textColor="@color/text10"
                 android:textSize="14sp"
-                app:layout_constraintStart_toEndOf="@+id/textTransaction13"
-                app:layout_constraintTop_toTopOf="@+id/textTransaction13" />
+                app:layout_constraintStart_toEndOf="@+id/textTrade13"
+                app:layout_constraintTop_toTopOf="@+id/textTrade13" />
 
             <TextView
-                android:id="@+id/textTransaction13"
+                android:id="@+id/textTrade13"
                 android:layout_width="28dp"
                 android:layout_height="20dp"
                 android:layout_marginTop="8dp"
@@ -267,7 +266,7 @@
                 android:text="수량"
                 android:textColor="@color/text10"
                 android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="@+id/textTransaction"
+                app:layout_constraintStart_toStartOf="@+id/textTrade"
                 app:layout_constraintTop_toBottomOf="@+id/itemNameTextView" />
 
             <TextView
@@ -284,11 +283,11 @@
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/textTransaction"
-                app:layout_constraintTop_toTopOf="@+id/textTransaction" />
+                app:layout_constraintStart_toEndOf="@+id/textTrade"
+                app:layout_constraintTop_toTopOf="@+id/textTrade" />
 
             <TextView
-                android:id="@+id/textTransaction"
+                android:id="@+id/textTrade"
                 android:layout_width="28dp"
                 android:layout_height="20dp"
                 android:layout_marginStart="12dp"
@@ -305,3 +304,4 @@
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
