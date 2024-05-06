@@ -7,9 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
+import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.data.model.TradeClientData
+import com.hifi.redeal.trade.data.model.TradeData
+import com.hifi.redeal.trade.data.model.toTradeEntry
 import com.hifi.redeal.trade.domain.usecase.TradeClientUseCase
 import com.hifi.redeal.trade.domain.usecase.TradeUseCase
+import com.hifi.redeal.util.numberFormatToLong
 import com.hifi.redeal.util.toNumberFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -80,5 +84,24 @@ class DepositTradeModifyViewModel @Inject constructor(
         value?.let {
             _modifyReceivedAmount.postValue(it.toNumberFormat())
         } ?: _modifyReceivedAmount.postValue(null)
+    }
+
+    fun updateTradeData() {
+        if (liveDataValueCheck()) { // 한번 더 확인
+            viewModelScope.launch {
+                val updateData = TradeData(
+                    modifyTradeId.value!!,
+                    "",
+                    0,
+                    0,
+                    modifyReceivedAmount.value!!.numberFormatToLong(),
+                    TradeType.DEPOSIT.type,
+                    modifyTrade.value!!.date,
+                    modifyClient.value!!.id,
+                    modifyClient.value!!.name
+                )
+                tradeUseCase.updateTrade(updateData.toTradeEntry())
+            }
+        }
     }
 }

@@ -21,6 +21,10 @@ import com.hifi.redeal.util.KeyboardFocusClearListener
 import com.hifi.redeal.util.numberFormatToLong
 import com.hifi.redeal.util.toNumberFormat
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -108,8 +112,14 @@ class TradeDepositModifyFragment : Fragment() {
             }
             modifyDepositPriceEditTextNumber.addTextChangedListener(tradeTextWatcher)
 
+            // 버튼을 눌렀을 경우 업데이트가 완료 된 후 프래그먼트 종료 로직 순차적 실행
             modifyDepositBtn.setOnClickListener {
-
+                CoroutineScope(Dispatchers.Main).launch {
+                    async {
+                        depositTradeModifyViewModel.updateTradeData()
+                    }.await()
+                    findNavController().popBackStack()
+                }
             }
 
             modifyDepositMaterialToolbar.setNavigationOnClickListener {

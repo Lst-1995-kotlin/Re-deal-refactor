@@ -30,6 +30,6 @@ class TradeUseCase @Inject constructor(
     }
 
     suspend fun updateTrade(tradeEntity: TradeEntity) {
-        tradeRepository.insertTrade(tradeEntity)
+        tradeRepository.updateTrade(tradeEntity)
     }
 }

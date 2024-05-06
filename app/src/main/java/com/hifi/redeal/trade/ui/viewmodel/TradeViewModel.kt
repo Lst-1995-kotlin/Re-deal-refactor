@@ -8,7 +8,6 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.data.model.TradeData
-import com.hifi.redeal.trade.data.repository.TradeRepository
 import com.hifi.redeal.trade.domain.usecase.TradeUseCase
 import com.hifi.redeal.util.toNumberFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
