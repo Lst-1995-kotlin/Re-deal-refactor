@@ -8,15 +8,16 @@ import androidx.lifecycle.viewModelScope
 import com.hifi.redeal.data.entrie.TradeEntity
 import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.data.model.TradeClientData
-import com.hifi.redeal.trade.data.repository.TradeRepository
+import com.hifi.redeal.trade.domain.usecase.TradeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
 class DepositTradeAddViewModel @Inject constructor(
-    private val tradeRepository: TradeRepository
+    private val tradeUseCase: TradeUseCase
 ) : ViewModel() {
 
     private val _receivedAmount = MutableLiveData<Long?>()
@@ -62,19 +63,21 @@ class DepositTradeAddViewModel @Inject constructor(
 
     fun insertDepositTrade() {
         viewModelScope.launch {
-            if (receivedAmount.value != null && selectedClient.value != null) {
-                tradeRepository.insertTrade(
-                    TradeEntity(
-                        itemName = "",
-                        itemCount = 0L,
-                        itemPrice = 0L,
-                        receivedAmount = receivedAmount.value!!,
-                        type = TradeType.DEPOSIT.type,
-                        date = Date(),
-                        checked = false,
-                        clientId = selectedClient.value!!.id
+            if (liveDataValueCheck()) {
+                async {
+                    tradeUseCase.insertTrade(
+                        TradeEntity(
+                            itemName = "",
+                            itemCount = 0L,
+                            itemPrice = 0L,
+                            receivedAmount = receivedAmount.value!!,
+                            type = TradeType.DEPOSIT.type,
+                            date = Date(),
+                            checked = false,
+                            clientId = selectedClient.value!!.id
+                        )
                     )
-                )
+                }.await()
             }
         }
     }
