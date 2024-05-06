@@ -62,7 +62,7 @@
                 android:layout_marginEnd="16dp"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:gravity="center|left"
-                android:text="@string/trade_unit"
+                android:text="@string/amount_unit"
                 android:textColor="@color/primary20"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
