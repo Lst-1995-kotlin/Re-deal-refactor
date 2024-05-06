@@ -39,7 +39,7 @@
         android:label="TradeDepositFragment" />
     <fragment
         android:id="@+id/tradeDepositModifyFragment"
-        android:name="com.hifi.redeal.trade.view_refactor_before.TradeDepositModifyFragment"
+        android:name="com.hifi.redeal.trade.ui.fragment.TradeDepositModifyFragment"
         android:label="TradeDepositModifyFragment" />
     <fragment
         android:id="@+id/tradeFragment"

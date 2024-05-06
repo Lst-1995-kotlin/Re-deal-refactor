@@ -4,36 +4,37 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.hifi.redeal.MainActivity
+import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTradeSalesModifyBinding
+import com.hifi.redeal.trade.ui.viewmodel.SalesTradeModifyViewModel
 
 class TradeSalesModifyFragment : Fragment() {
 
-    private lateinit var fragmentTransactionSalesModifyBinding: FragmentTradeSalesModifyBinding
-    private lateinit var mainActivity: MainActivity
-
-    //private val transactionClientViewModel: TransactionClientViewModel by activityViewModels()
-    //private val transactionViewModel: TransactionViewModel by activityViewModels()
+    private lateinit var fragmentTradeSalesModifyBinding: FragmentTradeSalesModifyBinding
+    private val salesTradeModifyViewModel: SalesTradeModifyViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        fragmentTransactionSalesModifyBinding =
-            FragmentTradeSalesModifyBinding.inflate(inflater)
-        mainActivity = activity as MainActivity
+        fragmentTradeSalesModifyBinding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_trade_sales_modify,
+            container,
+            false
+        )
+        fragmentTradeSalesModifyBinding.viewModel = salesTradeModifyViewModel
+        fragmentTradeSalesModifyBinding.lifecycleOwner = viewLifecycleOwner
+
 //        setBind()
 //        setViewModel()
-        return fragmentTransactionSalesModifyBinding.root
+        return fragmentTradeSalesModifyBinding.root
     }
 
-    override fun onPause() {
-        super.onPause()
-//        transactionViewModel.modifyTransactionBasic.value?.let {
-//            transactionViewModel.setModifyTransaction(null)
-//        }
-    }
 
 //    private fun setBind() {
 //        fragmentTransactionSalesModifyBinding.run {

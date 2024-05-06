@@ -46,7 +46,7 @@ import com.hifi.redeal.schedule.view.UnvisitedScheduleFragment
 import com.hifi.redeal.schedule.view.VisitedScheduleFragment
 import com.hifi.redeal.trade.ui.fragment.TradeDepositFragment
 import com.hifi.redeal.trade.ui.fragment.TradeFragment
-import com.hifi.redeal.trade.view_refactor_before.TradeDepositModifyFragment
+import com.hifi.redeal.trade.ui.fragment.TradeDepositModifyFragment
 import com.hifi.redeal.trade.ui.fragment.TradeSalesFragment
 import com.hifi.redeal.trade.ui.fragment.TradeByClientFragment
 import com.hifi.redeal.trade.view_refactor_before.TradeSalesModifyFragment
