@@ -90,7 +90,7 @@ class DepositTradeModifyViewModel @Inject constructor(
         if (liveDataValueCheck()) { // 한번 더 확인
             viewModelScope.launch {
                 val updateData = TradeData(
-                    modifyTradeId.value!!,
+                    modifyTrade.value!!.id,
                     "",
                     0,
                     0,
