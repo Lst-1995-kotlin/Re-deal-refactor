@@ -7,7 +7,7 @@
     <string name="untitled">&lt;Untitled&gt;</string>
     <string name="memo_toolbar_title">메모 전체 보기</string>
     <string name="memo_tab_item_name_photo">포토 메모</string>
-    <string name="memo_tab_item_name_voice">음성 메모</string>-*/
+    <string name="memo_tab_item_name_voice">음성 메모</string>
     <string name="record_memo_toolbar">음성 메모</string>
     <string name="photo_memo_toolbar">포토 메모</string>
     <string name="photo_detail_toolbar">메모 사진 리스트</string>
@@ -37,4 +37,5 @@
     <string name="count_unit">개</string>
     <string name="quantity">수량</string>
     <string name="name_product">품명</string>
+    <string name="trade_update">수정 완료</string>
 </resources>

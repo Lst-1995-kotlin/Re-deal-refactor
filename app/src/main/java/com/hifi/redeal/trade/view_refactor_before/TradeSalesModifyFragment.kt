@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.adapters.TextViewBindingAdapter.setText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -191,7 +190,8 @@ class TradeSalesModifyFragment : Fragment() {
                     }
                     if (!TradeAmountConfiguration.tradeAmountCheck(inputNumber)) inputNumber /= 10
                     if (tradeModifyItemPriceEditText.text.toString().numberFormatToLong() *
-                        tradeModifyItemCountEditText.text.toString().numberFormatToLong() < inputNumber
+                        tradeModifyItemCountEditText.text.toString()
+                            .numberFormatToLong() < inputNumber
                     ) {
                         inputNumber /= 10
                     }

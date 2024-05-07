@@ -196,7 +196,7 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/btn_round_primary20"
             android:fontFamily="@font/nanumsquareneo_bold"
-            android:text="거래 수정"
+            android:text="@string/trade_update"
             android:textColor="@color/primary99"
             android:textSize="20sp"
             android:visibility="@{viewModel.visibility}"
