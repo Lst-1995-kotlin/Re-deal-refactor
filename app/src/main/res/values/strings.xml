@@ -38,4 +38,5 @@
     <string name="quantity">수량</string>
     <string name="name_product">품명</string>
     <string name="trade_update">수정 완료</string>
+    <string name="trade_client_select">거래처 선택</string>
 </resources>
