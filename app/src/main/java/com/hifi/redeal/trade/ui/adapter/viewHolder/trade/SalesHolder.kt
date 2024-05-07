@@ -19,8 +19,8 @@ class SalesHolder(
 
     fun bind(tradeData: TradeData) {
         rowTransactionReleaseBinding.run {
-            textTransactionDate.text = tradeData.date.toDateYearOfDayFormat()
-            transctionClientNameTextView.text = tradeData.clientName
+            textTradeDate.text = tradeData.date.toDateYearOfDayFormat()
+            tradeClientNameTextView.text = tradeData.clientName
             itemNameTextView.text = tradeData.itemName
             itemSalesCountTextView.text = (tradeData.itemCount).toNumberFormat()
             itemPriceTextView.text = (tradeData.itemPrice).toNumberFormat()
@@ -31,8 +31,8 @@ class SalesHolder(
                 (tradeData.itemCount * tradeData.itemPrice - tradeData.receivedAmount).toNumberFormat()
             if (tradeData.itemCount * tradeData.itemPrice - tradeData.receivedAmount == 0L) {
                 recievablesTextView.visibility = View.GONE
-                textTransaction23.visibility = View.GONE
-                textTransaction24.visibility = View.GONE
+                textTrade23.visibility = View.GONE
+                textTrade24.visibility = View.GONE
             }
             setLongClickEvent(root, tradeData)
         }

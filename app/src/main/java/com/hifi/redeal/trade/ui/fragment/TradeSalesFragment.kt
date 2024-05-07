@@ -111,11 +111,11 @@ class TradeSalesFragment : Fragment() {
 
             // 품명 수정 될 때
             itemNameTextWatcher.setOnTextChangeListener {
-                if (!it.isNullOrEmpty()) {
-                    salesTradeAddViewModel.setItemName("$it")
+                if (it.isNullOrEmpty()) {
+                    salesTradeAddViewModel.setItemName(null)
                     return@setOnTextChangeListener
                 }
-                salesTradeAddViewModel.setItemName(null)
+                salesTradeAddViewModel.setItemName(it.toString())
             }
             tradeItemNameEditText.addTextChangedListener(itemNameTextWatcher)
 

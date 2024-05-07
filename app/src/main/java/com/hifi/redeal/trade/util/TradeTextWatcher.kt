@@ -6,7 +6,6 @@ import android.text.TextWatcher
 class TradeTextWatcher : TextWatcher {
 
     private var onTextChangeListener: (CharSequence?) -> Unit = { _ -> }
-    private var afterTextChangListener: (CharSequence?) -> Unit = { _ -> }
 
     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
@@ -14,15 +13,9 @@ class TradeTextWatcher : TextWatcher {
         onTextChangeListener(p0)
     }
 
-    override fun afterTextChanged(p0: Editable?) {
-        afterTextChangListener(p0)
-    }
+    override fun afterTextChanged(p0: Editable?) {}
 
     fun setOnTextChangeListener(listener: (CharSequence?) -> Unit) {
         onTextChangeListener = listener
-    }
-
-    fun setAfterTextChangListener(listener: (CharSequence?) -> Unit) {
-        afterTextChangListener = listener
     }
 }
