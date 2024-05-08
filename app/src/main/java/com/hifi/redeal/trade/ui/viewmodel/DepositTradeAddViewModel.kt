@@ -13,7 +13,6 @@ import com.hifi.redeal.trade.domain.usecase.TradeClientUseCase
 import com.hifi.redeal.trade.domain.usecase.TradeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
@@ -60,11 +59,10 @@ class DepositTradeAddViewModel @Inject constructor(
     fun setTradeClientId(id: Int) {
         viewModelScope.launch {
             async {
-                tradeClientUseCase.getClientById(id).collect{
+                tradeClientUseCase.getClientById(id).collect {
                     _selectedClient.postValue(it)
                 }
             }.await()
-            Log.d("tttt", "${id}")
         }
     }
 

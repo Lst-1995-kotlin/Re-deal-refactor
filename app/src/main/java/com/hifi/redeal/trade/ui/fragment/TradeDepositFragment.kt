@@ -130,7 +130,6 @@ class TradeDepositFragment : Fragment() {
     }
 
     private fun setViewModel() {
-        Log.d("tttt","프래그먼트: ${arguments?.getInt("clientId")}")
         CoroutineScope(Dispatchers.Main).launch {
             async {
                 arguments?.let { depositTradeAddViewModel.setTradeClientId(it.getInt("clientId")) }
