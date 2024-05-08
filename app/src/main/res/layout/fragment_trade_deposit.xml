@@ -26,7 +26,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/arrow_back_ios_24px"
-            app:title="입금 내역 추가"
+            app:title="@string/add_trade_deposit"
             app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance" />
 
         <View
@@ -59,7 +59,7 @@
                 style="@style/trade_text_input_edit_text_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="금액 입력"
+                android:hint="@string/received_amount"
                 android:inputType="number"
                 android:textAppearance="@style/AuthMainToolbarTitleTextAppearance" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -85,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/search_24px_primary20"
-                android:hint="거래처 선택"
+                android:hint="@string/trade_client_select"
                 android:text='@{viewModel.selectedClient != null ? viewModel.selectedClient.name + " " + viewModel.selectedClient.managerName : ""}'
                 android:textAppearance="@style/TextAppearance.App.BodySmall" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -98,7 +98,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/btn_round_primary20"
-            android:text="입금 내역 추가"
+            android:text="@string/add_trade_deposit"
             android:textColor="@color/primary99"
             android:textSize="20sp"
             android:fontFamily="@font/nanumsquareneo_bold"

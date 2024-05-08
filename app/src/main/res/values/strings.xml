@@ -24,6 +24,7 @@
     <!--    Trade-->
     <string name="trade_edit">거래 내역 수정</string>
     <string name="trade_delete">거래 내역 삭제</string>
+    <string name="trade_cancel">삭제 취소</string>
     <string name="trade_history">거래 내역</string>
     <string name="trade_sales">매출</string>
     <string name="trade_unit">건</string>
@@ -39,4 +40,8 @@
     <string name="name_product">품명</string>
     <string name="trade_update">수정 완료</string>
     <string name="trade_client_select">거래처 선택</string>
+    <string name="add_trade_deposit">입금 내역 추가</string>
+    <string name="add_trade_sales">거래 내역 추가</string>
+    <string name="trade_select_client_message">거래처 또는 담당자 이름으로 검색</string>
+    <string name="deposit">입금</string>
 </resources>

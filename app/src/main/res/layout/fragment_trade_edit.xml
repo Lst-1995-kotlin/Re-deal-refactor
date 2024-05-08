@@ -27,7 +27,7 @@
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/Theme.ReDeal.ToolbarTheme"
             app:navigationIcon="@drawable/arrow_back_ios_24px"
-            app:title="편집"
+            app:title="@string/trade_delete"
             app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"
             app:titleTextColor="@color/primary20" />
 
@@ -81,7 +81,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="삭제하기" />
+            android:text="@string/trade_delete" />
 
         <Button
             android:id="@+id/transaction_edit_cancel_button"
@@ -89,7 +89,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="취소" />
+            android:text="@string/trade_cancel" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

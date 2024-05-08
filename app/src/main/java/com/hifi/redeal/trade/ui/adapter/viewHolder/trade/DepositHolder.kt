@@ -20,8 +20,8 @@ class DepositHolder(
 
     fun bind(tradeData: TradeData) {
         rowTransactionDepositBinding.run {
-            textTransactionDate.text = tradeData.date.toDateYearOfDayFormat()
-            transctionClientNameTextView.text = "${tradeData.clientName} ${tradeData.managerName}"
+            textTradeDate.text = tradeData.date.toDateYearOfDayFormat()
+            tradeClientNameTextView.text = "${tradeData.clientName} ${tradeData.managerName}"
             depositPriceTextView.text = tradeData.receivedAmount.toNumberFormat()
             setLongClickEvent(root, tradeData)
         }
@@ -36,11 +36,11 @@ class DepositHolder(
 
             val dialog = builder.show()
             dialogTransactionEditBinding.run {
-                transactionDeleteImageButton.setOnClickListener {
+                tradeDeleteImageButton.setOnClickListener {
                     dialog.dismiss()
                     onDeleteClickListener(tradeData)
                 }
-                transactionEditImageButton.setOnClickListener {
+                tradeEditImageButton.setOnClickListener {
                     dialog.dismiss()
                     onEditClickListener(tradeData)
                 }

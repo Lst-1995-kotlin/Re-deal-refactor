@@ -48,11 +48,11 @@ class SalesHolder(
 
             val dialog = builder.show()
             dialogTransactionEditBinding.run {
-                transactionDeleteImageButton.setOnClickListener {
+                tradeDeleteImageButton.setOnClickListener {
                     dialog.dismiss()
                     onDeleteClickListener(tradeData)
                 }
-                transactionEditImageButton.setOnClickListener {
+                tradeEditImageButton.setOnClickListener {
                     dialog.dismiss()
                     onEditClickListener(tradeData)
                 }

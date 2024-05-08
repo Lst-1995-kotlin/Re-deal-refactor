@@ -12,9 +12,10 @@
         android:layout_margin="12dp"
         android:background="@drawable/date_selection_background"
         android:ems="10"
-        android:hint="거래처 또는 담당자 이름으로 검색"
+        android:hint="@string/trade_select_client_message"
         android:inputType="text"
-        android:padding="8dp" />
+        android:padding="8dp"
+        android:autofillHints="@string/trade_select_client_message" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchTransactionClientRecyclerView"
