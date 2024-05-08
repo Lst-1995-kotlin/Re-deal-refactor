@@ -3,6 +3,7 @@ package com.hifi.redeal.trade.ui.viewmodel
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.switchMap
@@ -39,6 +40,14 @@ class SalesTradeModifyViewModel @Inject constructor(
         } ?: MutableLiveData()
     }
 
+    private val modifyTradeObserver = Observer<TradeData> { tradeData ->
+        _modifyReceivedAmount.postValue(tradeData.receivedAmount.toNumberFormat())
+        _modifyItemName.postValue(tradeData.itemName)
+        _modifyItemCount.postValue(tradeData.itemCount.toNumberFormat())
+        _modifyItemPrice.postValue(tradeData.itemPrice.toNumberFormat())
+        setModifyClient(tradeData.clientId)
+    }
+
     val modifyItemName: LiveData<String?> get() = _modifyItemName
     val modifyItemCount: LiveData<String?> get() = _modifyItemCount
     val modifyItemPrice: LiveData<String?> get() = _modifyItemPrice
@@ -48,13 +57,7 @@ class SalesTradeModifyViewModel @Inject constructor(
 
     init {
         _visibility.postValue(View.VISIBLE)
-        modifyTrade.observeForever {
-            _modifyReceivedAmount.postValue(it.receivedAmount.toNumberFormat())
-            _modifyItemName.postValue(it.itemName)
-            _modifyItemCount.postValue(it.itemCount.toNumberFormat())
-            _modifyItemPrice.postValue(it.itemPrice.toNumberFormat())
-            setModifyClient(it.clientId)
-        }
+        modifyTrade.observeForever(modifyTradeObserver)
         modifyItemName.observeForever {
             buttonVisibilityCheck()
         }
@@ -70,6 +73,11 @@ class SalesTradeModifyViewModel @Inject constructor(
         modifyClient.observeForever {
             buttonVisibilityCheck()
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        modifyTrade.removeObserver(modifyTradeObserver)
     }
 
     private fun liveDataValueCheck(): Boolean {

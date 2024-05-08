@@ -3,6 +3,7 @@ package com.hifi.redeal.trade.ui.viewmodel
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.switchMap
@@ -37,22 +38,29 @@ class DepositTradeModifyViewModel @Inject constructor(
         } ?: MutableLiveData()
     }
 
+    private val modifyTradeObserver = Observer<TradeData> { tradeData ->
+        _modifyReceivedAmount.postValue(tradeData.receivedAmount.toNumberFormat())
+        setModifyClient(tradeData.clientId)
+    }
+
     val modifyReceivedAmount: LiveData<String?> get() = _modifyReceivedAmount
     val modifyClient: LiveData<TradeClientData> get() = _modifyClient
     val visibility: LiveData<Int> = _visibility // 버튼의 visibility 값을 관리.
 
     init {
         _visibility.postValue(View.VISIBLE)
-        modifyTrade.observeForever {
-            _modifyReceivedAmount.postValue(it.receivedAmount.toNumberFormat())
-            setModifyClient(it.clientId)
-        }
+        modifyTrade.observeForever(modifyTradeObserver)
         modifyReceivedAmount.observeForever {
             buttonVisibilityCheck()
         }
         modifyClient.observeForever {
             buttonVisibilityCheck()
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        modifyTrade.removeObserver(modifyTradeObserver)
     }
 
     private fun liveDataValueCheck(): Boolean {
