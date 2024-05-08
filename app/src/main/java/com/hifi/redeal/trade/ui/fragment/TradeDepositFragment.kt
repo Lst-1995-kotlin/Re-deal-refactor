@@ -1,6 +1,7 @@
 package com.hifi.redeal.trade.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,6 +52,7 @@ class TradeDepositFragment : Fragment() {
         fragmentTradeDepositBinding.viewModel = depositTradeAddViewModel
 
         setBind()
+        setViewModel()
         return fragmentTradeDepositBinding.root
     }
 
@@ -124,6 +126,15 @@ class TradeDepositFragment : Fragment() {
                 }
             }
 
+        }
+    }
+
+    private fun setViewModel() {
+        Log.d("tttt","프래그먼트: ${arguments?.getInt("clientId")}")
+        CoroutineScope(Dispatchers.Main).launch {
+            async {
+                arguments?.let { depositTradeAddViewModel.setTradeClientId(it.getInt("clientId")) }
+            }.await()
         }
     }
 

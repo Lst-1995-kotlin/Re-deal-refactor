@@ -21,7 +21,7 @@ class DepositHolder(
     fun bind(tradeData: TradeData) {
         rowTransactionDepositBinding.run {
             textTransactionDate.text = tradeData.date.toDateYearOfDayFormat()
-            transctionClientNameTextView.text = tradeData.clientName
+            transctionClientNameTextView.text = "${tradeData.clientName} ${tradeData.managerName}"
             depositPriceTextView.text = tradeData.receivedAmount.toNumberFormat()
             setLongClickEvent(root, tradeData)
         }

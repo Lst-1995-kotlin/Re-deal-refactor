@@ -99,7 +99,7 @@
                 android:paddingStart="0dp"
                 android:textColor="@color/text10"
                 android:textColorLink="@color/primary20"
-                android:text="@{viewModel.modifyClient.name}"
+                android:text='@{viewModel.modifyClient.name + " " + viewModel.modifyClient.managerName}'
                 android:textSize="20sp" />
         </com.google.android.material.textfield.TextInputLayout>
 

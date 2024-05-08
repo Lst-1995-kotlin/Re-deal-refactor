@@ -98,7 +98,8 @@ class DepositTradeModifyViewModel @Inject constructor(
                     TradeType.DEPOSIT.type,
                     modifyTrade.value!!.date,
                     modifyClient.value!!.id,
-                    modifyClient.value!!.name
+                    modifyClient.value!!.name,
+                    modifyClient.value!!.managerName
                 )
                 tradeUseCase.updateTrade(updateData.toTradeEntry())
             }

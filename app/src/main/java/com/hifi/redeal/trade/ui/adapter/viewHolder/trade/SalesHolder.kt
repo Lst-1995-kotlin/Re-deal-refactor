@@ -20,7 +20,7 @@ class SalesHolder(
     fun bind(tradeData: TradeData) {
         rowTransactionReleaseBinding.run {
             textTradeDate.text = tradeData.date.toDateYearOfDayFormat()
-            tradeClientNameTextView.text = tradeData.clientName
+            tradeClientNameTextView.text = "${tradeData.clientName} ${tradeData.managerName}"
             itemNameTextView.text = tradeData.itemName
             itemSalesCountTextView.text = (tradeData.itemCount).toNumberFormat()
             itemPriceTextView.text = (tradeData.itemPrice).toNumberFormat()

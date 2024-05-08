@@ -1,5 +1,6 @@
 package com.hifi.redeal.trade.ui.viewmodel
 
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,16 +9,19 @@ import androidx.lifecycle.viewModelScope
 import com.hifi.redeal.data.entrie.TradeEntity
 import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.data.model.TradeClientData
+import com.hifi.redeal.trade.domain.usecase.TradeClientUseCase
 import com.hifi.redeal.trade.domain.usecase.TradeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
 class DepositTradeAddViewModel @Inject constructor(
-    private val tradeUseCase: TradeUseCase
+    private val tradeUseCase: TradeUseCase,
+    private val tradeClientUseCase: TradeClientUseCase
 ) : ViewModel() {
 
     private val _receivedAmount = MutableLiveData<Long?>()
@@ -51,6 +55,17 @@ class DepositTradeAddViewModel @Inject constructor(
             return
         }
         _visibility.postValue(View.GONE)
+    }
+
+    fun setTradeClientId(id: Int) {
+        viewModelScope.launch {
+            async {
+                tradeClientUseCase.getClientById(id).collect{
+                    _selectedClient.postValue(it)
+                }
+            }.await()
+            Log.d("tttt", "${id}")
+        }
     }
 
     fun setTradeClientData(tradeClientData: TradeClientData) {

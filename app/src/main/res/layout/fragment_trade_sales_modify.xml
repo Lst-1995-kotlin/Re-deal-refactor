@@ -185,7 +185,7 @@
                 style="@style/trade_text_input_edit_text_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.modifyClient.name}"
+                android:text='@{viewModel.modifyClient.name + " " + viewModel.modifyClient.managerName}'
                 android:background="@drawable/bottom_border_not_focus"
                 android:drawableEnd="@drawable/search_24px_primary20"
                 android:fontFamily="@font/nanumsquareneo_regular"

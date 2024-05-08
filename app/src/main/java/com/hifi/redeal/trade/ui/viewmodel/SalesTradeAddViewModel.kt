@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.hifi.redeal.data.entrie.TradeEntity
 import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.data.model.TradeClientData
+import com.hifi.redeal.trade.domain.usecase.TradeClientUseCase
 import com.hifi.redeal.trade.domain.usecase.TradeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -17,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SalesTradeAddViewModel @Inject constructor(
-    private val tradeUseCase: TradeUseCase
+    private val tradeUseCase: TradeUseCase,
+    private val tradeClientUseCase: TradeClientUseCase
 ) : ViewModel() {
 
     private val _itemName = MutableLiveData<String?>()
@@ -72,6 +74,16 @@ class SalesTradeAddViewModel @Inject constructor(
 
     fun setTradeClientData(tradeClientData: TradeClientData) {
         _selectedClient.postValue(tradeClientData)
+    }
+
+    fun setTradeClientId(id: Int) {
+        viewModelScope.launch {
+            async {
+                tradeClientUseCase.getClientById(id).collect{
+                    _selectedClient.postValue(it)
+                }
+            }.await()
+        }
     }
 
     private fun buttonVisibilityCheck() {

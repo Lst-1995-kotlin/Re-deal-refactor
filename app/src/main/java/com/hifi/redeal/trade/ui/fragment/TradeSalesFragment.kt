@@ -52,6 +52,7 @@ class TradeSalesFragment : Fragment() {
         fragmentTradeSalesBinding.lifecycleOwner = viewLifecycleOwner
         fragmentTradeSalesBinding.viewModel = salesTradeAddViewModel
         setBind()
+        setViewModel()
 
         return fragmentTradeSalesBinding.root
     }
@@ -227,4 +228,13 @@ class TradeSalesFragment : Fragment() {
             tradeAmountReceivedEditText.addTextChangedListener(amountReceivedTextWatcher)
         }
     }
+
+    private fun setViewModel() {
+        CoroutineScope(Dispatchers.Main).launch {
+            async {
+                arguments?.let { salesTradeAddViewModel.setTradeClientId(it.getInt("clientId")) }
+            }.await()
+        }
+    }
+
 }

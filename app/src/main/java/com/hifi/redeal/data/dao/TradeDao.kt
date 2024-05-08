@@ -21,7 +21,8 @@ interface TradeDao {
            trade.type AS type,
            trade.date AS date,
            trade.client_id AS clientId,
-           client.name AS clientName
+           client.name AS clientName,
+           client.manager_name AS managerName
     FROM trade 
     INNER JOIN client ON trade.client_id = client.id
     ORDER BY date DESC
@@ -39,7 +40,8 @@ interface TradeDao {
            trade.type AS type,
            trade.date AS date,
            trade.client_id AS clientId,
-           client.name AS clientName
+           client.name AS clientName,
+           client.manager_name AS managerName
     FROM trade 
     INNER JOIN client ON trade.client_id = client.id
     WHERE trade.client_id = :clientId
@@ -58,7 +60,8 @@ interface TradeDao {
            trade.type AS type,
            trade.date AS date,
            trade.client_id AS clientId,
-           client.name AS clientName
+           client.name AS clientName,
+           client.manager_name AS managerName
     FROM trade  
     INNER JOIN client ON trade.client_id = client.id
     WHERE trade.id = :tradeId

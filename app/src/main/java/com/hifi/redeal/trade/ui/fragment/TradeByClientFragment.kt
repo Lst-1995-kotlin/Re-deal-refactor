@@ -99,19 +99,21 @@ class TradeByClientFragment : Fragment() {
             }
 
             ImgBtnAddDepositByClient.setOnClickListener {
+                val bundle = Bundle()
+                arguments?.getInt("clientId")?.let { bundle.putInt("clientId", it) }
                 findNavController().navigate(
                     R.id.action_tradeByClientFragment_to_tradeDepositFragment,
-                    Bundle().apply {
-                        arguments?.getInt("clientId")
-                    })
+                    bundle
+                )
             }
 
             ImgBtnAddTransactionByClient.setOnClickListener {
+                val bundle = Bundle()
+                arguments?.getInt("clientId")?.let { bundle.putInt("clientId", it) }
                 findNavController().navigate(
                     R.id.action_tradeByClientFragment_to_tradeSalesFragment,
-                    Bundle().apply {
-                        arguments?.getInt("clientId")
-                    })
+                    bundle
+                )
             }
 
             toolbarTransactionByClientMain.setOnMenuItemClickListener {
@@ -127,7 +129,7 @@ class TradeByClientFragment : Fragment() {
 
     private fun setViewModel() {
         // 코루틴을 이용하여 불러올 클라이언트 ID 설정 후 거래내역들 표시
-        CoroutineScope(Dispatchers.Main).launch{
+        CoroutineScope(Dispatchers.Main).launch {
             async {
                 tradeByClientViewModel.setClientId(arguments?.getInt("clientId"))
             }.await()
