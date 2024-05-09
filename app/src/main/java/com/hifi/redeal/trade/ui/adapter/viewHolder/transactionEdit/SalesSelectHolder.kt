@@ -5,50 +5,51 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.RowTradeSelectSalesBinding
 import com.hifi.redeal.trade.data.model.TradeData
+import com.hifi.redeal.trade.data.model.TradeSelectData
 import com.hifi.redeal.trade.ui.viewmodel.TradeViewModel
+import com.hifi.redeal.util.toDateYearOfDayFormat
+import com.hifi.redeal.util.toNumberFormat
 
 class SalesSelectHolder(
     private val rowTransactionSelectSalesBinding: RowTradeSelectSalesBinding,
-    private val tradeViewModel: TradeViewModel
+    private val onClickListener: (TradeSelectData) -> Unit
 ) : RecyclerView.ViewHolder(rowTransactionSelectSalesBinding.root) {
-    fun bind(tradeData: TradeData) {
+    fun bind(tradeSelectData: TradeSelectData) {
         rowTransactionSelectSalesBinding.run {
-            transactionSelectDateTextView.text = tradeData.date.toString()
-            transactionSelectClientNameTextView.text = tradeData.clientName
-            itemNameTextView.text = tradeData.itemName
-            itemSalesCountTextView.text = tradeData.itemCount.toString()
-            itemPriceTextView.text = tradeData.itemPrice.toString()
-            totalSalesAmountTextView.text = (tradeData.itemPrice * tradeData.itemCount).toString()
-            recievedAmountTextView.text = tradeData.receivedAmount.toString()
+            transactionSelectDateTextView.text = tradeSelectData.date.toDateYearOfDayFormat()
+            transactionSelectClientNameTextView.text = "${tradeSelectData.clientName} ${tradeSelectData.managerName}"
+            itemNameTextView.text = tradeSelectData.itemName
+            itemSalesCountTextView.text = tradeSelectData.itemCount.toNumberFormat()
+            itemPriceTextView.text = tradeSelectData.itemPrice.toNumberFormat()
+            totalSalesAmountTextView.text =
+                (tradeSelectData.itemPrice * tradeSelectData.itemCount).toNumberFormat()
+            recievedAmountTextView.text = tradeSelectData.receivedAmount.toNumberFormat()
             recievablesTextView.text =
-                ((tradeData.itemPrice * tradeData.itemCount) - tradeData.receivedAmount).toString()
-            if (((tradeData.itemPrice * tradeData.itemCount) - tradeData.receivedAmount).toInt() == 0) {
+                ((tradeSelectData.itemPrice * tradeSelectData.itemCount) - tradeSelectData.receivedAmount).toNumberFormat()
+            if (((tradeSelectData.itemPrice * tradeSelectData.itemCount) - tradeSelectData.receivedAmount).toInt() == 0) {
                 recievablesTextView.visibility = View.GONE
                 textTransaction23.visibility = View.GONE
                 textTransaction24.visibility = View.GONE
             }
-            //setClickEvent(rowTransactionSelectSalesBinding, tradeData)
-        }
-    }
-
-    fun setSelectedImage(isSelected: Boolean) {
-        if (isSelected) {
+            setClickEvent(rowTransactionSelectSalesBinding, tradeSelectData)
+            if (tradeSelectData.checked) {
+                rowTransactionSelectSalesBinding.transactionSelectSalesCheckBox.setImageResource(
+                    R.drawable.done_paint_24px
+                )
+                return
+            }
             rowTransactionSelectSalesBinding.transactionSelectSalesCheckBox.setImageResource(
-                R.drawable.done_paint_24px
+                R.drawable.rounded_rectangle_stroke_primary20
             )
-            return
         }
-        rowTransactionSelectSalesBinding.transactionSelectSalesCheckBox.setImageResource(
-            R.drawable.rounded_rectangle_stroke_primary20
-        )
     }
 
-//    private fun setClickEvent(
-//        rowTransactionSelectSalesBinding: RowTransactionSelectSalesBinding,
-//        tradeData: TradeData
-//    ) {
-//        rowTransactionSelectSalesBinding.root.setOnClickListener {
-//            transactionViewModel.transactionSelectedChanged(tradeData.id)
-//        }
-//    }
+    private fun setClickEvent(
+        rowTransactionSelectSalesBinding: RowTradeSelectSalesBinding,
+        tradeSelectData: TradeSelectData
+    ) {
+        rowTransactionSelectSalesBinding.root.setOnClickListener {
+            onClickListener(tradeSelectData)
+        }
+    }
 }

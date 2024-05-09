@@ -49,7 +49,7 @@ import com.hifi.redeal.trade.ui.fragment.TradeFragment
 import com.hifi.redeal.trade.ui.fragment.TradeDepositModifyFragment
 import com.hifi.redeal.trade.ui.fragment.TradeSalesFragment
 import com.hifi.redeal.trade.ui.fragment.TradeByClientFragment
-import com.hifi.redeal.trade.view_refactor_before.TradeSalesModifyFragment
+import com.hifi.redeal.trade.ui.fragment.TradeSalesModifyFragment
 import com.hifi.redeal.trade.view_refactor_before.TradeEditFragment
 import com.skt.tmap.TMapTapi
 import com.skt.tmap.TMapTapi.OnAuthenticationListenerCallback
