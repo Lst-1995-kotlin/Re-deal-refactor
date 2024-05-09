@@ -3,6 +3,7 @@ package com.hifi.redeal.trade.ui.viewmodel
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hifi.redeal.data.entrie.TradeEntity
@@ -29,6 +30,22 @@ class SalesTradeAddViewModel @Inject constructor(
     private val _selectedClient = MutableLiveData<TradeClientData>()
     private val _visibility = MutableLiveData<Int>()
 
+    private val itemNameObserver = Observer<String?>{
+        buttonVisibilityCheck()
+    }
+    private val itemCountObserver = Observer<Long?>{
+        buttonVisibilityCheck()
+    }
+    private val itemPriceObserver = Observer<Long?>{
+        buttonVisibilityCheck()
+    }
+    private val receivedAmountObserver = Observer<Long?>{
+        buttonVisibilityCheck()
+    }
+    private val selectedClientObserver = Observer<TradeClientData>{
+        buttonVisibilityCheck()
+    }
+
     val itemName: LiveData<String?> = _itemName
     val itemCount: LiveData<Long?> = _itemCount
     val itemPrice: LiveData<Long?> = _itemPrice
@@ -39,21 +56,11 @@ class SalesTradeAddViewModel @Inject constructor(
     init {
         _visibility.postValue(View.GONE)
 
-        itemName.observeForever {
-            buttonVisibilityCheck()
-        }
-        itemCount.observeForever {
-            buttonVisibilityCheck()
-        }
-        itemPrice.observeForever {
-            buttonVisibilityCheck()
-        }
-        receivedAmount.observeForever {
-            buttonVisibilityCheck()
-        }
-        selectedClient.observeForever {
-            buttonVisibilityCheck()
-        }
+        itemName.observeForever(itemNameObserver)
+        itemCount.observeForever(itemCountObserver)
+        itemPrice.observeForever(itemPriceObserver)
+        receivedAmount.observeForever(receivedAmountObserver)
+        selectedClient.observeForever(selectedClientObserver)
     }
 
     fun setItemName(value: String?) {
