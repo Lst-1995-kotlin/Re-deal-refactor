@@ -42,6 +42,12 @@ class DepositTradeModifyViewModel @Inject constructor(
         _modifyReceivedAmount.postValue(tradeData.receivedAmount.toNumberFormat())
         setModifyClient(tradeData.clientId)
     }
+    private val modifyReceivedAmountObserver = Observer<String?> {
+        buttonVisibilityCheck()
+    }
+    private val modifySelectedClientObserver = Observer<TradeClientData> {
+        buttonVisibilityCheck()
+    }
 
     val modifyReceivedAmount: LiveData<String?> get() = _modifyReceivedAmount
     val modifyClient: LiveData<TradeClientData> get() = _modifyClient
@@ -50,17 +56,15 @@ class DepositTradeModifyViewModel @Inject constructor(
     init {
         _visibility.postValue(View.VISIBLE)
         modifyTrade.observeForever(modifyTradeObserver)
-        modifyReceivedAmount.observeForever {
-            buttonVisibilityCheck()
-        }
-        modifyClient.observeForever {
-            buttonVisibilityCheck()
-        }
+        modifyReceivedAmount.observeForever(modifyReceivedAmountObserver)
+        modifyClient.observeForever(modifySelectedClientObserver)
     }
 
     override fun onCleared() {
         super.onCleared()
         modifyTrade.removeObserver(modifyTradeObserver)
+        modifyReceivedAmount.removeObserver(modifyReceivedAmountObserver)
+        modifyClient.removeObserver(modifySelectedClientObserver)
     }
 
     private fun liveDataValueCheck(): Boolean {

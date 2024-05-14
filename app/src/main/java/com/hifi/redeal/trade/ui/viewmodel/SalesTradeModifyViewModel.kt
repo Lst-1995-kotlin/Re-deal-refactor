@@ -32,6 +32,22 @@ class SalesTradeModifyViewModel @Inject constructor(
     private val _modifyClient = MutableLiveData<TradeClientData>()
     private val _visibility = MutableLiveData<Int>()
 
+    private val modifyItemNameObserver = Observer<String?>{
+        buttonVisibilityCheck()
+    }
+    private val modifyItemCountObserver = Observer<String?>{
+        buttonVisibilityCheck()
+    }
+    private val modifyItemPriceObserver = Observer<String?>{
+        buttonVisibilityCheck()
+    }
+    private val modifyReceivedAmountObserver = Observer<String?>{
+        buttonVisibilityCheck()
+    }
+    private val modifySelectedClientObserver = Observer<TradeClientData>{
+        buttonVisibilityCheck()
+    }
+
     private val modifyTradeId = MutableLiveData<Int>()
 
     private val modifyTrade = modifyTradeId.switchMap {
@@ -58,26 +74,21 @@ class SalesTradeModifyViewModel @Inject constructor(
     init {
         _visibility.postValue(View.VISIBLE)
         modifyTrade.observeForever(modifyTradeObserver)
-        modifyItemName.observeForever {
-            buttonVisibilityCheck()
-        }
-        modifyItemCount.observeForever {
-            buttonVisibilityCheck()
-        }
-        modifyItemPrice.observeForever {
-            buttonVisibilityCheck()
-        }
-        modifyReceivedAmount.observeForever {
-            buttonVisibilityCheck()
-        }
-        modifyClient.observeForever {
-            buttonVisibilityCheck()
-        }
+        modifyItemName.observeForever(modifyItemNameObserver)
+        modifyItemCount.observeForever(modifyItemCountObserver)
+        modifyItemPrice.observeForever(modifyItemPriceObserver)
+        modifyReceivedAmount.observeForever(modifyReceivedAmountObserver)
+        modifyClient.observeForever(modifySelectedClientObserver)
     }
 
     override fun onCleared() {
         super.onCleared()
         modifyTrade.removeObserver(modifyTradeObserver)
+        modifyItemName.removeObserver(modifyItemNameObserver)
+        modifyItemCount.removeObserver(modifyItemCountObserver)
+        modifyItemPrice.removeObserver(modifyItemPriceObserver)
+        modifyReceivedAmount.removeObserver(modifyReceivedAmountObserver)
+        modifyClient.removeObserver(modifySelectedClientObserver)
     }
 
     private fun liveDataValueCheck(): Boolean {
