@@ -12,13 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTradeByClientBinding
 import com.hifi.redeal.trade.configuration.TradeType
-import com.hifi.redeal.trade.ui.viewmodel.TradeByClientViewModel
 import com.hifi.redeal.trade.ui.adapter.TradeAdapter
 import com.hifi.redeal.trade.ui.adapter.TradeAdapterDiffCallback
 import com.hifi.redeal.trade.ui.adapter.viewHolder.ViewHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.CountHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.DepositHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.SalesHolderFactory
+import com.hifi.redeal.trade.ui.viewmodel.TradeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +30,7 @@ import javax.inject.Inject
 class TradeByClientFragment : Fragment() {
 
     private lateinit var fragmentTradeByClientBinding: FragmentTradeByClientBinding
-    private val tradeByClientViewModel: TradeByClientViewModel by viewModels()
+    private val tradeViewModel: TradeViewModel by viewModels()
     private lateinit var tradeAdapter: TradeAdapter
 
     @Inject
@@ -52,7 +52,7 @@ class TradeByClientFragment : Fragment() {
         fragmentTradeByClientBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_trade_by_client, container, false)
         fragmentTradeByClientBinding.lifecycleOwner = viewLifecycleOwner
-        fragmentTradeByClientBinding.viewModel = tradeByClientViewModel
+        fragmentTradeByClientBinding.viewModel = tradeViewModel
 
         setAdapter()
         setBind()
@@ -63,7 +63,7 @@ class TradeByClientFragment : Fragment() {
     private fun setAdapter() {
         val viewHolderFactories = HashMap<Int, ViewHolderFactory>()
 
-        depositHolderFactory.setOnDeleteClickListener { tradeByClientViewModel.deleteTrade(it) }
+        depositHolderFactory.setOnDeleteClickListener { tradeViewModel.deleteTrade(it) }
         depositHolderFactory.setOnEditClickListener {
             findNavController().navigate(
                 R.id.action_tradeByClientFragment_to_tradeDepositModifyFragment,
@@ -73,7 +73,7 @@ class TradeByClientFragment : Fragment() {
             )
         }
 
-        salesHolderFactory.setOnDeleteClickListener { tradeByClientViewModel.deleteTrade(it) }
+        salesHolderFactory.setOnDeleteClickListener { tradeViewModel.deleteTrade(it) }
         salesHolderFactory.setOnEditClickListener {
             findNavController().navigate(
                 R.id.action_tradeByClientFragment_to_tradeSalesModifyFragment,
@@ -131,10 +131,10 @@ class TradeByClientFragment : Fragment() {
         // 코루틴을 이용하여 불러올 클라이언트 ID 설정 후 거래내역들 표시
         CoroutineScope(Dispatchers.Main).launch {
             async {
-                tradeByClientViewModel.setClientId(arguments?.getInt("clientId"))
+                tradeViewModel.setClientId(arguments?.getInt("clientId"))
             }.await()
 
-            tradeByClientViewModel.trades.observe(viewLifecycleOwner) { trades -> // 어댑터에 표시하는 거래내역들
+            tradeViewModel.trades.observe(viewLifecycleOwner) { trades -> // 어댑터에 표시하는 거래내역들
                 tradeAdapter.submitList(trades) {
                     fragmentTradeByClientBinding.transactionByClientRecyclerView.scrollToPosition(0)
                     tradeAdapter.updateCount()

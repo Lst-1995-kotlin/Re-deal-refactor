@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.data.model.TradeData
@@ -19,7 +20,7 @@ class TradeViewModel @Inject constructor(
     private val tradeUseCase: TradeUseCase
 ) : ViewModel() {
 
-    val trades: LiveData<List<TradeData>> = tradeUseCase.getTrades().asLiveData()
+    private val _clientId = MutableLiveData<Int?>()
     private val _salesTradeCount = MutableLiveData<String>()
     private val _salesTradeAmount = MutableLiveData<String>()
     private val _tradeReceivables = MutableLiveData<String>()
@@ -27,11 +28,28 @@ class TradeViewModel @Inject constructor(
     val salesTradeAmount: LiveData<String> get() = _salesTradeAmount
     val tradeReceivables: LiveData<String> get() = _tradeReceivables
 
+    val clientId: LiveData<Int?> = _clientId
+
+    // _clientId를 관찰하고 _trades를 이에 따라 업데이트하기 위해 switchMap 사용
+    val trades: LiveData<List<TradeData>> = clientId.switchMap {
+        it?.let {
+            tradeUseCase.getTradeByClient(it).asLiveData()
+        } ?: tradeUseCase.getTrades().asLiveData()
+    }
+
 
     init {
         updateLiveData()
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        _clientId.postValue(null)
+    }
+
+    fun setClientId(clientId: Int?) {
+        _clientId.postValue(clientId)
+    }
 
     fun deleteTrade(tradeData: TradeData) {
         viewModelScope.launch {
