@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.data.model.TradeData
 import com.hifi.redeal.trade.data.model.TradeSelectData
+import com.hifi.redeal.trade.data.model.toTradeEntry
 import com.hifi.redeal.trade.domain.usecase.TradeUseCase
 import com.hifi.redeal.util.toNumberFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,9 +23,9 @@ class TradeSelectViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _clientId = MutableLiveData<Int?>()
-    private val _selectTradeCount = MutableLiveData<Int>()
+    private val _selectTradeCount = MutableLiveData<String>()
 
-    val selectTradeCount: LiveData<Int> get() = _selectTradeCount
+    val selectTradeCount: LiveData<String> get() = _selectTradeCount
 
     val clientId: LiveData<Int?> = _clientId
 
@@ -44,16 +45,22 @@ class TradeSelectViewModel @Inject constructor(
         _clientId.postValue(clientId)
     }
 
-    fun deleteTrade(tradeData: TradeData) {
+    fun updateSelectTradeData(updateData: TradeSelectData) {
         viewModelScope.launch {
-            tradeUseCase.deleteTrade(tradeData)
+            tradeUseCase.updateTrade(updateData.toTradeEntry())
+        }
+    }
+
+    fun selectHistoryClear() {
+        viewModelScope.launch {
+            tradeUseCase.selectHistoryClear()
         }
     }
 
     private fun updateLiveData() {
         viewModelScope.launch {
             trades.asFlow().collect { trades ->
-                _selectTradeCount.postValue(trades.count { it.checked })
+                _selectTradeCount.postValue(trades.count { it.checked }.toNumberFormat())
             }
         }
     }

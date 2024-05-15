@@ -111,6 +111,15 @@ interface TradeDao {
     )
     fun getTradeById(tradeId: Int): Flow<TradeData>
 
+    @Query(
+        """
+            UPDATE trade
+            SET checked = false
+            WHERE checked = true;
+        """
+    )
+    suspend fun selectHistoryClear()
+
     @Insert
     suspend fun insertTrade(tradeEntity: TradeEntity)
 

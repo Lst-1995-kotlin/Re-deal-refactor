@@ -6,8 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.databinding.RowTradeSelectDepositBinding
 import com.hifi.redeal.trade.data.model.TradeSelectData
 import com.hifi.redeal.trade.ui.adapter.viewHolder.ViewHolderFactory
+import javax.inject.Inject
 
-class DepositSelectHolderFactory : ViewHolderFactory {
+class DepositSelectHolderFactory @Inject constructor() : ViewHolderFactory {
 
     private lateinit var onClickListener: (TradeSelectData) -> Unit
 

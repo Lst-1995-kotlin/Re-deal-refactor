@@ -29,6 +29,10 @@ class TradeUseCase @Inject constructor(
     fun getSelectTradeByClient(clientId: Int): Flow<List<TradeSelectData>>  {
         return tradeRepository.getSelectTradeByClient(clientId)
     }
+
+    suspend fun selectHistoryClear() {
+        tradeRepository.selectHistoryClear()
+    }
     suspend fun deleteTrade(tradeData: TradeData) {
         tradeRepository.deleteTrade(tradeData)
     }
