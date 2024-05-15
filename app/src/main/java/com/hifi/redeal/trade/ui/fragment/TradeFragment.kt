@@ -46,6 +46,11 @@ class TradeFragment : Fragment() {
     @Inject
     lateinit var salesHolderFactory: SalesHolderFactory
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        tradeViewModel.setClientId(null)
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -119,19 +124,11 @@ class TradeFragment : Fragment() {
     }
 
     private fun setViewModel() {
-        // 코루틴을 이용하여 불러올 클라이언트 ID 설정 후 거래내역들 표시
-        CoroutineScope(Dispatchers.Main).launch {
-            async {
-                tradeViewModel.setClientId(null)
-            }.await()
-
-            tradeViewModel.trades.observe(viewLifecycleOwner) { trades -> // 어댑터에 표시하는 거래내역들
-                tradeAdapter.submitList(trades) {
-                    fragmentTradeBinding.transactionRecyclerView.scrollToPosition(0)
-                    tradeAdapter.updateCount()
-                }
+        tradeViewModel.trades.observe(viewLifecycleOwner) { trades -> // 어댑터에 표시하는 거래내역들
+            tradeAdapter.submitList(trades) {
+                fragmentTradeBinding.transactionRecyclerView.scrollToPosition(0)
+                tradeAdapter.updateCount()
             }
-
         }
     }
 }
