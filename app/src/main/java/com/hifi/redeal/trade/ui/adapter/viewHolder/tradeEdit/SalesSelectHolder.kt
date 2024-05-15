@@ -1,12 +1,10 @@
-package com.hifi.redeal.trade.ui.adapter.viewHolder.transactionEdit
+package com.hifi.redeal.trade.ui.adapter.viewHolder.tradeEdit
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.RowTradeSelectSalesBinding
-import com.hifi.redeal.trade.data.model.TradeData
 import com.hifi.redeal.trade.data.model.TradeSelectData
-import com.hifi.redeal.trade.ui.viewmodel.TradeViewModel
 import com.hifi.redeal.util.toDateYearOfDayFormat
 import com.hifi.redeal.util.toNumberFormat
 
@@ -17,7 +15,8 @@ class SalesSelectHolder(
     fun bind(tradeSelectData: TradeSelectData) {
         rowTransactionSelectSalesBinding.run {
             transactionSelectDateTextView.text = tradeSelectData.date.toDateYearOfDayFormat()
-            transactionSelectClientNameTextView.text = "${tradeSelectData.clientName} ${tradeSelectData.managerName}"
+            transactionSelectClientNameTextView.text =
+                "${tradeSelectData.clientName} ${tradeSelectData.managerName}"
             itemNameTextView.text = tradeSelectData.itemName
             itemSalesCountTextView.text = tradeSelectData.itemCount.toNumberFormat()
             itemPriceTextView.text = tradeSelectData.itemPrice.toNumberFormat()
