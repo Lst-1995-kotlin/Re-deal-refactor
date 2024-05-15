@@ -37,14 +37,8 @@ class TradeViewModel @Inject constructor(
         } ?: tradeUseCase.getTrades().asLiveData()
     }
 
-
     init {
         updateLiveData()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        _clientId.postValue(null)
     }
 
     fun setClientId(clientId: Int?) {

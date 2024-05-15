@@ -11,7 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class TradeEditFragment : Fragment() {
 
-    private lateinit var fragmentTransactionEditBinding: FragmentTradeEditBinding
+    private lateinit var fragmentTradeEditBinding: FragmentTradeEditBinding
 
     //private lateinit var transactionSelectAdapter: TransactionSelectAdapter
     //private val transactionViewModel: TransactionViewModel by activityViewModels()
@@ -23,12 +23,12 @@ class TradeEditFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        fragmentTransactionEditBinding = FragmentTradeEditBinding.inflate(inflater)
+        fragmentTradeEditBinding = FragmentTradeEditBinding.inflate(inflater)
 
 //        setAdapter()
 //        setBind()
 //        setViewModel()
-        return fragmentTransactionEditBinding.root
+        return fragmentTradeEditBinding.root
     }
 
 //    private fun setAdapter() {

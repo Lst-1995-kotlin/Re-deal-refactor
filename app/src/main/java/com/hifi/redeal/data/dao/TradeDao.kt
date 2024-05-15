@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.hifi.redeal.data.entrie.TradeEntity
 import com.hifi.redeal.trade.data.model.TradeData
+import com.hifi.redeal.trade.data.model.TradeSelectData
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -30,6 +31,26 @@ interface TradeDao {
     )
     fun getAllTrade(): Flow<List<TradeData>>
 
+
+    @Query(
+        """
+    SELECT trade.id AS id, 
+           trade.item_name AS itemName, 
+           trade.item_count AS itemCount,
+           trade.item_price AS itemPrice,
+           trade.received_amount AS receivedAmount,
+           trade.type AS type,
+           trade.date AS date,
+           trade.checked AS checked,
+           trade.client_id AS clientId,
+           client.name AS clientName,
+           client.manager_name AS managerName
+    FROM trade 
+    INNER JOIN client ON trade.client_id = client.id
+    ORDER BY date DESC
+"""
+    )
+    fun getAllSelectTrade(): Flow<List<TradeSelectData>>
     @Query(
         """
     SELECT trade.id AS id, 
@@ -48,7 +69,28 @@ interface TradeDao {
     ORDER BY date DESC
 """
     )
-    fun getClientTrade(clientId: Int): Flow<List<TradeData>>
+    fun getTradeByClient(clientId: Int): Flow<List<TradeData>>
+
+    @Query(
+        """
+    SELECT trade.id AS id, 
+           trade.item_name AS itemName, 
+           trade.item_count AS itemCount,
+           trade.item_price AS itemPrice,
+           trade.received_amount AS receivedAmount,
+           trade.type AS type,
+           trade.date AS date,
+           trade.checked AS checked,
+           trade.client_id AS clientId,
+           client.name AS clientName,
+           client.manager_name AS managerName
+    FROM trade 
+    INNER JOIN client ON trade.client_id = client.id
+    WHERE trade.client_id = :clientId
+    ORDER BY date DESC
+"""
+    )
+    fun getSelectTradeByClient(clientId: Int): Flow<List<TradeSelectData>>
 
     @Query(
         """

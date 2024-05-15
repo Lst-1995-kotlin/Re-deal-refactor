@@ -2,6 +2,7 @@ package com.hifi.redeal.trade.domain.usecase
 
 import com.hifi.redeal.data.entrie.TradeEntity
 import com.hifi.redeal.trade.data.model.TradeData
+import com.hifi.redeal.trade.data.model.TradeSelectData
 import com.hifi.redeal.trade.data.repository.TradeRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -13,6 +14,10 @@ class TradeUseCase @Inject constructor(
         return tradeRepository.getTrades()
     }
 
+    fun getAllSelectTrade(): Flow<List<TradeSelectData>> {
+        return tradeRepository.getAllSelectTrade()
+    }
+
     fun getTradeById(id: Int): Flow<TradeData> {
         return tradeRepository.getTradeById(id)
     }
@@ -21,6 +26,9 @@ class TradeUseCase @Inject constructor(
         return tradeRepository.getTradeByClient(clientId)
     }
 
+    fun getSelectTradeByClient(clientId: Int): Flow<List<TradeSelectData>>  {
+        return tradeRepository.getSelectTradeByClient(clientId)
+    }
     suspend fun deleteTrade(tradeData: TradeData) {
         tradeRepository.deleteTrade(tradeData)
     }
