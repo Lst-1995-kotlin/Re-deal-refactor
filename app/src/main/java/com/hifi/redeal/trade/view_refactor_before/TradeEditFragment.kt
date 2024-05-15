@@ -19,10 +19,6 @@ import com.hifi.redeal.trade.ui.adapter.viewHolder.tradeEdit.DepositSelectHolder
 import com.hifi.redeal.trade.ui.adapter.viewHolder.tradeEdit.SalesSelectHolderFactory
 import com.hifi.redeal.trade.ui.viewmodel.TradeSelectViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint

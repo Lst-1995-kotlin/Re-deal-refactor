@@ -7,8 +7,6 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
-import com.hifi.redeal.trade.configuration.TradeType
-import com.hifi.redeal.trade.data.model.TradeData
 import com.hifi.redeal.trade.data.model.TradeSelectData
 import com.hifi.redeal.trade.data.model.toTradeEntry
 import com.hifi.redeal.trade.domain.usecase.TradeUseCase

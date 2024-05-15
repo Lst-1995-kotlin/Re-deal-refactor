@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.data.model.TradeSelectData
 import com.hifi.redeal.trade.ui.adapter.viewHolder.ViewHolderFactory
-import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.CountHolder
 import com.hifi.redeal.trade.ui.adapter.viewHolder.tradeEdit.DepositSelectHolder
 import com.hifi.redeal.trade.ui.adapter.viewHolder.tradeEdit.SalesSelectHolder
 

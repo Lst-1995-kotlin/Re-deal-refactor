@@ -11,20 +11,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTradeBinding
+import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.ui.adapter.TradeAdapter
 import com.hifi.redeal.trade.ui.adapter.TradeAdapterDiffCallback
 import com.hifi.redeal.trade.ui.adapter.viewHolder.ViewHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.CountHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.DepositHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.trade.SalesHolderFactory
-import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.ui.dialog.TradeAddSelectDialog
 import com.hifi.redeal.trade.ui.viewmodel.TradeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
