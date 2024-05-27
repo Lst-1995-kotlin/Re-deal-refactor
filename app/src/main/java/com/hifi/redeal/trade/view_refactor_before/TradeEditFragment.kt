@@ -40,6 +40,7 @@ class TradeEditFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         tradeSelectViewModel.setClientId(null)
+        tradeSelectViewModel.selectHistoryClear()
     }
 
     override fun onCreateView(
