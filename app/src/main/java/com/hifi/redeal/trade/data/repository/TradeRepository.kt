@@ -26,6 +26,9 @@ class TradeRepository @Inject constructor(
     fun getSelectTradeByClient(clientId: Int): Flow<List<TradeSelectData>> =
         tradeDao.getSelectTradeByClient(clientId)
 
+    suspend fun selectTradeDelete() {
+        tradeDao.selectTradeDelete()
+    }
     suspend fun selectHistoryClear() {
         tradeDao.selectHistoryClear()
     }

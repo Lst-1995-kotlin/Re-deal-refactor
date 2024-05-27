@@ -30,6 +30,10 @@ class TradeUseCase @Inject constructor(
         return tradeRepository.getSelectTradeByClient(clientId)
     }
 
+    suspend fun selectTradeDelete() {
+        tradeRepository.selectTradeDelete()
+    }
+
     suspend fun selectHistoryClear() {
         tradeRepository.selectHistoryClear()
     }

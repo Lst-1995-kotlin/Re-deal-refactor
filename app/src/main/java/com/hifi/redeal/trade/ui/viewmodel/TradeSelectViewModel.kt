@@ -55,6 +55,12 @@ class TradeSelectViewModel @Inject constructor(
         }
     }
 
+    fun selectTradeDelete() {
+        viewModelScope.launch {
+            tradeUseCase.selectTradeDelete()
+        }
+    }
+
     private fun updateLiveData() {
         viewModelScope.launch {
             trades.asFlow().collect { trades ->

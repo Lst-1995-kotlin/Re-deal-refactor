@@ -120,6 +120,14 @@ interface TradeDao {
     )
     suspend fun selectHistoryClear()
 
+    @Query(
+        """
+            DELETE FROM trade 
+            WHERE checked = true            
+        """
+    )
+    suspend fun selectTradeDelete()
+
     @Insert
     suspend fun insertTrade(tradeEntity: TradeEntity)
 
