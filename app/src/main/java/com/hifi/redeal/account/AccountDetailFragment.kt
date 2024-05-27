@@ -30,7 +30,6 @@ import com.kakao.vectormap.mapwidget.component.GuiText
 import com.kakao.vectormap.mapwidget.component.Orientation
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
-import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -86,13 +85,8 @@ class AccountDetailFragment : Fragment() {
             bottomNavigationViewAccountDetail.setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.tradeFragment -> {
-//                        mainActivity.replaceFragment(
-//                            MainActivity.TRANSACTION_BY_CLIENT_FRAGMENT,
-//                            true,
-//
-//                        )
                         val bundle = Bundle()
-                        bundle.putInt("clientId", 2)
+                        bundle.putInt("clientId", 1)
                         findNavController().navigate(
                             R.id.action_accountDetailFragment_to_tradeByClientFragment,
                             bundle

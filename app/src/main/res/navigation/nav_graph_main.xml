@@ -15,7 +15,7 @@
         android:label="PhotoMemoFragment" />
     <fragment
         android:id="@+id/tradeByClientFragment"
-        android:name="com.hifi.redeal.trade.view_refactor_before.TradeByClientFragment"
+        android:name="com.hifi.redeal.trade.ui.fragment.TradeByClientFragment"
         android:label="TradeByClientFragment" >
         <action
             android:id="@+id/action_tradeByClientFragment_to_tradeDepositFragment"
@@ -39,7 +39,7 @@
         android:label="TradeDepositFragment" />
     <fragment
         android:id="@+id/tradeDepositModifyFragment"
-        android:name="com.hifi.redeal.trade.view_refactor_before.TradeDepositModifyFragment"
+        android:name="com.hifi.redeal.trade.ui.fragment.TradeDepositModifyFragment"
         android:label="TradeDepositModifyFragment" />
     <fragment
         android:id="@+id/tradeFragment"
@@ -67,7 +67,7 @@
         android:label="TradealesFragment" />
     <fragment
         android:id="@+id/tradealesModifyFragment"
-        android:name="com.hifi.redeal.trade.view_refactor_before.TradeSalesModifyFragment"
+        android:name="com.hifi.redeal.trade.ui.fragment.TradeSalesModifyFragment"
         android:label="TradealesModifyFragment" />
     <fragment
         android:id="@+id/accountDetailFragment"

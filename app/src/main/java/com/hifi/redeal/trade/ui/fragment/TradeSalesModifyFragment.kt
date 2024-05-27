@@ -9,15 +9,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.hifi.redeal.R
-import com.hifi.redeal.databinding.FragmentTradeSalesBinding
-import com.hifi.redeal.trade.configuration.TradeAmountConfiguration.Companion.tradeAmountCheck
+import com.hifi.redeal.databinding.FragmentTradeSalesModifyBinding
+import com.hifi.redeal.trade.configuration.TradeAmountConfiguration
 import com.hifi.redeal.trade.ui.adapter.viewHolder.client.TradeClientHolderFactory
 import com.hifi.redeal.trade.ui.dialog.SelectTradeClientDialog
-import com.hifi.redeal.trade.ui.viewmodel.SalesTradeAddViewModel
+import com.hifi.redeal.trade.ui.viewmodel.SalesTradeModifyViewModel
 import com.hifi.redeal.trade.util.DialogShowingFocusListener
 import com.hifi.redeal.trade.util.TradeInputEditTextFocusListener
 import com.hifi.redeal.trade.util.TradeTextWatcher
-import com.hifi.redeal.util.KeyboardFocusClearListener
 import com.hifi.redeal.util.numberFormatToLong
 import com.hifi.redeal.util.toNumberFormat
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,9 +27,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class TradeSalesFragment : Fragment() {
-    private lateinit var fragmentTradeSalesBinding: FragmentTradeSalesBinding
-    private val salesTradeAddViewModel: SalesTradeAddViewModel by viewModels()
+class TradeSalesModifyFragment : Fragment() {
+
+    private lateinit var fragmentTradeSalesModifyBinding: FragmentTradeSalesModifyBinding
+    private val salesTradeModifyViewModel: SalesTradeModifyViewModel by viewModels()
+
     private val itemNameTextWatcher = TradeTextWatcher()
     private val itemCountTextWatcher = TradeTextWatcher()
     private val itemPriceTextWatcher = TradeTextWatcher()
@@ -43,104 +44,89 @@ class TradeSalesFragment : Fragment() {
     lateinit var tradeClientHolderFactory: TradeClientHolderFactory
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
-        fragmentTradeSalesBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_trade_sales, container, false)
-        fragmentTradeSalesBinding.lifecycleOwner = viewLifecycleOwner
-        fragmentTradeSalesBinding.viewModel = salesTradeAddViewModel
+        fragmentTradeSalesModifyBinding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_trade_sales_modify,
+            container,
+            false
+        )
+        fragmentTradeSalesModifyBinding.lifecycleOwner = viewLifecycleOwner
+        fragmentTradeSalesModifyBinding.viewModel = salesTradeModifyViewModel
+
         setBind()
         setViewModel()
-
-        return fragmentTradeSalesBinding.root
+        return fragmentTradeSalesModifyBinding.root
     }
 
 
     private fun setBind() {
-        fragmentTradeSalesBinding.run {
-            addSalesMaterialToolbar.setNavigationOnClickListener {
+        fragmentTradeSalesModifyBinding.run {
+            modifySalesFragmentToolbar.setNavigationOnClickListener {
                 findNavController().popBackStack()
             }
 
-            addSalesBtn.setOnClickListener {
+            // 거래처를 클릭하여 선택하였을 경우
+            tradeClientHolderFactory.setOnClickListener {
+                salesTradeModifyViewModel.setModifyClient(it.id)
+                selectTradeClientDialog.dismiss()
+            }
+
+            modifySalesBtn.setOnClickListener {
                 CoroutineScope(Dispatchers.Main).launch {
                     async {
-                        salesTradeAddViewModel.insertSalesTrade()
+                        salesTradeModifyViewModel.updateTradeData()
                     }.await()
                     findNavController().popBackStack()
                 }
             }
-
-            // 입력 뷰 포커스 변경에 따른 백 그라운드 이미지 설정
-            tradeItemNameEditText.onFocusChangeListener =
+            tradeModifyItemNameEditText.onFocusChangeListener =
                 TradeInputEditTextFocusListener()
-            tradeItemCountEditText.onFocusChangeListener =
+            tradeModifyItemCountEditText.onFocusChangeListener =
                 TradeInputEditTextFocusListener()
-            tradeItemPriceEditText.onFocusChangeListener =
+            tradeModifyItemPriceEditText.onFocusChangeListener =
                 TradeInputEditTextFocusListener()
-            tradeAmountReceivedEditText.onFocusChangeListener =
+            tradeModifyAmountReceivedEditText.onFocusChangeListener =
                 TradeInputEditTextFocusListener()
 
-            // 키보드 내려 갔을 경우 포커스 제거
-            tradeItemNameEditText.viewTreeObserver.addOnGlobalLayoutListener(
-                KeyboardFocusClearListener(tradeItemNameEditText)
-            )
-            tradeItemCountEditText.viewTreeObserver.addOnGlobalLayoutListener(
-                KeyboardFocusClearListener(tradeItemCountEditText)
-            )
-            tradeItemPriceEditText.viewTreeObserver.addOnGlobalLayoutListener(
-                KeyboardFocusClearListener(tradeItemPriceEditText)
-            )
-            tradeAmountReceivedEditText.viewTreeObserver.addOnGlobalLayoutListener(
-                KeyboardFocusClearListener(tradeAmountReceivedEditText)
-            )
-
-
-            tradeClientSelectEditText.onFocusChangeListener =
+            tradeModifyClientSelectEditText.onFocusChangeListener =
                 DialogShowingFocusListener(
                     selectTradeClientDialog,
                     childFragmentManager
                 )
 
-            // 거래처를 클릭하여 선택하였을 경우
-            tradeClientHolderFactory.setOnClickListener {
-                salesTradeAddViewModel.setTradeClientData(it)
-                selectTradeClientDialog.dismiss()
-            }
-
-            // 품명 수정 될 때
+            // TODO : 이후 수량, 가격, 받은 금액에 대한 코드 수정 예정
+            // 품명이 변경되었을 경우
             itemNameTextWatcher.setOnTextChangeListener {
                 if (it.isNullOrEmpty()) {
-                    salesTradeAddViewModel.setItemName(null)
+                    salesTradeModifyViewModel.setItemName(null)
                     return@setOnTextChangeListener
                 }
-                salesTradeAddViewModel.setItemName(it.toString())
+                salesTradeModifyViewModel.setItemName(it.toString())
             }
-            tradeItemNameEditText.addTextChangedListener(itemNameTextWatcher)
+            tradeModifyItemNameEditText.addTextChangedListener(itemNameTextWatcher)
 
-            // TODO : 이후 수량, 가격, 받은 금액에 대한 코드 수정 예정
-
-            // 수량 수정 될 때
+            // 갯수가 변경되었을 경우
             itemCountTextWatcher.setOnTextChangeListener {
                 if (!it.isNullOrEmpty()) {
                     var inputNumber = "$it".numberFormatToLong()
                     if (inputNumber == 0L) {
-                        salesTradeAddViewModel.setItemCount(null)
+                        salesTradeModifyViewModel.setItemCount(null)
                         return@setOnTextChangeListener
                     }
                     val itemPrice =
-                        tradeItemPriceEditText.text.toString().numberFormatToLong()
+                        tradeModifyItemPriceEditText.text.toString().numberFormatToLong()
                     var salesPrice = inputNumber * itemPrice
-                    if (!tradeAmountCheck(salesPrice)) {
+                    if (!TradeAmountConfiguration.tradeAmountCheck(salesPrice)) {
                         inputNumber /= 10
                         salesPrice = inputNumber * itemPrice
                     }
-                    salesTradeAddViewModel.setItemCount(inputNumber)
+                    salesTradeModifyViewModel.setItemCount(inputNumber)
                     val replaceNumber = inputNumber.toNumberFormat()
-                    if (salesPrice > 0L) tradeAmountReceivedEditText.setText(salesPrice.toNumberFormat())
-                    tradeItemCountEditText.run {
+                    if (salesPrice > 0L) tradeModifyAmountReceivedEditText.setText(salesPrice.toNumberFormat())
+                    tradeModifyItemCountEditText.run {
                         removeTextChangedListener(itemCountTextWatcher)
                         setText(replaceNumber)
                         setSelection(replaceNumber.length)
@@ -148,35 +134,35 @@ class TradeSalesFragment : Fragment() {
                     }
                     return@setOnTextChangeListener
                 }
-                tradeItemCountEditText.run {
-                    salesTradeAddViewModel.setItemCount(null)
+                tradeModifyItemCountEditText.run {
+                    salesTradeModifyViewModel.setItemCount(null)
                     removeTextChangedListener(itemCountTextWatcher)
                     text = null
                     addTextChangedListener(itemCountTextWatcher)
                 }
-                tradeAmountReceivedEditText.text = null
+                tradeModifyAmountReceivedEditText.text = null
             }
-            tradeItemCountEditText.addTextChangedListener(itemCountTextWatcher)
+            tradeModifyItemCountEditText.addTextChangedListener(itemCountTextWatcher)
 
-            // 단가 수정 될 때
+            // 가격이 변경될 때
             itemPriceTextWatcher.setOnTextChangeListener {
                 if (!it.isNullOrEmpty()) {
                     var inputNumber = "$it".numberFormatToLong()
                     if (inputNumber == 0L) {
-                        salesTradeAddViewModel.setItemPrice(null)
+                        salesTradeModifyViewModel.setItemPrice(null)
                         return@setOnTextChangeListener
                     }
                     val itemCount =
-                        tradeItemCountEditText.text.toString().numberFormatToLong()
+                        tradeModifyItemCountEditText.text.toString().numberFormatToLong()
                     var salesPrice = inputNumber * itemCount
-                    if (!tradeAmountCheck(salesPrice)) {
+                    if (!TradeAmountConfiguration.tradeAmountCheck(salesPrice)) {
                         inputNumber /= 10
                         salesPrice = inputNumber * itemCount
                     }
-                    salesTradeAddViewModel.setItemPrice(inputNumber)
+                    salesTradeModifyViewModel.setItemPrice(inputNumber)
                     val replaceNumber = inputNumber.toNumberFormat()
-                    if (salesPrice > 0L) tradeAmountReceivedEditText.setText(salesPrice.toNumberFormat())
-                    tradeItemPriceEditText.run {
+                    if (salesPrice > 0L) tradeModifyAmountReceivedEditText.setText(salesPrice.toNumberFormat())
+                    tradeModifyItemPriceEditText.run {
                         removeTextChangedListener(itemPriceTextWatcher)
                         setText(replaceNumber)
                         setSelection(replaceNumber.length)
@@ -184,33 +170,34 @@ class TradeSalesFragment : Fragment() {
                     }
                     return@setOnTextChangeListener
                 }
-                tradeItemPriceEditText.run {
-                    salesTradeAddViewModel.setItemPrice(null)
+                tradeModifyItemPriceEditText.run {
+                    salesTradeModifyViewModel.setItemPrice(null)
                     removeTextChangedListener(itemPriceTextWatcher)
                     text = null
                     addTextChangedListener(itemPriceTextWatcher)
                 }
-                tradeAmountReceivedEditText.text = null
+                tradeModifyAmountReceivedEditText.text = null
             }
-            tradeItemPriceEditText.addTextChangedListener(itemPriceTextWatcher)
+            tradeModifyItemPriceEditText.addTextChangedListener(itemPriceTextWatcher)
 
             // 받은 금액이 수정 될 때
             amountReceivedTextWatcher.setOnTextChangeListener {
                 if (!it.isNullOrEmpty()) {
                     var inputNumber = "$it".numberFormatToLong()
                     if (inputNumber == 0L) {
-                        salesTradeAddViewModel.setReceivedAmount(null)
+                        salesTradeModifyViewModel.setReceivedAmount(null)
                         return@setOnTextChangeListener
                     }
-                    if (!tradeAmountCheck(inputNumber)) inputNumber /= 10
-                    if (tradeItemPriceEditText.text.toString().numberFormatToLong() *
-                        tradeItemCountEditText.text.toString().numberFormatToLong() < inputNumber
+                    if (!TradeAmountConfiguration.tradeAmountCheck(inputNumber)) inputNumber /= 10
+                    if (tradeModifyItemPriceEditText.text.toString().numberFormatToLong() *
+                        tradeModifyItemCountEditText.text.toString()
+                            .numberFormatToLong() < inputNumber
                     ) {
                         inputNumber /= 10
                     }
-                    salesTradeAddViewModel.setReceivedAmount(inputNumber)
+                    salesTradeModifyViewModel.setReceivedAmount(inputNumber)
                     val replaceNumber = inputNumber.toNumberFormat()
-                    tradeAmountReceivedEditText.run {
+                    tradeModifyAmountReceivedEditText.run {
                         removeTextChangedListener(amountReceivedTextWatcher)
                         setText(replaceNumber)
                         setSelection(replaceNumber.length)
@@ -218,23 +205,27 @@ class TradeSalesFragment : Fragment() {
                     }
                     return@setOnTextChangeListener
                 }
-                tradeAmountReceivedEditText.run {
-                    salesTradeAddViewModel.setReceivedAmount(null)
+                tradeModifyAmountReceivedEditText.run {
+                    salesTradeModifyViewModel.setReceivedAmount(null)
                     removeTextChangedListener(amountReceivedTextWatcher)
                     text = null
                     addTextChangedListener(amountReceivedTextWatcher)
                 }
             }
-            tradeAmountReceivedEditText.addTextChangedListener(amountReceivedTextWatcher)
+            tradeModifyAmountReceivedEditText.addTextChangedListener(amountReceivedTextWatcher)
+
+            modifySalesFragmentToolbar.setNavigationOnClickListener {
+                findNavController().popBackStack()
+            }
+
         }
     }
 
     private fun setViewModel() {
         CoroutineScope(Dispatchers.Main).launch {
             async {
-                arguments?.let { salesTradeAddViewModel.setTradeClientId(it.getInt("clientId")) }
+                arguments?.let { salesTradeModifyViewModel.setModifyTradeId(it.getInt("tradeId")) }
             }.await()
         }
     }
-
 }

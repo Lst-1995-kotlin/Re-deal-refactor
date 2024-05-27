@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:fontFamily="@font/nanumsquareneo_regular"
-        android:hint="거래 날짜"
+        android:hint="@string/loading"
         android:textColor="@color/text10"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/transactionSelectCardView"
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:fontFamily="@font/nanumsquareneo_regular"
-        android:hint="거래처명"
+        android:hint="@string/loading"
         android:textColor="@color/text10"
         android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/transactionSelectDateTextView"
@@ -67,14 +67,14 @@
                 android:layout_height="match_parent"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:gravity="center"
-                android:text="입금"
+                android:text="@string/deposit"
                 android:textColor="@color/text10" />
 
             <TextView
                 android:id="@+id/depositPriceTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/nanumsquareneo_regular"
                 android:gravity="center_vertical|end"
@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="12dp"
                 android:fontFamily="@font/nanumsquareneo_regular"
-                android:text="원"
+                android:text="@string/amount_unit"
                 android:textColor="@color/text10" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>

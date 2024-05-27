@@ -1,113 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background"
-    android:orientation="vertical"
-    android:transitionGroup="true">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/modifyDepositMaterialToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/Theme.ReDeal.ToolbarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/arrow_back_ios_24px"
-        app:title="입금 내역 수정"
-        app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance" />
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <View
-        android:id="@+id/modifyDepositDivider"
+    <data>
+        <variable
+            name="viewModel"
+            type="com.hifi.redeal.trade.ui.viewmodel.DepositTradeModifyViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/primary20"
+        android:layout_height="match_parent"
+        android:background="@color/background"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/modifyDepositMaterialToolbar" />
+        android:transitionGroup="true">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/modifyDepositPriceInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:textColorHint="@color/text30"
-        app:boxBackgroundMode="none"
-        app:endIconMode="clear_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/modifyDepositMaterialToolbar">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/modifyDepositPriceEditTextNumber"
-            style="@style/trade_text_input_edit_text_style"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/modifyDepositMaterialToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bottom_border_not_focus"
-            android:fontFamily="@font/nanumsquareneo_regular"
-            android:hint="변경 금액"
-            android:inputType="number"
-            android:maxLength="19"
-            android:singleLine="true"
-            android:textAlignment="viewStart"
-            android:textColor="@color/text10"
-            android:textColorLink="@color/primary20"
-            android:textSize="20sp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/Theme.ReDeal.ToolbarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/arrow_back_ios_24px"
+            app:title="입금 내역 수정"
+            app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/modifyDepositClientInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="20dp"
-        android:textColorHint="@color/text30"
-        app:boxBackgroundMode="none"
-        app:endIconMode="clear_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/modifyDepositPriceInputLayout">
+        <View
+            android:id="@+id/modifyDepositDivider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/primary20"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/modifyDepositMaterialToolbar" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/modifyDepositClientTextInputEditText"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/modifyDepositPriceInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bottom_border_not_focus"
-            android:drawableEnd="@drawable/search_24px_primary20"
-            android:fontFamily="@font/nanumsquareneo_regular"
-            android:inputType="number"
-            android:paddingStart="0dp"
-            android:textColor="@color/text10"
-            android:textColorLink="@color/primary20"
-            android:textSize="20sp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="20dp"
+            android:hint="@string/received_amount"
+            android:textColorHint="@color/text30"
+            app:boxBackgroundMode="none"
+            app:endIconMode="clear_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/modifyDepositMaterialToolbar">
 
-    <Button
-        android:id="@+id/modifyDepositBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/btn_round_primary20"
-        android:fontFamily="@font/nanumsquareneo_bold"
-        android:text="입금 내역 수정"
-        android:textColor="@color/primary99"
-        android:textSize="20sp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/modifyDepositPriceEditTextNumber"
+                style="@style/trade_text_input_edit_text_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bottom_border_not_focus"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:inputType="number"
+                android:maxLength="19"
+                android:singleLine="true"
+                android:text="@{viewModel.modifyReceivedAmount}"
+                android:textAlignment="viewStart"
+                android:textColor="@color/text10"
+                android:textColorLink="@color/primary20"
+                android:textSize="20sp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/modifyDepositClientInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
+            android:hint="@string/trade_client_select"
+            android:textColorHint="@color/text30"
+            app:boxBackgroundMode="none"
+            app:endIconMode="clear_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/modifyDepositPriceInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/modifyDepositClientTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bottom_border_not_focus"
+                android:drawableEnd="@drawable/search_24px_primary20"
+                android:fontFamily="@font/nanumsquareneo_regular"
+                android:inputType="number"
+                android:paddingStart="0dp"
+                android:textColor="@color/text10"
+                android:textColorLink="@color/primary20"
+                android:text='@{viewModel.modifyClient.name + " " + viewModel.modifyClient.managerName}'
+                android:textSize="20sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/modifyDepositBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/btn_round_primary20"
+            android:fontFamily="@font/nanumsquareneo_bold"
+            android:text="@string/trade_update"
+            android:textColor="@color/primary99"
+            android:textSize="20sp"
+            android:visibility="@{viewModel.visibility}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

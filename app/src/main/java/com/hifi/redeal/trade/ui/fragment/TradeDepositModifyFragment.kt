@@ -9,11 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.hifi.redeal.R
-import com.hifi.redeal.databinding.FragmentTradeDepositBinding
-import com.hifi.redeal.trade.configuration.TradeAmountConfiguration.Companion.tradeAmountCheck
+import com.hifi.redeal.databinding.FragmentTradeDepositModifyBinding
+import com.hifi.redeal.trade.configuration.TradeAmountConfiguration
 import com.hifi.redeal.trade.ui.adapter.viewHolder.client.TradeClientHolderFactory
 import com.hifi.redeal.trade.ui.dialog.SelectTradeClientDialog
-import com.hifi.redeal.trade.ui.viewmodel.DepositTradeAddViewModel
+import com.hifi.redeal.trade.ui.viewmodel.DepositTradeModifyViewModel
 import com.hifi.redeal.trade.util.DialogShowingFocusListener
 import com.hifi.redeal.trade.util.TradeInputEditTextFocusListener
 import com.hifi.redeal.trade.util.TradeTextWatcher
@@ -28,83 +28,42 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class TradeDepositFragment : Fragment() {
+class TradeDepositModifyFragment : Fragment() {
 
-    private lateinit var fragmentTradeDepositBinding: FragmentTradeDepositBinding
+    private lateinit var fragmentTradeDepositModifyBinding: FragmentTradeDepositModifyBinding
+    private val depositTradeModifyViewModel: DepositTradeModifyViewModel by viewModels()
     private val tradeTextWatcher = TradeTextWatcher()
-    private val depositTradeAddViewModel: DepositTradeAddViewModel by viewModels()
 
     @Inject
     lateinit var selectTradeClientDialog: SelectTradeClientDialog
 
     @Inject
     lateinit var tradeClientHolderFactory: TradeClientHolderFactory
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
-        fragmentTradeDepositBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_trade_deposit, container, false)
-        fragmentTradeDepositBinding.lifecycleOwner = viewLifecycleOwner
-        fragmentTradeDepositBinding.viewModel = depositTradeAddViewModel
-
+        fragmentTradeDepositModifyBinding =
+            DataBindingUtil.inflate(
+                inflater,
+                R.layout.fragment_trade_deposit_modify,
+                container,
+                false
+            )
+        fragmentTradeDepositModifyBinding.lifecycleOwner = viewLifecycleOwner
+        fragmentTradeDepositModifyBinding.viewModel = depositTradeModifyViewModel
         setBind()
         setViewModel()
-        return fragmentTradeDepositBinding.root
+
+        return fragmentTradeDepositModifyBinding.root
     }
 
+
     private fun setBind() {
-        fragmentTradeDepositBinding.run {
-            // 금액 입력 뷰 포커스 변경에 따른 백 그라운드 이미지 설정
-            addDepositAmountEditTextNumber.onFocusChangeListener =
-                TradeInputEditTextFocusListener()
-
-            // 키보드 내려 갔을 경우 포커스 제거
-            addDepositAmountEditTextNumber.viewTreeObserver.addOnGlobalLayoutListener(
-                KeyboardFocusClearListener(addDepositAmountEditTextNumber)
-            )
-
-            selectDepositClientTextInputEditText.viewTreeObserver.addOnGlobalLayoutListener(
-                KeyboardFocusClearListener(selectDepositClientTextInputEditText)
-            )
-
-            // 상단 툴바 내 백버튼 눌렀을 경우.
-            addDepositTradeMaterialToolbar.setNavigationOnClickListener {
-                findNavController().popBackStack()
-            }
-
-            // 금액을 입력 하였을 경우
-            tradeTextWatcher.setOnTextChangeListener {
-                if (!it.isNullOrEmpty()) {
-                    var inputNumber = "$it".numberFormatToLong()
-                    if (inputNumber == 0L) {
-                        depositTradeAddViewModel.setReceivedAmount(null)
-                        return@setOnTextChangeListener
-                    }
-                    if (!tradeAmountCheck(inputNumber)) inputNumber /= 10L
-                    val replaceNumber = inputNumber.toNumberFormat()
-                    depositTradeAddViewModel.setReceivedAmount(inputNumber)
-                    addDepositAmountEditTextNumber.run {
-                        removeTextChangedListener(tradeTextWatcher)
-                        setText(replaceNumber)
-                        setSelection(replaceNumber.length)
-                        addTextChangedListener(tradeTextWatcher)
-                    }
-                    return@setOnTextChangeListener
-                }
-                addDepositAmountEditTextNumber.run {
-                    depositTradeAddViewModel.setReceivedAmount(null)
-                    removeTextChangedListener(tradeTextWatcher)
-                    text = null
-                    addTextChangedListener(tradeTextWatcher)
-                }
-            }
-            addDepositAmountEditTextNumber.addTextChangedListener(tradeTextWatcher)
-
+        fragmentTradeDepositModifyBinding.run {
             // 거래처 선택 뷰를 클릭 하였을 경우
-            selectDepositClientTextInputEditText.onFocusChangeListener =
+            modifyDepositClientTextInputEditText.onFocusChangeListener =
                 DialogShowingFocusListener(
                     selectTradeClientDialog,
                     childFragmentManager
@@ -112,28 +71,64 @@ class TradeDepositFragment : Fragment() {
 
             // 거래처를 클릭하여 선택하였을 경우
             tradeClientHolderFactory.setOnClickListener {
-                depositTradeAddViewModel.setTradeClientData(it)
+                depositTradeModifyViewModel.setModifyClient(it.id)
                 selectTradeClientDialog.dismiss()
             }
 
-            addDepositBtn.setOnClickListener {
+            // 금액 입력 뷰 포커스 변경에 따른 백 그라운드 이미지 설정
+            modifyDepositPriceEditTextNumber.onFocusChangeListener =
+                TradeInputEditTextFocusListener()
+
+            // 키보드 내려 갔을 경우 포커스 제거
+            modifyDepositPriceEditTextNumber.viewTreeObserver.addOnGlobalLayoutListener(
+                KeyboardFocusClearListener(modifyDepositPriceEditTextNumber)
+            )
+
+            // 금액을 입력 하였을 경우
+            tradeTextWatcher.setOnTextChangeListener {
+                if (!it.isNullOrEmpty()) {
+                    var inputNumber = "$it".numberFormatToLong()
+                    if (inputNumber == 0L) {
+                        depositTradeModifyViewModel.setReceivedAmount(null)
+                        return@setOnTextChangeListener
+                    }
+                    if (!TradeAmountConfiguration.tradeAmountCheck(inputNumber)) inputNumber /= 10L
+                    val replaceNumber = inputNumber.toNumberFormat()
+                    depositTradeModifyViewModel.setReceivedAmount(inputNumber)
+                    modifyDepositPriceEditTextNumber.run {
+                        removeTextChangedListener(tradeTextWatcher)
+                        setText(replaceNumber)
+                        setSelection(replaceNumber.length)
+                        addTextChangedListener(tradeTextWatcher)
+                    }
+                    return@setOnTextChangeListener
+                }
+                modifyDepositPriceEditTextNumber.run {
+                    depositTradeModifyViewModel.setReceivedAmount(null)
+                    removeTextChangedListener(tradeTextWatcher)
+                    text = null
+                    addTextChangedListener(tradeTextWatcher)
+                }
+            }
+            modifyDepositPriceEditTextNumber.addTextChangedListener(tradeTextWatcher)
+
+            // 버튼을 눌렀을 경우 업데이트가 완료 된 후 프래그먼트 종료 로직 순차적 실행
+            modifyDepositBtn.setOnClickListener {
                 CoroutineScope(Dispatchers.Main).launch {
                     async {
-                        depositTradeAddViewModel.insertDepositTrade()
+                        depositTradeModifyViewModel.updateTradeData()
                     }.await()
                     findNavController().popBackStack()
                 }
             }
 
+            modifyDepositMaterialToolbar.setNavigationOnClickListener {
+                findNavController().popBackStack()
+            }
         }
     }
 
     private fun setViewModel() {
-        CoroutineScope(Dispatchers.Main).launch {
-            async {
-                arguments?.let { depositTradeAddViewModel.setTradeClientId(it.getInt("clientId")) }
-            }.await()
-        }
+        arguments?.let { depositTradeModifyViewModel.setModifyTradeId(it.getInt("tradeId")) }
     }
-
 }

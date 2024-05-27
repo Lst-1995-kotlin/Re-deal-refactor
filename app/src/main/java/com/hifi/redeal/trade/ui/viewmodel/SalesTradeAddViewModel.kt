@@ -1,22 +1,26 @@
-package com.hifi.redeal.trade.domain.viewmodel
+package com.hifi.redeal.trade.ui.viewmodel
 
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hifi.redeal.data.entrie.TradeEntity
 import com.hifi.redeal.trade.configuration.TradeType
 import com.hifi.redeal.trade.data.model.TradeClientData
-import com.hifi.redeal.trade.data.repository.TradeRepository
+import com.hifi.redeal.trade.domain.usecase.TradeClientUseCase
+import com.hifi.redeal.trade.domain.usecase.TradeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
 class SalesTradeAddViewModel @Inject constructor(
-    private val tradeRepository: TradeRepository
+    private val tradeUseCase: TradeUseCase,
+    private val tradeClientUseCase: TradeClientUseCase
 ) : ViewModel() {
 
     private val _itemName = MutableLiveData<String?>()
@@ -25,6 +29,22 @@ class SalesTradeAddViewModel @Inject constructor(
     private val _receivedAmount = MutableLiveData<Long?>()
     private val _selectedClient = MutableLiveData<TradeClientData>()
     private val _visibility = MutableLiveData<Int>()
+
+    private val itemNameObserver = Observer<String?>{
+        buttonVisibilityCheck()
+    }
+    private val itemCountObserver = Observer<Long?>{
+        buttonVisibilityCheck()
+    }
+    private val itemPriceObserver = Observer<Long?>{
+        buttonVisibilityCheck()
+    }
+    private val receivedAmountObserver = Observer<Long?>{
+        buttonVisibilityCheck()
+    }
+    private val selectedClientObserver = Observer<TradeClientData>{
+        buttonVisibilityCheck()
+    }
 
     val itemName: LiveData<String?> = _itemName
     val itemCount: LiveData<Long?> = _itemCount
@@ -36,21 +56,11 @@ class SalesTradeAddViewModel @Inject constructor(
     init {
         _visibility.postValue(View.GONE)
 
-        itemName.observeForever {
-            buttonVisibilityCheck()
-        }
-        itemCount.observeForever {
-            buttonVisibilityCheck()
-        }
-        itemPrice.observeForever {
-            buttonVisibilityCheck()
-        }
-        receivedAmount.observeForever {
-            buttonVisibilityCheck()
-        }
-        selectedClient.observeForever {
-            buttonVisibilityCheck()
-        }
+        itemName.observeForever(itemNameObserver)
+        itemCount.observeForever(itemCountObserver)
+        itemPrice.observeForever(itemPriceObserver)
+        receivedAmount.observeForever(receivedAmountObserver)
+        selectedClient.observeForever(selectedClientObserver)
     }
 
     fun setItemName(value: String?) {
@@ -73,6 +83,16 @@ class SalesTradeAddViewModel @Inject constructor(
         _selectedClient.postValue(tradeClientData)
     }
 
+    fun setTradeClientId(id: Int) {
+        viewModelScope.launch {
+            async {
+                tradeClientUseCase.getClientById(id).collect{
+                    _selectedClient.postValue(it)
+                }
+            }.await()
+        }
+    }
+
     private fun buttonVisibilityCheck() {
         if (liveDataValueCheck()) {
             _visibility.postValue(View.VISIBLE)
@@ -91,20 +111,22 @@ class SalesTradeAddViewModel @Inject constructor(
 
     fun insertSalesTrade() {
         viewModelScope.launch {
-            if (liveDataValueCheck()) {
-                tradeRepository.insertTrade(
-                    TradeEntity(
-                        itemName = itemName.value!!,
-                        itemCount = itemCount.value!!,
-                        itemPrice = itemPrice.value!!,
-                        receivedAmount = receivedAmount.value!!,
-                        type = TradeType.SALES.type,
-                        date = Date(),
-                        checked = false,
-                        clientId = selectedClient.value!!.id
+            async {
+                if (liveDataValueCheck()) {
+                    tradeUseCase.insertTrade(
+                        TradeEntity(
+                            itemName = itemName.value!!,
+                            itemCount = itemCount.value!!,
+                            itemPrice = itemPrice.value!!,
+                            receivedAmount = receivedAmount.value!!,
+                            type = TradeType.SALES.type,
+                            date = Date(),
+                            checked = false,
+                            clientId = selectedClient.value!!.id
+                        )
                     )
-                )
-            }
+                }
+            }.await()
         }
     }
 

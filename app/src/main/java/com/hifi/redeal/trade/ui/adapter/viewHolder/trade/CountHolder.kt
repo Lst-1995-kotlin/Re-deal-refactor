@@ -7,6 +7,6 @@ class CountHolder(
     private val rowTransactionCountBinding: RowTradeCountBinding
 ) : RecyclerView.ViewHolder(rowTransactionCountBinding.root) {
     fun bind(itemCount: Int) {
-        rowTransactionCountBinding.transactionCountTextView.text = "${itemCount}개의 거래내역"
+        rowTransactionCountBinding.tradeCountTextView.text = "${itemCount}개의 거래내역"
     }
 }
