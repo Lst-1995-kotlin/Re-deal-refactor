@@ -1,9 +1,9 @@
-package com.hifi.redeal.trade.configuration
+package com.hifi.redeal.configuration
 
 import android.view.View
 import com.hifi.redeal.R
 
-enum class ClientConfiguration(private val state: Long) {
+enum class AccountStateConfiguration(private val state: Long) {
     STATE_TRADING(1L),
     STATE_TRY(2L),
     STATE_STOP(3L),

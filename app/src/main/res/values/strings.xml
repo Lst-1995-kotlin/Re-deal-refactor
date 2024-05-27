@@ -44,4 +44,14 @@
     <string name="add_trade_sales">거래 내역 추가</string>
     <string name="trade_select_client_message">거래처 또는 담당자 이름으로 검색</string>
     <string name="deposit">입금</string>
+
+    <!-- Account-->
+    <string name="by_views">조회순</string>
+    <string name="by_visits">방문순</string>
+    <string name="by_contacts">연락순</string>
+    <string name="by_registrations">등록순</string>
+    <string name="is_favorite">즐겨 찾기</string>
+    <string name="is_trading">거래 중</string>
+    <string name="is_trying_to_trade">거래 시도</string>
+    <string name="is_trade_paused">거래 중지</string>
 </resources>
