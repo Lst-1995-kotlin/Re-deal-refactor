@@ -217,7 +217,7 @@
     </fragment>
     <fragment
         android:id="@+id/tradeEditFragment"
-        android:name="com.hifi.redeal.trade.view_refactor_before.TradeEditFragment"
+        android:name="com.hifi.redeal.trade.ui.fragment.TradeEditFragment"
         android:label="fragment_trade_edit"
         tools:layout="@layout/fragment_trade_edit" />
     <fragment
