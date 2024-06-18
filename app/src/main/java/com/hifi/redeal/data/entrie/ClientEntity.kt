@@ -3,6 +3,7 @@ package com.hifi.redeal.data.entrie
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.Date
 
 @Entity("client")
 data class ClientEntity(
@@ -21,5 +22,13 @@ data class ClientEntity(
     val managerNumber: String,
     @ColumnInfo val description: String,
     @ColumnInfo val state: Int,
-    @ColumnInfo val bookmark: Boolean
+    @ColumnInfo val bookmark: Boolean,
+    @ColumnInfo(name = "last_visit_date")
+    val lastVisitDate: Date?,
+    @ColumnInfo(name = "last_contact_date")
+    val lastContactDate: Date?,
+    @ColumnInfo(name = "create_date")
+    val createDate: Date?,
+    @ColumnInfo(name = "view_count")
+    val viewCount: Long
 )
