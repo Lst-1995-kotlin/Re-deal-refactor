@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTradeEditBinding
 import com.hifi.redeal.trade.configuration.TradeType
+import com.hifi.redeal.trade.data.model.toCheckChange
 import com.hifi.redeal.trade.ui.adapter.TradeSelectAdapter
 import com.hifi.redeal.trade.ui.adapter.TradeSelectAdapterDiffCallback
 import com.hifi.redeal.trade.ui.adapter.viewHolder.ViewHolderFactory
@@ -65,18 +66,12 @@ class TradeEditFragment : Fragment() {
     private fun setAdapter() {
         val viewHolderFactories = HashMap<Int, ViewHolderFactory>()
         depositSelectHolderFactory.setOnClickListener {
-            val updateData = it.copy(
-                checked = !it.checked
-            )
-            tradeSelectViewModel.updateSelectTradeData(updateData)
+            tradeSelectViewModel.updateSelectTradeData(it.toCheckChange())
         }
         viewHolderFactories[TradeType.DEPOSIT.type] = depositSelectHolderFactory
 
         salesSelectHolderFactory.setOnClickListener {
-            val updateData = it.copy(
-                checked = !it.checked
-            )
-            tradeSelectViewModel.updateSelectTradeData(updateData)
+            tradeSelectViewModel.updateSelectTradeData(it.toCheckChange())
         }
         viewHolderFactories[TradeType.SALES.type] = salesSelectHolderFactory
 
