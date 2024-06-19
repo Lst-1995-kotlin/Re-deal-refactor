@@ -16,7 +16,7 @@
         android:transitionGroup="true">
 
         <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBarLayoutTransactionByClientMain"
+            android:id="@+id/appBarLayoutTradeByClientMain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbarTransactionByClientMain"
+                android:id="@+id/toolbarTradeByClientMain"
                 style="@style/Theme.ReDeal.ToolbarTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
                 app:titleTextColor="@color/primary20" />
 
             <View
-                android:id="@+id/TransactionByClientDivider"
+                android:id="@+id/tradeByClientDivider"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/primary20" />
@@ -55,7 +55,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appBarLayoutTransactionByClientMain">
+            app:layout_constraintTop_toBottomOf="@+id/appBarLayoutTradeByClientMain">
 
             <TextView
                 android:id="@+id/textViewByClientTran1"
@@ -178,7 +178,7 @@
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/transactionByClientRecyclerView"
+                android:id="@+id/tradeByClientRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -221,7 +221,7 @@
                     app:drawableTopCompat="@drawable/money_24px" />
 
                 <TextView
-                    android:id="@+id/ImgBtnAddTransactionByClient"
+                    android:id="@+id/ImgBtnAddTradeByClient"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"

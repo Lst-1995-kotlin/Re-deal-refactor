@@ -34,9 +34,9 @@ class TradeSelectViewModel @Inject constructor(
         } ?: tradeUseCase.getAllSelectTrade().asLiveData()
     }
 
-
     init {
         updateLiveData()
+        selectHistoryClear()
     }
 
     fun setClientId(clientId: Int?) {
@@ -49,15 +49,15 @@ class TradeSelectViewModel @Inject constructor(
         }
     }
 
-    fun selectHistoryClear() {
-        viewModelScope.launch {
-            tradeUseCase.selectHistoryClear()
-        }
-    }
-
     fun selectTradeDelete() {
         viewModelScope.launch {
             tradeUseCase.selectTradeDelete()
+        }
+    }
+
+    private fun selectHistoryClear() {
+        viewModelScope.launch {
+            tradeUseCase.selectHistoryClear()
         }
     }
 
