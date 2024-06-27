@@ -27,7 +27,7 @@
                 android:background="@color/background"
                 android:minHeight="?attr/actionBarSize"
                 android:theme="@style/Theme.ReDeal.ToolbarTheme"
-                app:title="리딜"
+                app:title="@string/app_name"
                 app:titleTextAppearance="@style/account_detail_toolbar_title_text_appearance"/>
 
             <com.google.android.material.search.SearchBar
@@ -104,7 +104,7 @@
                 android:maxLines="1"
                 android:textColor="@color/text30"
                 android:textSize="10sp"
-                tools:text="유민국님" />
+                tools:text="@string/loading" />
         </LinearLayout>
 
         <com.google.android.material.tabs.TabLayout
@@ -163,7 +163,7 @@
                 android:id="@+id/chipAccountListSortReference"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="조회순"
+                android:text="@string/by_views"
                 style="@style/tab_item_chip_style_account_list"
                 app:closeIconTint="@color/primary20"/>
 
@@ -171,21 +171,21 @@
                 android:id="@+id/chipAccountListSortVisit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="방문순"
+                android:text="@string/by_visits"
                 style="@style/tab_item_chip_style_account_list" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipAccountListSortContact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="연락순"
+                android:text="@string/by_contacts"
                 style="@style/tab_item_chip_style_account_list" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipAccountListSortRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="등록순"
+                android:text="@string/by_registrations"
                 style="@style/tab_item_chip_style_account_list" />
 
         </com.google.android.material.chip.ChipGroup>

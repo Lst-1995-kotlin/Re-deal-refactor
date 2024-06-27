@@ -2,8 +2,8 @@ package com.hifi.redeal.trade.ui.adapter.viewHolder.client
 
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.databinding.TradeSelectClientItemBinding
-import com.hifi.redeal.trade.configuration.ClientConfiguration.Companion.setClientBookmarkResource
-import com.hifi.redeal.trade.configuration.ClientConfiguration.Companion.setClientStateResource
+import com.hifi.redeal.configuration.AccountStateConfiguration.Companion.setClientBookmarkResource
+import com.hifi.redeal.configuration.AccountStateConfiguration.Companion.setClientStateResource
 import com.hifi.redeal.trade.data.model.TradeClientData
 
 class TradeClientHolder(

@@ -1,6 +1,7 @@
 package com.hifi.redeal.account.repository.model
 
 import com.google.firebase.Timestamp
+import java.util.Date
 
 data class ClientInputData(
     val clientAddress: String? = null,
@@ -42,4 +43,18 @@ data class ClientData(
     val viewCount: Long? = null,
     var recentContactDate: Timestamp? = null,
     var recentVisitDate: Timestamp? = null
+)
+
+data class ClientListData(
+    val id: Int,
+    val name: String,
+    val address: String,
+    val addressDetail: String,
+    val representativeNumber: String,
+    val managerName: String,
+    val manageNumber: String,
+    val state: Int,
+    val bookmark: Boolean,
+    val lastVisitDate: Date,
+    val viewCount: Long
 )
