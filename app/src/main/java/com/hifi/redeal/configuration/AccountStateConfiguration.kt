@@ -24,9 +24,9 @@ enum class AccountStateConfiguration(private val state: Long) {
             if (value) {
                 view.visibility = View.VISIBLE
                 view.setBackgroundResource(R.drawable.star_fill_24px)
-                return
+            } else {
+                view.visibility = View.GONE
             }
-            view.visibility = View.GONE
         }
     }
 }
