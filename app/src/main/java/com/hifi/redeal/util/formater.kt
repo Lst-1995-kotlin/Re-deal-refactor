@@ -20,8 +20,7 @@ fun Long.toNumberFormat(): String {
 fun String.numberFormatToLong(): Long {
     val text = this.replace(",", "").trim()
     return when {
-        text.isEmpty() -> 0L
-        !text.all { it.isDigit() } -> throw NumberFormatException("${text}(은)는 숫자 포맷 으로 변경할 수 없습니다.")
+        text.isEmpty() || !text.all { it.isDigit() } -> 0L
         else -> text.toLong()
     }
 }

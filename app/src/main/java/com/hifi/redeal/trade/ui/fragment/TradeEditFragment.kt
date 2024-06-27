@@ -7,11 +7,13 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hifi.redeal.R
 import com.hifi.redeal.databinding.FragmentTradeEditBinding
 import com.hifi.redeal.trade.configuration.TradeType
+import com.hifi.redeal.trade.data.model.toCheckChange
 import com.hifi.redeal.trade.ui.adapter.TradeSelectAdapter
 import com.hifi.redeal.trade.ui.adapter.TradeSelectAdapterDiffCallback
 import com.hifi.redeal.trade.ui.adapter.viewHolder.ViewHolderFactory
@@ -19,8 +21,6 @@ import com.hifi.redeal.trade.ui.adapter.viewHolder.tradeEdit.DepositSelectHolder
 import com.hifi.redeal.trade.ui.adapter.viewHolder.tradeEdit.SalesSelectHolderFactory
 import com.hifi.redeal.trade.ui.viewmodel.TradeSelectViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -43,8 +43,7 @@ class TradeEditFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        tradeSelectViewModel.setClientId(null)
-        tradeSelectViewModel.selectHistoryClear()
+        tradeSelectViewModel.setClientId(arguments?.getInt("clientId"))
     }
 
     override fun onCreateView(
@@ -65,18 +64,12 @@ class TradeEditFragment : Fragment() {
     private fun setAdapter() {
         val viewHolderFactories = HashMap<Int, ViewHolderFactory>()
         depositSelectHolderFactory.setOnClickListener {
-            val updateData = it.copy(
-                checked = !it.checked
-            )
-            tradeSelectViewModel.updateSelectTradeData(updateData)
+            tradeSelectViewModel.updateSelectTradeData(it.toCheckChange())
         }
         viewHolderFactories[TradeType.DEPOSIT.type] = depositSelectHolderFactory
 
         salesSelectHolderFactory.setOnClickListener {
-            val updateData = it.copy(
-                checked = !it.checked
-            )
-            tradeSelectViewModel.updateSelectTradeData(updateData)
+            tradeSelectViewModel.updateSelectTradeData(it.toCheckChange())
         }
         viewHolderFactories[TradeType.SALES.type] = salesSelectHolderFactory
 
@@ -86,21 +79,21 @@ class TradeEditFragment : Fragment() {
 
     private fun setBind() {
         fragmentTradeEditBinding.run {
-            toolbarTransactionEdit.setNavigationOnClickListener {
+            toolbarTradeEdit.setNavigationOnClickListener {
                 findNavController().popBackStack()
             }
 
-            transactionEditSelectRecyclerView.run {
+            tradeEditSelectRecyclerView.run {
                 adapter = tradeSelectAdapter
                 layoutManager = LinearLayoutManager(context)
             }
 
-            transactionEditCancelButton.setOnClickListener {
+            tradeEditCancelButton.setOnClickListener {
                 findNavController().popBackStack()
             }
 
-            selectTransactionDeleteButton.setOnClickListener {
-                CoroutineScope(Dispatchers.Main).launch{
+            selectTradeDeleteButton.setOnClickListener {
+                lifecycleScope.launch {
                     async {
                         tradeSelectViewModel.selectTradeDelete()
                     }.await()
@@ -111,10 +104,11 @@ class TradeEditFragment : Fragment() {
     }
 
     private fun setViewModel() {
+
         tradeSelectViewModel.trades.observe(viewLifecycleOwner) { trades -> // 어댑터에 표시하는 거래내역들
             tradeSelectAdapter.submitList(trades)
         }
-        fragmentTradeEditBinding.transactionEditSelectRecyclerView.scrollToPosition(0)
+        fragmentTradeEditBinding.tradeEditSelectRecyclerView.scrollToPosition(0)
     }
 
 }

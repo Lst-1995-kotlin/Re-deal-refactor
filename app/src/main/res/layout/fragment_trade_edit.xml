@@ -18,7 +18,7 @@
         tools:context=".trade.ui.fragment.TradeEditFragment">
 
         <LinearLayout
-            android:id="@+id/appBarLayoutTransactionEdit"
+            android:id="@+id/appBarLayoutTradeEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -28,7 +28,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbarTransactionEdit"
+                android:id="@+id/toolbarTradeEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -41,7 +41,7 @@
                 app:titleTextColor="@color/primary20" />
 
             <TextView
-                android:id="@+id/toolbarTransactionEditTextView"
+                android:id="@+id/toolbarTradeEditTextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -55,16 +55,16 @@
         </LinearLayout>
 
         <View
-            android:id="@+id/transactionEditDivider"
+            android:id="@+id/tradeEditDivider"
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/primary20"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appBarLayoutTransactionEdit" />
+            app:layout_constraintTop_toBottomOf="@+id/appBarLayoutTradeEdit" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/transactionEditSelectRecyclerView"
+            android:id="@+id/tradeEditSelectRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="4dp"
@@ -75,7 +75,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appBarLayoutTransactionEdit" />
+            app:layout_constraintTop_toBottomOf="@+id/appBarLayoutTradeEdit" />
 
         <LinearLayout
             android:id="@+id/linearLayout4"
@@ -87,7 +87,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <Button
-                android:id="@+id/select_transaction_delete_button"
+                android:id="@+id/select_trade_delete_button"
                 style="@style/trade_edit_delete_button_style"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -95,7 +95,7 @@
                 android:text="@string/trade_delete" />
 
             <Button
-                android:id="@+id/transaction_edit_cancel_button"
+                android:id="@+id/trade_edit_cancel_button"
                 style="@style/trade_edit_cancel_button_style"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

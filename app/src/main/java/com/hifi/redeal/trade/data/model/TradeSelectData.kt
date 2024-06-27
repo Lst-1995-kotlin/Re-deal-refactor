@@ -17,6 +17,21 @@ data class TradeSelectData(
     val managerName: String
 )
 
+fun TradeSelectData.toCheckChange(): TradeSelectData {
+    return TradeSelectData(
+        this.id,
+        this.itemName,
+        this.itemCount,
+        this.itemPrice,
+        this.receivedAmount,
+        this.type,
+        this.date,
+        !this.checked,
+        this.clientId,
+        this.clientName,
+        this.managerName
+    )
+}
 fun TradeSelectData.toTradeEntry(): TradeEntity {
     return TradeEntity(
         this.id,

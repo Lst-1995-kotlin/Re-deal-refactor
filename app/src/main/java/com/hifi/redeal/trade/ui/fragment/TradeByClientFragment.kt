@@ -94,7 +94,7 @@ class TradeByClientFragment : Fragment() {
     private fun setBind() {
         fragmentTradeByClientBinding.run {
 
-            transactionByClientRecyclerView.run {
+            tradeByClientRecyclerView.run {
                 adapter = tradeAdapter
                 layoutManager = LinearLayoutManager(context)
             }
@@ -108,7 +108,7 @@ class TradeByClientFragment : Fragment() {
                 )
             }
 
-            ImgBtnAddTransactionByClient.setOnClickListener {
+            ImgBtnAddTradeByClient.setOnClickListener {
                 val bundle = Bundle()
                 arguments?.getInt("clientId")?.let { bundle.putInt("clientId", it) }
                 findNavController().navigate(
@@ -117,12 +117,13 @@ class TradeByClientFragment : Fragment() {
                 )
             }
 
-            toolbarTransactionByClientMain.setOnMenuItemClickListener {
+            toolbarTradeByClientMain.setOnMenuItemClickListener {
+                val bundle = Bundle()
+                arguments?.getInt("clientId")?.let { bundle.putInt("clientId", it) }
                 findNavController().navigate(
                     R.id.action_tradeByClientFragment_to_tradeEditFragment,
-                    Bundle().apply {
-                        arguments?.getInt("clientId")
-                    })
+                    bundle
+                )
                 true
             }
         }
@@ -132,7 +133,7 @@ class TradeByClientFragment : Fragment() {
         // 코루틴을 이용하여 불러올 클라이언트 ID 설정 후 거래내역들 표시
         tradeViewModel.trades.observe(viewLifecycleOwner) { trades -> // 어댑터에 표시하는 거래내역들
             tradeAdapter.submitList(trades) {
-                fragmentTradeByClientBinding.transactionByClientRecyclerView.scrollToPosition(0)
+                fragmentTradeByClientBinding.tradeByClientRecyclerView.scrollToPosition(0)
                 tradeAdapter.updateCount()
             }
         }
