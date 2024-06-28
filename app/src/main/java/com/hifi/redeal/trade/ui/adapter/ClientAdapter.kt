@@ -4,13 +4,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hifi.redeal.trade.data.model.TradeClientData
-import com.hifi.redeal.trade.ui.adapter.ClientAdapterDiffCallback
 import com.hifi.redeal.trade.ui.adapter.viewHolder.ViewHolderFactory
 import com.hifi.redeal.trade.ui.adapter.viewHolder.client.TradeClientHolder
 
 
 class ClientAdapter(
-    private val viewHolderFactories: HashMap<String, ViewHolderFactory>,
+    private val viewHolderFactories: Map<String, ViewHolderFactory>,
     diffCallback: ClientAdapterDiffCallback
 ) : ListAdapter<TradeClientData, RecyclerView.ViewHolder>(diffCallback) {
 

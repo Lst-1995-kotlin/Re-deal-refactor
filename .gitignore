@@ -99,6 +99,8 @@ obj/
 .idea/codeStyles/codeStyleConfig.xml
 .idea/codeStyles/Project.xml
 .idea/deploymentTargetSelector.xml
+.idea/other.xml
+.idea/studiobot.xml
 
 # Legacy Eclipse project files
 .classpath
